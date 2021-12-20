@@ -2383,7 +2383,7 @@ static const CRPCCommand commands[] =
     { "tokens (data retrieval)", "listtokens",                      &listtokens,                       false },
     { "tokens (data retrieval)", "gettokencrowdsale",               &gettokencrowdsale,                false },
     { "tokens (data retrieval)", "gettokengrants",                  &gettokengrants,                   false },
-    { "tokens (data retrieval)", "gettokenactivedexsells",          &gettokenactivedexsells,           false },
+    // { "tokens (data retrieval)", "gettokenactivedexsells",          &gettokenactivedexsells,           false },
     { "tokens (data retrieval)", "gettokenactivecrowdsales",        &gettokenactivecrowdsales,         false },
     { "tokens (data retrieval)", "gettokenorderbook",               &gettokenorderbook,                false },
     { "tokens (data retrieval)", "gettokentrade",                   &gettokentrade,                    false },
