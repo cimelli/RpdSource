@@ -1,9 +1,9 @@
-// Copyright (c) 2018-2020 The PIVX developers
+// Copyright (c) 2018-2020 The RPDCHAIN developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef PIVX_ZPIVTRACKER_H
-#define PIVX_ZPIVTRACKER_H
+#ifndef RPDCHAIN_ZPIVTRACKER_H
+#define RPDCHAIN_ZPIVTRACKER_H
 
 #include "zerocoin.h"
 #include "sync.h"
@@ -52,4 +52,4 @@ public:
     void Clear();
 };
 
-#endif //PIVX_ZPIVTRACKER_H
+#endif //RPDCHAIN_ZPIVTRACKER_H

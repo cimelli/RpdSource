@@ -1,9 +1,9 @@
-// Copyright (c) 2019 The PIVX developers
+// Copyright (c) 2019 The RPDCHAIN developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef PIVX_PFBorderImage_H
-#define PIVX_PFBorderImage_H
+#ifndef RPDCHAIN_PFBorderImage_H
+#define RPDCHAIN_PFBorderImage_H
 
 #include <QPainter>
 #include <QPixmap>
@@ -52,4 +52,4 @@ protected:
 
 };
 
-#endif //PIVX_PFBorderImage_H
+#endif //RPDCHAIN_PFBorderImage_H

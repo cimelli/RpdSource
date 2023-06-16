@@ -1,9 +1,9 @@
-// Copyright (c) 2020 The PIVX developers
+// Copyright (c) 2020 The RPDCHAIN developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef PIVX_LEGACY_ZPOS_H
-#define PIVX_LEGACY_ZPOS_H
+#ifndef RPDCHAIN_LEGACY_ZPOS_H
+#define RPDCHAIN_LEGACY_ZPOS_H
 
 #include "stakeinput.h"
 #include "main.h"
@@ -33,4 +33,4 @@ public:
     virtual bool ContextCheck(int nHeight, uint32_t nTime) override;
 };
 
-#endif //PIVX_LEGACY_ZPOS_H
+#endif //RPDCHAIN_LEGACY_ZPOS_H

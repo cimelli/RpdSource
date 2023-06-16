@@ -1,4 +1,4 @@
-// Copyright (c) 2019-2020 The PIVX developers
+// Copyright (c) 2019-2020 The RPDCHAIN developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -6,20 +6,20 @@
 #define SETTINGSWIDGET_H
 
 #include <QWidget>
-#include "qt/pivx/pwidget.h"
-#include "qt/pivx/settings/settingsbackupwallet.h"
-#include "qt/pivx/settings/settingsexportcsv.h"
-#include "qt/pivx/settings/settingsbittoolwidget.h"
-#include "qt/pivx/settings/settingssignmessagewidgets.h"
-#include "qt/pivx/settings/settingswalletrepairwidget.h"
-#include "qt/pivx/settings/settingswalletoptionswidget.h"
-#include "qt/pivx/settings/settingsmainoptionswidget.h"
-#include "qt/pivx/settings/settingsdisplayoptionswidget.h"
-#include "qt/pivx/settings/settingsmultisendwidget.h"
-#include "qt/pivx/settings/settingsinformationwidget.h"
-#include "qt/pivx/settings/settingsconsolewidget.h"
+#include "qt/rpdchain/pwidget.h"
+#include "qt/rpdchain/settings/settingsbackupwallet.h"
+#include "qt/rpdchain/settings/settingsexportcsv.h"
+#include "qt/rpdchain/settings/settingsbittoolwidget.h"
+#include "qt/rpdchain/settings/settingssignmessagewidgets.h"
+#include "qt/rpdchain/settings/settingswalletrepairwidget.h"
+#include "qt/rpdchain/settings/settingswalletoptionswidget.h"
+#include "qt/rpdchain/settings/settingsmainoptionswidget.h"
+#include "qt/rpdchain/settings/settingsdisplayoptionswidget.h"
+#include "qt/rpdchain/settings/settingsmultisendwidget.h"
+#include "qt/rpdchain/settings/settingsinformationwidget.h"
+#include "qt/rpdchain/settings/settingsconsolewidget.h"
 
-class PIVXGUI;
+class RPDCHAINGUI;
 
 QT_BEGIN_NAMESPACE
 class QDataWidgetMapper;
@@ -34,7 +34,7 @@ class SettingsWidget : public PWidget
     Q_OBJECT
 
 public:
-    explicit SettingsWidget(PIVXGUI* parent);
+    explicit SettingsWidget(RPDCHAINGUI* parent);
     ~SettingsWidget();
 
     void loadClientModel() override;

@@ -141,7 +141,7 @@
              <string notr="true">margin-left:8px;</string>
             </property>
             <property name="text">
-             <string>PIVX address or contact label</string>
+             <string>RPDCHAIN address or contact label</string>
             </property>
            </widget>
           </item>
@@ -710,7 +710,7 @@
   <customwidget>
    <class>OptionButton</class>
    <extends>QWidget</extends>
-   <header>qt/pivx/optionbutton.h</header>
+   <header>qt/rpdchain/optionbutton.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

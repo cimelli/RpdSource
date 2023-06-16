@@ -1,17 +1,17 @@
-// Copyright (c) 2019-2020 The PIVX developers
+// Copyright (c) 2019-2020 The RPDCHAIN developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#include "qt/pivx/addresseswidget.h"
-#include "qt/pivx/forms/ui_addresseswidget.h"
-#include "qt/pivx/addresslabelrow.h"
-#include "qt/pivx/addnewaddressdialog.h"
-#include "qt/pivx/tooltipmenu.h"
+#include "qt/rpdchain/addresseswidget.h"
+#include "qt/rpdchain/forms/ui_addresseswidget.h"
+#include "qt/rpdchain/addresslabelrow.h"
+#include "qt/rpdchain/addnewaddressdialog.h"
+#include "qt/rpdchain/tooltipmenu.h"
 
-#include "qt/pivx/addnewcontactdialog.h"
-#include "qt/pivx/pivxgui.h"
+#include "qt/rpdchain/addnewcontactdialog.h"
+#include "qt/rpdchain/rpdchaingui.h"
 #include "guiutil.h"
-#include "qt/pivx/qtutils.h"
+#include "qt/rpdchain/qtutils.h"
 #include "walletmodel.h"
 
 #include <QModelIndex>
@@ -58,7 +58,7 @@ public:
 };
 
 
-AddressesWidget::AddressesWidget(PIVXGUI* parent) :
+AddressesWidget::AddressesWidget(RPDCHAINGUI* parent) :
     PWidget(parent),
     ui(new Ui::AddressesWidget)
 {

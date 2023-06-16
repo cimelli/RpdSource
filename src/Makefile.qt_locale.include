@@ -1,15 +1,15 @@
 QT_TS = \
-  qt/locale/pivx_de.ts \
-  qt/locale/pivx_en.ts \
-  qt/locale/pivx_en_US.ts \
-  qt/locale/pivx_es.ts \
-  qt/locale/pivx_es_ES.ts \
-  qt/locale/pivx_fr_FR.ts \
-  qt/locale/pivx_hr_HR.ts \
-  qt/locale/pivx_it.ts \
-  qt/locale/pivx_ko_KR.ts \
-  qt/locale/pivx_nl.ts \
-  qt/locale/pivx_pl.ts \
-  qt/locale/pivx_ru.ts \
-  qt/locale/pivx_tr.ts \
-  qt/locale/pivx_zh_CN.ts
+  qt/locale/rpdchain_de.ts \
+  qt/locale/rpdchain_en.ts \
+  qt/locale/rpdchain_en_US.ts \
+  qt/locale/rpdchain_es.ts \
+  qt/locale/rpdchain_es_ES.ts \
+  qt/locale/rpdchain_fr_FR.ts \
+  qt/locale/rpdchain_hr_HR.ts \
+  qt/locale/rpdchain_it.ts \
+  qt/locale/rpdchain_ko_KR.ts \
+  qt/locale/rpdchain_nl.ts \
+  qt/locale/rpdchain_pl.ts \
+  qt/locale/rpdchain_ru.ts \
+  qt/locale/rpdchain_tr.ts \
+  qt/locale/rpdchain_zh_CN.ts

@@ -1,14 +1,14 @@
-// Copyright (c) 2019 The PIVX developers
+// Copyright (c) 2019 The RPDCHAIN developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#include "qt/pivx/settings/settingsfaqwidget.h"
-#include "qt/pivx/settings/forms/ui_settingsfaqwidget.h"
+#include "qt/rpdchain/settings/settingsfaqwidget.h"
+#include "qt/rpdchain/settings/forms/ui_settingsfaqwidget.h"
 #include <QScrollBar>
 #include <QMetaObject>
-#include "qt/pivx/qtutils.h"
+#include "qt/rpdchain/qtutils.h"
 
-SettingsFaqWidget::SettingsFaqWidget(PIVXGUI *parent) :
+SettingsFaqWidget::SettingsFaqWidget(RPDCHAINGUI *parent) :
     QDialog(parent),
     ui(new Ui::SettingsFaqWidget)
 {
@@ -82,7 +82,7 @@ SettingsFaqWidget::SettingsFaqWidget(PIVXGUI *parent) :
     connect(ui->pushButton_MNController, &QPushButton::clicked, [this](){onFaqClicked(ui->widget_MNController);});
 
     if (parent)
-        connect(parent, &PIVXGUI::windowResizeEvent, this, &SettingsFaqWidget::windowResizeEvent);
+        connect(parent, &RPDCHAINGUI::windowResizeEvent, this, &SettingsFaqWidget::windowResizeEvent);
 }
 
 void SettingsFaqWidget::showEvent(QShowEvent *event)

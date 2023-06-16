@@ -1,15 +1,15 @@
-// Copyright (c) 2019-2020 The PIVX developers
+// Copyright (c) 2019-2020 The RPDCHAIN developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#include "qt/pivx/contactsdropdown.h"
+#include "qt/rpdchain/contactsdropdown.h"
 
 #include <QPainter>
 #include <QSizePolicy>
-#include "qt/pivx/addresslabelrow.h"
-#include "qt/pivx/contactdropdownrow.h"
-#include "qt/pivx/qtutils.h"
-#include "qt/pivx/furlistrow.h"
+#include "qt/rpdchain/addresslabelrow.h"
+#include "qt/rpdchain/contactdropdownrow.h"
+#include "qt/rpdchain/qtutils.h"
+#include "qt/rpdchain/furlistrow.h"
 #include "walletmodel.h"
 #include "addresstablemodel.h"
 

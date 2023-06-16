@@ -1,9 +1,9 @@
-// Copyright (c) 2019 The PIVX developers
+// Copyright (c) 2019 The RPDCHAIN developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#include "qt/pivx/csrow.h"
-#include "qt/pivx/forms/ui_csrow.h"
+#include "qt/rpdchain/csrow.h"
+#include "qt/rpdchain/forms/ui_csrow.h"
 
 CSRow::CSRow(QWidget *parent) :
     QWidget(parent),

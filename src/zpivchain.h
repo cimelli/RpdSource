@@ -1,9 +1,9 @@
-// Copyright (c) 2018-2020 The PIVX developers
+// Copyright (c) 2018-2020 The RPDCHAIN developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef PIVX_ZPIVCHAIN_H
-#define PIVX_ZPIVCHAIN_H
+#ifndef RPDCHAIN_ZPIVCHAIN_H
+#define RPDCHAIN_ZPIVCHAIN_H
 
 #include "chain.h"
 #include "libzerocoin/Coin.h"
@@ -44,4 +44,4 @@ int64_t GetZerocoinSupply();
 bool UpdateZPIVSupplyConnect(const CBlock& block, CBlockIndex* pindex, bool fJustCheck);
 bool UpdateZPIVSupplyDisconnect(const CBlock& block, CBlockIndex* pindex);
 
-#endif //PIVX_ZPIVCHAIN_H
+#endif //RPDCHAIN_ZPIVCHAIN_H

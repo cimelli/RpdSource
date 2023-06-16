@@ -1,21 +1,21 @@
 
 Debian
 ====================
-This directory contains files used to package pivxd/pivx-qt
-for Debian-based Linux systems. If you compile pivxd/pivx-qt yourself, there are some useful files here.
+This directory contains files used to package rpdchaind/rpdchain-qt
+for Debian-based Linux systems. If you compile rpdchaind/rpdchain-qt yourself, there are some useful files here.
 
-## pivx: URI support ##
+## rpdchain: URI support ##
 
 
-pivx-qt.desktop  (Gnome / Open Desktop)
+rpdchain-qt.desktop  (Gnome / Open Desktop)
 To install:
 
-	sudo desktop-file-install pivx-qt.desktop
+	sudo desktop-file-install rpdchain-qt.desktop
 	sudo update-desktop-database
 
 If you build yourself, you will either need to modify the paths in
-the .desktop file or copy or symlink your pivx-qt binary to `/usr/bin`
-and the `../../share/pixmaps/pivx128.png` to `/usr/share/pixmaps`
+the .desktop file or copy or symlink your rpdchain-qt binary to `/usr/bin`
+and the `../../share/pixmaps/rpdchain128.png` to `/usr/share/pixmaps`
 
-pivx-qt.protocol (KDE)
+rpdchain-qt.protocol (KDE)
 
