@@ -1,0 +1,13 @@
+[Desktop Entry]
+Version=1.0
+Name=RPDCHAIN Core
+Comment=RPDCHAIN P2P Cryptocurrency
+Comment[fr]=RPDCHAIN, monnaie virtuelle cryptographique pair à pair
+Comment[tr]=RPDCHAIN, eşten eşe kriptografik sanal para birimi
+Exec=rpdchain-qt %u
+Terminal=false
+Type=Application
+Icon=rpdchain128
+MimeType=x-scheme-handler/rpdchain;
+Categories=Office;Finance;
+StartupWMClass=RpdChain-qt

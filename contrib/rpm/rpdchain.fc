@@ -1,0 +1,8 @@
+/usr/bin/rpdchain-cli		--	gen_context(system_u:object_r:rpdchain_exec_t,s0)
+/usr/sbin/rpdchaind		--	gen_context(system_u:object_r:rpdchain_exec_t,s0)
+/usr/lib(64)?/rpdchain/rpdchaind		--	gen_context(system_u:object_r:rpdchain_exec_t,s0)
+
+/etc/rpdchain(/.*)?		gen_context(system_u:object_r:rpdchain_conf_t,s0)
+/var/lib/rpdchain(/.*)?		gen_context(system_u:object_r:rpdchain_var_lib_t,s0)
+
+(/var)?/run/rpdchaind(/.*)?   gen_context(system_u:object_r:rpdchain_var_run_t,s0)

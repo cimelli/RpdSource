@@ -1,0 +1,6 @@
+usr/local/bin/rpdchain-qt usr/bin
+share/pixmaps/rpdchain32.xpm usr/share/pixmaps
+share/pixmaps/rpdchain16.xpm usr/share/pixmaps
+share/pixmaps/rpdchain128.png usr/share/pixmaps
+debian/rpdchain-qt.desktop usr/share/applications
+debian/rpdchain-qt.protocol usr/share/kde4/services/
