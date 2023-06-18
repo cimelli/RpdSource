@@ -16,14 +16,14 @@ BEGIN
     BEGIN
         BLOCK "040904E4" // U.S. English - multilingual (hex)
         BEGIN
-            VALUE "CompanyName",        "Rpdchain"
-            VALUE "FileDescription",    "Rpdchain-cli (OSS RPC client for Rpdchain)"
+            VALUE "CompanyName",        "RpdChain"
+            VALUE "FileDescription",    "RpdChain-cli (OSS RPC client for RpdChain)"
             VALUE "FileVersion",        VER_FILEVERSION_STR
             VALUE "InternalName",       "rpdchain-cli"
             VALUE "LegalCopyright",     COPYRIGHT_STR
             VALUE "LegalTrademarks1",   "Distributed under the MIT/X11 software license, see the accompanying file COPYING or http://www.opensource.org/licenses/mit-license.php."
             VALUE "OriginalFilename",   "rpdchain-cli.exe"
-            VALUE "ProductName",        "Rpdchain-cli"
+            VALUE "ProductName",        "RpdChain-cli"
             VALUE "ProductVersion",     VER_PRODUCTVERSION_STR
         END
     END

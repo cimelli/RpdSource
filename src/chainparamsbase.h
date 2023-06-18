@@ -11,7 +11,7 @@
 
 /**
  * CBaseChainParams defines the base parameters (shared between rpdchain-cli and rpdchaind)
- * of a given instance of the Rpdchain system.
+ * of a given instance of the RpdChain system.
  */
 class CBaseChainParams
 {

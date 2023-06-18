@@ -6,7 +6,7 @@
 
 import time
 
-from test_framework.test_framework import RpdchainTestFramework
+from test_framework.test_framework import RpdChainTestFramework
 from test_framework.util import (
     assert_equal,
     assert_raises_rpc_error,
@@ -14,7 +14,7 @@ from test_framework.util import (
     assert_greater_than_or_equal,
 )
 
-class WalletEncryptionTest(RpdchainTestFramework):
+class WalletEncryptionTest(RpdChainTestFramework):
     def set_test_params(self):
         self.setup_clean_chain = True
         self.num_nodes = 1

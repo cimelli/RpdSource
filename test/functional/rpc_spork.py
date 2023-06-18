@@ -6,11 +6,11 @@
 
 from time import sleep
 
-from test_framework.test_framework import RpdchainTestFramework
+from test_framework.test_framework import RpdChainTestFramework
 from test_framework.util import set_node_times, assert_equal
 
 
-class RPDCHAIN_RPCSporkTest(RpdchainTestFramework):
+class RPDCHAIN_RPCSporkTest(RpdChainTestFramework):
 
     def set_test_params(self):
         self.setup_clean_chain = True

@@ -14,7 +14,7 @@
 - (NSString *)__bundleIdentifier
 {
     if (self == [NSBundle mainBundle]) {
-        return @"io.rpdchain.Rpdchain-Qt";
+        return @"io.rpdchain.RpdChain-Qt";
     } else {
         return [self __bundleIdentifier];
     }

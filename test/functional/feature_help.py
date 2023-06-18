@@ -5,10 +5,10 @@
 """Verify that starting rpdchain with -h works as expected."""
 import subprocess
 
-from test_framework.test_framework import RpdchainTestFramework
+from test_framework.test_framework import RpdChainTestFramework
 from test_framework.util import assert_equal
 
-class HelpTest(RpdchainTestFramework):
+class HelpTest(RpdChainTestFramework):
     def set_test_params(self):
         self.setup_clean_chain = True
         self.num_nodes = 1

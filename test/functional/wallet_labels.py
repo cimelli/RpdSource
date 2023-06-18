@@ -17,10 +17,10 @@ The accounts API test can be removed in v5.0.
 """
 from collections import defaultdict
 
-from test_framework.test_framework import RpdchainTestFramework
+from test_framework.test_framework import RpdChainTestFramework
 from test_framework.util import assert_equal, assert_raises_rpc_error
 
-class WalletlabelsTest(RpdchainTestFramework):
+class WalletlabelsTest(RpdChainTestFramework):
     def set_test_params(self):
         self.setup_clean_chain = True
         self.num_nodes = 2

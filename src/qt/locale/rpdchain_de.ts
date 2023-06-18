@@ -1594,7 +1594,7 @@ in die Zwischenablage zu kopieren.
 
 
 SIe müssen lediglich die Daten in die rpdchain.conf Datei Ihres externen Servers einfügen,
-die Rpdchain-wallet starten, um dann von der Kontrollwallet aus
+die RpdChain-wallet starten, um dann von der Kontrollwallet aus
 ihren Masternode zu starten (Wählen Sie den Masternode in der Liste aus und drücken SIe "Start").
 </translation>
     </message>

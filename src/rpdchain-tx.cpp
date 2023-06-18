@@ -46,7 +46,7 @@ static bool AppInitRawTx(int argc, char* argv[])
 
     if (argc < 2 || mapArgs.count("-?") || mapArgs.count("-help")) {
         // First part of help message is specific to this utility
-        std::string strUsage = _("Rpdchain Core rpdchain-tx utility version") + " " + FormatFullVersion() + "\n\n" +
+        std::string strUsage = _("RpdChain Core rpdchain-tx utility version") + " " + FormatFullVersion() + "\n\n" +
                                _("Usage:") + "\n" +
                                "  rpdchain-tx [options] <hex-tx> [commands]  " + _("Update hex-encoded rpdchain transaction") + "\n" +
                                "  rpdchain-tx [options] -create [commands]   " + _("Create hex-encoded rpdchain transaction") + "\n" +

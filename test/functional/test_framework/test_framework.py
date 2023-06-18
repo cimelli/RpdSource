@@ -73,7 +73,7 @@ TEST_EXIT_SKIPPED = 77
 TMPDIR_PREFIX = "rpdchain_func_test_"
 
 
-class RpdchainTestFramework():
+class RpdChainTestFramework():
     """Base class for a rpdchain test script.
 
     Individual rpdchain test scripts should subclass this class and override the set_test_params() and run_test() methods.
@@ -1097,7 +1097,7 @@ class RpdchainTestFramework():
 
 ### ------------------------------------------------------
 
-class ComparisonTestFramework(RpdchainTestFramework):
+class ComparisonTestFramework(RpdChainTestFramework):
     """Test framework for doing p2p comparison testing
 
     Sets up some rpdchaind binaries:

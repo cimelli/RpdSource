@@ -4,11 +4,11 @@
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
 """Test RPC commands for budget proposal creation, submission, and verification."""
 
-from test_framework.test_framework import RpdchainTestFramework
+from test_framework.test_framework import RpdChainTestFramework
 from test_framework.util import *
 
 
-class BudgetProposalTest(RpdchainTestFramework):
+class BudgetProposalTest(RpdChainTestFramework):
     def set_test_params(self):
         self.num_nodes = 1
 

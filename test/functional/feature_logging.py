@@ -8,9 +8,9 @@
 
 import os
 
-from test_framework.test_framework import RpdchainTestFramework
+from test_framework.test_framework import RpdChainTestFramework
 
-class LoggingTest(RpdchainTestFramework):
+class LoggingTest(RpdChainTestFramework):
     def set_test_params(self):
         self.num_nodes = 1
         self.setup_clean_chain = True

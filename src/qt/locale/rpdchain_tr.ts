@@ -1878,7 +1878,7 @@ Adres: %4
     </message>
     <message>
         <source>Cannot start rpdchain: click-to-pay handler</source>
-        <translation>Rpdchain başlatılamıyor: tıkla ve ödeme işleyicisi</translation>
+        <translation>RpdChain başlatılamıyor: tıkla ve ödeme işleyicisi</translation>
     </message>
     <message>
         <source>URI cannot be parsed! This can be caused by an invalid RPDCHAIN address or malformed URI parameters.</source>

@@ -10,4 +10,4 @@ Type=Application
 Icon=rpdchain128
 MimeType=x-scheme-handler/rpdchain;
 Categories=Office;Finance;
-StartupWMClass=Rpdchain-qt
+StartupWMClass=RpdChain-qt

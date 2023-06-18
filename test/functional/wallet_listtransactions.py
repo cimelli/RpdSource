@@ -7,7 +7,7 @@ from decimal import Decimal
 from io import BytesIO
 
 from test_framework.mininode import CTransaction, COIN
-from test_framework.test_framework import RpdchainTestFramework
+from test_framework.test_framework import RpdChainTestFramework
 from test_framework.util import (
     assert_array_result,
     assert_equal,
@@ -22,7 +22,7 @@ def txFromHex(hexstring):
     tx.deserialize(f)
     return tx
 
-class ListTransactionsTest(RpdchainTestFramework):
+class ListTransactionsTest(RpdChainTestFramework):
     def set_test_params(self):
         self.num_nodes = 2
         self.enable_mocktime()

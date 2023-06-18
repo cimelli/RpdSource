@@ -236,7 +236,7 @@
     </message>
     <message>
         <source>Invalid Contact Address</source>
-        <translation>Adresse Rpdchain incorrecte</translation>
+        <translation>Adresse RpdChain incorrecte</translation>
     </message>
     <message>
         <source>Cannot store your own address as contact</source>

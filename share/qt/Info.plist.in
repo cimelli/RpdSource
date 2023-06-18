@@ -38,7 +38,7 @@
   <true/>
 
   <key>CFBundleIdentifier</key>
-  <string>io.rpdchain.Rpdchain-Qt</string>
+  <string>io.rpdchain.RpdChain-Qt</string>
 
   <key>CFBundleURLTypes</key>
   <array>
@@ -46,7 +46,7 @@
       <key>CFBundleTypeRole</key>
       <string>Editor</string>
       <key>CFBundleURLName</key>
-      <string>io.rpdchain.RpdchainPayment</string>
+      <string>io.rpdchain.RpdChainPayment</string>
       <key>CFBundleURLSchemes</key>
       <array>
         <string>rpdchain</string>
@@ -60,7 +60,7 @@
       <key>UTTypeIdentifier</key>
       <string>io.rpdchain.paymentrequest</string>
       <key>UTTypeDescription</key>
-      <string>Rpdchain payment request</string>
+      <string>RpdChain payment request</string>
       <key>UTTypeConformsTo</key>
       <array>
         <string>public.data</string>

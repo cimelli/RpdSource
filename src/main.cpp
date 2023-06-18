@@ -3573,10 +3573,10 @@ bool CheckWork(const CBlock block, CBlockIndex* const pindexPrev)
     }
 
     if (block.nBits != nBitsRequired) {
-        // Rpdchain Specific reference to the block with the wrong threshold was used.
+        // RpdChain Specific reference to the block with the wrong threshold was used.
         const Consensus::Params& consensus = Params().GetConsensus();
-        if ((block.nTime == (uint32_t) consensus.nRpdchainBadBlockTime) &&
-                (block.nBits == (uint32_t) consensus.nRpdchainBadBlockBits)) {
+        if ((block.nTime == (uint32_t) consensus.nRpdChainBadBlockTime) &&
+                (block.nBits == (uint32_t) consensus.nRpdChainBadBlockBits)) {
             // accept RPDCHAIN block minted with incorrect proof of work threshold
             return true;
         }

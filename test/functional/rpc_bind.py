@@ -7,11 +7,11 @@
 import socket
 import sys
 
-from test_framework.test_framework import RpdchainTestFramework, SkipTest
+from test_framework.test_framework import RpdChainTestFramework, SkipTest
 from test_framework.util import *
 from test_framework.netutil import *
 
-class RPCBindTest(RpdchainTestFramework):
+class RPCBindTest(RpdChainTestFramework):
     def set_test_params(self):
         self.setup_clean_chain = True
         self.num_nodes = 1
