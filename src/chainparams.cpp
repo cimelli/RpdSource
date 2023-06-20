@@ -174,28 +174,21 @@ public:
         consensus.powLimit   = ~UINT256_ZERO >> 2;
         consensus.posLimitV1 = ~UINT256_ZERO >> 24;
         consensus.posLimitV2 = ~UINT256_ZERO >> 20;
+
         consensus.nBudgetCycleBlocks = 43200;       // approx. 1 every 30 days
         consensus.nBudgetFeeConfirmations = 6;      // Number of confirmations for the finalization fee
+        consensus.nCoinbaseMaturity = 10;
+        consensus.nMasternodeCountDrift = 20; // num of MN we allow the see-saw payments to be off by
 
-        consensus.nCoinbaseMaturity = 100;
         consensus.nFutureTimeDriftPoW = 7200;
         consensus.nFutureTimeDriftPoS = 180;
-        consensus.nMasternodeCountDrift = 20;       // num of MN we allow the see-saw payments to be off by
         consensus.nPoolMaxTransactions = 3;
+
+
         consensus.nProposalEstablishmentTime = 60 * 60 * 24;    // must be at least a day old to make it into a budget
 
-
-
-        // Block reward related params
         consensus.nMaxMoneyOut = 35000000 * COIN; // 35m
-        //consensus.nHalvingInterval = 500000;      // Halve block reward every 500k blocks
-        //consensus.nPreMine = 10000000 * COIN;     // 10m premined coins
-        //consensus.nBlockReward = 0.445875 * COIN; // Initial Block reward
-        //consensus.nMasternodeReward = 0.7;        // 70%
-        //consensus.nDevReward = 0.1;               // 10%
-        //consensus.nStakeReward = 0.2;             // 20%
-
-
+        devFundAddress = "yKRXYbZGkewZF1qaj4FuaA5Gh8FrRbzgyR";
 
         consensus.nStakeMinAge = 60 * 60;
         consensus.nStakeMinDepth = 600;
