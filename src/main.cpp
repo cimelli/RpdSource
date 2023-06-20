@@ -2365,9 +2365,10 @@ bool ConnectBlock(const CBlock& block, CValidationState& state, CBlockIndex* pin
                          REJECT_INVALID, "bad-cb-amount");
     }
 
+    
         // Dev fund checks
-    if (nHeight > 1) {
-        CTxDestination dest = DecodeDestination(Params().DevFundAddress(nHeight));
+    if (chainActive.Height() > 1) {
+        CTxDestination dest = DecodeDestination(Params().DevFundAddress());
         CScript devScriptPubKey = GetScriptForDestination(dest);
 
         if (block.vtx[1].vout[1].scriptPubKey != devScriptPubKey)
