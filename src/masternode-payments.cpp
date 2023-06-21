@@ -362,9 +362,9 @@ void CMasternodePayments::FillBlockPayee(CMutableTransaction& txNew, int64_t nFe
             hasPayment = false;
         }
     }
-
+    int blockHeight = chainActive.Height();
     CAmount blockValue = GetBlockValue(pindexPrev->nHeight);
-    CAmount masternodePayment = GetMasternodePayment(nHeight);
+    CAmount masternodePayment = GetMasternodePayment(blockHeight);
 
     if (hasPayment) {
         if (fProofOfStake) {
