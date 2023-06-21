@@ -2785,6 +2785,7 @@ bool CWallet::CreateCoinStake(
     const Consensus::Params& consensus = Params().GetConsensus();
     int nHeight = pindexPrev->nHeight + 1;
 
+
     // Mark coin stake transaction
     txNew.vin.clear();
     txNew.vout.clear();

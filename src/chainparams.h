@@ -77,7 +77,6 @@ public:
 
     const std::string& DevFundAddress(int nHeight) const { return devFundAddress; }
 
-
 protected:
     CChainParams() {}
 

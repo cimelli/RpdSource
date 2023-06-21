@@ -142,6 +142,7 @@ static const Checkpoints::CCheckpointData data = {
 static Checkpoints::MapCheckpoints mapCheckpointsTestnet =
     boost::assign::map_list_of
     (0, uint256S("0x001")); //!< RPDCHAIN v4.1.1 enforced
+
 static const Checkpoints::CCheckpointData dataTestnet = {
     &mapCheckpointsTestnet,
     1591225230,
@@ -189,7 +190,7 @@ public:
 
         consensus.nMaxMoneyOut = 35000000 * COIN; // 35m
         devFundAddress = "yKRXYbZGkewZF1qaj4FuaA5Gh8FrRbzgyR";
-
+        
         consensus.nStakeMinAge = 60 * 60;
         consensus.nStakeMinDepth = 600;
         consensus.nTargetTimespan = 40 * 60;
