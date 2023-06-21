@@ -2365,16 +2365,16 @@ bool ConnectBlock(const CBlock& block, CValidationState& state, CBlockIndex* pin
                          REJECT_INVALID, "bad-cb-amount");
     }
 
-    
+    int64_t blockHeight = chainActive.Height();
         // Dev fund checks
-    if (chainActive.Height() > 1) {
-        CTxDestination dest = DecodeDestination(Params().DevFundAddress());
+    if (blockHeight > 1) {
+        CTxDestination dest = DecodeDestination(Params().DevFundAddress(blockHeight));
         CScript devScriptPubKey = GetScriptForDestination(dest);
 
         if (block.vtx[1].vout[1].scriptPubKey != devScriptPubKey)
             return state.DoS(100, error("CheckReward(): Dev fund payment is missing"), REJECT_INVALID, "bad-cs-dev-payment-missing");
 
-        if (block.vtx[1].vout[1].nValue < GetBlockDevSubsidy(nHeight))
+        if (block.vtx[1].vout[1].nValue < GetBlockDevSubsidy(blockHeight))
             return state.DoS(100, error("CheckReward(): Dev fund payment is invalid"), REJECT_INVALID, "bad-cs-dev-payment-invalid");
     }
 
