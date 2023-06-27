@@ -2449,26 +2449,28 @@ bool ConnectBlock(const CBlock& block, CValidationState& state, CBlockIndex* pin
     // add this block to the view's block chain
     view.SetBestBlock(pindex->GetBlockHash());
 
+    // Comment out below since zero was never used on the new chain.
+
     // Update zPIV money supply map
-    if (!UpdateZPIVSupplyConnect(block, pindex, fJustCheck)) {
-        return state.DoS(100, error("%s: Failed to calculate new zPIV supply for block=%s height=%d", __func__,
-                                    block.GetHash().GetHex(), pindex->nHeight), REJECT_INVALID);
-    }
+    //if (!UpdateZPIVSupplyConnect(block, pindex, fJustCheck)) {
+    //    return state.DoS(100, error("%s: Failed to calculate new zPIV supply for block=%s height=%d", __func__,
+    //                                block.GetHash().GetHex(), pindex->nHeight), REJECT_INVALID);
+    //}
 
     // A one-time event where the zPIV supply was off (due to serial duplication off-chain on main net)
-    if (Params().NetworkID() == CBaseChainParams::MAIN && pindex->nHeight == consensus.height_last_ZC_WrappedSerials + 1
-            && GetZerocoinSupply() != consensus.ZC_WrappedSerialsSupply + GetWrapppedSerialInflationAmount()) {
-        RecalculatePIVSupply(consensus.vUpgrades[Consensus::UPGRADE_ZC].nActivationHeight, false);
-    }
+    //if (Params().NetworkID() == CBaseChainParams::MAIN && pindex->nHeight == consensus.height_last_ZC_WrappedSerials + 1
+    //        && GetZerocoinSupply() != consensus.ZC_WrappedSerialsSupply + GetWrapppedSerialInflationAmount()) {
+    //    RecalculatePIVSupply(consensus.vUpgrades[Consensus::UPGRADE_ZC].nActivationHeight, false);
+    //}
 
     // Add fraudulent funds to the supply and remove any recovered funds.
-    if (Params().NetworkID() == CBaseChainParams::MAIN && pindex->nHeight == consensus.height_ZC_RecalcAccumulators) {
-        LogPrintf("%s : Adding fraudulent funds at height_ZC_RecalcAccumulators\n", __func__);
-        const CAmount nInvalidAmountFiltered = 268200*COIN;    //Amount of invalid coins filtered through exchanges, that should be considered valid
-        nMoneySupply += nInvalidAmountFiltered;
-        CAmount nLocked = GetInvalidUTXOValue();
-        nMoneySupply -= nLocked;
-    }
+    //if (Params().NetworkID() == CBaseChainParams::MAIN && pindex->nHeight == consensus.height_ZC_RecalcAccumulators) {
+    //    LogPrintf("%s : Adding fraudulent funds at height_ZC_RecalcAccumulators\n", __func__);
+    //    const CAmount nInvalidAmountFiltered = 268200*COIN;    //Amount of invalid coins filtered through exchanges, that should be considered valid
+    //    nMoneySupply += nInvalidAmountFiltered;
+    //    CAmount nLocked = GetInvalidUTXOValue();
+    //    nMoneySupply -= nLocked;
+    //}
 
     // Update PIV money supply
     nMoneySupply += (nValueOut - nValueIn);
@@ -3311,19 +3313,21 @@ bool FindUndoPos(CValidationState& state, int nFile, CDiskBlockPos& pos, unsigne
 bool CheckBlockHeader(const CBlockHeader& block, CValidationState& state, bool fCheckPOW)
 {
     // Check proof of work matches claimed amount
-    if (fCheckPOW && !CheckProofOfWork(block.GetHash(), block.nBits))
-        return state.DoS(50, false, REJECT_INVALID, "high-hash", false, "proof of work failed");
+    //if (fCheckPOW && !CheckProofOfWork(block.GetHash(), block.nBits))
+    //    return state.DoS(50, false, REJECT_INVALID, "high-hash", false, "proof of work failed");
 
-    if (Params().IsRegTestNet()) return true;
+    //if (Params().IsRegTestNet()) return true;
 
     // Version 4 header must be used after consensus.ZC_TimeStart. And never before.
-    if (block.GetBlockTime() > Params().GetConsensus().ZC_TimeStart) {
-        if(block.nVersion < 4)
-            return state.DoS(50,false, REJECT_INVALID, "block-version", "must be above 4 after ZC_TimeStart");
-    } else {
-        if (block.nVersion >= 4)
-            return state.DoS(50,false, REJECT_INVALID, "block-version", "must be below 4 before ZC_TimeStart");
-    }
+    //if (block.GetBlockTime() > Params().GetConsensus().ZC_TimeStart) {
+    //    if(block.nVersion < 4)
+    //        return state.DoS(50,false, REJECT_INVALID, "block-version", "must be above 4 after ZC_TimeStart");
+    //} else {
+    //    if (block.nVersion >= 4)
+    //        return state.DoS(50,false, REJECT_INVALID, "block-version", "must be below 4 before ZC_TimeStart");
+    //}
+
+    //! there are no pow blocks after 200, so its safe to return true here
 
     return true;
 }
@@ -3510,6 +3514,7 @@ bool CheckBlock(const CBlock& block, CValidationState& state, bool fCheckPOW, bo
                                              strprintf("Transaction check failed (tx hash %s) %s", tx.GetHash().ToString(), state.GetDebugMessage()));
 
         // double check that there are no double spent zPIV spends in this block
+        /*
         if (tx.HasZerocoinSpendInputs()) {
             for (const CTxIn& txIn : tx.vin) {
                 bool isPublicSpend = txIn.IsZerocoinPublicSpend();
@@ -3537,6 +3542,10 @@ bool CheckBlock(const CBlock& block, CValidationState& state, bool fCheckPOW, bo
                 }
             }
         }
+        */
+        if (tx.HasZerocoinSpendInputs())
+            return state.DoS(100, error("%s : no zerocoin on this chain", __func__),
+                REJECT_INVALID, "bad-zc-spend", true);
     }
 
     unsigned int nSigOps = 0;
@@ -3561,7 +3570,7 @@ bool CheckWork(const CBlock block, CBlockIndex* const pindexPrev)
 
     unsigned int nBitsRequired = GetNextWorkRequired(pindexPrev, &block);
 
-    if (!Params().IsRegTestNet() && block.IsProofOfWork() && (pindexPrev->nHeight + 1 <= 68589)) {
+    if (!Params().IsRegTestNet() && block.IsProofOfWork()) {
         double n1 = ConvertBitsToDouble(block.nBits);
         double n2 = ConvertBitsToDouble(nBitsRequired);
 
@@ -3573,12 +3582,15 @@ bool CheckWork(const CBlock block, CBlockIndex* const pindexPrev)
 
     if (block.nBits != nBitsRequired) {
         // RpdChain Specific reference to the block with the wrong threshold was used.
-        const Consensus::Params& consensus = Params().GetConsensus();
-        if ((block.nTime == (uint32_t) consensus.nRpdChainBadBlockTime) &&
-                (block.nBits == (uint32_t) consensus.nRpdChainBadBlockBits)) {
+
+        //const Consensus::Params& consensus = Params().GetConsensus();
+        //if ((block.nTime == (uint32_t) consensus.nRpdChainBadBlockTime) &&
+        //        (block.nBits == (uint32_t) consensus.nRpdChainBadBlockBits)) {
             // accept RPDCHAIN block minted with incorrect proof of work threshold
-            return true;
-        }
+        //    return true;
+        //}
+
+        // Uncomment back if we ever do need to use this in the future.
 
         return error("%s : incorrect proof of work at %d", __func__, pindexPrev->nHeight + 1);
     }
@@ -3644,6 +3656,7 @@ bool ContextualCheckBlockHeader(const CBlockHeader& block, CValidationState& sta
         return state.DoS(0, error("%s : forked chain older than last checkpoint (height %d)", __func__, nHeight));
 
     // Reject outdated version blocks
+    /*
     if((block.nVersion < 3 && nHeight >= 1) ||
         (block.nVersion < 4 && consensus.NetworkUpgradeActive(nHeight, Consensus::UPGRADE_ZC)) ||
         (block.nVersion < 5 && consensus.NetworkUpgradeActive(nHeight, Consensus::UPGRADE_BIP65)) ||
@@ -3653,6 +3666,7 @@ bool ContextualCheckBlockHeader(const CBlockHeader& block, CValidationState& sta
         std::string stringErr = strprintf("rejected block version %d at height %d", block.nVersion, nHeight);
         return state.Invalid(false, REJECT_OBSOLETE, "bad-version", stringErr);
     }
+    */
 
     return true;
 }

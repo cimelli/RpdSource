@@ -320,12 +320,12 @@ public:
             READWRITE(nTime);
             READWRITE(nBits);
             READWRITE(nNonce);
-            if(this->nVersion > 3 && this->nVersion < 7)
-                READWRITE(nAccumulatorCheckpoint);
+            //if(this->nVersion > 3 && this->nVersion < 7)
+            //    READWRITE(nAccumulatorCheckpoint);
 
         } else if (nSerVersion > DBI_OLD_SER_VERSION && ser_action.ForRead()) {
             // Serialization with CLIENT_VERSION = 4009901
-            std::map<libzerocoin::CoinDenomination, int64_t> mapZerocoinSupply;
+            //std::map<libzerocoin::CoinDenomination, int64_t> mapZerocoinSupply;
             int64_t nMoneySupply = 0;
             READWRITE(nMoneySupply);
             READWRITE(nFlags);
@@ -336,10 +336,10 @@ public:
             READWRITE(nTime);
             READWRITE(nBits);
             READWRITE(nNonce);
-            if(this->nVersion > 3) {
-                READWRITE(mapZerocoinSupply);
-                if(this->nVersion < 7) READWRITE(nAccumulatorCheckpoint);
-            }
+            //if(this->nVersion > 3) {
+            //    READWRITE(mapZerocoinSupply);
+            //    if(this->nVersion < 7) READWRITE(nAccumulatorCheckpoint);
+            //}
 
         } else if (ser_action.ForRead()) {
             // Serialization with CLIENT_VERSION = 4009900-
@@ -371,13 +371,13 @@ public:
             READWRITE(nTime);
             READWRITE(nBits);
             READWRITE(nNonce);
-            if(this->nVersion > 3) {
+            /* if (this->nVersion > 3) {
                 std::map<libzerocoin::CoinDenomination, int64_t> mapZerocoinSupply;
                 std::vector<libzerocoin::CoinDenomination> vMintDenominationsInBlock;
                 READWRITE(nAccumulatorCheckpoint);
                 READWRITE(mapZerocoinSupply);
                 READWRITE(vMintDenominationsInBlock);
-            }
+            }*/
         }
     }
 
@@ -391,8 +391,8 @@ public:
         block.nTime = nTime;
         block.nBits = nBits;
         block.nNonce = nNonce;
-        if (nVersion > 3 && nVersion < 7)
-            block.nAccumulatorCheckpoint = nAccumulatorCheckpoint;
+        //if (nVersion > 3 && nVersion < 7)
+        //    block.nAccumulatorCheckpoint = nAccumulatorCheckpoint;
         return block.GetHash();
     }
 
@@ -463,10 +463,10 @@ public:
             READWRITE(nTime);
             READWRITE(nBits);
             READWRITE(nNonce);
-            if(this->nVersion > 3) {
+            /* if (this->nVersion > 3) {
                 READWRITE(mapZerocoinSupply);
                 if(this->nVersion < 7) READWRITE(nAccumulatorCheckpoint);
-            }
+            }*/
 
         } else {
             // Serialization with CLIENT_VERSION = 4009900-
@@ -489,11 +489,11 @@ public:
             READWRITE(nTime);
             READWRITE(nBits);
             READWRITE(nNonce);
-            if(this->nVersion > 3) {
+            /* if (this->nVersion > 3) {
                 READWRITE(nAccumulatorCheckpoint);
                 READWRITE(mapZerocoinSupply);
                 READWRITE(vMintDenominationsInBlock);
-            }
+            }*/
         }
     }
 };
