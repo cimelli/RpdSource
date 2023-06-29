@@ -189,6 +189,7 @@ public:
         consensus.nProposalEstablishmentTime = 60 * 60 * 24;    // must be at least a day old to make it into a budget
 
         consensus.nMaxMoneyOut = 35000000 * COIN; // 35m
+        consensus.Collateral = 5000;
         devFundAddress = "yKRXYbZGkewZF1qaj4FuaA5Gh8FrRbzgyR";
         
         consensus.nStakeMinAge = 60 * 60;
