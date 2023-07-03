@@ -50,7 +50,10 @@ protected:
 };
 
 struct CMainSignals {
-// XX42    boost::signals2::signal<void(const uint256&)> EraseTransaction;
+
+    /** A posInBlock value for SyncTransaction which indicates the transaction was conflicted, disconnected, or not in a block */
+    static const int SYNC_TRANSACTION_NOT_IN_BLOCK = -1;
+    // XX42    boost::signals2::signal<void(const uint256&)> EraseTransaction;
     /** Notifies listeners of updated block chain tip */
     boost::signals2::signal<void (const CBlockIndex *)> UpdatedBlockTip;
     /** Notifies listeners of updated transaction data (transaction, and optionally the block it is found in. */

@@ -1112,7 +1112,8 @@ bool AcceptToMemoryPool(CTxMemPool& pool, CValidationState& state, const CTransa
             return state.DoS(0, false, REJECT_INSUFFICIENTFEE, "mempool full");
     }
 
-    SyncWithWallets(tx, nullptr);
+    GetMainSignals().SyncTransaction(tx, nullptr, CMainSignals::SYNC_TRANSACTION_NOT_IN_BLOCK);
+    //SyncWithWallets(tx, nullptr, CMainSignals::SYNC_TRANSACTION_NOT_IN_BLOCK);
 
     TryToAddToMarkerCache(tx);
 
