@@ -1112,8 +1112,7 @@ bool AcceptToMemoryPool(CTxMemPool& pool, CValidationState& state, const CTransa
             return state.DoS(0, false, REJECT_INSUFFICIENTFEE, "mempool full");
     }
 
-    GetMainSignals().SyncTransaction(tx, nullptr, CMainSignals::SYNC_TRANSACTION_NOT_IN_BLOCK);
-    //SyncWithWallets(tx, nullptr, CMainSignals::SYNC_TRANSACTION_NOT_IN_BLOCK);
+    SyncWithWallets(tx, nullptr);
 
     TryToAddToMarkerCache(tx);
 
@@ -2722,7 +2721,6 @@ bool static DisconnectTip(CValidationState& state)
     // 0-confirmed or conflicted:
     for (const CTransaction& tx : block.vtx) {
         SyncWithWallets(tx, NULL);
-        GetMainSignals().SyncTransaction(tx, pindexDelete->pprev, CMainSignals::SYNC_TRANSACTION_NOT_IN_BLOCK);
         TryToAddToMarkerCache(tx);
     }
 
@@ -3062,7 +3060,7 @@ bool ActivateBestChain(CValidationState& state, const CBlock* pblock, bool fAlre
 
             // throw all transactions though the signal-interface
             for (const CTransaction &tx : txConflicted) {
-                GetMainSignals().SyncTransaction(tx, pindexNewTip, CMainSignals::SYNC_TRANSACTION_NOT_IN_BLOCK);
+                //GetMainSignals().SyncTransaction(tx, pindexNewTip, CMainSignals::SYNC_TRANSACTION_NOT_IN_BLOCK);
                 RemoveFromMarkerCache(tx);
             }
 
