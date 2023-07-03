@@ -33,6 +33,12 @@
 #include <boost/thread/exceptions.hpp>
 #include <boost/thread/condition_variable.hpp> // for boost::thread_interrupted
 
+/** Flag to indicate, whether the Omni Core log file should be reopened. */
+extern std::atomic<bool> fReopenOmniCoreLog;
+
+extern const char * const RPDCHAIN_CONF_FILENAME;
+extern const char * const RPDCHAIN_PID_FILENAME;
+extern const char * const RPDCHAIN_MASTERNODE_CONF_FILENAME;
 extern const char * const DEFAULT_DEBUGLOGFILE;
 
 //RPDCHAIN only features
