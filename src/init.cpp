@@ -1107,10 +1107,10 @@ bool AppInit2()
     }
 
     // Register Omni RPC commands
-    RegisterOmniDataRetrievalRPCCommands();
-    RegisterOmniPayloadCreationRPCCommands();
-    RegisterOmniRawTransactionRPCCommands();
-    RegisterOmniTransactionCreationRPCCommands();
+    //RegisterOmniDataRetrievalRPCCommands();
+    //RegisterOmniPayloadCreationRPCCommands();
+    //RegisterOmniRawTransactionRPCCommands();
+    //RegisterOmniTransactionCreationRPCCommands();
 
 #endif
 
