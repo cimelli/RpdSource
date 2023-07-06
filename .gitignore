@@ -66,3 +66,25 @@ out/build/x64-Debug/CMakeFiles/3.25.1-msvc1/CompilerIdCXX/CMakeCXXCompilerId.exe
 out/build/x64-Debug/CMakeFiles/CMakeOutput.log
 
 out/build/x64-Debug/CMakeFiles/ShowIncludes/main.obj
+
+*.vsidx
+
+out/build/x64-Debug/CMakeFiles/3.25.1-msvc1/CMakeCCompiler.cmake
+
+out/build/x64-Debug/CMakeFiles/3.25.1-msvc1/CMakeCXXCompiler.cmake
+
+out/build/x64-Debug/CMakeFiles/3.25.1-msvc1/CMakeDetermineCompilerABI_C.bin
+
+out/build/x64-Debug/CMakeFiles/3.25.1-msvc1/CMakeDetermineCompilerABI_CXX.bin
+
+out/build/x64-Debug/CMakeFiles/3.25.1-msvc1/CMakeRCCompiler.cmake
+
+out/build/x64-Debug/CMakeFiles/3.25.1-msvc1/CMakeSystem.cmake
+
+out/build/x64-Debug/CMakeFiles/3.25.1-msvc1/CompilerIdC/CMakeCCompilerId.c
+
+.vs/RpdSource/v17/Browse.VC.db-shm
+
+.vs/RpdSource/v17/Browse.VC.db-wal
+
+.vs/RpdSource/v17/Browse.VC.opendb

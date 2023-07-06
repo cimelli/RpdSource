@@ -3071,7 +3071,7 @@ bool ActivateBestChain(CValidationState& state, const CBlock* pblock, bool fAlre
 
             // ... and about transactions that got confirmed:
             for(unsigned int i = 0; i < txChanged.size(); i++) {
-                GetMainSignals().SyncTransaction(std::get<0>(txChanged[i]), std::get<1>(txChanged[i]), std::get<2>(txChanged[i]));
+                //GetMainSignals().SyncTransaction(std::get<0>(txChanged[i]), std::get<1>(txChanged[i]), std::get<2>(txChanged[i]));
 
                 //! Omni Core: new confirmed transaction notification
                 // // LogPrint("handler", "Omni Core handler: new confirmed transaction [height: %d, idx: %u]\n", GetHeight(), nTxIdx);
