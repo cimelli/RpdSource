@@ -1,28 +1,24 @@
-#include "omnicore/mdex.h"
+#include <omnicore/mdex.h>
 
-#include "omnicore/dbfees.h"
-#include "omnicore/dbtradelist.h"
-#include "omnicore/dbtxlist.h"
-#include "omnicore/errors.h"
-#include "omnicore/log.h"
-#include "omnicore/omnicore.h"
-#include "omnicore/rules.h"
-#include "omnicore/sp.h"
-#include "omnicore/tx.h"
-#include "omnicore/uint256_extensions.h"
+#include <omnicore/dbfees.h>
+#include <omnicore/dbtradelist.h>
+#include <omnicore/dbtxlist.h>
+#include <omnicore/log.h>
+#include <omnicore/rules.h>
+#include <omnicore/sp.h>
+#include <omnicore/uint256_extensions.h>
 
-#include "arith_uint256.h"
-#include "chain.h"
-#include "main.h"
-#include "tinyformat.h"
-#include "uint256.h"
+#include <arith_uint256.h>
+#include <chain.h>
+#include <hash.h>
+#include <validation.h>
+#include <tinyformat.h>
+#include <uint256.h>
 
 #include <univalue.h>
 
 #include <boost/multiprecision/cpp_int.hpp>
 #include <boost/rational.hpp>
-
-#include <openssl/sha.h>
 
 #include <assert.h>
 #include <stdint.h>
@@ -50,7 +46,7 @@ md_PricesMap* mastercore::get_Prices(uint32_t prop)
 
     if (it != metadex.end()) return &(it->second);
 
-    return (md_PricesMap*) NULL;
+    return static_cast<md_PricesMap*>(nullptr);
 }
 
 md_Set* mastercore::get_Indexes(md_PricesMap* p, rational_t price)
@@ -59,7 +55,7 @@ md_Set* mastercore::get_Indexes(md_PricesMap* p, rational_t price)
 
     if (it != p->end()) return &(it->second);
 
-    return (md_Set*) NULL;
+    return static_cast<md_Set*>(nullptr);
 }
 
 enum MatchReturnType
@@ -228,7 +224,7 @@ static MatchReturnType x_Trade(CMPMetaDEx* const pnew)
             // If the amount Alice would have to pay to buy Bob's tokens at his price
             // is fractional, always round UP the amount Alice has to pay
             // This will always be better for Bob. Rounding in the other direction
-            // will always be impossible, because ot would violate Bob's accepted price
+            // will always be impossible, because it would violate Bob's accepted price
             arith_uint256 iWouldPay = DivideAndRoundUp((ConvertTo256(nCouldBuy) * ConvertTo256(pold->getAmountDesired())), ConvertTo256(pold->getAmountForSale()));
             int64_t nWouldPay = ConvertTo64(iWouldPay);
 
@@ -411,7 +407,7 @@ int64_t CMPMetaDEx::getAmountToFill() const
 
 int64_t CMPMetaDEx::getBlockTime() const
 {
-    CBlockIndex* pblockindex = chainActive[block];
+    CBlockIndex* pblockindex = ::ChainActive()[block];
     return pblockindex->GetBlockTime();
 }
 
@@ -428,7 +424,7 @@ std::string CMPMetaDEx::ToString() const
         property, FormatMP(property, amount_forsale), desired_property, FormatMP(desired_property, amount_desired));
 }
 
-void CMPMetaDEx::saveOffer(std::ofstream& file, SHA256_CTX* shaCtx) const
+void CMPMetaDEx::saveOffer(std::ofstream& file, CHash256 &hasher) const
 {
     std::string lineOut = strprintf("%s,%d,%d,%d,%d,%d,%d,%d,%s,%d",
         addr,
@@ -444,7 +440,7 @@ void CMPMetaDEx::saveOffer(std::ofstream& file, SHA256_CTX* shaCtx) const
     );
 
     // add the line to the hash
-    SHA256_Update(shaCtx, lineOut.c_str(), lineOut.length());
+    hasher.Write((unsigned char*)lineOut.c_str(), lineOut.length());
 
     // write the line
     file << lineOut << std::endl;
@@ -465,7 +461,7 @@ bool mastercore::MetaDEx_INSERT(const CMPMetaDEx& objMetaDEx)
 
     // Create an empty set of metadex objects (to use in case no set currently exists at this price)
     md_Set temp_indexes;
-    md_Set *p_indexes = NULL;
+    md_Set *p_indexes = nullptr;
 
     // Prepare for return code
     std::pair <md_Set::iterator, bool> ret;
@@ -496,7 +492,7 @@ int mastercore::MetaDEx_ADD(const std::string& sender_addr, uint32_t prop, int64
 {
     int rc = METADEX_ERROR -1;
 
-    // Create a MetaDEx object from paremeters
+    // Create a MetaDEx object from parameters
     CMPMetaDEx new_mdex(sender_addr, block, prop, amount, property_desired, amount_desired, txid, idx, CMPTransaction::ADD);
     if (msc_debug_metadex1) PrintToLog("%s(); buyer obj: %s\n", __FUNCTION__, new_mdex.ToString());
 
@@ -532,7 +528,7 @@ int mastercore::MetaDEx_CANCEL_AT_PRICE(const uint256& txid, unsigned int block,
     int rc = METADEX_ERROR -20;
     CMPMetaDEx mdex(sender_addr, 0, prop, amount, property_desired, amount_desired, uint256(), 0, CMPTransaction::CANCEL_AT_PRICE);
     md_PricesMap* prices = get_Prices(prop);
-    const CMPMetaDEx* p_mdex = NULL;
+    const CMPMetaDEx* p_mdex = nullptr;
 
     if (msc_debug_metadex1) PrintToLog("%s():%s\n", __FUNCTION__, mdex.ToString());
 
@@ -585,7 +581,7 @@ int mastercore::MetaDEx_CANCEL_ALL_FOR_PAIR(const uint256& txid, unsigned int bl
 {
     int rc = METADEX_ERROR -30;
     md_PricesMap* prices = get_Prices(prop);
-    const CMPMetaDEx* p_mdex = NULL;
+    const CMPMetaDEx* p_mdex = nullptr;
 
     PrintToLog("%s(%d,%d)\n", __FUNCTION__, prop, property_desired);
 
@@ -848,5 +844,5 @@ const CMPMetaDEx* mastercore::MetaDEx_RetrieveTrade(const uint256& txid)
             }
         }
     }
-    return (CMPMetaDEx*) NULL;
+    return static_cast<CMPMetaDEx*>(nullptr);
 }

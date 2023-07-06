@@ -1,15 +1,14 @@
-#ifndef OMNICORE_DEX_H
-#define OMNICORE_DEX_H
+#ifndef BITCOIN_OMNICORE_DEX_H
+#define BITCOIN_OMNICORE_DEX_H
 
-#include "omnicore/log.h"
-#include "omnicore/omnicore.h"
-#include "omnicore/tx.h"
+#include <omnicore/log.h>
+#include <omnicore/omnicore.h>
+#include <omnicore/tx.h>
 
-#include "amount.h"
-#include "tinyformat.h"
-#include "uint256.h"
-
-#include <openssl/sha.h>
+#include <amount.h>
+#include <hash.h>
+#include <tinyformat.h>
+#include <uint256.h>
 
 #include <stdint.h>
 #include <fstream>
@@ -87,7 +86,7 @@ public:
     {
     }
 
-    void saveOffer(std::ofstream& file, SHA256_CTX* shaCtx, const std::string& address) const
+    void saveOffer(std::ofstream& file, const std::string& address, CHash256& hasher) const
     {
         std::string lineOut = strprintf("%s,%d,%d,%d,%d,%d,%d,%d,%s",
                 address,
@@ -102,7 +101,7 @@ public:
         );
 
         // add the line to the hash
-        SHA256_Update(shaCtx, lineOut.c_str(), lineOut.length());
+        hasher.Write((unsigned char*)lineOut.c_str(), lineOut.length());
 
         // write the line
         file << lineOut << std::endl;
@@ -195,7 +194,7 @@ public:
         return bRet;
     }
 
-    void saveAccept(std::ofstream& file, SHA256_CTX* shaCtx, const std::string& address, const std::string& buyer) const
+    void saveAccept(std::ofstream& file, const std::string& address, const std::string& buyer, CHash256& hasher) const
     {
         std::string lineOut = strprintf("%s,%d,%s,%d,%d,%d,%d,%d,%d,%s",
                 address,
@@ -210,7 +209,7 @@ public:
                 offer_txid.ToString());
 
         // add the line to the hash
-        SHA256_Update(shaCtx, lineOut.c_str(), lineOut.length());
+        hasher.Write((unsigned char*)lineOut.c_str(), lineOut.length());
 
         // write the line
         file << lineOut << std::endl;
@@ -231,18 +230,21 @@ extern AcceptMap my_accepts;
 int64_t calculateDesiredBTC(const int64_t amountOffered, const int64_t amountDesired, const int64_t amountAvailable);
 
 bool DEx_offerExists(const std::string& addressSeller, uint32_t propertyId);
+bool DEx_hasOffer(const std::string& addressSeller);
+bool DEx_getTokenForSale(const std::string& addressSeller, uint32_t& retTokenId);
 CMPOffer* DEx_getOffer(const std::string& addressSeller, uint32_t propertyId);
 bool DEx_acceptExists(const std::string& addressSeller, uint32_t propertyId, const std::string& addressBuyer);
 CMPAccept* DEx_getAccept(const std::string& addressSeller, uint32_t propertyId, const std::string& addressBuyer);
-int DEx_offerCreate(const std::string& addressSeller, uint32_t propertyId, int64_t amountOffered, int block, int64_t amountDesired, int64_t minAcceptFee, uint8_t paymentWindow, const uint256& txid, uint64_t* nAmended = NULL);
+int DEx_offerCreate(const std::string& addressSeller, uint32_t propertyId, int64_t amountOffered, int block, int64_t amountDesired, int64_t minAcceptFee, uint8_t paymentWindow, const uint256& txid, uint64_t* nAmended = nullptr);
 int DEx_offerDestroy(const std::string& addressSeller, uint32_t propertyId);
-int DEx_offerUpdate(const std::string& addressSeller, uint32_t propertyId, int64_t amountOffered, int block, int64_t amountDesired, int64_t minAcceptFee, uint8_t paymentWindow, const uint256& txid, uint64_t* nAmended = NULL);
-int DEx_acceptCreate(const std::string& addressBuyer, const std::string& addressSeller, uint32_t propertyId, int64_t amountAccepted, int block, int64_t feePaid, uint64_t* nAmended = NULL);
+int DEx_offerUpdate(const std::string& addressSeller, uint32_t propertyId, int64_t amountOffered, int block, int64_t amountDesired, int64_t minAcceptFee, uint8_t paymentWindow, const uint256& txid, uint64_t* nAmended = nullptr);
+int DEx_acceptCreate(const std::string& addressBuyer, const std::string& addressSeller, uint32_t propertyId, int64_t amountAccepted, int block, int64_t feePaid, uint64_t* nAmended = nullptr);
 int DEx_acceptDestroy(const std::string& addressBuyer, const std::string& addressSeller, uint32_t propertyid, bool fForceErase = false);
-int DEx_payment(const uint256& txid, unsigned int vout, const std::string& addressSeller, const std::string& addressBuyer, int64_t amountPaid, int block, uint64_t* nAmended = NULL);
+int DEx_payment(const uint256& txid, unsigned int vout, const std::string& addressSeller, const std::string& addressBuyer, int64_t amountPaid, int block, uint64_t* nAmended = nullptr);
+int64_t calculateDExPurchase(const int64_t amountOffered, const int64_t amountDesired, const int64_t amountPaid);
 
 unsigned int eraseExpiredAccepts(int block);
 }
 
 
-#endif // OMNICORE_DEX_H
+#endif // BITCOIN_OMNICORE_DEX_H

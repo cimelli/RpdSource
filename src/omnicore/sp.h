@@ -1,15 +1,13 @@
-#ifndef OMNICORE_SP_H
-#define OMNICORE_SP_H
+#ifndef BITCOIN_OMNICORE_SP_H
+#define BITCOIN_OMNICORE_SP_H
 
-#include "omnicore/dbbase.h"
-#include "omnicore/dbspinfo.h"
-#include "omnicore/log.h"
-#include "omnicore/omnicore.h"
+#include <omnicore/dbbase.h>
+#include <omnicore/dbspinfo.h>
+#include <omnicore/log.h>
 
 class CBlockIndex;
+class CHash256;
 class uint256;
-
-#include <openssl/sha.h>
 
 #include <stdint.h>
 #include <stdio.h>
@@ -37,7 +35,7 @@ private:
     int64_t u_created;
     int64_t i_created;
 
-    uint256 txid; // NOTE: not persisted as it doesnt seem used
+    uint256 txid; // NOTE: not persisted as it doesn't seem used
 
     // Schema:
     //   txid -> amount invested, crowdsale deadline, user issued tokens, issuer issued tokens
@@ -63,7 +61,7 @@ public:
 
     std::string toString(const std::string& address) const;
     void print(const std::string& address, FILE* fp = stdout) const;
-    void saveCrowdSale(std::ofstream& file, SHA256_CTX* shaCtx, const std::string& addr) const;
+    void saveCrowdSale(std::ofstream& file, const std::string& addr, CHash256 &hasher) const;
 };
 
 namespace mastercore
@@ -81,6 +79,9 @@ std::string strEcosystem(uint8_t ecosystem);
 std::string getPropertyName(uint32_t propertyId);
 bool isPropertyDivisible(uint32_t propertyId);
 bool IsPropertyIdValid(uint32_t propertyId);
+bool isPropertyNonFungible(uint32_t propertyId);
+bool HasDelegate(uint32_t propertyId);
+std::string GetDelegate(uint32_t propertyId);
 
 CMPCrowd* getCrowd(const std::string& address);
 
@@ -95,10 +96,10 @@ void calculateFundraiser(bool inflateAmount, int64_t amtTransfer, uint8_t bonusP
         int64_t fundraiserSecs, int64_t currentSecs, int64_t numProps, uint8_t issuerPerc, int64_t totalTokens,
         std::pair<int64_t, int64_t>& tokens, bool& close_crowdsale);
 
-void eraseMaxedCrowdsale(const std::string& address, int64_t blockTime, int block);
+void eraseMaxedCrowdsale(const std::string& address, int64_t blockTime, int block, uint256& blockHash);
 
 unsigned int eraseExpiredCrowdsale(const CBlockIndex* pBlockIndex);
 }
 
 
-#endif // OMNICORE_SP_H
+#endif // BITCOIN_OMNICORE_SP_H

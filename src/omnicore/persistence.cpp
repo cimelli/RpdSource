@@ -4,28 +4,27 @@
  * This file contains file based persistence related functions.
  */
 
-#include "omnicore/persistence.h"
+#include <omnicore/persistence.h>
 
-#include "omnicore/dex.h"
-#include "omnicore/log.h"
-#include "omnicore/mdex.h"
-#include "omnicore/omnicore.h"
-#include "omnicore/rules.h"
-#include "omnicore/sp.h"
-#include "omnicore/tally.h"
-#include "omnicore/utilsbitcoin.h"
+#include <omnicore/dex.h>
+#include <omnicore/log.h>
+#include <omnicore/mdex.h>
+#include <omnicore/rules.h>
+#include <omnicore/sp.h>
+#include <omnicore/tally.h>
+#include <omnicore/utilsbitcoin.h>
 
-#include "chain.h"
-#include "main.h"
-#include "tinyformat.h"
-#include "uint256.h"
-#include "util.h"
+#include <chain.h>
+#include <fs.h>
+#include <hash.h>
+#include <validation.h>
+#include <tinyformat.h>
+#include <uint256.h>
+#include <util/system.h>
 
 #include <boost/algorithm/string.hpp>
 #include <boost/filesystem.hpp>
 #include <boost/lexical_cast.hpp>
-
-#include <openssl/sha.h>
 
 #include <stdint.h>
 
@@ -42,7 +41,7 @@ using namespace mastercore;
 extern int64_t exodus_prev;
 
 //! Path for file based persistence
-extern boost::filesystem::path pathStateFiles;
+extern fs::path pathStateFiles;
 
 enum FILETYPES {
   FILETYPE_BALANCES = 0,
@@ -74,7 +73,7 @@ static bool is_state_prefix(std::string const &str)
     return false;
 }
 
-static int write_msc_balances(std::ofstream& file, SHA256_CTX* shaCtx)
+static int write_msc_balances(std::ofstream& file, CHash256& hasher)
 {
     std::unordered_map<std::string, CMPTally>::iterator iter;
     for (iter = mp_tally_map.begin(); iter != mp_tally_map.end(); ++iter) {
@@ -109,7 +108,7 @@ static int write_msc_balances(std::ofstream& file, SHA256_CTX* shaCtx)
 
         if (false == emptyWallet) {
             // add the line to the hash
-            SHA256_Update(shaCtx, lineOut.c_str(), lineOut.length());
+            hasher.Write((unsigned char*)lineOut.c_str(), lineOut.length());
 
             // write the line
             file << lineOut << std::endl;
@@ -119,7 +118,7 @@ static int write_msc_balances(std::ofstream& file, SHA256_CTX* shaCtx)
     return 0;
 }
 
-static int write_mp_offers(std::ofstream& file, SHA256_CTX* shaCtx)
+static int write_mp_offers(std::ofstream& file, CHash256& hasher)
 {
     OfferMap::const_iterator iter;
     for (iter = my_offers.begin(); iter != my_offers.end(); ++iter) {
@@ -127,13 +126,13 @@ static int write_mp_offers(std::ofstream& file, SHA256_CTX* shaCtx)
         std::vector<std::string> vstr;
         boost::split(vstr, iter->first, boost::is_any_of("-"), boost::token_compress_on);
         const CMPOffer& offer = iter->second;
-        offer.saveOffer(file, shaCtx, vstr[0]);
+        offer.saveOffer(file, vstr[0], hasher);
     }
 
     return 0;
 }
 
-static int write_mp_accepts(std::ofstream& file, SHA256_CTX* shaCtx)
+static int write_mp_accepts(std::ofstream& file, CHash256& hasher)
 {
     AcceptMap::const_iterator iter;
     for (iter = my_accepts.begin(); iter != my_accepts.end(); ++iter) {
@@ -141,13 +140,13 @@ static int write_mp_accepts(std::ofstream& file, SHA256_CTX* shaCtx)
         std::vector<std::string> vstr;
         boost::split(vstr, iter->first, boost::is_any_of("-+"), boost::token_compress_on);
         const CMPAccept& accept = iter->second;
-        accept.saveAccept(file, shaCtx, vstr[0], vstr[1]);
+        accept.saveAccept(file, vstr[0], vstr[2], hasher);
     }
 
     return 0;
 }
 
-static int write_globals_state(std::ofstream& file, SHA256_CTX* shaCtx)
+static int write_globals_state(std::ofstream& file, CHash256& hasher)
 {
     uint32_t nextSPID = pDbSpInfo->peekNextSPID(OMNI_PROPERTY_MSC);
     uint32_t nextTestSPID = pDbSpInfo->peekNextSPID(OMNI_PROPERTY_TMSC);
@@ -157,7 +156,7 @@ static int write_globals_state(std::ofstream& file, SHA256_CTX* shaCtx)
             nextTestSPID);
 
     // add the line to the hash
-    SHA256_Update(shaCtx, lineOut.c_str(), lineOut.length());
+    hasher.Write((unsigned char*)lineOut.c_str(), lineOut.length());
 
     // write the line
     file << lineOut << std::endl;
@@ -165,18 +164,18 @@ static int write_globals_state(std::ofstream& file, SHA256_CTX* shaCtx)
     return 0;
 }
 
-static int write_mp_crowdsales(std::ofstream& file, SHA256_CTX* shaCtx)
+static int write_mp_crowdsales(std::ofstream& file, CHash256& hasher)
 {
     for (CrowdMap::const_iterator it = my_crowds.begin(); it != my_crowds.end(); ++it) {
         // decompose the key for address
         const CMPCrowd& crowd = it->second;
-        crowd.saveCrowdSale(file, shaCtx, it->first);
+        crowd.saveCrowdSale(file, it->first, hasher);
     }
 
     return 0;
 }
 
-static int write_mp_metadex(std::ofstream &file, SHA256_CTX* shaCtx)
+static int write_mp_metadex(std::ofstream &file, CHash256& hasher)
 {
     for (md_PropertiesMap::iterator my_it = metadex.begin(); my_it != metadex.end(); ++my_it) {
         md_PricesMap& prices = my_it->second;
@@ -184,7 +183,7 @@ static int write_mp_metadex(std::ofstream &file, SHA256_CTX* shaCtx)
             md_Set& indexes = (it->second);
             for (md_Set::iterator it = indexes.begin(); it != indexes.end(); ++it) {
                 const CMPMetaDEx& meta = *it;
-                meta.saveOffer(file, shaCtx);
+                meta.saveOffer(file, hasher);
             }
         }
     }
@@ -402,49 +401,46 @@ static int input_mp_mdexorder_string(const std::string& s)
 
 static int write_state_file(const CBlockIndex* pBlockIndex, int what)
 {
-    boost::filesystem::path path = pathStateFiles / strprintf("%s-%s.dat", statePrefix[what], pBlockIndex->GetBlockHash().ToString());
+    fs::path path = pathStateFiles / strprintf("%s-%s.dat", statePrefix[what], pBlockIndex->GetBlockHash().ToString());
     const std::string strFile = path.string();
 
     std::ofstream file;
     file.open(strFile.c_str());
 
-    SHA256_CTX shaCtx;
-    SHA256_Init(&shaCtx);
+    CHash256 hasher;
 
     int result = 0;
 
     switch (what) {
         case FILETYPE_BALANCES:
-            result = write_msc_balances(file, &shaCtx);
+            result = write_msc_balances(file, hasher);
             break;
 
         case FILETYPE_OFFERS:
-            result = write_mp_offers(file, &shaCtx);
+            result = write_mp_offers(file, hasher);
             break;
 
         case FILETYPE_ACCEPTS:
-            result = write_mp_accepts(file, &shaCtx);
+            result = write_mp_accepts(file, hasher);
             break;
 
         case FILETYPE_GLOBALS:
-            result = write_globals_state(file, &shaCtx);
+            result = write_globals_state(file, hasher);
             break;
 
         case FILETYPE_CROWDSALES:
-            result = write_mp_crowdsales(file, &shaCtx);
+            result = write_mp_crowdsales(file, hasher);
             break;
 
         case FILETYPE_MDEXORDERS:
-            result = write_mp_metadex(file, &shaCtx);
+            result = write_mp_metadex(file, hasher);
             break;
     }
 
-    // generate and wite the double hash of all the contents written
-    uint256 hash1;
-    SHA256_Final((unsigned char*) &hash1, &shaCtx);
-    uint256 hash2;
-    SHA256((unsigned char*) &hash1, sizeof (hash1), (unsigned char*) &hash2);
-    file << "!" << hash2.ToString() << std::endl;
+    // generate and write the double hash of all the contents written
+    uint256 hash;
+    hasher.Finalize(hash.begin());
+    file << "!" << hash.ToString() << std::endl;
 
     file.flush();
     file.close();
@@ -456,11 +452,11 @@ static void prune_state_files(const CBlockIndex* topIndex)
     // build a set of blockHashes for which we have any state files
     std::set<uint256> statefulBlockHashes;
 
-    boost::filesystem::directory_iterator dIter(pathStateFiles);
-    boost::filesystem::directory_iterator endIter;
+    fs::directory_iterator dIter(pathStateFiles);
+    fs::directory_iterator endIter;
     for (; dIter != endIter; ++dIter) {
         std::string fName = dIter->path().empty() ? "<invalid>" : (*--dIter->path().end()).string();
-        if (false == boost::filesystem::is_regular_file(dIter->status())) {
+        if (false == fs::is_regular_file(dIter->status())) {
             // skip funny business
             PrintToLog("Non-regular file found in persistence directory : %s\n", fName);
             continue;
@@ -486,7 +482,7 @@ static void prune_state_files(const CBlockIndex* topIndex)
         CBlockIndex const *curIndex = GetBlockIndex(*iter);
 
         // if we have nothing int the index, or this block is too old..
-        if (NULL == curIndex || (((topIndex->nHeight - curIndex->nHeight) > MAX_STATE_HISTORY)
+        if (nullptr == curIndex || (((topIndex->nHeight - curIndex->nHeight) > MAX_STATE_HISTORY)
                 && (curIndex->nHeight % STORE_EVERY_N_BLOCK != 0))) {
             if (msc_debug_persistence) {
                 if (curIndex) {
@@ -499,19 +495,40 @@ static void prune_state_files(const CBlockIndex* topIndex)
             // destroy the associated files!
             std::string strBlockHash = iter->ToString();
             for (int i = 0; i < NUM_FILETYPES; ++i) {
-                boost::filesystem::path path = pathStateFiles / strprintf("%s-%s.dat", statePrefix[i], strBlockHash);
-                boost::filesystem::remove(path);
+                fs::path path = pathStateFiles / strprintf("%s-%s.dat", statePrefix[i], strBlockHash);
+                fs::remove(path);
             }
         }
     }
 }
 
 /**
+ * @return The block height at which the state is persisted every block.
+ */
+static int GetWrapModeHeight()
+{
+    if (MainNet()) {
+        return DONT_STORE_MAINNET_STATE_UNTIL;
+    } else {
+        return 0;
+    }
+}
+
+/**
  * Indicates whether persistence is enabled and the state is stored.
  */
-bool IsPersistenceEnabled(int blockHeight) {
+bool IsPersistenceEnabled(int blockHeight)
+{
+    static int nWarpModeHeight = GetWrapModeHeight();
+
+    int nMinHeight = nWarpModeHeight;
+
+    if (nWarpModeHeight == 0) {
+        nMinHeight = GetHeight();
+    }
+
     // if too far away from the top -- do not write
-    if (GetHeight() > (blockHeight + MAX_STATE_HISTORY)
+    if (nMinHeight > (blockHeight + MAX_STATE_HISTORY)
             && (blockHeight % STORE_EVERY_N_BLOCK != 0)) {
         return false;
     }
@@ -546,10 +563,9 @@ int PersistInMemoryState(const CBlockIndex* pBlockIndex)
 int RestoreInMemoryState(const std::string& filename, int what, bool verifyHash)
 {
     int lines = 0;
-    int (*inputLineFunc)(const std::string&) = NULL;
+    int (*inputLineFunc)(const std::string&) = nullptr;
 
-    SHA256_CTX shaCtx;
-    SHA256_Init(&shaCtx);
+    CHash256 hasher;
 
     switch (what) {
         case FILETYPE_BALANCES:
@@ -620,7 +636,7 @@ int RestoreInMemoryState(const std::string& filename, int what, bool verifyHash)
 
         // update hash?
         if (verifyHash) {
-            SHA256_Update(&shaCtx, line.c_str(), line.length());
+            hasher.Write((unsigned char*)line.c_str(), line.length());
         }
 
         if (inputLineFunc) {
@@ -636,13 +652,11 @@ int RestoreInMemoryState(const std::string& filename, int what, bool verifyHash)
     file.close();
 
     if (verifyHash && res == 0) {
-        // generate and wite the double hash of all the contents written
-        uint256 hash1;
-        SHA256_Final((unsigned char*) &hash1, &shaCtx);
-        uint256 hash2;
-        SHA256((unsigned char*) &hash1, sizeof (hash1), (unsigned char*) &hash2);
+        // generate and write the double hash of all the contents written
+        uint256 hash;
+        hasher.Finalize(hash.begin());
 
-        if (false == boost::iequals(hash2.ToString(), fileHash)) {
+        if (false == boost::iequals(hash.ToString(), fileHash)) {
             PrintToLog("File %s loaded, but failed hash validation!\n", filename);
             res = -1;
         }
@@ -659,109 +673,161 @@ int RestoreInMemoryState(const std::string& filename, int what, bool verifyHash)
  */
 int LoadMostRelevantInMemoryState()
 {
-    PrintToLog("Trying to load most relevant state into memory..\n");
     int res = -1;
-    // check the SP database and roll it back to its latest valid state
-    // according to the active chain
     uint256 spWatermark;
-    if (!pDbSpInfo->getWatermark(spWatermark)) {
-        // trigger a full reparse, if the SP database has no watermark
-        PrintToLog("Failed to load historical state: SP database has no watermark\n");
-        return -1;
-    }
-
-    CBlockIndex const *spBlockIndex = GetBlockIndex(spWatermark);
-    if (NULL == spBlockIndex) {
-        // trigger a full reparse, if the watermark isn't a real block
-        PrintToLog("Failed to load historical state: watermark isn't a real block\n");
-        return -1;
-    }
-
-    while (NULL != spBlockIndex && false == chainActive.Contains(spBlockIndex)) {
-        int remainingSPs = pDbSpInfo->popBlock(spBlockIndex->GetBlockHash());
-        if (remainingSPs < 0) {
-            // trigger a full reparse, if the levelDB cannot roll back
-            PrintToLog("Failed to load historical state: no valid state found after rolling back SP database\n");
+    {
+        LOCK(cs_tally);
+        PrintToLog("Trying to load most relevant state into memory..\n");
+        // check the SP database and roll it back to its latest valid state
+        // according to the active chain
+        if (!pDbSpInfo->getWatermark(spWatermark)) {
+            // trigger a full reparse, if the SP database has no watermark
+            PrintToLog("Failed to load historical state: SP database has no watermark\n");
             return -1;
-        } /*else if (remainingSPs == 0) {
-      // potential optimization here?
-    }*/
-        spBlockIndex = spBlockIndex->pprev;
-        if (spBlockIndex != NULL) {
-            pDbSpInfo->setWatermark(spBlockIndex->GetBlockHash());
         }
+
     }
 
-    // prepare a set of available files by block hash pruning any that are
-    // not in the active chain
-    std::set<uint256> persistedBlocks;
-    boost::filesystem::directory_iterator dIter(pathStateFiles);
-    boost::filesystem::directory_iterator endIter;
-    for (; dIter != endIter; ++dIter) {
-        if (false == boost::filesystem::is_regular_file(dIter->status()) || dIter->path().empty()) {
-            // skip funny business
-            continue;
-        }
+    // Try and get watermark block
+    CBlockIndex const *spBlockIndex = GetBlockIndex(spWatermark);
 
-        std::string fName = (*--dIter->path().end()).string();
-        std::vector<std::string> vstr;
-        boost::split(vstr, fName, boost::is_any_of("-."), boost::token_compress_on);
-        if (vstr.size() == 3 &&
-                boost::equals(vstr[2], "dat")) {
-            uint256 blockHash;
-            blockHash.SetHex(vstr[1]);
-            CBlockIndex *pBlockIndex = GetBlockIndex(blockHash);
-            if (pBlockIndex == NULL || false == chainActive.Contains(pBlockIndex)) {
+    // Watermark block not found.
+    if (nullptr == spBlockIndex)
+    {
+        PrintToLog("spWatermark not found: %s\n", spWatermark.ToString());
+
+        // Try and load an historical state
+        fs::directory_iterator dIter(pathStateFiles);
+        fs::directory_iterator endIter;
+        std::map<int, const CBlockIndex*> foundBlocks;
+
+        for (; dIter != endIter; ++dIter) {
+            if (false == fs::is_regular_file(dIter->status()) || dIter->path().empty()) {
+                // skip funny business
                 continue;
             }
 
-            // this is a valid block in the active chain, store it
-            persistedBlocks.insert(blockHash);
-        }
-    }
-
-    // using the SP's watermark after its fixed-up as the tip
-    // walk backwards until we find a valid and full set of persisted state files
-    // for each block we discard, roll back the SP database
-    CBlockIndex const *curTip = spBlockIndex;
-    int abortRollBackBlock = 9999999;
-    if (curTip != NULL) {
-        abortRollBackBlock = ConsensusParams().GENESIS_BLOCK - 1;
-    }
-    while (NULL != curTip && persistedBlocks.size() > 0 && curTip->nHeight > abortRollBackBlock ) {
-        if (persistedBlocks.find(curTip->GetBlockHash()) != persistedBlocks.end()) {
-            int success = -1;
-            for (int i = 0; i < NUM_FILETYPES; ++i) {
-                boost::filesystem::path path = pathStateFiles / strprintf("%s-%s.dat", statePrefix[i], curTip->GetBlockHash().ToString());
-                const std::string strFile = path.string();
-                success = RestoreInMemoryState(strFile, i, true);
-                if (success < 0) {
-                    PrintToConsole("Found a state inconsistency at block height %d. "
-                            "Reverting up to %d blocks.. this may take a few minutes.\n",
-                            curTip->nHeight, (curTip->nHeight - abortRollBackBlock - 1));
-                    break;
+            std::string fName = (*--dIter->path().end()).string();
+            std::vector<std::string> vstr;
+            boost::split(vstr, fName, boost::is_any_of("-."), boost::token_compress_on);
+            if (vstr.size() == 3 && boost::equals(vstr[2], "dat")) {
+                uint256 blockHash;
+                blockHash.SetHex(vstr[1]);
+                CBlockIndex *pBlockIndex = GetBlockIndex(blockHash);
+                if (pBlockIndex == nullptr) {
+                    continue;
                 }
-            }
 
-            if (success >= 0) {
-                res = curTip->nHeight;
-                break;
+                // Add to found blocks
+                foundBlocks.emplace(pBlockIndex->nHeight, pBlockIndex);
             }
-
-            // remove this from the persistedBlock Set
-            persistedBlocks.erase(spBlockIndex->GetBlockHash());
         }
 
-        // go to the previous block
-        if (pDbSpInfo->popBlock(curTip->GetBlockHash()) <= 0) {
-            // trigger a full reparse, if the levelDB cannot roll back
-            PrintToLog("Failed to load historical state: no valid state found after rolling back SP database (2)\n");
+        // Was unable to find valid previous state, full reparse required.
+        if (foundBlocks.empty()) {
+            PrintToLog("Failed to load historical state: watermark isn't a real block\n");
             return -1;
         }
-        curTip = curTip->pprev;
-        spBlockIndex = curTip;
-        if (curTip != NULL) {
-            pDbSpInfo->setWatermark(curTip->GetBlockHash());
+
+        spBlockIndex = foundBlocks.rbegin()->second;
+        pDbSpInfo->setWatermark(spBlockIndex->GetBlockHash());
+
+        PrintToLog("Watermark not found. New one set from state files: %s\n", spBlockIndex->GetBlockHash().ToString());
+    }
+
+    std::set<uint256> persistedBlocks;
+    {
+        LOCK2(cs_main, cs_tally);
+
+        PrintToLog("Rolling back blocks to active chain.\n");
+
+        while (nullptr != spBlockIndex && false == ::ChainActive().Contains(spBlockIndex)) {
+            int remainingSPs = pDbSpInfo->popBlock(spBlockIndex->GetBlockHash());
+            if (remainingSPs < 0) {
+                // trigger a full reparse, if the levelDB cannot roll back
+                PrintToLog("Failed to load historical state: no valid state found after rolling back SP database\n");
+                return -1;
+            }
+
+            spBlockIndex = spBlockIndex->pprev;
+            if (spBlockIndex != nullptr) {
+                pDbSpInfo->setWatermark(spBlockIndex->GetBlockHash());
+            }
+        }
+
+        // prepare a set of available files by block hash pruning any that are
+        // not in the active chain
+        fs::directory_iterator dIter(pathStateFiles);
+        fs::directory_iterator endIter;
+        for (; dIter != endIter; ++dIter) {
+            if (false == fs::is_regular_file(dIter->status()) || dIter->path().empty()) {
+                // skip funny business
+                continue;
+            }
+
+            std::string fName = (*--dIter->path().end()).string();
+            std::vector<std::string> vstr;
+            boost::split(vstr, fName, boost::is_any_of("-."), boost::token_compress_on);
+            if (vstr.size() == 3 &&
+                    boost::equals(vstr[2], "dat")) {
+                uint256 blockHash;
+                blockHash.SetHex(vstr[1]);
+                CBlockIndex *pBlockIndex = GetBlockIndex(blockHash);
+                if (pBlockIndex == nullptr || false == ::ChainActive().Contains(pBlockIndex)) {
+                    continue;
+                }
+
+                // this is a valid block in the active chain, store it
+                persistedBlocks.insert(blockHash);
+            }
+        }
+    }
+
+    {
+        LOCK(cs_tally);
+        // using the SP's watermark after its fixed-up as the tip
+        // walk backwards until we find a valid and full set of persisted state files
+        // for each block we discard, roll back the SP database
+        CBlockIndex const *curTip = spBlockIndex;
+        int abortRollBackBlock = 9999999;
+        if (curTip != nullptr) {
+            abortRollBackBlock = ConsensusParams().GENESIS_BLOCK - 1;
+        }
+        while (nullptr != curTip && persistedBlocks.size() > 0 && curTip->nHeight > abortRollBackBlock ) {
+            if (persistedBlocks.find(curTip->GetBlockHash()) != persistedBlocks.end()) {
+                int success = -1;
+                for (int i = 0; i < NUM_FILETYPES; ++i) {
+                    fs::path path = pathStateFiles / strprintf("%s-%s.dat", statePrefix[i], curTip->GetBlockHash().ToString());
+                    const std::string strFile = path.string();
+                    success = RestoreInMemoryState(strFile, i, true);
+                    if (success < 0) {
+                        PrintToConsole("Found a state inconsistency at block height %d. "
+                                "Reverting up to %d blocks.. this may take a few minutes.\n",
+                                curTip->nHeight, (curTip->nHeight - abortRollBackBlock - 1));
+                        break;
+                    }
+                }
+
+                if (success >= 0) {
+                    res = curTip->nHeight;
+                    break;
+                }
+
+                // remove this from the persistedBlock Set
+                persistedBlocks.erase(spBlockIndex->GetBlockHash());
+            }
+
+            // go to the previous block
+            if (pDbSpInfo->popBlock(curTip->GetBlockHash()) <= 0) {
+                // trigger a full reparse, if the levelDB cannot roll back
+                PrintToLog("Failed to load historical state: no valid state found after rolling back SP database (2)\n");
+                return -1;
+            }
+            curTip = curTip->pprev;
+            spBlockIndex = curTip;
+            if (curTip != nullptr) {
+                pDbSpInfo->setWatermark(curTip->GetBlockHash());
+            }
         }
     }
 

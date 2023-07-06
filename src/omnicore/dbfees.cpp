@@ -4,20 +4,18 @@
  * This file contains code for handling Omni fees.
  */
 
-#include "omnicore/dbfees.h"
+#include <omnicore/dbfees.h>
 
-#include "omnicore/log.h"
-#include "omnicore/omnicore.h"
-#include "omnicore/rules.h"
-#include "omnicore/sp.h"
-#include "omnicore/sto.h"
+#include <omnicore/log.h>
+#include <omnicore/rules.h>
+#include <omnicore/sp.h>
+#include <omnicore/sto.h>
 
-#include "main.h"
+#include <validation.h>
 
-#include "leveldb/db.h"
+#include <leveldb/db.h>
 
 #include <boost/algorithm/string.hpp>
-#include <boost/filesystem.hpp>
 #include <boost/lexical_cast.hpp>
 
 #include <stdint.h>
@@ -31,7 +29,7 @@ using namespace mastercore;
 
 std::map<uint32_t, int64_t> distributionThresholds;
 
-COmniFeeCache::COmniFeeCache(const boost::filesystem::path& path, bool fWipe)
+COmniFeeCache::COmniFeeCache(const fs::path& path, bool fWipe)
 {
     leveldb::Status status = Open(path, fWipe);
     PrintToConsole("Loading fee cache database: %s\n", status.ToString());
@@ -118,9 +116,9 @@ void COmniFeeCache::AddFee(const uint32_t &propertyId, int block, const int64_t 
         // overflow - there is no way the fee cache should exceed the maximum possible number of tokens, not safe to continue
         const std::string& msg = strprintf("Shutting down due to fee cache overflow (block %d property %d current %d amount %d)\n", block, propertyId, currentCachedAmount, amount);
         PrintToLog(msg);
-        if (!GetBoolArg("-overrideforcedshutdown", false)) {
-            boost::filesystem::path persistPath = GetDataDir() / "MP_persist";
-            if (boost::filesystem::exists(persistPath)) boost::filesystem::remove_all(persistPath); // prevent the node being restarted without a reparse after forced shutdown
+        if (!gArgs.GetBoolArg("-overrideforcedshutdown", false)) {
+            fs::path persistPath = GetDataDir() / "MP_persist";
+            if (fs::exists(persistPath)) fs::remove_all(persistPath); // prevent the node being restarted without a reparse after forced shutdown
             AbortNode(msg, msg);
         }
     }
@@ -252,7 +250,7 @@ void COmniFeeCache::PruneCache(const uint32_t &propertyId, int block)
         std::set<feeCacheItem>::iterator startIt = sCacheHistoryItems.begin();
         feeCacheItem firstItem = *startIt;
         if (firstItem.first >= pruneBlock) {
-            if (msc_debug_fees) PrintToLog("Endingg PruneCache - no matured entries found.\n");
+            if (msc_debug_fees) PrintToLog("Ending PruneCache - no matured entries found.\n");
             return; // all entries are above supplied block value, nothing to do
         }
         std::string newValue;
@@ -334,7 +332,7 @@ std::set<feeCacheItem> COmniFeeCache::GetCacheHistory(const uint32_t &propertyId
     return sCacheHistoryItems;
 }
 
-COmniFeeHistory::COmniFeeHistory(const boost::filesystem::path& path, bool fWipe)
+COmniFeeHistory::COmniFeeHistory(const fs::path& path, bool fWipe)
 {
     leveldb::Status status = Open(path, fWipe);
     PrintToConsole("Loading fee history database: %s\n", status.ToString());
@@ -344,7 +342,7 @@ COmniFeeHistory::~COmniFeeHistory()
 {
     if (msc_debug_fees) PrintToLog("COmniFeeHistory closed\n");
 }
-    
+
 // Show Fee History DB statistics
 void COmniFeeHistory::printStats()
 {
@@ -514,4 +512,3 @@ void COmniFeeHistory::RecordFeeDistribution(const uint32_t &propertyId, int bloc
     leveldb::Status status = pdb->Put(writeoptions, key, value);
     if (msc_debug_fees) PrintToLog("Added fee distribution to feeCacheHistory - key=%s value=%s [%s]\n", key, value, status.ToString());
 }
-

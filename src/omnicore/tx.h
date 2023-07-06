@@ -1,20 +1,19 @@
-#ifndef OMNICORE_TX_H
-#define OMNICORE_TX_H
+#ifndef BITCOIN_OMNICORE_TX_H
+#define BITCOIN_OMNICORE_TX_H
 
 class CMPMetaDEx;
 class CMPOffer;
 class CTransaction;
 
-#include "omnicore/omnicore.h"
-#include "omnicore/parsing.h"
+#include <omnicore/omnicore.h>
+#include <omnicore/parsing.h>
 
-#include "uint256.h"
-#include "utilstrencodings.h"
+#include <uint256.h>
+#include <util/strencodings.h>
 
 #include <stdint.h>
 #include <string.h>
 
-#include <string.h>
 #include <string>
 
 using mastercore::strTransactionType;
@@ -76,13 +75,19 @@ private:
     // MetaDEx
     unsigned int desired_property;
     uint64_t desired_value;
-    unsigned char action; // depreciated
+    unsigned char action; // deprecated
 
     // TradeOffer
     uint64_t amount_desired;
     unsigned char blocktimelimit;
     uint64_t min_fee;
     unsigned char subaction;
+
+    // Unique Send
+    uint64_t nonfungible_token_start;
+    uint64_t nonfungible_token_end;
+    uint8_t nonfungible_data_type; // Issuer (1) or holder (0)
+    char nonfungible_data[SP_STRING_FIELD_LEN]; // GrantData, IssuerData or HolderData
 
     // Alert
     uint16_t alert_type;
@@ -107,6 +112,7 @@ private:
     bool interpret_SimpleSend();
     bool interpret_SendToOwners();
     bool interpret_SendAll();
+    bool interpret_SendNonFungible();
     bool interpret_TradeOffer();
     bool interpret_MetaDExTrade();
     bool interpret_MetaDExCancelPrice();
@@ -124,6 +130,10 @@ private:
     bool interpret_DisableFreezing();
     bool interpret_FreezeTokens();
     bool interpret_UnfreezeTokens();
+    bool interpret_AddDelegate();
+    bool interpret_RemoveDelegate();
+    bool interpret_AnyData();
+    bool interpret_NonFungibleData();
     bool interpret_Activation();
     bool interpret_Deactivation();
     bool interpret_Alert();
@@ -131,26 +141,31 @@ private:
     /**
      * Logic and "effects"
      */
-    int logicMath_SimpleSend();
+    int logicMath_SimpleSend(uint256& blockHash);
     int logicMath_SendToOwners();
     int logicMath_SendAll();
+    int logicMath_SendNonFungible();
     int logicMath_TradeOffer();
     int logicMath_AcceptOffer_BTC();
     int logicMath_MetaDExTrade();
     int logicMath_MetaDExCancelPrice();
     int logicMath_MetaDExCancelPair();
     int logicMath_MetaDExCancelEcosystem();
-    int logicMath_CreatePropertyFixed();
-    int logicMath_CreatePropertyVariable();
-    int logicMath_CloseCrowdsale();
-    int logicMath_CreatePropertyManaged();
-    int logicMath_GrantTokens();
-    int logicMath_RevokeTokens();
-    int logicMath_ChangeIssuer();
-    int logicMath_EnableFreezing();
-    int logicMath_DisableFreezing();
-    int logicMath_FreezeTokens();
-    int logicMath_UnfreezeTokens();
+    int logicMath_CreatePropertyFixed(CBlockIndex *pindex);
+    int logicMath_CreatePropertyVariable(CBlockIndex *pindex);
+    int logicMath_CloseCrowdsale(CBlockIndex *pindex);
+    int logicMath_CreatePropertyManaged(CBlockIndex* pindex);
+    int logicMath_GrantTokens(CBlockIndex* pindex, uint256 &blockHash);
+    int logicMath_RevokeTokens(CBlockIndex *pindex);
+    int logicMath_ChangeIssuer(CBlockIndex *pindex);
+    int logicMath_EnableFreezing(CBlockIndex *pindex);
+    int logicMath_DisableFreezing(CBlockIndex *pindex);
+    int logicMath_FreezeTokens(CBlockIndex *pindex);
+    int logicMath_UnfreezeTokens(CBlockIndex *pindex);
+    int logicMath_AddDelegate(CBlockIndex *pindex);
+    int logicMath_RemoveDelegate(CBlockIndex *pindex);
+    int logicMath_AnyData();
+    int logicMath_NonFungibleData();
     int logicMath_Activation();
     int logicMath_Deactivation();
     int logicMath_Alert();
@@ -158,7 +173,7 @@ private:
     /**
      * Logic helpers
      */
-    int logicHelper_CrowdsaleParticipation();
+    int logicHelper_CrowdsaleParticipation(uint256& blockHash);
 
 public:
     //! DEx and MetaDEx action values
@@ -188,6 +203,7 @@ public:
     std::string getSender() const { return sender; }
     std::string getReceiver() const { return receiver; }
     std::string getPayload() const { return HexStr(pkt, pkt + pkt_size); }
+    std::string getPayloadData() const { return HexStr(pkt + 4 /* skip version and type */, pkt + pkt_size); }
     uint64_t getAmount() const { return nValue; }
     uint64_t getNewAmount() const { return nNewValue; }
     uint8_t getEcosystem() const { return ecosystem; }
@@ -211,6 +227,10 @@ public:
     uint32_t getMinClientVersion() const { return min_client_version; }
     unsigned int getIndexInBlock() const { return tx_idx; }
     uint32_t getDistributionProperty() const { return distribution_property; }
+    uint64_t getNonFungibleTokenStart() const { return nonfungible_token_start; }
+    uint64_t getNonFungibleTokenEnd() const { return nonfungible_token_end; }
+    uint64_t getNonFungibleDataType() const { return nonfungible_data_type; }
+    std::string getNonFungibleData() const { return nonfungible_data; }
 
     /** Creates a new CMPTransaction object. */
     CMPTransaction()
@@ -262,6 +282,9 @@ public:
         activation_block = 0;
         min_client_version = 0;
         distribution_property = 0;
+        nonfungible_token_start = 0;
+        nonfungible_token_end = 0;
+        memset(&nonfungible_data, 0, sizeof(nonfungible_data));
     }
 
     /** Sets the given values. */
@@ -308,4 +331,4 @@ public:
 };
 
 
-#endif // OMNICORE_TX_H
+#endif // BITCOIN_OMNICORE_TX_H

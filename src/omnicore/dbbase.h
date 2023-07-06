@@ -1,9 +1,9 @@
-#ifndef OMNICORE_DBBASE_H
-#define OMNICORE_DBBASE_H
+#ifndef BITCOIN_OMNICORE_DBBASE_H
+#define BITCOIN_OMNICORE_DBBASE_H
 
-#include "leveldb/db.h"
+#include <leveldb/db.h>
 
-#include <boost/filesystem/path.hpp>
+#include <fs.h>
 
 #include <assert.h>
 #include <stddef.h>
@@ -79,7 +79,7 @@ protected:
      * @param fWipe  Whether to wipe the database before opening
      * @return A Status object, indicating success or failure
      */
-    leveldb::Status Open(const boost::filesystem::path& path, bool fWipe = false);
+    leveldb::Status Open(const fs::path& path, bool fWipe = false);
 
     /**
      * Deinitializes and closes the database.
@@ -94,4 +94,4 @@ public:
 };
 
 
-#endif // OMNICORE_DBBASE_H
+#endif // BITCOIN_OMNICORE_DBBASE_H

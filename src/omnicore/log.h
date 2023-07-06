@@ -1,8 +1,8 @@
-#ifndef OMNICORE_LOG_H
-#define OMNICORE_LOG_H
+#ifndef BITCOIN_OMNICORE_LOG_H
+#define BITCOIN_OMNICORE_LOG_H
 
-#include "util.h"
-#include "tinyformat.h"
+#include <util/system.h>
+#include <tinyformat.h>
 
 #include <string>
 
@@ -52,6 +52,7 @@ extern bool msc_debug_consensus_hash_every_block;
 extern bool msc_debug_alerts;
 extern bool msc_debug_consensus_hash_every_transaction;
 extern bool msc_debug_fees;
+extern bool msc_debug_nftdb;
 
 /* When we switch to C++11, this can be switched to variadic templates instead
  * of this macro-based construction (see tinyformat.h).
@@ -83,4 +84,4 @@ TINYFORMAT_FOREACH_ARGNUM(MAKE_OMNI_CORE_ERROR_AND_LOG_FUNC)
 #undef MAKE_OMNI_CORE_ERROR_AND_LOG_FUNC
 
 
-#endif // OMNICORE_LOG_H
+#endif // BITCOIN_OMNICORE_LOG_H

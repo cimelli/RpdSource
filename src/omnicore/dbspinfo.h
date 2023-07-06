@@ -1,14 +1,13 @@
-#ifndef OMNICORE_DBSPINFO_H
-#define OMNICORE_DBSPINFO_H
+#ifndef BITCOIN_OMNICORE_DBSPINFO_H
+#define BITCOIN_OMNICORE_DBSPINFO_H
 
-#include "omnicore/dbbase.h"
-#include "omnicore/log.h"
-#include "omnicore/omnicore.h"
+#include <omnicore/dbbase.h>
+#include <omnicore/log.h>
+#include <omnicore/omnicore.h>
 
-#include "serialize.h"
-#include "uint256.h"
-
-#include <boost/filesystem/path.hpp>
+#include <fs.h>
+#include <serialize.h>
+#include <uint256.h>
 
 #include <stdint.h>
 
@@ -49,6 +48,7 @@ public:
     struct Entry {
         // common SP data
         std::string issuer;
+        std::string delegate;
         uint16_t prop_type;
         uint32_t prev_prop_id;
         std::string category;
@@ -77,6 +77,7 @@ public:
         uint256 update_block;
         bool fixed;
         bool manual;
+        bool unique;
 
         // For crowdsale properties:
         //   txid -> amount invested, crowdsale deadline, user issued tokens, issuer issued tokens
@@ -87,6 +88,10 @@ public:
         // Historical issuers:
         //   (block, idx) -> issuer
         std::map<std::pair<int, int>, std::string > historicalIssuers;
+
+        // Historical delegates:
+        //   (block, idx) -> delegate
+        std::map<std::pair<int, int>, std::string > historicalDelegates;
 
         Entry();
 
@@ -129,6 +134,15 @@ public:
 
         /** Returns the issuer for the given block. */
         std::string getIssuer(int block) const;
+
+        /** Stores a new delegate in the DB. */
+        void addDelegate(int block, int idx, const std::string& newDelegate);
+
+        /** Clears the delegate in the DB. */
+        void removeDelegate(int block, int idx);
+
+        /** Returns the delegate for the given block, if there is one. */
+        std::string getDelegate(int block) const;
     };
 
 private:
@@ -140,7 +154,7 @@ private:
     uint32_t next_test_spid;
 
 public:
-    CMPSPInfo(const boost::filesystem::path& path, bool fWipe);
+    CMPSPInfo(const fs::path& path, bool fWipe);
     virtual ~CMPSPInfo();
 
     /** Extends clearing of CDBBase. */
@@ -164,4 +178,4 @@ public:
 };
 
 
-#endif // OMNICORE_DBSPINFO_H
+#endif // BITCOIN_OMNICORE_DBSPINFO_H

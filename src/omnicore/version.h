@@ -1,8 +1,8 @@
-#ifndef OMNICORE_VERSION_H
-#define OMNICORE_VERSION_H
+#ifndef BITCOIN_OMNICORE_VERSION_H
+#define BITCOIN_OMNICORE_VERSION_H
 
 #if defined(HAVE_CONFIG_H)
-#include "config/rpdchain-config.h"
+#include <config/bitcoin-config.h>
 #else
 
 //
@@ -15,7 +15,7 @@
 #define OMNICORE_VERSION_MAJOR       0
 
 // Increase with every non-consensus affecting feature
-#define OMNICORE_VERSION_MINOR       5
+#define OMNICORE_VERSION_MINOR       11
 
 // Increase with every patch, which is not a feature or consensus affecting
 #define OMNICORE_VERSION_PATCH       0
@@ -42,6 +42,14 @@ static const int OMNICORE_VERSION =
                     +        1000 * OMNICORE_VERSION_PATCH
                     +           1 * OMNICORE_VERSION_BUILD;
 
+static const int OMNI_USERAGENT_VERSION =
+                           1000000 * OMNICORE_VERSION_MAJOR
+                         +   10000 * OMNICORE_VERSION_MINOR
+                         +     100 * OMNICORE_VERSION_PATCH
+                         +       1 * OMNICORE_VERSION_BUILD;
+
+extern const std::string OMNI_CLIENT_NAME;
+
 //! Returns formatted Omni Core version, e.g. "1.2.0"
 const std::string OmniCoreVersion();
 
@@ -51,4 +59,4 @@ const std::string BitcoinCoreVersion();
 
 #endif // WINDRES_PREPROC
 
-#endif // OMNICORE_VERSION_H
+#endif // BITCOIN_OMNICORE_VERSION_H

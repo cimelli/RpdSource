@@ -1,30 +1,29 @@
-#include "omnicore/dbtxlist.h"
+#include <omnicore/dbtxlist.h>
 
-#include "omnicore/activation.h"
-#include "omnicore/dbtransaction.h"
-#include "omnicore/dex.h"
-#include "omnicore/log.h"
-#include "omnicore/notifications.h"
-#include "omnicore/omnicore.h"
-#include "omnicore/tx.h"
-#include "omnicore/utilsbitcoin.h"
+#include <omnicore/activation.h>
+#include <omnicore/dbtransaction.h>
+#include <omnicore/dex.h>
+#include <omnicore/log.h>
+#include <omnicore/notifications.h>
+#include <omnicore/omnicore.h>
+#include <omnicore/tx.h>
+#include <omnicore/utilsbitcoin.h>
 
-#include "chain.h"
-#include "chainparams.h"
-#include "main.h"
-#include "sync.h"
-#include "tinyformat.h"
-#include "uint256.h"
-#include "util.h"
-#include "utilstrencodings.h"
+#include <chain.h>
+#include <chainparams.h>
+#include <fs.h>
+#include <validation.h>
+#include <sync.h>
+#include <tinyformat.h>
+#include <uint256.h>
+#include <util/system.h>
+#include <util/strencodings.h>
 
-#include "leveldb/iterator.h"
-#include "leveldb/slice.h"
-#include "leveldb/status.h"
+#include <leveldb/iterator.h>
+#include <leveldb/slice.h>
+#include <leveldb/status.h>
 
 #include <boost/algorithm/string.hpp>
-#include <boost/exception/to_string.hpp>
-#include <boost/filesystem/path.hpp>
 #include <boost/lexical_cast.hpp>
 
 #include <stddef.h>
@@ -44,7 +43,7 @@ using mastercore::GetBlockIndex;
 using mastercore::isNonMainNet;
 using mastercore::pDbTransaction;
 
-CMPTxList::CMPTxList(const boost::filesystem::path& path, bool fWipe)
+CMPTxList::CMPTxList(const fs::path& path, bool fWipe)
 {
     leveldb::Status status = Open(path, fWipe);
     PrintToConsole("Loading tx meta-info database: %s\n", status.ToString());
@@ -261,7 +260,7 @@ bool CMPTxList::getPurchaseDetails(const uint256 txid, int purchaseNumber, std::
     if (!pdb) return 0;
     std::vector<std::string> vstr;
     std::string strValue;
-    leveldb::Status status = pdb->Get(readoptions, txid.ToString() + "-" + boost::to_string(purchaseNumber), &strValue);
+    leveldb::Status status = pdb->Get(readoptions, txid.ToString() + "-" + std::to_string(purchaseNumber), &strValue);
     if (status.ok()) {
         // parse the string returned
         boost::split(vstr, strValue, boost::is_any_of(":"), boost::token_compress_on);
@@ -270,7 +269,7 @@ bool CMPTxList::getPurchaseDetails(const uint256 txid, int purchaseNumber, std::
             *vout = atoi(vstr[0]);
             *buyer = vstr[1];
             *seller = vstr[2];
-            *propertyId = atoi(vstr[3]);
+            *propertyId = atoi64(vstr[3]);
             *nValue = boost::lexical_cast<boost::uint64_t>(vstr[4]);
             return true;
         }
@@ -399,6 +398,32 @@ int CMPTxList::setDBVersion()
     return getDBVersion();
 }
 
+std::pair<int64_t,int64_t> CMPTxList::GetNonFungibleGrant(const uint256& txid)
+{
+    std::string strKey = strprintf("%s-UG", txid.ToString());
+    std::string strValue;
+    leveldb::Status status = pdb->Get(readoptions, strKey, &strValue);
+    if (status.ok()) {
+        std::vector<std::string> vstr;
+        boost::split(vstr, strValue, boost::is_any_of("-"), boost::token_compress_on);
+        if (2 == vstr.size()) {
+            return std::make_pair(boost::lexical_cast<int64_t>(vstr[0]), boost::lexical_cast<int64_t>(vstr[1]));
+        }
+    }
+    return std::make_pair(0,0);
+}
+
+void CMPTxList::RecordNonFungibleGrant(const uint256& txid, int64_t start, int64_t end)
+{
+    assert(pdb);
+
+    const std::string key = txid.ToString() + "-UG";
+    const std::string value = strprintf("%d-%d", start, end);
+
+    leveldb::Status status = pdb->Put(writeoptions, key, value);
+    PrintToLog("%s(): Writing Non-Fungible Grant range %s:%d-%d (%s), line %d, file: %s\n", __FUNCTION__, key, start, end, status.ToString(), __LINE__, __FILE__);
+}
+
 bool CMPTxList::exists(const uint256 &txid)
 {
     if (!pdb) return false;
@@ -520,9 +545,9 @@ void CMPTxList::LoadAlerts(int blockHeight)
     for (std::vector<std::pair<int64_t, uint256> >::iterator it = loadOrder.begin(); it != loadOrder.end(); ++it) {
         uint256 txid = (*it).second;
         uint256 blockHash;
-        CTransaction wtx;
+        CTransactionRef wtx;
         CMPTransaction mp_obj;
-        if (!GetTransaction(txid, wtx, blockHash)) {
+        if (!GetTransaction(txid, wtx, Params().GetConsensus(), blockHash)) {
             PrintToLog("ERROR: While loading alert %s: tx in levelDB but does not exist.\n", txid.GetHex());
             continue;
         }
@@ -532,7 +557,7 @@ void CMPTxList::LoadAlerts(int blockHeight)
             // skipping, because it's in the future
             continue;
         }
-        if (0 != ParseTransaction(wtx, blockHeight, 0, mp_obj)) {
+        if (0 != ParseTransaction(*wtx, blockHeight, 0, mp_obj)) {
             PrintToLog("ERROR: While loading alert %s: failed ParseTransaction.\n", txid.GetHex());
             continue;
         }
@@ -560,8 +585,8 @@ void CMPTxList::LoadAlerts(int blockHeight)
     int64_t blockTime = 0;
     {
         LOCK(cs_main);
-        CBlockIndex* pBlockIndex = chainActive[blockHeight - 1];
-        if (pBlockIndex != NULL) {
+        CBlockIndex* pBlockIndex = ::ChainActive()[blockHeight - 1];
+        if (pBlockIndex != nullptr) {
             blockTime = pBlockIndex->GetBlockTime();
         }
     }
@@ -596,19 +621,19 @@ void CMPTxList::LoadActivations(int blockHeight)
     for (std::vector<std::pair<int64_t, uint256> >::iterator it = loadOrder.begin(); it != loadOrder.end(); ++it) {
         uint256 hash = (*it).second;
         uint256 blockHash;
-        CTransaction wtx;
+        CTransactionRef wtx;
         CMPTransaction mp_obj;
 
-        if (!GetTransaction(hash, wtx, blockHash)) {
+        if (!GetTransaction(hash, wtx, Params().GetConsensus(), blockHash)) {
             PrintToLog("ERROR: While loading activation transaction %s: tx in levelDB but does not exist.\n", hash.GetHex());
             continue;
         }
-        if (blockHash.IsNull() || (NULL == GetBlockIndex(blockHash))) {
+        if (blockHash.IsNull() || (nullptr == GetBlockIndex(blockHash))) {
             PrintToLog("ERROR: While loading activation transaction %s: failed to retrieve block hash.\n", hash.GetHex());
             continue;
         }
         CBlockIndex* pBlockIndex = GetBlockIndex(blockHash);
-        if (NULL == pBlockIndex) {
+        if (nullptr == pBlockIndex) {
             PrintToLog("ERROR: While loading activation transaction %s: failed to retrieve block index.\n", hash.GetHex());
             continue;
         }
@@ -617,7 +642,7 @@ void CMPTxList::LoadActivations(int blockHeight)
             // skipping, because it's in the future
             continue;
         }
-        if (0 != ParseTransaction(wtx, currentBlockHeight, 0, mp_obj)) {
+        if (0 != ParseTransaction(*wtx, currentBlockHeight, 0, mp_obj)) {
             PrintToLog("ERROR: While loading activation transaction %s: failed ParseTransaction.\n", hash.GetHex());
             continue;
         }
@@ -639,7 +664,7 @@ void CMPTxList::LoadActivations(int blockHeight)
     CheckLiveActivations(blockHeight);
 
     // This alert never expires as long as custom activations are used
-    if (mapArgs.count("-omniactivationallowsender") || mapArgs.count("-omniactivationignoresender")) {
+    if (gArgs.IsArgSet("-omniactivationallowsender") || gArgs.IsArgSet("-omniactivationignoresender")) {
         AddAlert("omnicore", ALERT_CLIENT_VERSION_EXPIRY, std::numeric_limits<uint32_t>::max(),
                 "Authorization for feature activation has been modified.  Data provided by this client should not be trusted.");
     }
@@ -676,18 +701,18 @@ bool CMPTxList::LoadFreezeState(int blockHeight)
     for (std::vector<std::pair<std::string, uint256> >::iterator it = loadOrder.begin(); it != loadOrder.end(); ++it) {
         uint256 hash = (*it).second;
         uint256 blockHash;
-        CTransaction wtx;
+        CTransactionRef wtx;
         CMPTransaction mp_obj;
-        if (!GetTransaction(hash, wtx, blockHash)) {
+        if (!GetTransaction(hash, wtx, Params().GetConsensus(), blockHash)) {
             PrintToLog("ERROR: While loading freeze transaction %s: tx in levelDB but does not exist.\n", hash.GetHex());
             return false;
         }
-        if (blockHash.IsNull() || (NULL == GetBlockIndex(blockHash))) {
+        if (blockHash.IsNull() || (nullptr == GetBlockIndex(blockHash))) {
             PrintToLog("ERROR: While loading freeze transaction %s: failed to retrieve block hash.\n", hash.GetHex());
             return false;
         }
         CBlockIndex* pBlockIndex = GetBlockIndex(blockHash);
-        if (NULL == pBlockIndex) {
+        if (nullptr == pBlockIndex) {
             PrintToLog("ERROR: While loading freeze transaction %s: failed to retrieve block index.\n", hash.GetHex());
             return false;
         }
@@ -696,7 +721,7 @@ bool CMPTxList::LoadFreezeState(int blockHeight)
             // skipping, because it's in the future
             continue;
         }
-        if (0 != ParseTransaction(wtx, currentBlockHeight, 0, mp_obj)) {
+        if (0 != ParseTransaction(*wtx, currentBlockHeight, 0, mp_obj)) {
             PrintToLog("ERROR: While loading freeze transaction %s: failed ParseTransaction.\n", hash.GetHex());
             return false;
         }
@@ -717,9 +742,9 @@ bool CMPTxList::LoadFreezeState(int blockHeight)
         txnsLoaded++;
     }
 
-    // if (blockHeight > 497000 && !isNonMainNet()) {
-    //     assert(txnsLoaded >= 2); // sanity check against a failure to properly load the freeze state
-    // }
+    if (blockHeight > 497000 && !isNonMainNet()) {
+        assert(txnsLoaded >= 2); // sanity check against a failure to properly load the freeze state
+    }
 
     return true;
 }

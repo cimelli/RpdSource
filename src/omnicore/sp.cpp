@@ -1,17 +1,17 @@
 // Smart Properties & Crowd Sales
 
-#include "omnicore/sp.h"
+#include <omnicore/sp.h>
 
-#include "omnicore/dbspinfo.h"
-#include "omnicore/log.h"
-#include "omnicore/omnicore.h"
-#include "omnicore/uint256_extensions.h"
+#include <omnicore/log.h>
+#include <omnicore/omnicore.h>
+#include <omnicore/uint256_extensions.h>
 
-#include "arith_uint256.h"
-#include "main.h"
-#include "tinyformat.h"
-#include "uint256.h"
-#include "utiltime.h"
+#include <arith_uint256.h>
+#include <hash.h>
+#include <validation.h>
+#include <tinyformat.h>
+#include <uint256.h>
+#include <util/time.h>
 
 #include <boost/algorithm/string.hpp>
 #include <boost/filesystem.hpp>
@@ -54,7 +54,7 @@ void CMPCrowd::print(const std::string& address, FILE* fp) const
     fprintf(fp, "%s\n", toString(address).c_str());
 }
 
-void CMPCrowd::saveCrowdSale(std::ofstream& file, SHA256_CTX* shaCtx, const std::string& addr) const
+void CMPCrowd::saveCrowdSale(std::ofstream& file, const std::string& addr, CHash256& hasher) const
 {
     // compose the outputline
     // addr,propertyId,nValue,property_desired,deadline,early_bird,percentage,created,mined
@@ -86,7 +86,7 @@ void CMPCrowd::saveCrowdSale(std::ofstream& file, SHA256_CTX* shaCtx, const std:
     }
 
     // add the line to the hash
-    SHA256_Update(shaCtx, lineOut.c_str(), lineOut.length());
+    hasher.Write((unsigned char*)lineOut.c_str(), lineOut.length());
 
     // write the line
     file << lineOut << std::endl;
@@ -98,7 +98,7 @@ CMPCrowd* mastercore::getCrowd(const std::string& address)
 
     if (my_it != my_crowds.end()) return &(my_it->second);
 
-    return (CMPCrowd *)NULL;
+    return static_cast<CMPCrowd*>(nullptr);
 }
 
 bool mastercore::IsPropertyIdValid(uint32_t propertyId)
@@ -118,6 +118,37 @@ bool mastercore::IsPropertyIdValid(uint32_t propertyId)
     }
 
     return false;
+}
+
+bool mastercore::isPropertyNonFungible(uint32_t propertyId)
+{
+    CMPSPInfo::Entry sp;
+
+    if (pDbSpInfo->getSP(propertyId, sp)) return sp.unique;
+
+    return false;
+}
+
+bool mastercore::HasDelegate(uint32_t propertyId)
+{
+    CMPSPInfo::Entry sp;
+
+    if (pDbSpInfo->getSP(propertyId, sp)) {
+        return !sp.delegate.empty();
+    }
+
+    return false;
+}
+
+std::string mastercore::GetDelegate(uint32_t propertyId)
+{
+    CMPSPInfo::Entry sp;
+
+    if (pDbSpInfo->getSP(propertyId, sp)) {
+        return sp.delegate;
+    }
+
+    return "";
 }
 
 bool mastercore::isPropertyDivisible(uint32_t propertyId)
@@ -151,7 +182,7 @@ bool mastercore::isCrowdsaleActive(uint32_t propertyId)
  * Calculates missing bonus tokens, which are credited to the crowdsale issuer.
  *
  * Due to rounding effects, a crowdsale issuer may not receive the full
- * bonus immediatly. The missing amount is calculated based on the total
+ * bonus immediately. The missing amount is calculated based on the total
  * tokens created and already credited.
  *
  * @param sp        The crowdsale property
@@ -197,7 +228,6 @@ int64_t mastercore::GetMissedIssuerBonus(const CMPSPInfo::Entry& sp, const CMPCr
 }
 
 // calculateFundraiser does token calculations per transaction
-// calcluateFractional does calculations for missed tokens
 void mastercore::calculateFundraiser(bool inflateAmount, int64_t amtTransfer, uint8_t bonusPerc,
         int64_t fundraiserSecs, int64_t currentSecs, int64_t numProps, uint8_t issuerPerc, int64_t totalTokens,
         std::pair<int64_t, int64_t>& tokens, bool& close_crowdsale)
@@ -224,7 +254,7 @@ void mastercore::calculateFundraiser(bool inflateAmount, int64_t amtTransfer, ui
     // Calculate the earlybird percentage to be applied
     arith_uint256 ebPercentage_ = weeks_ * ConvertTo256(bonusPerc);
 
-    // Calcluate the bonus percentage to apply up to percentage_precision number of digits
+    // Calculate the bonus percentage to apply up to percentage_precision number of digits
     arith_uint256 bonusPercentage_ = (precision_ * percentage_precision);
     bonusPercentage_ += ebPercentage_;
     bonusPercentage_ /= percentage_precision;
@@ -263,7 +293,7 @@ void mastercore::calculateFundraiser(bool inflateAmount, int64_t amtTransfer, ui
         arith_uint256 maxCreatable = uint256_const::max_int64 - ConvertTo256(totalTokens);
         arith_uint256 created = createdTokens_int + issuerTokens_int;
 
-        // Calcluate the ratio of tokens for what we can create and apply it
+        // Calculate the ratio of tokens for what we can create and apply it
         arith_uint256 ratio = created * precision_;
         ratio *= satoshi_precision_;
         ratio /= maxCreatable;
@@ -330,7 +360,7 @@ bool mastercore::isCrowdsalePurchase(const uint256& txid, const std::string& add
     return false;
 }
 
-void mastercore::eraseMaxedCrowdsale(const std::string& address, int64_t blockTime, int block)
+void mastercore::eraseMaxedCrowdsale(const std::string& address, int64_t blockTime, int block, uint256& blockHash)
 {
     CrowdMap::iterator it = my_crowds.find(address);
 
@@ -341,7 +371,7 @@ void mastercore::eraseMaxedCrowdsale(const std::string& address, int64_t blockTi
             __func__, address, block, blockTime, crowdsale.getPropertyId(), strMPProperty(crowdsale.getPropertyId()));
 
         if (msc_debug_sp) {
-            PrintToLog("%s(): %s\n", __func__, DateTimeStrFormat("%Y-%m-%d %H:%M:%S", blockTime));
+            PrintToLog("%s(): %s\n", __func__, FormatISO8601DateTime(blockTime));
             PrintToLog("%s(): %s\n", __func__, crowdsale.toString(address));
         }
 
@@ -354,9 +384,8 @@ void mastercore::eraseMaxedCrowdsale(const std::string& address, int64_t blockTi
         sp.close_early = true;
         sp.max_tokens = true;
         sp.timeclosed = blockTime;
+        sp.update_block = blockHash;
 
-        // update SP with this data
-        sp.update_block = chainActive[block]->GetBlockHash();
         assert(pDbSpInfo->updateSP(crowdsale.getPropertyId(), sp));
 
         // no calculate fractional calls here, no more tokens (at MAX)
@@ -366,7 +395,7 @@ void mastercore::eraseMaxedCrowdsale(const std::string& address, int64_t blockTi
 
 unsigned int mastercore::eraseExpiredCrowdsale(const CBlockIndex* pBlockIndex)
 {
-    if (pBlockIndex == NULL) return 0;
+    if (pBlockIndex == nullptr) return 0;
 
     const int64_t blockTime = pBlockIndex->GetBlockTime();
     const int blockHeight = pBlockIndex->nHeight;
@@ -382,7 +411,7 @@ unsigned int mastercore::eraseExpiredCrowdsale(const CBlockIndex* pBlockIndex)
                 __func__, address, blockHeight, blockTime, crowdsale.getPropertyId(), strMPProperty(crowdsale.getPropertyId()));
 
             if (msc_debug_sp) {
-                PrintToLog("%s(): %s\n", __func__, DateTimeStrFormat("%Y-%m-%d %H:%M:%S", blockTime));
+                PrintToLog("%s(): %s\n", __func__, FormatISO8601DateTime(blockTime));
                 PrintToLog("%s(): %s\n", __func__, crowdsale.toString(address));
             }
 
@@ -421,6 +450,7 @@ std::string mastercore::strPropertyType(uint16_t propertyType)
     switch (propertyType) {
         case MSC_PROPERTY_TYPE_DIVISIBLE: return "divisible";
         case MSC_PROPERTY_TYPE_INDIVISIBLE: return "indivisible";
+        case MSC_PROPERTY_TYPE_NONFUNGIBLE: return "non-fungible";
     }
 
     return "unknown";

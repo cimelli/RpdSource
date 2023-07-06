@@ -1,11 +1,10 @@
-#ifndef OMNICORE_DBTRANSACTION_H
-#define OMNICORE_DBTRANSACTION_H
+#ifndef BITCOIN_OMNICORE_DBTRANSACTION_H
+#define BITCOIN_OMNICORE_DBTRANSACTION_H
 
-#include "omnicore/dbbase.h"
+#include <omnicore/dbbase.h>
 
-#include "uint256.h"
-
-#include <boost/filesystem/path.hpp>
+#include <fs.h>
+#include <uint256.h>
 
 #include <stdint.h>
 
@@ -17,7 +16,7 @@
 class COmniTransactionDB : public CDBBase
 {
 public:
-    COmniTransactionDB(const boost::filesystem::path& path, bool fWipe);
+    COmniTransactionDB(const fs::path& path, bool fWipe);
     virtual ~COmniTransactionDB();
 
     /** Stores position in block and validation result for a transaction. */
@@ -40,5 +39,5 @@ namespace mastercore
     extern COmniTransactionDB* pDbTransaction;
 }
 
-#endif // OMNICORE_DBTRANSACTION_H
+#endif // BITCOIN_OMNICORE_DBTRANSACTION_H
 

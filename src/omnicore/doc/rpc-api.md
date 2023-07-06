@@ -14,8 +14,11 @@ All available commands can be listed with `"help"`, and information about a spec
 
 - [Transaction creation](#transaction-creation)
   - [omni_send](#omni_send)
-  - [omni_senddexsell](#omni_senddexsell)
+  - [omni_sendnewdexorder](#omni_sendnewdexorder)
+  - [omni_sendupdatedexorder](#omni_sendupdatedexorder)
+  - [omni_sendcanceldexorder](#omni_sendcanceldexorder)
   - [omni_senddexaccept](#omni_senddexaccept)
+  - [omni_senddexpay](#omni_senddexpay)
   - [omni_sendissuancecrowdsale](#omni_sendissuancecrowdsale)
   - [omni_sendissuancefixed](#omni_sendissuancefixed)
   - [omni_sendissuancemanaged](#omni_sendissuancemanaged)
@@ -33,9 +36,14 @@ All available commands can be listed with `"help"`, and information about a spec
   - [omni_senddisablefreezing](#omni_senddisablefreezing)
   - [omni_sendfreeze](#omni_sendfreeze)
   - [omni_sendunfreeze](#omni_sendunfreeze)
+  - [omni_sendadddelegate](#omni_sendadddelegate)
+  - [omni_sendremovedelegate](#omni_sendremovedelegate)
+  - [omni_sendanydata](#omni_sendanydata)
   - [omni_sendrawtx](#omni_sendrawtx)
   - [omni_funded_send](#omni_funded_send)
   - [omni_funded_sendall](#omni_funded_sendall)
+  - [omni_sendnonfungible](#omni_sendnonfungible)
+  - [omni_setnonfungibledata](#omni_setnonfungibledata)
 - [Data retrieval](#data-retrieval)
   - [omni_getinfo](#omni_getinfo)
   - [omni_getbalance](#omni_getbalance)
@@ -63,6 +71,17 @@ All available commands can be listed with `"help"`, and information about a spec
   - [omni_getpayload](#omni_getpayload)
   - [omni_getseedblocks](#omni_getseedblocks)
   - [omni_getcurrentconsensushash](#omni_getcurrentconsensushash)
+  - [omni_getnonfungibletokens](#omni_getnonfungibletokens)
+  - [omni_getnonfungibletokendata](#omni_getnonfungibletokendata)
+  - [omni_getnonfungibletokenranges](#omni_getnonfungibletokenranges)
+- [Data retrieval (address index)](#data-retrieval-address-index)
+  - [getaddresstxids](#getaddresstxids)
+  - [getaddressdeltas](#getaddressdeltas)
+  - [getaddressbalance](#getaddressbalance)
+  - [getaddressutxos](#getaddressutxos)
+  - [getaddressmempool](#getaddressmempool)
+  - [getblockhashes](#getblockhashes)
+  - [getspentinfo](#getspentinfo)
 - [Raw transactions](#raw-transactions)
   - [omni_decodetransaction](#omni_decodetransaction)
   - [omni_createrawtx_opreturn](#omni_createrawtx_opreturn)
@@ -90,6 +109,11 @@ All available commands can be listed with `"help"`, and information about a spec
   - [omni_createpayload_disablefreezing](#omni_createpayload_disablefreezing)
   - [omni_createpayload_freeze](#omni_createpayload_freeze)
   - [omni_createpayload_unfreeze](#omni_createpayload_unfreeze)
+  - [omni_createpayload_adddelegate](#omni_createpayload_adddelegate)
+  - [omni_createpayload_removedelegate](#omni_createpayload_removedelegate)
+  - [omni_createpayload_anydata](#omni_createpayload_anydata)
+  - [omni_createpayload_sendnonfungible](#omni_createpayload_sendnonfungible)
+  - [omni_createpayload_setnonfungibledata](#omni_createpayload_setnonfungibledata)
 - [Fee system](#fee-system)
   - [omni_getfeecache](#omni_getfeecache)
   - [omni_getfeetrigger](#omni_getfeetrigger)
@@ -98,7 +122,7 @@ All available commands can be listed with `"help"`, and information about a spec
   - [omni_getfeedistributions](#omni_getfeedistributions)
 - [Configuration](#configuration)
   - [omni_setautocommit](#omni_setautocommit)
-- [Depreciated API calls](#depreciated-api-calls)
+- [Deprecated API calls](#deprecated-api-calls)
 
 ---
 
@@ -138,14 +162,20 @@ $ omnicore-cli "omni_send" "3M9qvHKtgARhqcMtM5cRT9VaiDJ5PSfQGY" "37FaKponF7zqoML
 
 ### omni_senddexsell
 
-Place, update or cancel a sell offer on the traditional distributed OMNI/BTC exchange.
+Place, update or cancel a sell offer on the distributed token/BTC exchange.
+
+**Please note: this RPC is replaced by:**
+
+- [omni_sendnewdexorder](#omni_sendnewdexorder)
+- [omni_sendupdatedexorder](#omni_sendupdatedexorder)
+- [omni_sendcanceldexorder](#omni_sendcanceldexorder)
 
 **Arguments:**
 
 | Name                | Type    | Presence | Description                                                                                  |
 |---------------------|---------|----------|----------------------------------------------------------------------------------------------|
 | `fromaddress`       | string  | required | the address to send from                                                                     |
-| `propertyidforsale` | number  | required | the identifier of the tokens to list for sale (must be `1` for `OMN` or `2`for `TOMN`)       |
+| `propertyidforsale` | number  | required | the identifier of the tokens to list for sale                                                |
 | `amountforsale`     | string  | required | the amount of tokens to list for sale                                                        |
 | `amountdesired`     | string  | required | the amount of bitcoins desired                                                               |
 | `paymentwindow`     | number  | required | a time limit in blocks a buyer has to pay following a successful accepting order             |
@@ -160,7 +190,87 @@ Place, update or cancel a sell offer on the traditional distributed OMNI/BTC exc
 **Example:**
 
 ```bash
-$ omnicore-cli "omni_senddexsell" "37FaKponF7zqoMLUjEiko25pDiuVH5YLEa" 1 "1.5" "0.75" 25 "0.0005" 1
+$ omnicore-cli "omni_senddexsell" "37FaKponF7zqoMLUjEiko25pDiuVH5YLEa" 1 "1.5" "0.75" 25 "0.0001" 1
+```
+
+---
+
+### omni_sendnewdexorder
+
+Creates a new sell offer on the distributed token/BTC exchange.
+
+**Arguments:**
+
+| Name                | Type    | Presence | Description                                                                                  |
+|---------------------|---------|----------|----------------------------------------------------------------------------------------------|
+| `fromaddress`       | string  | required | the address to send from                                                                     |
+| `propertyidforsale` | number  | required | the identifier of the tokens to list for sale                                                |
+| `amountforsale`     | string  | required | the amount of tokens to list for sale                                                        |
+| `amountdesired`     | string  | required | the amount of bitcoins desired                                                               |
+| `paymentwindow`     | number  | required | a time limit in blocks a buyer has to pay following a successful accepting order             |
+| `minacceptfee`      | string  | required | a minimum mining fee a buyer has to pay to accept the offer                                  |
+
+**Result:**
+```js
+"hash"  // (string) the hex-encoded transaction hash
+```
+
+**Example:**
+
+```bash
+$ omnicore-cli "omni_sendnewdexorder" "37FaKponF7zqoMLUjEiko25pDiuVH5YLEa" 1 "1.5" "0.75" 50 "0.0001"
+```
+
+---
+
+### omni_sendupdatedexorder
+
+Updates an existing sell offer on the distributed token/BTC exchange.
+
+**Arguments:**
+
+| Name                | Type    | Presence | Description                                                                                  |
+|---------------------|---------|----------|----------------------------------------------------------------------------------------------|
+| `fromaddress`       | string  | required | the address to send from                                                                     |
+| `propertyidforsale` | number  | required | the identifier of the tokens to update                                                       |
+| `amountforsale`     | string  | required | the new amount of tokens to list for sale                                                    |
+| `amountdesired`     | string  | required | the new amount of bitcoins desired                                                           |
+| `paymentwindow`     | number  | required | a new time limit in blocks a buyer has to pay following a successful accepting order         |
+| `minacceptfee`      | string  | required | a new minimum mining fee a buyer has to pay to accept the offer                              |
+
+**Result:**
+```js
+"hash"  // (string) the hex-encoded transaction hash
+```
+
+**Example:**
+
+```bash
+$ omnicore-cli "omni_sendupdatedexorder" "37FaKponF7zqoMLUjEiko25pDiuVH5YLEa" 1 "1.0" "1.75" 50 "0.0001"
+```
+
+---
+
+### omni_sendcanceldexorder
+
+Cancels existing sell offer on the distributed token/BTC exchange.
+
+**Arguments:**
+
+| Name                | Type    | Presence | Description                                                                                  |
+|---------------------|---------|----------|----------------------------------------------------------------------------------------------|
+| `fromaddress`       | string  | required | the address to send from                                                                     |
+| `propertyidforsale` | number  | required | the identifier of the tokens to cancel                                                       |
+
+**Result:**
+```js
+"hash"  // (string) the hex-encoded transaction hash
+```
+
+**Example:**
+
+```bash
+$ omnicore-cli "omni_sendcanceldexorder" "37FaKponF7zqoMLUjEiko25pDiuVH5YLEa" 1
 ```
 
 ---
@@ -188,6 +298,35 @@ Create and broadcast an accept offer for the specified token and amount.
 
 ```bash
 $ omnicore-cli "omni_senddexaccept" \
+    "35URq1NN3xL6GeRKUP6vzaQVcxoJiiJKd8" "37FaKponF7zqoMLUjEiko25pDiuVH5YLEa" 1 "15.0"
+```
+---
+
+### omni_senddexpay
+
+Create and broadcast payment for an accept offer.
+
+Please note:
+Partial purchases are not possible and the whole accepted amount must be paid.
+
+**Arguments:**
+
+| Name                | Type    | Presence | Description                                                                                  |
+|---------------------|---------|----------|----------------------------------------------------------------------------------------------|
+| `fromaddress`       | string  | required | the address to send from                                                                     |
+| `toaddress`         | string  | required | the address of the seller                                                                    |
+| `propertyid`        | number  | required | the identifier of the token to purchase                                                      |
+| `amount`            | string  | required | the Bitcoin amount to send                                                                   |
+
+**Result:**
+```js
+"hash"  // (string) the hex-encoded transaction hash
+```
+
+**Example:**
+
+```bash
+$ omnicore-cli "omni_senddexpay" \
     "35URq1NN3xL6GeRKUP6vzaQVcxoJiiJKd8" "37FaKponF7zqoMLUjEiko25pDiuVH5YLEa" 1 "15.0"
 ```
 
@@ -275,7 +414,7 @@ Create new tokens with manageable supply.
 |---------------------|---------|----------|----------------------------------------------------------------------------------------------|
 | `fromaddress`       | string  | required | the address to send from                                                                     |
 | `ecosystem`         | number  | required | the ecosystem to create the tokens in (`1` for main ecosystem, `2` for test ecosystem)       |
-| `type`              | number  | required | the type of the tokens to create: (`1` for indivisible tokens, `2` for divisible tokens)     |
+| `type`              | number  | required | the type of the tokens to create: (`1` for indivisible tokens, `2` for divisible tokens, `5` for NFTs)     |
 | `previousid`        | number  | required | an identifier of a predecessor token (`0` for new tokens)                                    |
 | `category`          | string  | required | a category for the new tokens (can be `""`)                                                  |
 | `subcategory`       | string  | required | a subcategory for the new tokens (can be `""`)                                               |
@@ -337,7 +476,7 @@ Issue or grant new units of managed tokens.
 | `toaddress`         | string  | required | the receiver of the tokens (sender by default, can be `""`)                                  |
 | `propertyid`        | number  | required | the identifier of the tokens to grant                                                        |
 | `amount`            | string  | required | the amount of tokens to create                                                               |
-| `memo`              | string  | optional | a text note attached to this transaction (none by default)                                   |
+| `grantdata`         | string  | optional | NFT only: data set in all NFTs created in this grant (default: empty)                        |
 
 **Result:**
 ```js
@@ -618,7 +757,7 @@ Note: Only the issuer may freeze tokens, and only if the token is of the managed
 
 | Name                | Type    | Presence | Description                                                                                  |
 |---------------------|---------|----------|----------------------------------------------------------------------------------------------|
-| `fromaddress`       | string  | required | the address to send from (must be issuer of a managed property with freezing enabled         |
+| `fromaddress`       | string  | required | the address to send from (must be delegate or issuer of a managed property with freezing enabled |
 | `toaddress`         | string  | required | the address to freeze                                                                        |
 | `propertyid`        | number  | required | the identifier of the tokens to freeze                                                       |
 | `amount`            | string  | required | the amount to freeze (note: currently unused, frozen addresses cannot transact the property) |
@@ -646,7 +785,7 @@ Note: Only the issuer may unfreeze tokens
 
 | Name                | Type    | Presence | Description                                                                                  |
 |---------------------|---------|----------|----------------------------------------------------------------------------------------------|
-| `fromaddress`       | string  | required | the address to send from (must be issuer of a managed property with freezing enabled         |
+| `fromaddress`       | string  | required | the address to send from (must be delegate or issuer of a managed property with freezing enabled |
 | `toaddress`         | string  | required | the address to unfreeze                                                                      |
 | `propertyid`        | number  | required | the identifier of the tokens to unfreeze                                                     |
 | `amount`            | string  | required | the amount to unfreeze (note: currently unused                                               |
@@ -660,6 +799,87 @@ Note: Only the issuer may unfreeze tokens
 
 ```bash
 $ omnicore-cli "omni_sendunfreeze" "3M9qvHKtgARhqcMtM5cRT9VaiDJ5PSfQGY" "3HTHRxu3aSDV4deakjC7VmsiUp7c6dfbvs" 2 1000
+```
+
+---
+
+### omni_sendadddelegate
+
+Adds a delegate for the issuance of tokens of a managed property.
+
+**Arguments:**
+
+| Name                | Type    | Presence | Description                                                                                  |
+|---------------------|---------|----------|----------------------------------------------------------------------------------------------|
+| `fromaddress`       | string  | required | the issuer of the tokens                                                                     |
+| `propertyid`        | number  | required | the identifier of the tokens                                                                 |
+| `delegateaddress`   | string  | required | the new delegate                                                                             |
+
+**Result:**
+```js
+"hash"  // (string) the hex-encoded transaction hash
+```
+
+**Example:**
+
+```bash
+$ omnicore-cli "omni_sendadddelegate" "12GftZCQ3vwubWmRCmnfZAHdDWXj6ujenx" 21 "14TG9NsTxk2fvH8iGiFcVbquC5NPhHcFjh"
+```
+
+---
+
+### omni_sendremovedelegate
+
+Removes a delegate for the issuance of tokens of a managed property.
+
+**Arguments:**
+
+| Name                | Type    | Presence | Description                                                                                  |
+|---------------------|---------|----------|----------------------------------------------------------------------------------------------|
+| `fromaddress`       | string  | required | the issuer or delegate of the tokens                                                         |
+| `propertyid`        | number  | required | the identifier of the tokens                                                                 |
+| `delegateaddress`   | string  | required | the delegate to be removed                                                                   |
+
+**Result:**
+```js
+"hash"  // (string) the hex-encoded transaction hash
+```
+
+**Example:**
+
+```bash
+$ omnicore-cli "omni_sendremovedelegate" "12GftZCQ3vwubWmRCmnfZAHdDWXj6ujenx" 21 "14TG9NsTxk2fvH8iGiFcVbquC5NPhHcFjh"
+```
+
+---
+
+### omni_sendanydata
+
+Create and broadcast a transaction with an arbitrary payload.
+
+When no receiver is specified, the sender is also considered as receiver.
+
+**Arguments:**
+
+| Name                | Type    | Presence | Description                                                                                  |
+|---------------------|---------|----------|----------------------------------------------------------------------------------------------|
+| `fromaddress`       | string  | required | the address to send from                                                                     |
+| `data`              | string  | required | the hex-encoded data                                                                         |
+| `toaddress`         | string  | optional | the optional address of the receiver                                                                  |
+
+**Result:**
+```js
+"hash"  // (string) the hex-encoded transaction hash
+```
+
+**Example:**
+
+```bash
+$ omnicore-cli "omni_sendanydata" "3M9qvHKtgARhqcMtM5cRT9VaiDJ5PSfQGY" "646578782032303230"
+```
+
+```bash
+$ omnicore-cli "omni_sendanydata" "3M9qvHKtgARhqcMtM5cRT9VaiDJ5PSfQGY" "646578782032303230" "3HTHRxu3aSDV4deakjC7VmsiUp7c6dfbvs"
 ```
 
 ---
@@ -753,6 +973,63 @@ $ omnicore-cli "omni_funded_sendall" "1DFa5bT6KMEr6ta29QJouainsjaNBsJQhH" \
 
 ---
 
+### omni_sendnonfungible
+
+Create and broadcast a non-fungible send transaction.
+
+**Arguments:**
+
+| Name                | Type    | Presence | Description                                                                                  |
+|---------------------|---------|----------|----------------------------------------------------------------------------------------------|
+| `address`           | string  | required | the address to send from                                                                     |
+| `toaddress`         | string  | required | the address of the receiver                                                                  |
+| `propertyid`        | number  | required | the identifier of the tokens to send                                                         |
+| `tokenstart`        | number  | required | the first token in the range to send                                                         |
+| `tokenend`          | number  | required | the last token in the range to send                                                          |
+| `redeemaddress`     | string  | optional | an address that can spend the transaction dust (sender by default)                           |
+| `referenceamount`   | string  | optional | a bitcoin amount that is sent to the receiver (minimal by default)                           |
+
+**Result:**
+```js
+"hash"  // (string) the hex-encoded transaction hash
+```
+
+**Example:**
+
+```bash
+$ omnicore-cli "omni_sendnonfungible" "3M9qvHKtgARhqcMtM5cRT9VaiDJ5PSfQGY" "37FaKponF7zqoMLUjEiko25pDiuVH5YLEa" 70 1 1000
+```
+
+---
+
+### omni_setnonfungibledata
+
+Sets either the issuer or holder data field in a non-fungible tokem. Holder data can only be
+updated by the token owner and issuer data can only be updated by address that created the tokens.
+
+**Arguments:**
+
+| Name                | Type    | Presence | Description                                                                                  |
+|---------------------|---------|----------|----------------------------------------------------------------------------------------------|
+| `propertyid`        | number  | required | the property identifier                                                                      |
+| `tokenstart`        | number  | required | the first token in the range to set data on                                                  |
+| `tokenend`          | number  | required | the last token in the range to set data on                                                   |
+| `issuer`            | boolean | required | if true issuer data set, otherwise holder data set                                           |
+| `data`              | string  | required | data set as in either issuer or holder fields                                                |
+
+**Result:**
+```js
+"hash"  // (string) the hex-encoded transaction hash
+```
+
+**Example:**
+
+```bash
+$ omnicore-cli "omni_setnonfungibledata" 70 50 60 true "string data"
+```
+
+---
+
 
 ## Data retrieval
 
@@ -772,7 +1049,7 @@ Result:
 {
   "omnicoreversion_int" : xxxxxxx,      // (number) client version as integer
   "omnicoreversion" : "x.x.x.x-xxx",    // (string) client version
-  "mastercoreversion" : "x.x.x.x-xxx",  // (string) client version (DEPRECIATED)
+  "mastercoreversion" : "x.x.x.x-xxx",  // (string) client version (DEPRECATED)
   "bitcoincoreversion" : "x.x.x",       // (string) Bitcoin Core version
   "commitinfo" : "xxxxxxx",             // (string) build commit identifier
   "block" : nnnnnn,                     // (number) index of the last processed block
@@ -783,7 +1060,7 @@ Result:
     {
       "alerttype" : n                       // (number) alert type as integer
       "alerttype" : "xxx"                   // (string) alert type (can be "alertexpiringbyblock", "alertexpiringbyblocktime", "alertexpiringbyclientversion" or "error")
-      "alertexpiry" : "nnnnnnnnnn"          // (string) expiration criteria (can refer to block height, timestamp or client verion)
+      "alertexpiry" : "nnnnnnnnnn"          // (string) expiration criteria (can refer to block height, timestamp or client version)
       "alertmessage" : "xxx"                // (string) information about the alert
     },
     ...
@@ -1185,6 +1462,8 @@ $ omnicore-cli "omni_getactivedexsells"
 
 Lists all tokens or smart properties.
 
+To get the total number of tokens, please use omni_getproperty.
+
 **Arguments:**
 
 *None*
@@ -1200,6 +1479,10 @@ Lists all tokens or smart properties.
     "data" : "information",         // (string) additional information or a description
     "url" : "uri",                  // (string) an URI, for example pointing to a website
     "divisible" : true|false        // (boolean) whether the tokens are divisible
+    "issuer" : "address",           // (string) the Bitcoin address of the issuer on record
+    "creationtxid" : "hash",        // (string) the hex-encoded creation transaction hash
+    "fixedissuance" : true|false,   // (boolean) whether the token supply is fixed
+    "managedissuance" : true|false, // (boolean) whether the token supply is managed by the issuer
   },
   ...
 ]
@@ -1234,6 +1517,7 @@ Returns details for about the tokens or smart property to lookup.
   "url" : "uri",                  // (string) an URI, for example pointing to a website
   "divisible" : true|false,       // (boolean) whether the tokens are divisible
   "issuer" : "address",           // (string) the Bitcoin address of the issuer on record
+  "delegate" : "address",         // (string) the Bitcoin address of the issuance delegate, if there is one
   "creationtxid" : "hash",        // (string) the hex-encoded creation transaction hash
   "fixedissuance" : true|false,   // (boolean) whether the token supply is fixed
   "managedissuance" : true|false, // (boolean) whether the token supply is managed by the issuer
@@ -1490,7 +1774,7 @@ List active offers on the distributed token exchange.
 | Name                | Type    | Presence | Description                                                                                  |
 |---------------------|---------|----------|----------------------------------------------------------------------------------------------|
 | `propertyid`        | number  | required | filter orders by `propertyid` for sale                                                       |
-| `propertyid`        | number  | optional | filter orders by `propertyid` desired                                                        |
+| `propertyiddesired` | number  | optional | filter orders by `propertyiddesired`                                                        |
 
 **Result:**
 ```js
@@ -1532,7 +1816,7 @@ Retrieves the history of trades on the distributed token exchange for the specif
 | Name                | Type    | Presence | Description                                                                                  |
 |---------------------|---------|----------|----------------------------------------------------------------------------------------------|
 | `propertyid`        | number  | required | the first side of the traded pair                                                            |
-| `propertyid`        | number  | required | the second side of the traded pair                                                           |
+| `propertyidsecond`  | number  | required | the second side of the traded pair                                                           |
 | `count`             | number  | optional | number of trades to retrieve (default: `10`)                                                 |
 
 **Result:**
@@ -1677,7 +1961,7 @@ Get the payload for an Omni transaction.
 **Example:**
 
 ```bash
-$ omnicore-cli "omni_getactivations" "1075db55d416d3ca199f55b6084e2115b9345e16c5cf302fc80e9d5fbf5d48d"
+$ omnicore-cli "omni_getpayload" "1075db55d416d3ca199f55b6084e2115b9345e16c5cf302fc80e9d5fbf5d48d"
 ```
 
 ---
@@ -1735,6 +2019,343 @@ $ omnicore-cli "omni_getcurrentconsensushash"
 ```
 
 ---
+
+### omni_getnonfungibletokens
+
+Returns the non-fungible tokens for a given address. Optional property ID filter.
+
+**Arguments:**
+
+| Name                | Type    | Presence | Description                                                                                  |
+|---------------------|---------|----------|----------------------------------------------------------------------------------------------|
+| `address`           | string  | required | the address                                                                                  |
+| `propertyid`        | number  | optional | the property identifier                                                                      |
+
+**Result:**
+```js
+[
+  {
+    "propertyid" : n,
+    "tokens" : [
+      {
+        "tokenstart" : n,            // (number) the first token in this range
+        "tokenend" : n,              // (number) the last token in this range
+        "amount" : n,                // (number) the amount of tokens in the range
+      }...
+    ]
+  }...
+]
+```
+
+**Example:**
+
+```bash
+$ omnicore-cli "omni_getnonfungibletokens 1EXoDusjGwvnjZUyKkxZ4UHEf77z6A5S4P 1"
+```
+
+---
+
+### omni_getnonfungibletokendata
+
+Returns owner and all data set in a non-fungible token.
+
+**Arguments:**
+
+| Name                | Type    | Presence | Description                                                                                  |
+|---------------------|---------|----------|----------------------------------------------------------------------------------------------|
+| `propertyid`        | number  | required | the property identifier                                                                      |
+| `tokenidstart`      | number  | required | the first non-fungible token in range                                                        |
+| `tokenidend`        | number  | required | the last non-fungible token in range                                                         |
+
+**Result:**
+```js
+{
+  "index" : n,                  // (number) the unique index of the token
+  "owner" : "owner",            // (string) the Bitcoin address of the owner
+  "grantdata" : "grantdata",    // (string) contents of the grant data field
+  "issuerdata" : "issuerdata",  // (string) contents of the issuer data field
+  "holderdata" : "holderdata",  // (string) contents of the holder data field
+}
+```
+
+**Example:**
+
+```bash
+$ omnicore-cli "omni_getnonfungibletokendata 1 10 20"
+```
+
+---
+
+### omni_getnonfungibletokenranges
+
+Returns the ranges and their addresses for a non-fungible token property.
+
+**Arguments:**
+
+| Name                | Type    | Presence | Description                                                                                  |
+|---------------------|---------|----------|----------------------------------------------------------------------------------------------|
+| `propertyid`        | number  | required | the property identifier                                                                      |
+
+**Result:**
+```js
+{
+  "address" : "address",        // (string) the address
+  "tokenstart" : n,            // (number) the first token in this range
+  "tokenend" : n,              // (number) the last token in this range
+  "amount" : n.nnnnnnnn,       // (number) the amount of tokens in the range
+}
+```
+
+**Example:**
+
+```bash
+$ omnicore-cli "omni_getnonfungibletokenranges 1"
+```
+
+---
+
+## Data retrieval (address index)
+
+The following RPCs can be used to obtain information about non-wallet balances and transactions. The address index must be enabled to use them.
+
+### getaddresstxids
+
+Returns the txids for one or more addresses (requires addressindex to be enabled).
+
+**Arguments:**
+
+| Name                | Type    | Presence | Description                                                                                  |
+|---------------------|---------|----------|----------------------------------------------------------------------------------------------|
+| `addresses`         | object  | required | an object with addresses and optional start and end blocks                                   |
+
+**Result:**
+```js
+[          // (array of txids) a list of transaction hashes
+  "hash",  // (string) the transaction identifier
+  ...
+]
+```
+
+**Example:**
+
+```bash
+$ omnicore-cli getaddresstxids '{"addresses": ["2NDaa1MvFcpc2CAbFvG5g9dDxzrRyDnKnsj"]}'
+```
+```bash
+$ omnicore-cli getaddresstxids '{"addresses": ["2NDaa1MvFcpc2CAbFvG5g9dDxzrRyDnKnsj"], "start": 380, "end": 400}'
+```
+
+---
+
+### getaddressdeltas
+
+Returns all changes for an address (requires addressindex to be enabled).
+
+**Arguments:**
+
+| Name                | Type    | Presence | Description                                                                                  |
+|---------------------|---------|----------|----------------------------------------------------------------------------------------------|
+| `addresses`         | object  | required | an object with addresses and optional start and end blocks                                   |
+
+**Result:**
+```js
+[
+  {
+    "satoshis": n,              // (number) the difference of satoshis
+    "txid": "hash",             // (string) the related txid
+    "index": n,                 // (number) the related input or output index
+    "height": n,                // (number) the block height
+    "address": "base58address", // (string) the address
+  },
+  ...
+]
+```
+
+**Example:**
+
+```bash
+$ omnicore-cli getaddressdeltas '{"addresses": ["2NDaa1MvFcpc2CAbFvG5g9dDxzrRyDnKnsj"]}'
+```
+```bash
+$ omnicore-cli getaddressdeltas '{"addresses": ["2NDaa1MvFcpc2CAbFvG5g9dDxzrRyDnKnsj"], "start": 380, "end": 400, "chainInfo": false}'
+```
+
+---
+
+### getaddressbalance
+
+Returns the balance for one or more addresses (requires addressindex to be enabled).
+
+**Arguments:**
+
+| Name                | Type    | Presence | Description                                                                                  |
+|---------------------|---------|----------|----------------------------------------------------------------------------------------------|
+| `addresses`         | object  | required | an array of addresses                                                                        |
+
+**Result:**
+```js
+{
+  "balance": n,   // (number) the current balance in satoshis
+  "received": n,  // (number) the total number of satoshis received (including change)
+  "immature": n   // (number) the total number of non-spendable mining satoshis received
+}
+```
+
+**Example:**
+
+```bash
+$ omnicore-cli getaddressbalance '{"addresses": ["2NDaa1MvFcpc2CAbFvG5g9dDxzrRyDnKnsj"]}'
+```
+```bash
+$ omnicore-cli getaddressbalance '{"addresses": ["2NDaa1MvFcpc2CAbFvG5g9dDxzrRyDnKnsj", "2N2Hca6QvczCnSJ1ZkFfjqDvmgPiWifFF8Q"]}'
+```
+
+---
+
+### getaddressutxos
+
+Returns all unspent outputs for an address (requires addressindex to be enabled).
+
+**Arguments:**
+
+| Name                | Type    | Presence | Description                                                                                  |
+|---------------------|---------|----------|----------------------------------------------------------------------------------------------|
+| `addresses`         | object  | required | an array of addresses                                                                        |
+
+**Result:**
+```js
+{
+  "utxos": [
+    {
+      "address": "base58address", // (string) The address
+      "txid": "hash"              // (string) The output txid
+      "outputIndex": n,           // (number) The block height
+      "script": "hex",            // (string) The script hex encoded
+      "satoshis": n,              // (number) The number of satoshis of the output
+      "height": 301,              // (number) The block height
+      "coinbase": true            // (boolean) Whether it's a coinbase transaction
+    },
+    ...
+  ],
+  "hash": "hash",                 // (string) The current block hash
+  "height": n                     // (string) The current block height
+}
+```
+
+**Example:**
+
+```bash
+$ omnicore-cli getaddressbalance '{"addresses": ["2NDaa1MvFcpc2CAbFvG5g9dDxzrRyDnKnsj"]}'
+```
+```bash
+$ omnicore-cli getaddressbalance '{"addresses": ["2NDaa1MvFcpc2CAbFvG5g9dDxzrRyDnKnsj"], "chainInfo": true}'
+```
+
+---
+
+### getaddressmempool
+
+Returns all mempool deltas for an address (requires addressindex to be enabled).
+
+**Arguments:**
+
+| Name                | Type    | Presence | Description                                                                                  |
+|---------------------|---------|----------|----------------------------------------------------------------------------------------------|
+| `addresses`         | object  | required | an array of addresses                                                                        |
+
+**Result:**
+```js
+[
+  {
+    "address": "base58address", // (string) The address
+    "txid": "hash"              // (string) The related txid
+    "index": n,                 // (number) The related input or output index
+    "satoshis": n,              // (number) The difference of satoshis
+    "timestamp": n,             // (number) The time the transaction entered the mempool (seconds)
+    "prevtxid": "hash",         // (string) The previous txid (if spending)
+    "prevout": n                // (number) The previous transaction output index (if spending)
+  },
+  ...
+]
+```
+
+**Example:**
+
+```bash
+$ omnicore-cli getaddressmempool '{"addresses": ["2NDaa1MvFcpc2CAbFvG5g9dDxzrRyDnKnsj"]}'
+```
+
+---
+
+### getblockhashes
+
+Returns array of hashes of blocks within the timestamp range provided.
+
+**Arguments:**
+
+| Name                | Type    | Presence | Description                                                                                  |
+|---------------------|---------|----------|----------------------------------------------------------------------------------------------|
+| `high`              | number  | required | the newer block timestamp                                                                    |
+| `low`               | number  | required | the older block timestamp                                                                    |
+| `options`           | object  | optional | an object with options                                                                       |
+
+**Result:**
+```js
+[
+  "hash",               // (string) The block hash
+  ...
+]
+```
+```js
+[
+  {
+    "blockhash": "hash", // (string) The block hash
+    "logicalts": n       // (number) The logical timestamp
+  },
+  ...
+]
+```
+
+**Example:**
+
+```bash
+$ omnicore-cli getblockhashes 1902163557 1602163557
+```
+```bash
+$ omnicore-cli getblockhashes 1902163557 1602163557 '{"noOrphans":false, "logicalTimes":true}'
+```
+
+---
+
+### getspentinfo
+
+Returns the txid and index where an output is spent.
+
+Returns array of hashes of blocks within the timestamp range provided.
+
+**Arguments:**
+
+| Name                | Type    | Presence | Description                                                                                  |
+|---------------------|---------|----------|----------------------------------------------------------------------------------------------|
+| `data`              | object  | required | Transaction data                                                                             |
+
+**Result:**
+```js
+{
+  "txid": "hash", // (string) The transaction id
+  "index": n,     // (number) The spending input index
+  "height": n     // (number) The block height
+}
+```
+
+**Example:**
+
+```bash
+getspentinfo '{"txid": "f5ea8842e96933cbb4d6f07c6dd33902bf3abb2f46cd84ff681ecd288214ea72", "index": 0}'
+```
+
+---
+
 
 ## Raw transactions
 
@@ -1905,7 +2526,7 @@ The output value is set to at least the dust threshold.
 |---------------------|---------|----------|----------------------------------------------------------------------------------------------|
 | `rawtx`             | string  | required | the raw transaction to extend (can be `null`)                                                |
 | `destination`       | string  | required | the reference address or destination                                                         |
-| `amount`            | number  | optional | the optional reference amount (minimal by default)                                           |
+| `referenceamount`   | number  | optional | the optional reference amount (minimal by default)                                           |
 
 **Result:**
 ```js
@@ -2241,7 +2862,7 @@ Note: if the server is not synchronized, amounts are considered as divisible, ev
 |---------------------|---------|----------|----------------------------------------------------------------------------------------------|
 | `propertyid`        | number  | required | the identifier of the tokens to grant                                                        |
 | `amount`            | string  | required | the amount of tokens to create                                                               |
-| `memo`              | string  | optional | a text note attached to this transaction (none by default)                                   |
+| `grantdata`         | string  | optional | NFT only: data set in all NFTs created in this grant (default: empty)                        |
 
 **Result:**
 ```js
@@ -2509,6 +3130,133 @@ Note: if the server is not synchronized, amounts are considered as divisible, ev
 $ omnicore-cli "omni_createpayload_unfreeze" "3HTHRxu3aSDV4deakjC7VmsiUp7c6dfbvs" 31 "100"
 ```
 
+
+
+
+
+
+
+
+---
+
+### omni_createpayload_adddelegate
+
+Creates the payload to add a delegate for the issuance of tokens of a managed property.
+
+**Arguments:**
+
+| Name                | Type    | Presence | Description                                                                                                 |
+|---------------------|---------|----------|-------------------------------------------------------------------------------------------------------------|
+| `propertyid`        | number  | required | the identifier of the tokens                                                                                |
+
+**Result:**
+```js
+"payload"  // (string) the hex-encoded payload
+```
+
+**Example:**
+
+```bash
+$ omnicore-cli "omni_createpayload_adddelegate" 21
+```
+
+---
+
+### omni_createpayload_removedelegate
+
+Creates the payload to remove a delegate for the issuance of tokens of a managed property.
+
+**Arguments:**
+
+| Name                | Type    | Presence | Description                                                                                                 |
+|---------------------|---------|----------|-------------------------------------------------------------------------------------------------------------|
+| `propertyid`        | number  | required | the identifier of the tokens                                                                                |
+
+**Result:**
+```js
+"payload"  // (string) the hex-encoded payload
+```
+
+**Example:**
+
+```bash
+$ omnicore-cli "omni_createpayload_removedelegate" 21
+
+---
+
+### omni_createpayload_anydata
+
+Creates the payload to embed arbitrary data.
+
+**Arguments:**
+
+| Name                | Type    | Presence | Description                                                                                  |
+|---------------------|---------|----------|----------------------------------------------------------------------------------------------|
+| `data`              | string  | required | the hex-encoded data                                                                         |
+
+**Result:**
+```js
+"payload"  // (string) the hex-encoded payload
+```
+
+**Example:**
+
+```bash
+$ omnicore-cli "omni_createpayload_anydata" "646578782032303230"
+```
+
+---
+
+### omni_createpayload_sendnonfungible
+
+Create the payload for a non-fungible send transaction.
+
+**Arguments:**
+
+| Name                | Type    | Presence | Description                                                                                  |
+|---------------------|---------|----------|----------------------------------------------------------------------------------------------|
+| `propertyid`        | number  | required | the identifier of the tokens to send                                                         |
+| `tokenstart`        | number  | required | the first token in the range to send                                                         |
+| `tokenend`          | number  | required | the last token in the range to send                                                          |
+
+**Result:**
+```js
+"payload"  // (string) the hex-encoded payload
+```
+
+**Example:**
+
+```bash
+$ omnicore-cli "omni_createpayload_sendnonfungible" 70 1 1000
+```
+
+---
+
+### omni_createpayload_setnonfungibledata
+
+Create the payload for a non-fungible token set data transaction.
+
+**Arguments:**
+
+| Name                | Type    | Presence | Description                                                                                  |
+|---------------------|---------|----------|----------------------------------------------------------------------------------------------|
+| `propertyid`        | number  | required | the identifier of the tokens to send                                                         |
+| `tokenstart`        | number  | required | the first token in the range to set data on                                                  |
+| `tokenend`          | number  | required | the last token in the range to set data on                                                   |
+| `issuer`            | boolean | required | if true issuer data set, otherwise holder data set                                           |
+| `data`              | string  | required | data set as in either issuer or holder fields                                                |
+
+**Result:**
+```js
+"payload"  // (string) the hex-encoded payload
+```
+
+**Example:**
+
+```bash
+$ omnicore-cli "omni_createpayload_setnonfungibledata" 70 50 60 true "string data"
+```
+
 ---
 
 ## Fee system
@@ -2596,7 +3344,7 @@ If an ecosystem is supplied the results will reflect the fee share for that ecos
 ```js
 [                                  // (array of JSON objects)
   {
-    "address" : "address"          // (string) the adress that would receive a share of fees
+    "address" : "address"          // (string) the address that would receive a share of fees
     "feeshare" : "n.nnnn%",        // (string) the percentage of fees this address will receive based on the current state
   },
 ...
@@ -2715,9 +3463,9 @@ $ omnicore-cli "omni_setautocommit" false
 
 ---
 
-## Depreciated API calls
+## Deprecated API calls
 
-To ensure backwards compatibility, depreciated RPCs are kept for at least one major version.
+To ensure backwards compatibility, deprecated RPCs are kept for at least one major version.
 
 The following calls are replaced in Omni Core 0.0.10, and queries with the old command are forwarded.
 

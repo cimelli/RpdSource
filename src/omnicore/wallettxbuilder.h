@@ -1,7 +1,19 @@
-#ifndef OMNICORE_WALLETTXBUILDER_H
-#define OMNICORE_WALLETTXBUILDER_H
+#ifndef BITCOIN_OMNICORE_WALLETTXBUILDER_H
+#define BITCOIN_OMNICORE_WALLETTXBUILDER_H
+
+#if defined(HAVE_CONFIG_H)
+#include <config/bitcoin-config.h>
+#endif
 
 class uint256;
+class CWallet;
+struct NodeContext;
+
+namespace interfaces {
+class Wallet;
+} // namespace interfaces
+
+#include <amount.h>
 
 #include <stdint.h>
 #include <string>
@@ -18,18 +30,24 @@ int WalletTxBuilder(
         const std::vector<unsigned char>& payload,
         uint256& retTxid,
         std::string& retRawTx,
-        bool commit);
+        bool commit,
+        interfaces::Wallet* iWallet = nullptr,
+        CAmount min_fee = 0);
 
+#ifdef ENABLE_WALLET
 /**
  * Creates and sends a raw transaction by selecting all coins from the sender
  * and enough coins from a fee source. Change is sent to the fee source!
  */
-int CreateFundedTransaction(
-        const std::string& senderAddress,
+int CreateFundedTransaction(const std::string& senderAddress,
         const std::string& receiverAddress,
         const std::string& feeAddress,
         const std::vector<unsigned char>& payload,
-        uint256& retTxid);
+        uint256& retTxid,
+        interfaces::Wallet* iWallet,
+        NodeContext &node);
 
+int CreateDExTransaction(interfaces::Wallet* pwallet, const std::string& buyerAddress, const std::string& sellerAddress, const CAmount& nAmount, uint256& txid);
+#endif
 
-#endif // OMNICORE_WALLETTXBUILDER_H
+#endif // BITCOIN_OMNICORE_WALLETTXBUILDER_H

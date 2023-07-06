@@ -1,15 +1,15 @@
-#include "omnicore/encoding.h"
+#include <omnicore/encoding.h>
 
-#include "omnicore/omnicore.h"
-#include "omnicore/script.h"
-#include "omnicore/parsing.h"
+#include <omnicore/omnicore.h>
+#include <omnicore/script.h>
+#include <omnicore/parsing.h>
 
-#include "base58.h"
-#include "pubkey.h"
-#include "random.h"
-#include "script/script.h"
-#include "script/standard.h"
-#include "utilstrencodings.h"
+#include <base58.h>
+#include <pubkey.h>
+#include <random.h>
+#include <script/script.h>
+#include <script/standard.h>
+#include <util/strencodings.h>
 
 #include <stdint.h>
 #include <string>
@@ -17,13 +17,13 @@
 #include <vector>
 
 /**
- * Embedds a payload in obfuscated multisig outputs, and adds an Exodus marker output.
+ * Embeds a payload in obfuscated multisig outputs, and adds an Exodus marker output.
  *
  * @see The class B transaction encoding specification:
  * https://github.com/mastercoin-MSC/spec#class-b-transactions-also-known-as-the-multisig-method
  */
 bool OmniCore_Encode_ClassB(const std::string& senderAddress, const CPubKey& redeemingPubKey,
-        const std::vector<unsigned char>& vchPayload, std::vector<std::pair<CScript, int64_t> >& vecOutputs)
+        const std::vector<unsigned char>& vchPayload, std::vector<std::pair<CScript, int64_t> >& vecOutputs, CAmount *outputAmount)
 {
     unsigned int nRemainingBytes = vchPayload.size();
     unsigned int nNextByte = 0;
@@ -53,7 +53,7 @@ bool OmniCore_Encode_ClassB(const std::string& senderAddress, const CPubKey& red
             vchFakeKey.resize(33);
             CPubKey pubKey;
             unsigned char chRandom = static_cast<unsigned char>(GetRand(256));
-            for (int j = 0; j < 256 ; j++) { // Fix ECDSA coodinate
+            for (int j = 0; j < 256 ; j++) { // Fix ECDSA coordinate
                 vchFakeKey[32] = chRandom;
                 pubKey = CPubKey(vchFakeKey);
                 if (pubKey.IsFullyValid()) break;
@@ -65,17 +65,21 @@ bool OmniCore_Encode_ClassB(const std::string& senderAddress, const CPubKey& red
 
         // Push back a bare multisig output with obfuscated data
         CScript scriptMultisigOut = GetScriptForMultisig(1, vKeys);
-        vecOutputs.push_back(std::make_pair(scriptMultisigOut, GetDustThreshold(scriptMultisigOut)));
+        if (outputAmount)
+            *outputAmount += OmniGetDustThreshold(scriptMultisigOut);
+        vecOutputs.push_back(std::make_pair(scriptMultisigOut, OmniGetDustThreshold(scriptMultisigOut)));
     }
 
     // Add the Exodus marker output
     CScript scriptExodusOutput = GetScriptForDestination(ExodusAddress());
-    vecOutputs.push_back(std::make_pair(scriptExodusOutput, GetDustThreshold(scriptExodusOutput)));
+    if (outputAmount)
+        *outputAmount += OmniGetDustThreshold(scriptExodusOutput);
+    vecOutputs.push_back(std::make_pair(scriptExodusOutput, OmniGetDustThreshold(scriptExodusOutput)));
     return true;
 }
 
 /**
- * Embedds a payload in an OP_RETURN output, prefixed with a transaction marker.
+ * Embeds a payload in an OP_RETURN output, prefixed with a transaction marker.
  *
  * The request is rejected, if the size of the payload with marker is larger than
  * the allowed data carrier size ("-datacarriersize=n").

@@ -1,5 +1,5 @@
-#ifndef OMNICORE_OMNICORE_H
-#define OMNICORE_OMNICORE_H
+#ifndef BITCOIN_OMNICORE_OMNICORE_H
+#define BITCOIN_OMNICORE_OMNICORE_H
 
 class CBlockIndex;
 class CCoinsView;
@@ -7,14 +7,13 @@ class CCoinsViewCache;
 class CTransaction;
 class Coin;
 
-#include "omnicore/log.h"
-#include "omnicore/tally.h"
+#include <omnicore/log.h>
+#include <omnicore/tally.h>
 
 #include <script/standard.h>
-
-#include "sync.h"
-#include "uint256.h"
-#include "util.h"
+#include <sync.h>
+#include <uint256.h>
+#include <util/system.h>
 
 #include <univalue.h>
 
@@ -26,13 +25,20 @@ class Coin;
 #include <set>
 #include <unordered_map>
 
-int const MAX_STATE_HISTORY = 50;
-int const STORE_EVERY_N_BLOCK = 10000;
+// Keep the state of the last 50 blocks to roll back quickly
+// in case of a block reorganization
+int const MAX_STATE_HISTORY = 200;
+// Also store the state every 5000 blocks to be able to recover
+// from a crash or shutdown during reparse more quickly
+int const STORE_EVERY_N_BLOCK = 5000;
+// Don't store the state every block on mainnet until block 622000
+// was reached
+int const DONT_STORE_MAINNET_STATE_UNTIL = 622000;
 
 #define TEST_ECO_PROPERTY_1 (0x80000003UL)
 
 // increment this value to force a refresh of the state (similar to --startclean)
-#define DB_VERSION 7
+#define DB_VERSION 8
 
 // could probably also use: int64_t maxInt64 = std::numeric_limits<int64_t>::max();
 // maximum numeric values from the spec:
@@ -52,6 +58,7 @@ enum TransactionType {
   MSC_TYPE_RESTRICTED_SEND            =  2,
   MSC_TYPE_SEND_TO_OWNERS             =  3,
   MSC_TYPE_SEND_ALL                   =  4,
+  MSC_TYPE_SEND_NONFUNGIBLE           =  5,
   MSC_TYPE_SAVINGS_MARK               = 10,
   MSC_TYPE_SAVINGS_COMPROMISED        = 11,
   MSC_TYPE_RATELIMITED_MARK           = 12,
@@ -74,8 +81,12 @@ enum TransactionType {
   MSC_TYPE_CHANGE_ISSUER_ADDRESS      = 70,
   MSC_TYPE_ENABLE_FREEZING            = 71,
   MSC_TYPE_DISABLE_FREEZING           = 72,
+  MSC_TYPE_ADD_DELEGATE               = 73,
+  MSC_TYPE_REMOVE_DELEGATE            = 74,
   MSC_TYPE_FREEZE_PROPERTY_TOKENS     = 185,
   MSC_TYPE_UNFREEZE_PROPERTY_TOKENS   = 186,
+  MSC_TYPE_ANYDATA                    = 200,
+  MSC_TYPE_NONFUNGIBLE_DATA           = 201,
   OMNICORE_MESSAGE_TYPE_DEACTIVATION  = 65533,
   OMNICORE_MESSAGE_TYPE_ACTIVATION    = 65534,
   OMNICORE_MESSAGE_TYPE_ALERT         = 65535
@@ -83,6 +94,7 @@ enum TransactionType {
 
 #define MSC_PROPERTY_TYPE_INDIVISIBLE             1
 #define MSC_PROPERTY_TYPE_DIVISIBLE               2
+#define MSC_PROPERTY_TYPE_NONFUNGIBLE             5
 #define MSC_PROPERTY_TYPE_INDIVISIBLE_REPLACING   65
 #define MSC_PROPERTY_TYPE_DIVISIBLE_REPLACING     66
 #define MSC_PROPERTY_TYPE_INDIVISIBLE_APPENDING   129
@@ -105,12 +117,13 @@ enum TransactionType {
 #define METADEX_ERROR         (-81000)
 #define PKT_ERROR_TOKENS      (-82000)
 #define PKT_ERROR_SEND_ALL    (-83000)
+#define PKT_ERROR_ANYDATA     (-84000)
 
 #define OMNI_PROPERTY_BTC   0
 #define OMNI_PROPERTY_MSC   1
 #define OMNI_PROPERTY_TMSC  2
 
-/** Number formating related functions. */
+/** Number formatting related functions. */
 std::string FormatDivisibleMP(int64_t amount, bool fSign = false);
 std::string FormatDivisibleShortMP(int64_t amount);
 std::string FormatIndivisibleMP(int64_t amount);
@@ -121,6 +134,9 @@ std::string FormatShortMP(uint32_t propertyId, int64_t amount);
 
 /** Returns the Exodus address. */
 const CTxDestination ExodusAddress();
+
+/** Returns the Exodus crowdsale address. */
+const CTxDestination ExodusCrowdsaleAddress(int nBlock = 0);
 
 /** Returns the marker for class C transactions. */
 const std::vector<unsigned char> GetOmMarker();
@@ -150,16 +166,15 @@ int mastercore_init();
 int mastercore_shutdown();
 
 /** Block and transaction handlers. */
-int mastercore_handler_disc_begin(int nBlockNow, CBlockIndex const * pBlockIndex);
-int mastercore_handler_disc_end(int nBlockNow, CBlockIndex const * pBlockIndex);
+void mastercore_handler_disc_begin(const int nHeight);
 int mastercore_handler_block_begin(int nBlockNow, CBlockIndex const * pBlockIndex);
 int mastercore_handler_block_end(int nBlockNow, CBlockIndex const * pBlockIndex, unsigned int);
-bool mastercore_handler_tx(const CTransaction& tx, int nBlock, unsigned int idx, const CBlockIndex* pBlockIndex);
+bool mastercore_handler_tx(const CTransaction& tx, int nBlock, unsigned int idx, const CBlockIndex* pBlockIndex, const std::shared_ptr<std::map<COutPoint, Coin>> removedCoins);
 
 /** Scans for marker and if one is found, add transaction to marker cache. */
-void TryToAddToMarkerCache(const CTransaction& tx);
+void TryToAddToMarkerCache(const CTransactionRef& tx);
 /** Removes transaction from marker cache. */
-void RemoveFromMarkerCache(const CTransaction& tx);
+void RemoveFromMarkerCache(const uint256& txHash);
 /** Checks, if transaction is in marker cache. */
 bool IsInMarkerCache(const uint256& txHash);
 
@@ -192,7 +207,7 @@ uint32_t GetNextPropertyId(bool maineco); // maybe move into sp
 
 CMPTally* getTally(const std::string& address);
 bool update_tally_map(const std::string& who, uint32_t propertyId, int64_t amount, TallyType ttype);
-int64_t getTotalTokens(uint32_t propertyId, int64_t* n_owners_total = NULL);
+int64_t getTotalTokens(uint32_t propertyId, int64_t* n_owners_total = nullptr);
 
 std::string strMPProperty(uint32_t propertyId);
 std::string strTransactionType(uint16_t txType);
@@ -221,4 +236,4 @@ void PrintFreezeState();
 
 }
 
-#endif // OMNICORE_OMNICORE_H
+#endif // BITCOIN_OMNICORE_OMNICORE_H

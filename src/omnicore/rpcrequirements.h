@@ -1,5 +1,5 @@
-#ifndef OMNICORE_RPCREQUIREMENTS_H
-#define OMNICORE_RPCREQUIREMENTS_H
+#ifndef BITCOIN_OMNICORE_RPCREQUIREMENTS_H
+#define BITCOIN_OMNICORE_RPCREQUIREMENTS_H
 
 #include <stdint.h>
 #include <string>
@@ -13,16 +13,25 @@ void RequireDifferentIds(uint32_t propertyId, uint32_t otherId);
 void RequireCrowdsale(uint32_t propertyId);
 void RequireActiveCrowdsale(uint32_t propertyId);
 void RequireManagedProperty(uint32_t propertyId);
+void RequireNonFungibleProperty(uint32_t propertyId);
 void RequireTokenIssuer(const std::string& address, uint32_t propertyId);
+void RequireExistingDelegate(uint32_t propertyId);
+void RequireEmptyDelegate(uint32_t propertyId);
+void RequireSenderDelegateBeforeIssuer(uint32_t propertyId, const std::string& address);
+void RequireSenderDelegateOrIssuer(uint32_t propertyId, const std::string& address);
+void RequireMatchingDelegate(uint32_t propertyId, const std::string& address);
 void RequireMatchingDExOffer(const std::string& address, uint32_t propertyId);
-void RequireNoOtherDExOffer(const std::string& address, uint32_t propertyId);
+void RequireNoOtherDExOffer(const std::string& address);
+void RequireMatchingDExAccept(const std::string& sellerAddress, uint32_t propertyId, const std::string& buyerAddress);
 void RequireSaneReferenceAmount(int64_t amount);
 void RequireSaneDExPaymentWindow(const std::string& address, uint32_t propertyId);
 void RequireSaneDExFee(const std::string& address, uint32_t propertyId);
+void RequireSaneNonFungibleRange(int64_t tokenStart, int64_t tokenEnd);
 void RequireHeightInChain(int blockHeight);
+void RequireNonFungibleTokenOwner(const std::string& address, uint32_t propertyId, int64_t tokenStart, int64_t tokenEnd);
 
 // TODO:
 // Checks for MetaDEx orders for cancel operations
 
 
-#endif // OMNICORE_RPCREQUIREMENTS_H
+#endif // BITCOIN_OMNICORE_RPCREQUIREMENTS_H

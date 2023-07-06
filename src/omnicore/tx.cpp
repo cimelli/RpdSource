@@ -1,30 +1,32 @@
 // Master Protocol transaction code
 
-#include "omnicore/tx.h"
+#include <omnicore/tx.h>
 
-#include "omnicore/activation.h"
-#include "omnicore/dbfees.h"
-#include "omnicore/dbspinfo.h"
-#include "omnicore/dbstolist.h"
-#include "omnicore/dbtradelist.h"
-#include "omnicore/dbtxlist.h"
-#include "omnicore/dex.h"
-#include "omnicore/log.h"
-#include "omnicore/mdex.h"
-#include "omnicore/notifications.h"
-#include "omnicore/omnicore.h"
-#include "omnicore/parsing.h"
-#include "omnicore/rules.h"
-#include "omnicore/sp.h"
-#include "omnicore/sto.h"
-#include "omnicore/utilsbitcoin.h"
-#include "omnicore/version.h"
+#include <omnicore/activation.h>
+#include <omnicore/dbfees.h>
+#include <omnicore/dbspinfo.h>
+#include <omnicore/dbstolist.h>
+#include <omnicore/dbtradelist.h>
+#include <omnicore/dbtxlist.h>
+#include <omnicore/dex.h>
+#include <omnicore/log.h>
+#include <omnicore/mdex.h>
+#include <omnicore/notifications.h>
+#include <omnicore/omnicore.h>
+#include <omnicore/parsing.h>
+#include <omnicore/rules.h>
+#include <omnicore/sp.h>
+#include <omnicore/sto.h>
+#include <omnicore/nftdb.h>
+#include <omnicore/utilsbitcoin.h>
+#include <omnicore/version.h>
 
-#include "amount.h"
-#include "base58.h"
-#include "main.h"
-#include "sync.h"
-#include "utiltime.h"
+#include <amount.h>
+#include <base58.h>
+#include <key_io.h>
+#include <validation.h>
+#include <sync.h>
+#include <util/time.h>
 
 #include <boost/algorithm/string.hpp>
 #include <boost/lexical_cast.hpp>
@@ -48,6 +50,7 @@ std::string mastercore::strTransactionType(uint16_t txType)
         case MSC_TYPE_RESTRICTED_SEND: return "Restricted Send";
         case MSC_TYPE_SEND_TO_OWNERS: return "Send To Owners";
         case MSC_TYPE_SEND_ALL: return "Send All";
+        case MSC_TYPE_SEND_NONFUNGIBLE: return "Unique Send";
         case MSC_TYPE_SAVINGS_MARK: return "Savings";
         case MSC_TYPE_SAVINGS_COMPROMISED: return "Savings COMPROMISED";
         case MSC_TYPE_RATELIMITED_MARK: return "Rate-Limiting";
@@ -70,6 +73,10 @@ std::string mastercore::strTransactionType(uint16_t txType)
         case MSC_TYPE_DISABLE_FREEZING: return "Disable Freezing";
         case MSC_TYPE_FREEZE_PROPERTY_TOKENS: return "Freeze Property Tokens";
         case MSC_TYPE_UNFREEZE_PROPERTY_TOKENS: return "Unfreeze Property Tokens";
+        case MSC_TYPE_ADD_DELEGATE: return "Add Delegate";
+        case MSC_TYPE_REMOVE_DELEGATE: return "Remove Delegate";
+        case MSC_TYPE_ANYDATA: return "Embed any data";
+        case MSC_TYPE_NONFUNGIBLE_DATA: return "Set Non-Fungible Token Data";
         case MSC_TYPE_NOTIFICATION: return "Notification";
         case OMNICORE_MESSAGE_TYPE_ALERT: return "ALERT";
         case OMNICORE_MESSAGE_TYPE_DEACTIVATION: return "Feature Deactivation";
@@ -120,6 +127,9 @@ bool CMPTransaction::interpret_Transaction()
 
         case MSC_TYPE_SEND_ALL:
             return interpret_SendAll();
+
+        case MSC_TYPE_SEND_NONFUNGIBLE:
+            return interpret_SendNonFungible();
 
         case MSC_TYPE_TRADE_OFFER:
             return interpret_TradeOffer();
@@ -172,8 +182,20 @@ bool CMPTransaction::interpret_Transaction()
         case MSC_TYPE_UNFREEZE_PROPERTY_TOKENS:
             return interpret_UnfreezeTokens();
 
+        case MSC_TYPE_ADD_DELEGATE:
+            return interpret_AddDelegate();
+
+        case MSC_TYPE_REMOVE_DELEGATE:
+            return interpret_RemoveDelegate();
+
         case OMNICORE_MESSAGE_TYPE_DEACTIVATION:
             return interpret_Deactivation();
+            
+        case MSC_TYPE_ANYDATA:
+            return interpret_AnyData();
+
+        case MSC_TYPE_NONFUNGIBLE_DATA:
+            return interpret_NonFungibleData();
 
         case OMNICORE_MESSAGE_TYPE_ACTIVATION:
             return interpret_Activation();
@@ -284,6 +306,28 @@ bool CMPTransaction::interpret_SendAll()
     return true;
 }
 
+/** Tx 5 */
+bool CMPTransaction::interpret_SendNonFungible()
+{
+    if (pkt_size < 24) {
+        return false;
+    }
+    memcpy(&property, &pkt[4], 4);
+    SwapByteOrder32(property);
+    memcpy(&nonfungible_token_start, &pkt[8], 8);
+    SwapByteOrder64(nonfungible_token_start);
+    memcpy(&nonfungible_token_end, &pkt[16], 8);
+    SwapByteOrder64(nonfungible_token_end);
+
+    if ((!rpcOnly && msc_debug_packets) || msc_debug_packets_readonly) {
+        PrintToLog("\t        property: %d (%s)\n", property, strMPProperty(property));
+        PrintToLog("\t      tokenstart: %d\n", nonfungible_token_start);
+        PrintToLog("\t        tokenend: %d\n", nonfungible_token_end);
+    }
+
+    return true;
+}
+
 /** Tx 20 */
 bool CMPTransaction::interpret_TradeOffer()
 {
@@ -355,7 +399,7 @@ bool CMPTransaction::interpret_MetaDExTrade()
     memcpy(&desired_value, &pkt[20], 8);
     SwapByteOrder64(desired_value);
 
-    action = CMPTransaction::ADD; // depreciated
+    action = CMPTransaction::ADD; // deprecated
 
     if ((!rpcOnly && msc_debug_packets) || msc_debug_packets_readonly) {
         PrintToLog("\t        property: %d (%s)\n", property, strMPProperty(property));
@@ -383,7 +427,7 @@ bool CMPTransaction::interpret_MetaDExCancelPrice()
     memcpy(&desired_value, &pkt[20], 8);
     SwapByteOrder64(desired_value);
 
-    action = CMPTransaction::CANCEL_AT_PRICE; // depreciated
+    action = CMPTransaction::CANCEL_AT_PRICE; // deprecated
 
     if ((!rpcOnly && msc_debug_packets) || msc_debug_packets_readonly) {
         PrintToLog("\t        property: %d (%s)\n", property, strMPProperty(property));
@@ -406,10 +450,10 @@ bool CMPTransaction::interpret_MetaDExCancelPair()
     memcpy(&desired_property, &pkt[8], 4);
     SwapByteOrder32(desired_property);
 
-    nValue = 0; // depreciated
-    nNewValue = nValue; // depreciated
-    desired_value = 0; // depreciated
-    action = CMPTransaction::CANCEL_ALL_FOR_PAIR; // depreciated
+    nValue = 0; // deprecated
+    nNewValue = nValue; // deprecated
+    desired_value = 0; // deprecated
+    action = CMPTransaction::CANCEL_ALL_FOR_PAIR; // deprecated
 
     if ((!rpcOnly && msc_debug_packets) || msc_debug_packets_readonly) {
         PrintToLog("\t        property: %d (%s)\n", property, strMPProperty(property));
@@ -427,12 +471,12 @@ bool CMPTransaction::interpret_MetaDExCancelEcosystem()
     }
     memcpy(&ecosystem, &pkt[4], 1);
 
-    property = ecosystem; // depreciated
-    desired_property = ecosystem; // depreciated
-    nValue = 0; // depreciated
-    nNewValue = nValue; // depreciated
-    desired_value = 0; // depreciated
-    action = CMPTransaction::CANCEL_EVERYTHING; // depreciated
+    property = ecosystem; // deprecated
+    desired_property = ecosystem; // deprecated
+    nValue = 0; // deprecated
+    nNewValue = nValue; // deprecated
+    desired_value = 0; // deprecated
+    action = CMPTransaction::CANCEL_EVERYTHING; // deprecated
 
     if ((!rpcOnly && msc_debug_packets) || msc_debug_packets_readonly) {
         PrintToLog("\t       ecosystem: %d\n", (int)ecosystem);
@@ -620,6 +664,11 @@ bool CMPTransaction::interpret_GrantTokens()
     SwapByteOrder64(nValue);
     nNewValue = nValue;
 
+    // Get NFT data, was memo before and previously unused here.
+    const char* p = 16 + (char*) &pkt;
+    std::string spstr(p);
+    memcpy(nonfungible_data, spstr.c_str(), std::min(spstr.length(), sizeof(nonfungible_data)-1));
+
     // Special case: if can't find the receiver -- assume grant to self!
     if (receiver.empty()) {
         receiver = sender;
@@ -628,6 +677,7 @@ bool CMPTransaction::interpret_GrantTokens()
     if ((!rpcOnly && msc_debug_packets) || msc_debug_packets_readonly) {
         PrintToLog("\t        property: %d (%s)\n", property, strMPProperty(property));
         PrintToLog("\t           value: %s\n", FormatMP(property, nValue));
+        PrintToLog("\t            data: %s\n", nonfungible_data);
     }
 
     return true;
@@ -779,6 +829,81 @@ bool CMPTransaction::interpret_UnfreezeTokens()
     return true;
 }
 
+/** Tx 73 */
+bool CMPTransaction::interpret_AddDelegate()
+{
+    if (pkt_size < 8) {
+        return false;
+    }
+    memcpy(&property, &pkt[4], 4);
+    SwapByteOrder32(property);
+
+    if ((!rpcOnly && msc_debug_packets) || msc_debug_packets_readonly) {
+        PrintToLog("\t        property: %d (%s)\n", property, strMPProperty(property));
+    }
+
+    return true;
+}
+
+/** Tx 74 */
+bool CMPTransaction::interpret_RemoveDelegate()
+{
+    if (pkt_size < 8) {
+        return false;
+    }
+    memcpy(&property, &pkt[4], 4);
+    SwapByteOrder32(property);
+
+    if ((!rpcOnly && msc_debug_packets) || msc_debug_packets_readonly) {
+        PrintToLog("\t        property: %d (%s)\n", property, strMPProperty(property));
+    }
+
+    return true;
+}
+
+/** Tx 200 */
+bool CMPTransaction::interpret_AnyData()
+{
+    if (pkt_size < 4) {
+        return false;
+    }
+
+    if ((!rpcOnly && msc_debug_packets) || msc_debug_packets_readonly) {
+        PrintToLog("\t       data: %s\n", "...");
+        PrintToLog("\t   receiver: %s\n", receiver);
+    }
+
+    return true;
+}
+
+/** Tx 201 */
+bool CMPTransaction::interpret_NonFungibleData()
+{
+    if (pkt_size < 25) {
+        return false;
+    }
+    memcpy(&property, &pkt[4], 4);
+    SwapByteOrder32(property);
+    memcpy(&nonfungible_token_start, &pkt[8], 8);
+    SwapByteOrder64(nonfungible_token_start);
+    memcpy(&nonfungible_token_end, &pkt[16], 8);
+    SwapByteOrder64(nonfungible_token_end);
+    memcpy(&nonfungible_data_type, &pkt[24], 1);
+
+    const char* p = 25 + (char*) &pkt;
+    std::string spstr(p);
+    memcpy(nonfungible_data, spstr.c_str(), std::min(spstr.length(), sizeof(nonfungible_data)-1));
+
+    if ((!rpcOnly && msc_debug_packets) || msc_debug_packets_readonly) {
+        PrintToLog("\t                property: %d (%s)\n", property, strMPProperty(property));
+        PrintToLog("\t nonfungible_token_start: %d\n", nonfungible_token_start);
+        PrintToLog("\t   nonfungible_token_end: %d\n", nonfungible_token_end);
+        PrintToLog("\t                    data: %s\n", nonfungible_data);
+    }
+
+    return true;
+}
+
 /** Tx 65533 */
 bool CMPTransaction::interpret_Deactivation()
 {
@@ -866,6 +991,15 @@ int CMPTransaction::interpretPacket()
         return (PKT_ERROR -2);
     }
 
+    // Use ::ChainActive()[block] here to avoid locking cs_main after cs_tally below
+    CBlockIndex* pindex;
+    uint256 blockHash;
+    {
+        LOCK(cs_main);
+        pindex = ::ChainActive()[block];
+        blockHash = ::ChainActive()[block]->GetBlockHash();
+    }
+
     LOCK(cs_tally);
 
     if (isAddressFrozen(sender, property)) {
@@ -875,13 +1009,16 @@ int CMPTransaction::interpretPacket()
 
     switch (type) {
         case MSC_TYPE_SIMPLE_SEND:
-            return logicMath_SimpleSend();
+            return logicMath_SimpleSend(blockHash);
 
         case MSC_TYPE_SEND_TO_OWNERS:
             return logicMath_SendToOwners();
 
         case MSC_TYPE_SEND_ALL:
             return logicMath_SendAll();
+
+        case MSC_TYPE_SEND_NONFUNGIBLE:
+            return logicMath_SendNonFungible();
 
         case MSC_TYPE_TRADE_OFFER:
             return logicMath_TradeOffer();
@@ -902,37 +1039,49 @@ int CMPTransaction::interpretPacket()
             return logicMath_MetaDExCancelEcosystem();
 
         case MSC_TYPE_CREATE_PROPERTY_FIXED:
-            return logicMath_CreatePropertyFixed();
+            return logicMath_CreatePropertyFixed(pindex);
 
         case MSC_TYPE_CREATE_PROPERTY_VARIABLE:
-            return logicMath_CreatePropertyVariable();
+            return logicMath_CreatePropertyVariable(pindex);
 
         case MSC_TYPE_CLOSE_CROWDSALE:
-            return logicMath_CloseCrowdsale();
+            return logicMath_CloseCrowdsale(pindex);
 
         case MSC_TYPE_CREATE_PROPERTY_MANUAL:
-            return logicMath_CreatePropertyManaged();
+            return logicMath_CreatePropertyManaged(pindex);
 
         case MSC_TYPE_GRANT_PROPERTY_TOKENS:
-            return logicMath_GrantTokens();
+            return logicMath_GrantTokens(pindex, blockHash);
 
         case MSC_TYPE_REVOKE_PROPERTY_TOKENS:
-            return logicMath_RevokeTokens();
+            return logicMath_RevokeTokens(pindex);
 
         case MSC_TYPE_CHANGE_ISSUER_ADDRESS:
-            return logicMath_ChangeIssuer();
+            return logicMath_ChangeIssuer(pindex);
 
         case MSC_TYPE_ENABLE_FREEZING:
-            return logicMath_EnableFreezing();
+            return logicMath_EnableFreezing(pindex);
 
         case MSC_TYPE_DISABLE_FREEZING:
-            return logicMath_DisableFreezing();
+            return logicMath_DisableFreezing(pindex);
 
         case MSC_TYPE_FREEZE_PROPERTY_TOKENS:
-            return logicMath_FreezeTokens();
+            return logicMath_FreezeTokens(pindex);
 
         case MSC_TYPE_UNFREEZE_PROPERTY_TOKENS:
-            return logicMath_UnfreezeTokens();
+            return logicMath_UnfreezeTokens(pindex);
+            
+        case MSC_TYPE_ADD_DELEGATE:
+            return logicMath_AddDelegate(pindex);
+
+        case MSC_TYPE_REMOVE_DELEGATE:
+            return logicMath_RemoveDelegate(pindex);
+
+        case MSC_TYPE_ANYDATA:
+            return logicMath_AnyData();
+
+        case MSC_TYPE_NONFUNGIBLE_DATA:
+            return logicMath_NonFungibleData();
 
         case OMNICORE_MESSAGE_TYPE_DEACTIVATION:
             return logicMath_Deactivation();
@@ -948,12 +1097,12 @@ int CMPTransaction::interpretPacket()
 }
 
 /** Passive effect of crowdsale participation. */
-int CMPTransaction::logicHelper_CrowdsaleParticipation()
+int CMPTransaction::logicHelper_CrowdsaleParticipation(uint256& blockHash)
 {
     CMPCrowd* pcrowdsale = getCrowd(receiver);
 
     // No active crowdsale
-    if (pcrowdsale == NULL) {
+    if (pcrowdsale == nullptr) {
         return (PKT_ERROR_CROWD -1);
     }
     // Active crowdsale, but not for this property
@@ -1015,7 +1164,7 @@ int CMPTransaction::logicHelper_CrowdsaleParticipation()
 
     // Close crowdsale, if we hit MAX_TOKENS
     if (close_crowdsale) {
-        eraseMaxedCrowdsale(receiver, blockTime, block);
+        eraseMaxedCrowdsale(receiver, blockTime, block, blockHash);
     }
 
     // Indicate, if no tokens were transferred
@@ -1027,7 +1176,7 @@ int CMPTransaction::logicHelper_CrowdsaleParticipation()
 }
 
 /** Tx 0 */
-int CMPTransaction::logicMath_SimpleSend()
+int CMPTransaction::logicMath_SimpleSend(uint256& blockHash)
 {
     if (!IsTransactionTypeAllowed(block, property, type, version)) {
         PrintToLog("%s(): rejected: type %d or version %d not permitted for property %d at block %d\n",
@@ -1037,6 +1186,11 @@ int CMPTransaction::logicMath_SimpleSend()
                 property,
                 block);
         return (PKT_ERROR_SEND -22);
+    }
+
+    if (isPropertyNonFungible(property)) {
+        PrintToLog("%s(): rejected: property %d is of type non-fungible\n", __func__, property);
+        return (PKT_ERROR_TOKENS -27);
     }
 
     if (nValue <= 0 || MAX_INT_8_BYTES < nValue) {
@@ -1066,8 +1220,8 @@ int CMPTransaction::logicMath_SimpleSend()
     assert(update_tally_map(sender, property, -nValue, BALANCE));
     assert(update_tally_map(receiver, property, nValue, BALANCE));
 
-    // Is there an active crowdsale running from this recepient?
-    logicHelper_CrowdsaleParticipation();
+    // Is there an active crowdsale running from this recipient?
+    logicHelper_CrowdsaleParticipation(blockHash);
 
     return 0;
 }
@@ -1083,6 +1237,11 @@ int CMPTransaction::logicMath_SendToOwners()
                 property,
                 block);
         return (PKT_ERROR_STO -22);
+    }
+
+    if (isPropertyNonFungible(property)) {
+        PrintToLog("%s(): rejected: property %d is of type non-fungible\n", __func__, property);
+        return (PKT_ERROR_TOKENS -27);
     }
 
     if (nValue <= 0 || MAX_INT_8_BYTES < nValue) {
@@ -1123,6 +1282,49 @@ int CMPTransaction::logicMath_SendToOwners()
     if (numberOfReceivers <= 0) {
         PrintToLog("%s(): rejected: no other owners of property %d [owners=%d <= 0]\n", __func__, distributeTo, numberOfReceivers);
         return (PKT_ERROR_STO -26);
+    }
+
+    // determine which property the fee will be paid in
+    uint32_t feeProperty = isTestEcosystemProperty(property) ? OMNI_PROPERTY_TMSC : OMNI_PROPERTY_MSC;
+    int64_t feePerOwner = (version == MP_TX_PKT_V0) ? TRANSFER_FEE_PER_OWNER : TRANSFER_FEE_PER_OWNER_V1;
+    int64_t transferFee = feePerOwner * numberOfReceivers;
+    PrintToLog("\t    Transfer fee: %s %s\n", FormatDivisibleMP(transferFee), strMPProperty(feeProperty));
+
+    // enough coins to pay the fee?
+    if (feeProperty != property) {
+        int64_t nBalanceFee = GetTokenBalance(sender, feeProperty, BALANCE);
+        if (nBalanceFee < transferFee) {
+            PrintToLog("%s(): rejected: sender %s has insufficient balance of property %d to pay for fee [%s < %s]\n",
+                    __func__,
+                    sender,
+                    feeProperty,
+                    FormatMP(property, nBalanceFee),
+                    FormatMP(property, transferFee));
+            return (PKT_ERROR_STO -27);
+        }
+    } else {
+        // special case check, only if distributing MSC or TMSC -- the property the fee will be paid in
+        int64_t nBalanceFee = GetTokenBalance(sender, feeProperty, BALANCE);
+        if (nBalanceFee < ((int64_t) nValue + transferFee)) {
+            PrintToLog("%s(): rejected: sender %s has insufficient balance of %d to pay for amount + fee [%s < %s + %s]\n",
+                    __func__,
+                    sender,
+                    feeProperty,
+                    FormatMP(property, nBalanceFee),
+                    FormatMP(property, nValue),
+                    FormatMP(property, transferFee));
+            return (PKT_ERROR_STO -28);
+        }
+    }
+
+    // ------------------------------------------
+
+    assert(update_tally_map(sender, feeProperty, -transferFee, BALANCE));
+    if (version == MP_TX_PKT_V0) {
+        // v0 - do not credit the subtracted fee to any tally (ie burn the tokens)
+    } else {
+        // v1 - credit the subtracted fee to the fee cache
+        pDbFeeCache->AddFee(feeProperty, block, transferFee);
     }
 
     // split up what was taken and distribute between all holders
@@ -1169,10 +1371,15 @@ int CMPTransaction::logicMath_SendAll()
         return (PKT_ERROR_SEND_ALL -22);
     }
 
+    if (isPropertyNonFungible(property)) {
+        PrintToLog("%s(): rejected: property %d is of type non-fungible\n", __func__, property);
+        return (PKT_ERROR_TOKENS -27);
+    }
+
     // ------------------------------------------
 
     CMPTally* ptally = getTally(sender);
-    if (ptally == NULL) {
+    if (ptally == nullptr) {
         PrintToLog("%s(): rejected: sender %s has no tokens to send\n", __func__, sender);
         return (PKT_ERROR_SEND_ALL -54);
     }
@@ -1214,6 +1421,87 @@ int CMPTransaction::logicMath_SendAll()
     return 0;
 }
 
+/** Tx 5 */
+int CMPTransaction::logicMath_SendNonFungible()
+{
+    if (!IsTransactionTypeAllowed(block, property, type, version)) {
+        PrintToLog("%s(): rejected: type %d or version %d not permitted for property %d at block %d\n",
+                __func__,
+                type,
+                version,
+                property,
+                block);
+        return (PKT_ERROR_SEND -22);
+    }
+
+    if (!isPropertyNonFungible(property)) {
+        PrintToLog("%s(): rejected: property %d is not of type non-fungible\n", __func__, property);
+        return (PKT_ERROR_TOKENS -27);
+    }
+
+    if (nonfungible_token_start <= 0 || MAX_INT_8_BYTES < nonfungible_token_start) {
+        PrintToLog("%s(): rejected: non-fungible token range start value out of range or zero: %d", __func__, nonfungible_token_start);
+        return (PKT_ERROR_SEND -23);
+    }
+
+    if (nonfungible_token_end <= 0 || MAX_INT_8_BYTES < nonfungible_token_end) {
+        PrintToLog("%s(): rejected: non-fungible token range end value out of range or zero: %d", __func__, nonfungible_token_end);
+        return (PKT_ERROR_SEND -23);
+    }
+
+    if (nonfungible_token_start > nonfungible_token_end) {
+        PrintToLog("%s(): rejected: non-fungible token range start value: %d is less than or equal to range end value: %d", __func__, nonfungible_token_start, nonfungible_token_end);
+        return (PKT_ERROR_SEND -23);
+    }
+
+    int64_t amount = (nonfungible_token_end - nonfungible_token_start) + 1;
+    if (amount <= 0) {
+        PrintToLog("%s(): rejected: non-fungible token range amount out of range or zero: %d", __func__, amount);
+        return (PKT_ERROR_SEND -23);
+    }
+
+    if (!pDbSpInfo->hasSP(property)) {
+        PrintToLog("%s(): rejected: property %d does not exist\n", __func__, property);
+        return (PKT_ERROR_SEND -24);
+    }
+
+    int64_t nBalance = GetAvailableTokenBalance(sender, property);
+    if (nBalance < amount) {
+        PrintToLog("%s(): rejected: sender %s has insufficient balance of property %d [%s < %s]\n",
+                __func__,
+                sender,
+                property,
+                FormatMP(property, nBalance),
+                FormatMP(property, amount));
+        return (PKT_ERROR_SEND -25);
+    }
+
+    std::string rangeStartOwner = pDbNFT->GetNonFungibleTokenOwner(property, nonfungible_token_start);
+    std::string rangeEndOwner = pDbNFT->GetNonFungibleTokenOwner(property, nonfungible_token_end);
+    bool contiguous = pDbNFT->IsRangeContiguous(property, nonfungible_token_start, nonfungible_token_end);
+    if (rangeStartOwner != sender || rangeEndOwner != sender || !contiguous) {
+        PrintToLog("%s(): rejected: sender %s does not own the range being sent\n",
+                __func__,
+                sender);
+        return (PKT_ERROR_SEND -26);
+    }
+
+    // ------------------------------------------
+
+    // Special case: if can't find the receiver -- assume send to self!
+    if (receiver.empty()) {
+        receiver = sender;
+    }
+
+    // Move the tokens
+    assert(update_tally_map(sender, property, -amount, BALANCE));
+    assert(update_tally_map(receiver, property, amount, BALANCE));
+    bool success = pDbNFT->MoveNonFungibleTokens(property,nonfungible_token_start,nonfungible_token_end,sender,receiver);
+    assert(success);
+
+    return 0;
+}
+
 /** Tx 20 */
 int CMPTransaction::logicMath_TradeOffer()
 {
@@ -1227,14 +1515,22 @@ int CMPTransaction::logicMath_TradeOffer()
         return (PKT_ERROR_TRADEOFFER -22);
     }
 
+    if (isPropertyNonFungible(property)) {
+        PrintToLog("%s(): rejected: property %d is of type non-fungible\n", __func__, property);
+        return (PKT_ERROR_TOKENS -27);
+    }
+
     if (MAX_INT_8_BYTES < nValue) {
         PrintToLog("%s(): rejected: value out of range or zero: %d\n", __func__, nValue);
         return (PKT_ERROR_TRADEOFFER -23);
     }
 
-    if (OMNI_PROPERTY_TMSC != property && OMNI_PROPERTY_MSC != property) {
-        PrintToLog("%s(): rejected: property for sale %d must be OMN or TOMN\n", __func__, property);
-        return (PKT_ERROR_TRADEOFFER -47);
+    // Ensure only OMNI and TOMNI are allowed, when the DEx is not yet free
+    if (!IsFeatureActivated(FEATURE_FREEDEX, block)) {
+        if (OMNI_PROPERTY_TMSC != property && OMNI_PROPERTY_MSC != property) {
+            PrintToLog("%s(): rejected: property for sale %d must be OMN or TOMN\n", __func__, property);
+            return (PKT_ERROR_TRADEOFFER -47);
+        }
     }
 
     // ------------------------------------------
@@ -1323,6 +1619,11 @@ int CMPTransaction::logicMath_AcceptOffer_BTC()
         return (DEX_ERROR_ACCEPT -22);
     }
 
+    if (isPropertyNonFungible(property)) {
+        PrintToLog("%s(): rejected: property %d is of type non-fungible\n", __func__, property);
+        return (PKT_ERROR_TOKENS -27);
+    }
+
     if (nValue <= 0 || MAX_INT_8_BYTES < nValue) {
         PrintToLog("%s(): rejected: value out of range or zero: %d\n", __func__, nValue);
         return (DEX_ERROR_ACCEPT -23);
@@ -1347,6 +1648,11 @@ int CMPTransaction::logicMath_MetaDExTrade()
                 property,
                 block);
         return (PKT_ERROR_METADEX -22);
+    }
+
+    if (isPropertyNonFungible(property) || isPropertyNonFungible(desired_property)) {
+        PrintToLog("%s(): rejected: property %d or %d is of type non-fungible\n", __func__, property, desired_property);
+        return (PKT_ERROR_TOKENS -27);
     }
 
     if (property == desired_property) {
@@ -1425,6 +1731,11 @@ int CMPTransaction::logicMath_MetaDExCancelPrice()
         return (PKT_ERROR_METADEX -22);
     }
 
+    if (isPropertyNonFungible(property) || isPropertyNonFungible(desired_property)) {
+        PrintToLog("%s(): rejected: property %d or %d is of type non-fungible\n", __func__, property, desired_property);
+        return (PKT_ERROR_TOKENS -27);
+    }
+
     if (property == desired_property) {
         PrintToLog("%s(): rejected: property for sale %d and desired property %d must not be equal\n",
                 __func__,
@@ -1479,6 +1790,11 @@ int CMPTransaction::logicMath_MetaDExCancelPair()
                 property,
                 block);
         return (PKT_ERROR_METADEX -22);
+    }
+
+    if (isPropertyNonFungible(property) || isPropertyNonFungible(desired_property)) {
+        PrintToLog("%s(): rejected: property %d or %d is of type non-fungible\n", __func__, property, desired_property);
+        return (PKT_ERROR_TOKENS -27);
     }
 
     if (property == desired_property) {
@@ -1538,19 +1854,13 @@ int CMPTransaction::logicMath_MetaDExCancelEcosystem()
 }
 
 /** Tx 50 */
-int CMPTransaction::logicMath_CreatePropertyFixed()
+int CMPTransaction::logicMath_CreatePropertyFixed(CBlockIndex* pindex)
 {
-    uint256 blockHash;
-    {
-        LOCK(cs_main);
-
-        CBlockIndex* pindex = chainActive[block];
-        if (pindex == NULL) {
-            PrintToLog("%s(): ERROR: block %d not in the active chain\n", __func__, block);
-            return (PKT_ERROR_SP -20);
-        }
-        blockHash = pindex->GetBlockHash();
+    if (pindex == nullptr) {
+        PrintToLog("%s(): ERROR: block %d not in the active chain\n", __func__, block);
+        return (PKT_ERROR_SP -20);
     }
+    uint256 blockHash = pindex->GetBlockHash();
 
     if (OMNI_PROPERTY_MSC != ecosystem && OMNI_PROPERTY_TMSC != ecosystem) {
         PrintToLog("%s(): rejected: invalid ecosystem: %d\n", __func__, (uint32_t) ecosystem);
@@ -1609,19 +1919,13 @@ int CMPTransaction::logicMath_CreatePropertyFixed()
 }
 
 /** Tx 51 */
-int CMPTransaction::logicMath_CreatePropertyVariable()
+int CMPTransaction::logicMath_CreatePropertyVariable(CBlockIndex* pindex)
 {
-    uint256 blockHash;
-    {
-        LOCK(cs_main);
-
-        CBlockIndex* pindex = chainActive[block];
-        if (pindex == NULL) {
-            PrintToLog("%s(): ERROR: block %d not in the active chain\n", __func__, block);
-            return (PKT_ERROR_SP -20);
-        }
-        blockHash = pindex->GetBlockHash();
+    if (pindex == nullptr) {
+        PrintToLog("%s(): ERROR: block %d not in the active chain\n", __func__, block);
+        return (PKT_ERROR_SP -20);
     }
+    uint256 blockHash = pindex->GetBlockHash();
 
     if (OMNI_PROPERTY_MSC != ecosystem && OMNI_PROPERTY_TMSC != ecosystem) {
         PrintToLog("%s(): rejected: invalid ecosystem: %d\n", __func__, (uint32_t) ecosystem);
@@ -1676,7 +1980,7 @@ int CMPTransaction::logicMath_CreatePropertyVariable()
         return (PKT_ERROR_SP -38);
     }
 
-    if (NULL != getCrowd(sender)) {
+    if (nullptr != getCrowd(sender)) {
         PrintToLog("%s(): rejected: sender %s has an active crowdsale\n", __func__, sender);
         return (PKT_ERROR_SP -39);
     }
@@ -1712,19 +2016,13 @@ int CMPTransaction::logicMath_CreatePropertyVariable()
 }
 
 /** Tx 53 */
-int CMPTransaction::logicMath_CloseCrowdsale()
+int CMPTransaction::logicMath_CloseCrowdsale(CBlockIndex* pindex)
 {
-    uint256 blockHash;
-    {
-        LOCK(cs_main);
-
-        CBlockIndex* pindex = chainActive[block];
-        if (pindex == NULL) {
-            PrintToLog("%s(): ERROR: block %d not in the active chain\n", __func__, block);
-            return (PKT_ERROR_SP -20);
-        }
-        blockHash = pindex->GetBlockHash();
+    if (pindex == nullptr) {
+        PrintToLog("%s(): ERROR: block %d not in the active chain\n", __func__, block);
+        return (PKT_ERROR_SP -20);
     }
+    uint256 blockHash = pindex->GetBlockHash();
 
     if (!IsTransactionTypeAllowed(block, property, type, version)) {
         PrintToLog("%s(): rejected: type %d or version %d not permitted for property %d at block %d\n",
@@ -1734,6 +2032,11 @@ int CMPTransaction::logicMath_CloseCrowdsale()
                 property,
                 block);
         return (PKT_ERROR_SP -22);
+    }
+
+    if (isPropertyNonFungible(property)) {
+        PrintToLog("%s(): rejected: property %d is of type non-fungible\n", __func__, property);
+        return (PKT_ERROR_TOKENS -27);
     }
 
     if (!IsPropertyIdValid(property)) {
@@ -1779,19 +2082,13 @@ int CMPTransaction::logicMath_CloseCrowdsale()
 }
 
 /** Tx 54 */
-int CMPTransaction::logicMath_CreatePropertyManaged()
+int CMPTransaction::logicMath_CreatePropertyManaged(CBlockIndex* pindex)
 {
-    uint256 blockHash;
-    {
-        LOCK(cs_main);
-
-        CBlockIndex* pindex = chainActive[block];
-        if (pindex == NULL) {
-            PrintToLog("%s(): ERROR: block %d not in the active chain\n", __func__, block);
-            return (PKT_ERROR_SP -20);
-        }
-        blockHash = pindex->GetBlockHash();
+    if (pindex == nullptr) {
+        PrintToLog("%s(): ERROR: block %d not in the active chain\n", __func__, block);
+        return (PKT_ERROR_SP -20);
     }
+    uint256 blockHash = pindex->GetBlockHash();
 
     if (OMNI_PROPERTY_MSC != ecosystem && OMNI_PROPERTY_TMSC != ecosystem) {
         PrintToLog("%s(): rejected: invalid ecosystem: %d\n", __func__, (uint32_t) ecosystem);
@@ -1808,9 +2105,14 @@ int CMPTransaction::logicMath_CreatePropertyManaged()
         return (PKT_ERROR_SP -22);
     }
 
-    if (MSC_PROPERTY_TYPE_INDIVISIBLE != prop_type && MSC_PROPERTY_TYPE_DIVISIBLE != prop_type) {
+    if (MSC_PROPERTY_TYPE_INDIVISIBLE != prop_type && MSC_PROPERTY_TYPE_DIVISIBLE != prop_type && MSC_PROPERTY_TYPE_NONFUNGIBLE != prop_type) {
         PrintToLog("%s(): rejected: invalid property type: %d\n", __func__, prop_type);
         return (PKT_ERROR_SP -36);
+    }
+
+    if (MSC_PROPERTY_TYPE_NONFUNGIBLE == prop_type && !IsFeatureActivated(FEATURE_NONFUNGIBLE, block)) {
+        PrintToLog("%s(): rejected: non-fungible tokens are not yet activated (property type: %d)\n", __func__, prop_type);
+        return (PKT_ERROR_SP -22);
     }
 
     if ('\0' == name[0]) {
@@ -1830,6 +2132,11 @@ int CMPTransaction::logicMath_CreatePropertyManaged()
     newSP.name.assign(name);
     newSP.url.assign(url);
     newSP.data.assign(data);
+    if (prop_type != MSC_PROPERTY_TYPE_NONFUNGIBLE) {
+        newSP.unique = false;
+    } else {
+        newSP.unique = true;
+    }
     newSP.fixed = false;
     newSP.manual = true;
     newSP.creation_block = blockHash;
@@ -1838,25 +2145,23 @@ int CMPTransaction::logicMath_CreatePropertyManaged()
     uint32_t propertyId = pDbSpInfo->putSP(ecosystem, newSP);
     assert(propertyId > 0);
 
-    PrintToLog("CREATED MANUAL PROPERTY id: %d admin: %s\n", propertyId, sender);
+    if (prop_type != MSC_PROPERTY_TYPE_NONFUNGIBLE) {
+        PrintToLog("CREATED MANUAL PROPERTY id: %d admin: %s\n", propertyId, sender);
+    } else {
+        PrintToLog("CREATED MANUAL PROPERTY WITH NON-FUNGIBLE TOKENS id: %d admin: %s\n", propertyId, sender);
+    }
 
     return 0;
 }
 
 /** Tx 55 */
-int CMPTransaction::logicMath_GrantTokens()
+int CMPTransaction::logicMath_GrantTokens(CBlockIndex* pindex, uint256& blockHash)
 {
-    uint256 blockHash;
-    {
-        LOCK(cs_main);
-
-        CBlockIndex* pindex = chainActive[block];
-        if (pindex == NULL) {
-            PrintToLog("%s(): ERROR: block %d not in the active chain\n", __func__, block);
-            return (PKT_ERROR_SP -20);
-        }
-        blockHash = pindex->GetBlockHash();
+    if (pindex == nullptr) {
+        PrintToLog("%s(): ERROR: block %d not in the active chain\n", __func__, block);
+        return (PKT_ERROR_SP -20);
     }
+    uint256 pindexBlockHash = pindex->GetBlockHash();
 
     if (!IsTransactionTypeAllowed(block, property, type, version)) {
         PrintToLog("%s(): rejected: type %d or version %d not permitted for property %d at block %d\n",
@@ -1886,8 +2191,21 @@ int CMPTransaction::logicMath_GrantTokens()
         return (PKT_ERROR_TOKENS -42);
     }
 
-    if (sender != sp.getIssuer(block)) {
-        PrintToLog("%s(): rejected: sender %s is not issuer of property %d [issuer=%s]\n", __func__, sender, property, sp.issuer);
+    bool authorized = true;
+    // check, if there is a delegate and whether the sender is the delegate
+    if (!sp.getDelegate(block).empty()) {
+        if (sender != sp.getDelegate(block)) {
+            authorized = false;
+        }
+    // otherwise ensure sender is issuer
+    } else {
+        if (sender != sp.getIssuer(block)) {
+            authorized = false;
+        }
+    }
+    if (!authorized) {
+        PrintToLog("%s(): rejected: sender %s is not delegate or issuer of property %d [issuer=%s, delegate=%s]\n",
+                __func__, sender, property, sp.getIssuer(block), sp.getDelegate(block));
         return (PKT_ERROR_TOKENS -43);
     }
 
@@ -1908,12 +2226,20 @@ int CMPTransaction::logicMath_GrantTokens()
     dataPt.push_back(nValue);
     dataPt.push_back(0);
     sp.historicalData.insert(std::make_pair(txid, dataPt));
-    sp.update_block = blockHash;
+    sp.update_block = pindexBlockHash;
 
     // Persist the number of granted tokens
     assert(pDbSpInfo->updateSP(property, sp));
 
     // Move the tokens
+    if (sp.unique) {
+        std::pair<int64_t,int64_t> grantedRange = pDbNFT->CreateNonFungibleTokens(property, nValue, receiver, nonfungible_data);
+        assert(grantedRange.first > 0);
+        assert(grantedRange.second > 0);
+        assert(grantedRange.second >= grantedRange.first);
+        pDbTransactionList->RecordNonFungibleGrant(txid, grantedRange.first, grantedRange.second);
+        PrintToLog("%s(): non-fungible: granted range %d to %d of property %d to %s\n", __func__, grantedRange.first, grantedRange.second, property, receiver);
+    }
     assert(update_tally_map(receiver, property, nValue, BALANCE));
 
     /**
@@ -1921,8 +2247,8 @@ int CMPTransaction::logicMath_GrantTokens()
      * is not activated, "granting tokens" can trigger crowdsale participations.
      */
     if (!IsFeatureActivated(FEATURE_GRANTEFFECTS, block)) {
-        // Is there an active crowdsale running from this recepient?
-        logicHelper_CrowdsaleParticipation();
+        // Is there an active crowdsale running from this recipient?
+        logicHelper_CrowdsaleParticipation(blockHash);
     }
 
     NotifyTotalTokensChanged(property, block);
@@ -1931,19 +2257,13 @@ int CMPTransaction::logicMath_GrantTokens()
 }
 
 /** Tx 56 */
-int CMPTransaction::logicMath_RevokeTokens()
+int CMPTransaction::logicMath_RevokeTokens(CBlockIndex* pindex)
 {
-    uint256 blockHash;
-    {
-        LOCK(cs_main);
-
-        CBlockIndex* pindex = chainActive[block];
-        if (pindex == NULL) {
-            PrintToLog("%s(): ERROR: block %d not in the active chain\n", __func__, block);
-            return (PKT_ERROR_TOKENS -20);
-        }
-        blockHash = pindex->GetBlockHash();
+    if (pindex == nullptr) {
+        PrintToLog("%s(): ERROR: block %d not in the active chain\n", __func__, block);
+        return (PKT_ERROR_TOKENS -20);
     }
+    uint256 blockHash = pindex->GetBlockHash();
 
     if (!IsTransactionTypeAllowed(block, property, type, version)) {
         PrintToLog("%s(): rejected: type %d or version %d not permitted for property %d at block %d\n",
@@ -1953,6 +2273,11 @@ int CMPTransaction::logicMath_RevokeTokens()
                 property,
                 block);
         return (PKT_ERROR_TOKENS -22);
+    }
+
+    if (isPropertyNonFungible(property)) {
+        PrintToLog("%s(): rejected: property %d is of type non-fungible\n", __func__, property);
+        return (PKT_ERROR_TOKENS -27);
     }
 
     if (nValue <= 0 || MAX_INT_8_BYTES < nValue) {
@@ -2001,19 +2326,13 @@ int CMPTransaction::logicMath_RevokeTokens()
 }
 
 /** Tx 70 */
-int CMPTransaction::logicMath_ChangeIssuer()
+int CMPTransaction::logicMath_ChangeIssuer(CBlockIndex* pindex)
 {
-    uint256 blockHash;
-    {
-        LOCK(cs_main);
-
-        CBlockIndex* pindex = chainActive[block];
-        if (pindex == NULL) {
-            PrintToLog("%s(): ERROR: block %d not in the active chain\n", __func__, block);
-            return (PKT_ERROR_TOKENS -20);
-        }
-        blockHash = pindex->GetBlockHash();
+    if (pindex == nullptr) {
+        PrintToLog("%s(): ERROR: block %d not in the active chain\n", __func__, block);
+        return (PKT_ERROR_TOKENS -20);
     }
+    uint256 blockHash = pindex->GetBlockHash();
 
     if (!IsTransactionTypeAllowed(block, property, type, version)) {
         PrintToLog("%s(): rejected: type %d or version %d not permitted for property %d at block %d\n",
@@ -2023,6 +2342,11 @@ int CMPTransaction::logicMath_ChangeIssuer()
                 property,
                 block);
         return (PKT_ERROR_TOKENS -22);
+    }
+
+    if (isPropertyNonFungible(property)) {
+        PrintToLog("%s(): rejected: property %d is of type non-fungible\n", __func__, property);
+        return (PKT_ERROR_TOKENS -27);
     }
 
     if (!IsPropertyIdValid(property)) {
@@ -2038,7 +2362,7 @@ int CMPTransaction::logicMath_ChangeIssuer()
         return (PKT_ERROR_TOKENS -43);
     }
 
-    if (NULL != getCrowd(sender)) {
+    if (nullptr != getCrowd(sender)) {
         PrintToLog("%s(): rejected: sender %s has an active crowdsale\n", __func__, sender);
         return (PKT_ERROR_TOKENS -39);
     }
@@ -2048,7 +2372,7 @@ int CMPTransaction::logicMath_ChangeIssuer()
         return (PKT_ERROR_TOKENS -45);
     }
 
-    if (NULL != getCrowd(receiver)) {
+    if (nullptr != getCrowd(receiver)) {
         PrintToLog("%s(): rejected: receiver %s has an active crowdsale\n", __func__, receiver);
         return (PKT_ERROR_TOKENS -46);
     }
@@ -2066,18 +2390,11 @@ int CMPTransaction::logicMath_ChangeIssuer()
 }
 
 /** Tx 71 */
-int CMPTransaction::logicMath_EnableFreezing()
+int CMPTransaction::logicMath_EnableFreezing(CBlockIndex* pindex)
 {
-    uint256 blockHash;
-    {
-        LOCK(cs_main);
-
-        CBlockIndex* pindex = chainActive[block];
-        if (pindex == NULL) {
-            PrintToLog("%s(): ERROR: block %d not in the active chain\n", __func__, block);
-            return (PKT_ERROR_TOKENS -20);
-        }
-        blockHash = pindex->GetBlockHash();
+    if (pindex == nullptr) {
+        PrintToLog("%s(): ERROR: block %d not in the active chain\n", __func__, block);
+        return (PKT_ERROR_TOKENS -20);
     }
 
     if (!IsTransactionTypeAllowed(block, property, type, version)) {
@@ -2127,18 +2444,11 @@ int CMPTransaction::logicMath_EnableFreezing()
 }
 
 /** Tx 72 */
-int CMPTransaction::logicMath_DisableFreezing()
+int CMPTransaction::logicMath_DisableFreezing(CBlockIndex* pindex)
 {
-    uint256 blockHash;
-    {
-        LOCK(cs_main);
-
-        CBlockIndex* pindex = chainActive[block];
-        if (pindex == NULL) {
-            PrintToLog("%s(): ERROR: block %d not in the active chain\n", __func__, block);
-            return (PKT_ERROR_TOKENS -20);
-        }
-        blockHash = pindex->GetBlockHash();
+    if (pindex == nullptr) {
+        PrintToLog("%s(): ERROR: block %d not in the active chain\n", __func__, block);
+        return (PKT_ERROR_TOKENS -20);
     }
 
     if (!IsTransactionTypeAllowed(block, property, type, version)) {
@@ -2180,18 +2490,11 @@ int CMPTransaction::logicMath_DisableFreezing()
 }
 
 /** Tx 185 */
-int CMPTransaction::logicMath_FreezeTokens()
+int CMPTransaction::logicMath_FreezeTokens(CBlockIndex* pindex)
 {
-    uint256 blockHash;
-    {
-        LOCK(cs_main);
-
-        CBlockIndex* pindex = chainActive[block];
-        if (pindex == NULL) {
-            PrintToLog("%s(): ERROR: block %d not in the active chain\n", __func__, block);
-            return (PKT_ERROR_TOKENS -20);
-        }
-        blockHash = pindex->GetBlockHash();
+    if (pindex == nullptr) {
+        PrintToLog("%s(): ERROR: block %d not in the active chain\n", __func__, block);
+        return (PKT_ERROR_TOKENS -20);
     }
 
     if (!IsTransactionTypeAllowed(block, property, type, version)) {
@@ -2217,8 +2520,21 @@ int CMPTransaction::logicMath_FreezeTokens()
         return (PKT_ERROR_TOKENS -42);
     }
 
-    if (sender != sp.getIssuer(block)) {
-        PrintToLog("%s(): rejected: sender %s is not issuer of property %d [issuer=%s]\n", __func__, sender, property, sp.issuer);
+    bool authorized = true;
+    // check, if there is a delegate and whether the sender is the delegate
+    if (!sp.getDelegate(block).empty()) {
+        if (sender != sp.getDelegate(block)) {
+            authorized = false;
+        }
+    // otherwise ensure sender is issuer
+    } else {
+        if (sender != sp.getIssuer(block)) {
+            authorized = false;
+        }
+    }
+    if (!authorized) {
+        PrintToLog("%s(): rejected: sender %s is not delegate or issuer of property %d [issuer=%s, delegate=%s]\n",
+                __func__, sender, property, sp.getIssuer(block), sp.getDelegate(block));
         return (PKT_ERROR_TOKENS -43);
     }
 
@@ -2238,18 +2554,11 @@ int CMPTransaction::logicMath_FreezeTokens()
 }
 
 /** Tx 186 */
-int CMPTransaction::logicMath_UnfreezeTokens()
+int CMPTransaction::logicMath_UnfreezeTokens(CBlockIndex* pindex)
 {
-    uint256 blockHash;
-    {
-        LOCK(cs_main);
-
-        CBlockIndex* pindex = chainActive[block];
-        if (pindex == NULL) {
-            PrintToLog("%s(): ERROR: block %d not in the active chain\n", __func__, block);
-            return (PKT_ERROR_TOKENS -20);
-        }
-        blockHash = pindex->GetBlockHash();
+    if (pindex == nullptr) {
+        PrintToLog("%s(): ERROR: block %d not in the active chain\n", __func__, block);
+        return (PKT_ERROR_TOKENS -20);
     }
 
     if (!IsTransactionTypeAllowed(block, property, type, version)) {
@@ -2275,8 +2584,21 @@ int CMPTransaction::logicMath_UnfreezeTokens()
         return (PKT_ERROR_TOKENS -42);
     }
 
-    if (sender != sp.getIssuer(block)) {
-        PrintToLog("%s(): rejected: sender %s is not issuer of property %d [issuer=%s]\n", __func__, sender, property, sp.issuer);
+    bool authorized = true;
+    // check, if there is a delegate and whether the sender is the delegate
+    if (!sp.getDelegate(block).empty()) {
+        if (sender != sp.getDelegate(block)) {
+            authorized = false;
+        }
+    // otherwise ensure sender is issuer
+    } else {
+        if (sender != sp.getIssuer(block)) {
+            authorized = false;
+        }
+    }
+    if (!authorized) {
+        PrintToLog("%s(): rejected: sender %s is not delegate or issuer of property %d [issuer=%s, delegate=%s]\n",
+                __func__, sender, property, sp.getIssuer(block), sp.getDelegate(block));
         return (PKT_ERROR_TOKENS -43);
     }
 
@@ -2294,6 +2616,214 @@ int CMPTransaction::logicMath_UnfreezeTokens()
 
     return 0;
 }
+
+/** Tx 73 */
+int CMPTransaction::logicMath_AddDelegate(CBlockIndex* pindex)
+{
+    if (pindex == nullptr) {
+        PrintToLog("%s(): ERROR: block %d not in the active chain\n", __func__, block);
+        return (PKT_ERROR_TOKENS -20);
+    }
+    uint256 blockHash = pindex->GetBlockHash();
+
+    if (!IsTransactionTypeAllowed(block, property, type, version)) {
+        PrintToLog("%s(): rejected: type %d or version %d not permitted for property %d at block %d\n",
+                __func__,
+                type,
+                version,
+                property,
+                block);
+        return (PKT_ERROR_TOKENS -22);
+    }
+
+    if (!IsPropertyIdValid(property)) {
+        PrintToLog("%s(): rejected: property %d does not exist\n", __func__, property);
+        return (PKT_ERROR_TOKENS -24);
+    }
+
+    CMPSPInfo::Entry sp;
+    assert(pDbSpInfo->getSP(property, sp));
+
+    if (!sp.manual) {
+        PrintToLog("%s(): rejected: property %d is not managed\n", __func__, property);
+        return (PKT_ERROR_TOKENS -42);
+    }
+
+    if (sender != sp.getIssuer(block)) {
+        PrintToLog("%s(): rejected: sender %s is not issuer of property %d [issuer=%s]\n", __func__, sender, property, sp.getIssuer(block));
+        return (PKT_ERROR_TOKENS -43);
+    }
+
+    if (receiver.empty()) {
+        PrintToLog("%s(): rejected: receiver is empty\n", __func__);
+        return (PKT_ERROR_TOKENS -45);
+    }
+
+    // ------------------------------------------
+
+    sp.addDelegate(block, tx_idx, receiver);
+
+    sp.delegate = receiver;
+    sp.update_block = blockHash;
+
+    assert(pDbSpInfo->updateSP(property, sp));
+
+    return 0;
+}
+
+/** Tx 74 */
+int CMPTransaction::logicMath_RemoveDelegate(CBlockIndex* pindex)
+{
+    if (pindex == nullptr) {
+        PrintToLog("%s(): ERROR: block %d not in the active chain\n", __func__, block);
+        return (PKT_ERROR_TOKENS -20);
+    }
+    uint256 blockHash = pindex->GetBlockHash();
+
+    if (!IsTransactionTypeAllowed(block, property, type, version)) {
+        PrintToLog("%s(): rejected: type %d or version %d not permitted for property %d at block %d\n",
+                __func__,
+                type,
+                version,
+                property,
+                block);
+        return (PKT_ERROR_TOKENS -22);
+    }
+
+    if (!IsPropertyIdValid(property)) {
+        PrintToLog("%s(): rejected: property %d does not exist\n", __func__, property);
+        return (PKT_ERROR_TOKENS -24);
+    }
+
+    CMPSPInfo::Entry sp;
+    assert(pDbSpInfo->getSP(property, sp));
+
+    if (!sp.manual) {
+        PrintToLog("%s(): rejected: property %d is not managed\n", __func__, property);
+        return (PKT_ERROR_TOKENS -42);
+    }
+
+    if (sender != sp.getIssuer(block) && sender != sp.getDelegate(block)) {
+        PrintToLog("%s(): rejected: sender %s is not issuer or delegate of property %d [issuer=%s, delegate=%s]\n",
+                __func__, sender, property, sp.getIssuer(block), sp.getDelegate(block));
+        return (PKT_ERROR_TOKENS -43);
+    }
+
+    if (receiver.empty()) {
+        PrintToLog("%s(): rejected: receiver is empty\n", __func__);
+        return (PKT_ERROR_TOKENS -45);
+    }
+
+    if (receiver != sp.getDelegate(block)) {
+        PrintToLog("%s(): rejected: delegate to remove %s does not match current delegate %s\n", __func__, receiver, sp.getDelegate(block));
+        return (PKT_ERROR_TOKENS -46);
+    }
+
+    // ------------------------------------------
+
+    sp.removeDelegate(block, tx_idx);
+
+    sp.delegate = "";
+    sp.update_block = blockHash;
+
+    assert(pDbSpInfo->updateSP(property, sp));
+
+    return 0;
+}
+
+/** Tx 200 */
+int CMPTransaction::logicMath_AnyData()
+{
+    if (!IsTransactionTypeAllowed(block, property, type, version)) {
+        PrintToLog("%s(): rejected: type %d or version %d not permitted for property %d at block %d\n",
+                __func__,
+                type,
+                version,
+                property,
+                block);
+        return (PKT_ERROR_ANYDATA -22);
+    }
+
+    return 0;
+}
+
+/** Tx 201 */
+int CMPTransaction::logicMath_NonFungibleData()
+{
+    if (!IsTransactionTypeAllowed(block, property, type, version)) {
+        PrintToLog("%s(): rejected: type %d or version %d not permitted for property %d at block %d\n",
+                __func__,
+                type,
+                version,
+                property,
+                block);
+        return (PKT_ERROR_SEND -22);
+    }
+
+    if (!isPropertyNonFungible(property)) {
+        PrintToLog("%s(): rejected: property %d is not of type non-fungible\n", __func__, property);
+        return (PKT_ERROR_TOKENS -27);
+    }
+
+    if (nonfungible_token_start <= 0 || MAX_INT_8_BYTES < nonfungible_token_start) {
+        PrintToLog("%s(): rejected: non-fungible token range start value out of range or zero: %d", __func__, nonfungible_token_start);
+        return (PKT_ERROR_SEND -23);
+    }
+
+    if (nonfungible_token_end <= 0 || MAX_INT_8_BYTES < nonfungible_token_end) {
+        PrintToLog("%s(): rejected: non-fungible token range end value out of range or zero: %d", __func__, nonfungible_token_end);
+        return (PKT_ERROR_SEND -23);
+    }
+
+    if (nonfungible_token_start > nonfungible_token_end) {
+        PrintToLog("%s(): rejected: non-fungible token range start value: %d is less than or equal to range end value: %d", __func__, nonfungible_token_start, nonfungible_token_end);
+        return (PKT_ERROR_SEND -23);
+    }
+
+    int64_t amount = (nonfungible_token_end - nonfungible_token_start) + 1;
+    if (amount <= 0) {
+        PrintToLog("%s(): rejected: non-fungible token range amount out of range or zero: %d", __func__, amount);
+        return (PKT_ERROR_SEND -23);
+    }
+
+    if (!pDbSpInfo->hasSP(property)) {
+        PrintToLog("%s(): rejected: property %d does not exist\n", __func__, property);
+        return (PKT_ERROR_SEND -24);
+    }
+
+    NonFungibleStorage type = nonfungible_data_type ? NonFungibleStorage::IssuerData : NonFungibleStorage::HolderData;
+
+    if (type == NonFungibleStorage::HolderData)
+    {
+        std::string rangeStartOwner = pDbNFT->GetNonFungibleTokenOwner(property, nonfungible_token_start);
+        std::string rangeEndOwner = pDbNFT->GetNonFungibleTokenOwner(property, nonfungible_token_end);
+        bool contiguous = pDbNFT->IsRangeContiguous(property, nonfungible_token_start, nonfungible_token_end);
+        if (rangeStartOwner != sender || rangeEndOwner != sender || !contiguous) {
+            PrintToLog("%s(): rejected: sender %s does not own the range data is being set on\n",
+                    __func__,
+                    sender);
+            return (PKT_ERROR_SEND -26);
+        }
+    }
+    else
+    {
+        CMPSPInfo::Entry sp;
+        pDbSpInfo->getSP(property, sp);
+        if (sp.getIssuer(block) != sender) {
+            PrintToLog("%s(): rejected: sender %s is not the issuer of property %d\n",
+                    __func__,
+                    sender,
+                    property);
+        }
+    }
+
+    // ------------------------------------------
+
+    pDbNFT->ChangeNonFungibleTokenData(property, nonfungible_token_start, nonfungible_token_end, nonfungible_data, type);
+
+    return 0;
+}
+
 
 /** Tx 65533 */
 int CMPTransaction::logicMath_Deactivation()
@@ -2403,9 +2933,9 @@ int CMPTransaction::logicMath_Alert()
             std::string msgText = "Client upgrade is required!  Shutting down due to unsupported consensus state!";
             PrintToLog(msgText);
             PrintToConsole(msgText);
-            if (!GetBoolArg("-overrideforcedshutdown", false)) {
-                boost::filesystem::path persistPath = GetDataDir() / "MP_persist";
-                if (boost::filesystem::exists(persistPath)) boost::filesystem::remove_all(persistPath); // prevent the node being restarted without a reparse after forced shutdown
+            if (!gArgs.GetBoolArg("-overrideforcedshutdown", false)) {
+                fs::path persistPath = GetDataDir() / "MP_persist";
+                if (fs::exists(persistPath)) fs::remove_all(persistPath); // prevent the node being restarted without a reparse after forced shutdown
                 AbortNode(msgText, msgText);
             }
         }
@@ -2418,7 +2948,7 @@ int CMPTransaction::logicMath_Alert()
     }
 
     // we have a new alert, fire a notify event if needed
-    AlertNotify(alert_text, true);
+    DoWarning(alert_text);
 
     return 0;
 }

@@ -1,7 +1,7 @@
-#include "omnicore/createpayload.h"
+#include <omnicore/createpayload.h>
 
-#include "test/test_bitcoin.h"
-#include "utilstrencodings.h"
+#include <test/util/setup_common.h>
+#include <util/strencodings.h>
 
 #include <boost/test/unit_test.hpp>
 
@@ -423,6 +423,34 @@ BOOST_AUTO_TEST_CASE(payload_unfreeze_tokens)
 
     BOOST_CHECK_EQUAL(HexStr(vch),
         "000000ba0000000400000000000003e800946cb2e08075bcbaf157e47bcb67eb2b2339d242");
+}
+
+BOOST_AUTO_TEST_CASE(payload_add_delegate)
+{
+    // Enable freezing [type 73, version 0]
+    std::vector<unsigned char> vch = CreatePayload_AddDelegate(
+        static_cast<uint32_t>(21));                 // property: SP #21
+
+    BOOST_CHECK_EQUAL(HexStr(vch), "0000004900000015");
+}
+
+BOOST_AUTO_TEST_CASE(payload_remove_delegate)
+{
+    // Enable freezing [type 74, version 0]
+    std::vector<unsigned char> vch = CreatePayload_RemoveDelegate(
+        static_cast<uint32_t>(21));                 // property: SP #21
+
+    BOOST_CHECK_EQUAL(HexStr(vch), "0000004a00000015");
+}
+
+BOOST_AUTO_TEST_CASE(payload_anydata)
+{
+    // Freeze tokens [type 200, version 0]
+    std::vector<unsigned char> vch = CreatePayload_AnyData(
+        ParseHex("646578782032303230"));                            // data
+
+    BOOST_CHECK_EQUAL(HexStr(vch),
+        "000000c8646578782032303230");
 }
 
 BOOST_AUTO_TEST_CASE(payload_feature_deactivation)

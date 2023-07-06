@@ -1,22 +1,21 @@
-#include "omnicore/rpcvalues.h"
+#include <omnicore/rpcvalues.h>
 
-#include "omnicore/createtx.h"
-#include "omnicore/parse_string.h"
-#include "omnicore/walletutils.h"
+#include <omnicore/createtx.h>
+#include <omnicore/parse_string.h>
+#include <omnicore/walletutils.h>
 
-#include "base58.h"
-#include "core_io.h"
-#include "primitives/transaction.h"
-#include "pubkey.h"
-#include "rpc/protocol.h"
-#include "rpc/server.h"
-#include "script/script.h"
-#include "uint256.h"
+#include <base58.h>
+#include <core_io.h>
+#include <interfaces/wallet.h>
+#include <key_io.h>
+#include <primitives/transaction.h>
+#include <pubkey.h>
+#include <rpc/protocol.h>
+#include <rpc/util.h>
+#include <script/script.h>
+#include <uint256.h>
 
 #include <univalue.h>
-
-#include <boost/assign/list_of.hpp>
-#include <boost/foreach.hpp>
 
 #include <string>
 #include <vector>
@@ -117,6 +116,15 @@ uint16_t ParsePropertyType(const UniValue& value)
     return static_cast<uint16_t>(propertyType);
 }
 
+uint16_t ParseManagedPropertyType(const UniValue& value)
+{
+    int64_t propertyType = value.get_int64();
+    if (propertyType != 1 && propertyType != 2 && propertyType != 5) {
+        throw JSONRPCError(RPC_INVALID_PARAMETER, "Invalid property type (1 = indivisible, 2 = divisible, 5 = non-fungible only)");
+    }
+    return static_cast<uint16_t>(propertyType);
+}
+
 uint32_t ParsePreviousPropertyId(const UniValue& value)
 {
     int64_t previousId = value.get_int64();
@@ -173,14 +181,14 @@ uint8_t ParseMetaDExAction(const UniValue& value)
 
 CTransaction ParseTransaction(const UniValue& value)
 {
-    CTransaction tx;
+    CMutableTransaction tx;
     if (value.isNull() || value.get_str().empty()) {
-        return tx;
+        return CTransaction(tx);
     }
     if (!DecodeHexTx(tx, value.get_str())) {
         throw JSONRPCError(RPC_DESERIALIZATION_ERROR, "Transaction deserialization failed");
     }
-    return tx;
+    return CTransaction(tx);
 }
 
 CMutableTransaction ParseMutableTransaction(const UniValue& value)
@@ -189,10 +197,10 @@ CMutableTransaction ParseMutableTransaction(const UniValue& value)
     return CMutableTransaction(tx);
 }
 
-CPubKey ParsePubKeyOrAddress(const UniValue& value)
+CPubKey ParsePubKeyOrAddress(interfaces::Wallet* iWallet, const UniValue& value)
 {
     CPubKey pubKey;
-    if (!mastercore::AddressToPubKey(value.get_str(), pubKey)) {
+    if (!mastercore::AddressToPubKey(iWallet, value.get_str(), pubKey)) {
         throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid redemption key or address");
     }
     return pubKey;

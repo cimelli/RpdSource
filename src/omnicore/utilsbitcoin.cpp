@@ -4,10 +4,10 @@
  * This file contains certain helpers to access information about Bitcoin.
  */
 
-#include "chain.h"
-#include "chainparams.h"
-#include "main.h"
-#include "sync.h"
+#include <chain.h>
+#include <chainparams.h>
+#include <validation.h>
+#include <sync.h>
 
 #include <stdint.h>
 #include <string>
@@ -20,7 +20,7 @@ namespace mastercore
 int GetHeight()
 {
     LOCK(cs_main);
-    return chainActive.Height();
+    return ::ChainActive().Height();
 }
 
 /**
@@ -29,21 +29,21 @@ int GetHeight()
 uint32_t GetLatestBlockTime()
 {
     LOCK(cs_main);
-    if (chainActive.Tip())
-        return chainActive.Tip()->GetBlockTime();
+    if (::ChainActive().Tip())
+        return ::ChainActive().Tip()->GetBlockTime();
     else
         return Params().GenesisBlock().nTime;
 }
 
 /**
- * @return The CBlockIndex, or NULL, if the block isn't available.
+ * @return The CBlockIndex, or nullptr, if the block isn't available.
  */
 CBlockIndex* GetBlockIndex(const uint256& hash)
 {
-    CBlockIndex* pBlockIndex = NULL;
+    CBlockIndex* pBlockIndex = nullptr;
     LOCK(cs_main);
-    BlockMap::const_iterator it = mapBlockIndex.find(hash);
-    if (it != mapBlockIndex.end()) {
+    BlockMap::const_iterator it = ::BlockIndex().find(hash);
+    if (it != ::BlockIndex().end()) {
         pBlockIndex = it->second;
     }
 

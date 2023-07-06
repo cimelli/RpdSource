@@ -1,15 +1,10 @@
-#include "omnicore/dex.h"
+#include <omnicore/dex.h>
 
-#include "test/test_bitcoin.h"
+#include <test/util/setup_common.h>
 
 #include <boost/test/unit_test.hpp>
 
 #include <stdint.h>
-
-// forward declaration
-namespace mastercore {
-extern int64_t calculateDExPurchase(const int64_t amountOffered, const int64_t amountDesired, const int64_t amountPaid);
-}
 
 using mastercore::calculateDExPurchase;
 

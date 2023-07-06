@@ -1,17 +1,18 @@
-#include "omnicore/test/utils_tx.h"
+#include <omnicore/test/utils_tx.h>
 
-#include "omnicore/omnicore.h"
-#include "omnicore/parsing.h"
-#include "omnicore/script.h"
-#include "omnicore/tx.h"
+#include <omnicore/omnicore.h>
+#include <omnicore/parsing.h>
+#include <omnicore/script.h>
+#include <omnicore/tx.h>
 
-#include "base58.h"
-#include "coins.h"
-#include "primitives/transaction.h"
-#include "random.h"
-#include "script/script.h"
-#include "script/standard.h"
-#include "test/test_bitcoin.h"
+#include <base58.h>
+#include <coins.h>
+#include <key_io.h>
+#include <primitives/transaction.h>
+#include <random.h>
+#include <script/script.h>
+#include <script/standard.h>
+#include <test/util/setup_common.h>
 
 #include <stdint.h>
 #include <algorithm>
@@ -28,8 +29,8 @@ BOOST_FIXTURE_TEST_SUITE(omnicore_sender_bycontribution_tests, BasicTestingSetup
 static CTransaction TxClassB(const std::vector<CTxOut>& txInputs);
 static bool GetSenderByContribution(const std::vector<CTxOut>& vouts, std::string& strSender);
 static CTxOut createTxOut(int64_t amount, const std::string& dest);
-static CKeyID createRandomKeyId();
-static CScriptID createRandomScriptId();
+static PKHash createRandomKeyId();
+static ScriptHash createRandomScriptId();
 void shuffleAndCheck(std::vector<CTxOut>& vouts, unsigned nRounds);
 
 // Test settings
@@ -242,7 +243,7 @@ BOOST_AUTO_TEST_CASE(p2sh_contribution_by_sum_order_test)
  * representation as string (instead of uint160) determines the chosen candidate.
  *
  * In practise this implies selecting the sender "by sum" via a comparison of 
- * CBitcoinAddress objects would yield faulty results.
+ * CTxDestination objects would yield faulty results.
  *
  * Note: it reflects the behavior of Omni Core, but this edge case is not specified.
  */
@@ -332,27 +333,21 @@ static CTransaction TxClassB(const std::vector<CTxOut>& txInputs)
     CMutableTransaction mutableTx;
 
     // Inputs:
-    for (std::vector<CTxOut>::const_iterator it = txInputs.begin(); it != txInputs.end(); ++it)
+    for (const auto& txOut : txInputs)
     {
-        const CTxOut& txOut = *it;
-
         // Create transaction for input:
         CMutableTransaction inputTx;
-        unsigned int nOut = 0;
         inputTx.vout.push_back(txOut);
         CTransaction tx(inputTx);
 
         // Populate transaction cache:
-        CCoinsModifier coins = view.ModifyCoins(tx.GetHash());
-
-        if (nOut >= coins->vout.size()) {
-            coins->vout.resize(nOut+1);
-        }
-        coins->vout[nOut].scriptPubKey = txOut.scriptPubKey;
-        coins->vout[nOut].nValue = txOut.nValue;
+        Coin newcoin;
+        newcoin.out.scriptPubKey = txOut.scriptPubKey;
+        newcoin.out.nValue = txOut.nValue;
+        view.AddCoin(COutPoint(tx.GetHash(), 0), std::move(newcoin), true);
 
         // Add input:
-        CTxIn txIn(tx.GetHash(), nOut);
+        CTxIn txIn(tx.GetHash(), 0);
         mutableTx.vin.push_back(txIn);
     }
 
@@ -383,29 +378,29 @@ static bool GetSenderByContribution(const std::vector<CTxOut>& vouts, std::strin
 /** Helper to create a CTxOut object. */
 static CTxOut createTxOut(int64_t amount, const std::string& dest)
 {
-    return CTxOut(amount, GetScriptForDestination(CBitcoinAddress(dest).Get()));
+    return CTxOut(amount, GetScriptForDestination(DecodeDestination(dest)));
 }
 
 /** Helper to create a CKeyID object with random value.*/
-static CKeyID createRandomKeyId()
+static PKHash createRandomKeyId()
 {
     std::vector<unsigned char> vch;
     vch.reserve(20);
     for (int i = 0; i < 20; ++i) {
         vch.push_back(static_cast<unsigned char>(GetRandInt(256)));
     }
-    return CKeyID(uint160(vch));
+    return PKHash(uint160(vch));
 }
 
 /** Helper to create a CScriptID object with random value.*/
-static CScriptID createRandomScriptId()
+static ScriptHash createRandomScriptId()
 {
     std::vector<unsigned char> vch;
     vch.reserve(20);
     for (int i = 0; i < 20; ++i) {
         vch.push_back(static_cast<unsigned char>(GetRandInt(256)));
     }
-    return CScriptID(uint160(vch));
+    return ScriptHash(uint160(vch));
 }
 
 /**

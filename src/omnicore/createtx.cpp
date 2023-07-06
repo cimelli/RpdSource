@@ -1,15 +1,16 @@
-#include "omnicore/createtx.h"
+#include <omnicore/createtx.h>
 
-#include "omnicore/encoding.h"
-#include "omnicore/script.h"
+#include <omnicore/encoding.h>
+#include <omnicore/script.h>
 
-#include "base58.h"
-#include "coins.h"
-#include "primitives/transaction.h"
-#include "pubkey.h"
-#include "script/script.h"
-#include "script/standard.h"
-#include "uint256.h"
+#include <base58.h>
+#include <coins.h>
+#include <key_io.h>
+#include <primitives/transaction.h>
+#include <pubkey.h>
+#include <script/script.h>
+#include <script/standard.h>
+#include <uint256.h>
 
 #include <stdint.h>
 #include <string>
@@ -81,11 +82,8 @@ TxBuilder& TxBuilder::addChange(const CTxDestination& destination, const CCoinsV
 
     CScript scriptPubKey = GetScriptForDestination(destination);
 
-    // Temporary hack, remove this later
-    int spendHeight = 1286001;
-
-    int64_t txChange = view.GetValueIn(tx, spendHeight) - tx.GetValueOut() - txFee;
-    int64_t minValue = GetDustThreshold(scriptPubKey);
+    int64_t txChange = view.GetValueIn(tx) - tx.GetValueOut() - txFee;
+    int64_t minValue = OmniGetDustThreshold(scriptPubKey);
 
     if (txChange < minValue) {
         return *this;
@@ -137,7 +135,7 @@ OmniTxBuilder& OmniTxBuilder::addReference(const std::string& destination, int64
     CTxDestination dest = DecodeDestination(destination);
     CScript scriptPubKey = GetScriptForDestination(dest);
 
-    int64_t minValue = GetDustThreshold(scriptPubKey);
+    int64_t minValue = OmniGetDustThreshold(scriptPubKey);
     value = std::max(minValue, value);
 
     return (OmniTxBuilder&) TxBuilder::addOutput(scriptPubKey, value);

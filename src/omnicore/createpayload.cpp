@@ -1,11 +1,11 @@
 // This file serves to provide payload creation functions.
 
-#include "omnicore/createpayload.h"
+#include <omnicore/createpayload.h>
 
-#include "omnicore/log.h"
-#include "omnicore/parsing.h"
+#include <omnicore/log.h>
+#include <omnicore/parsing.h>
 
-#include "base58.h"
+#include <base58.h>
 
 #include <stdint.h>
 #include <string>
@@ -31,7 +31,7 @@
 static std::vector<unsigned char> AddressToBytes(const std::string& address)
 {
     std::vector<unsigned char> addressBytes;
-    bool success = DecodeBase58(address, addressBytes);
+    bool success = DecodeBase58(address, addressBytes, 21 + 4);
     if (!success) {
         PrintToLog("ERROR: failed to decode address %s.\n", address);
     }
@@ -73,6 +73,50 @@ std::vector<unsigned char> CreatePayload_SendAll(uint8_t ecosystem)
     PUSH_BACK_BYTES(payload, messageVer);
     PUSH_BACK_BYTES(payload, messageType);
     PUSH_BACK_BYTES(payload, ecosystem);
+
+    return payload;
+}
+
+std::vector<unsigned char> CreatePayload_SendNonFungible(uint32_t propertyId, uint64_t tokenStart, uint64_t tokenEnd)
+{
+    std::vector<unsigned char> payload;
+    uint16_t messageType = 5;
+    uint16_t messageVer = 0;
+    SwapByteOrder16(messageType);
+    SwapByteOrder16(messageVer);
+    SwapByteOrder32(propertyId);
+    SwapByteOrder64(tokenStart);
+    SwapByteOrder64(tokenEnd);
+
+    PUSH_BACK_BYTES(payload, messageVer);
+    PUSH_BACK_BYTES(payload, messageType);
+    PUSH_BACK_BYTES(payload, propertyId);
+    PUSH_BACK_BYTES(payload, tokenStart);
+    PUSH_BACK_BYTES(payload, tokenEnd);
+
+    return payload;
+}
+
+std::vector<unsigned char> CreatePayload_SetNonFungibleData(uint32_t propertyId, uint64_t tokenStart, uint64_t tokenEnd, uint8_t issuer, std::string& data)
+{
+    std::vector<unsigned char> payload;
+    uint16_t messageType = 201;
+    uint16_t messageVer = 0;
+    SwapByteOrder16(messageType);
+    SwapByteOrder16(messageVer);
+    SwapByteOrder32(propertyId);
+    SwapByteOrder64(tokenStart);
+    SwapByteOrder64(tokenEnd);
+    if (data.size() > 255) data = data.substr(0,255);
+
+    PUSH_BACK_BYTES(payload, messageVer);
+    PUSH_BACK_BYTES(payload, messageType);
+    PUSH_BACK_BYTES(payload, propertyId);
+    PUSH_BACK_BYTES(payload, tokenStart);
+    PUSH_BACK_BYTES(payload, tokenEnd);
+    PUSH_BACK_BYTES(payload, issuer);
+    payload.insert(payload.end(), data.begin(), data.end());
+    payload.push_back('\0');
 
     return payload;
 }
@@ -276,7 +320,7 @@ std::vector<unsigned char> CreatePayload_CloseCrowdsale(uint32_t propertyId)
     return payload;
 }
 
-std::vector<unsigned char> CreatePayload_Grant(uint32_t propertyId, uint64_t amount, std::string memo)
+std::vector<unsigned char> CreatePayload_Grant(uint32_t propertyId, uint64_t amount, std::string info)
 {
     std::vector<unsigned char> payload;
     uint16_t messageType = 55;
@@ -285,13 +329,13 @@ std::vector<unsigned char> CreatePayload_Grant(uint32_t propertyId, uint64_t amo
     SwapByteOrder16(messageVer);
     SwapByteOrder32(propertyId);
     SwapByteOrder64(amount);
-    if (memo.size() > 255) memo = memo.substr(0,255);
+    if (info.size() > 255) info = info.substr(0,255);
 
     PUSH_BACK_BYTES(payload, messageVer);
     PUSH_BACK_BYTES(payload, messageType);
     PUSH_BACK_BYTES(payload, propertyId);
     PUSH_BACK_BYTES(payload, amount);
-    payload.insert(payload.end(), memo.begin(), memo.end());
+    payload.insert(payload.end(), info.begin(), info.end());
     payload.push_back('\0');
 
     return payload;
@@ -407,6 +451,38 @@ std::vector<unsigned char> CreatePayload_UnfreezeTokens(uint32_t propertyId, uin
     return payload;
 }
 
+std::vector<unsigned char> CreatePayload_AddDelegate(uint32_t propertyId)
+{
+    std::vector<unsigned char> payload;
+    uint16_t messageType = 73;
+    uint16_t messageVer = 0;
+    SwapByteOrder16(messageType);
+    SwapByteOrder16(messageVer);
+    SwapByteOrder32(propertyId);
+
+    PUSH_BACK_BYTES(payload, messageVer);
+    PUSH_BACK_BYTES(payload, messageType);
+    PUSH_BACK_BYTES(payload, propertyId);
+
+    return payload;
+}
+
+std::vector<unsigned char> CreatePayload_RemoveDelegate(uint32_t propertyId)
+{
+    std::vector<unsigned char> payload;
+    uint16_t messageType = 74;
+    uint16_t messageVer = 0;
+    SwapByteOrder16(messageType);
+    SwapByteOrder16(messageVer);
+    SwapByteOrder32(propertyId);
+
+    PUSH_BACK_BYTES(payload, messageVer);
+    PUSH_BACK_BYTES(payload, messageType);
+    PUSH_BACK_BYTES(payload, propertyId);
+
+    return payload;
+}
+
 std::vector<unsigned char> CreatePayload_MetaDExTrade(uint32_t propertyIdForSale, uint64_t amountForSale, uint32_t propertyIdDesired, uint64_t amountDesired)
 {
     std::vector<unsigned char> payload;
@@ -488,6 +564,23 @@ std::vector<unsigned char> CreatePayload_MetaDExCancelEcosystem(uint8_t ecosyste
     PUSH_BACK_BYTES(payload, messageVer);
     PUSH_BACK_BYTES(payload, messageType);
     PUSH_BACK_BYTES(payload, ecosystem);
+
+    return payload;
+}
+
+std::vector<unsigned char> CreatePayload_AnyData(const std::vector<unsigned char>& data)
+{
+    std::vector<unsigned char> payload;
+
+    uint16_t messageVer = 0;
+    uint16_t messageType = 200;
+
+    SwapByteOrder16(messageVer);
+    SwapByteOrder16(messageType);
+
+    PUSH_BACK_BYTES(payload, messageVer);
+    PUSH_BACK_BYTES(payload, messageType);
+    payload.insert(payload.end(), data.begin(), data.end());
 
     return payload;
 }

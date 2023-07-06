@@ -1,16 +1,14 @@
-#ifndef OMNICORE_MDEX_H
-#define OMNICORE_MDEX_H
+#ifndef BITCOIN_OMNICORE_MDEX_H
+#define BITCOIN_OMNICORE_MDEX_H
 
-#include "omnicore/tx.h"
+#include <omnicore/tx.h>
 
-#include "uint256.h"
+#include <uint256.h>
 
 #include <boost/lexical_cast.hpp>
 #include <boost/multiprecision/cpp_dec_float.hpp>
 #include <boost/multiprecision/cpp_int.hpp>
 #include <boost/rational.hpp>
-
-#include <openssl/sha.h>
 
 #include <stdint.h>
 
@@ -18,6 +16,8 @@
 #include <map>
 #include <set>
 #include <string>
+
+class CHash256;
 
 typedef boost::rational<boost::multiprecision::checked_int128_t> rational_t;
 
@@ -99,7 +99,7 @@ public:
     /** Used for display of unit prices with 50 decimal places at RPC layer. */
     std::string displayFullUnitPrice() const;
 
-    void saveOffer(std::ofstream& file, SHA256_CTX* shaCtx) const;
+    void saveOffer(std::ofstream& file, CHash256 &hasher) const;
 };
 
 namespace mastercore
@@ -143,4 +143,4 @@ const CMPMetaDEx* MetaDEx_RetrieveTrade(const uint256& txid);
 }
 
 
-#endif // OMNICORE_MDEX_H
+#endif // BITCOIN_OMNICORE_MDEX_H

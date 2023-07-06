@@ -1,11 +1,10 @@
-#ifndef OMNICORE_FEES_H
-#define OMNICORE_FEES_H
+#ifndef BITCOIN_OMNICORE_DBFEES_H
+#define BITCOIN_OMNICORE_DBFEES_H
 
-#include "omnicore/dbbase.h"
-#include "omnicore/log.h"
+#include <omnicore/dbbase.h>
+#include <omnicore/log.h>
 
-#include <boost/filesystem.hpp>
-
+#include <fs.h>
 #include <stdint.h>
 #include <set>
 #include <string>
@@ -19,7 +18,7 @@ typedef std::pair<std::string, int64_t> feeHistoryItem;
 class COmniFeeCache : public CDBBase
 {
 public:
-    COmniFeeCache(const boost::filesystem::path& path, bool fWipe);
+    COmniFeeCache(const fs::path& path, bool fWipe);
     virtual ~COmniFeeCache();
 
     /** Show Fee Cache DB statistics */
@@ -54,7 +53,7 @@ public:
 class COmniFeeHistory : public CDBBase
 {
 public:
-    COmniFeeHistory(const boost::filesystem::path& path, bool fWipe);
+    COmniFeeHistory(const fs::path& path, bool fWipe);
     virtual ~COmniFeeHistory();
 
     /** Show Fee History DB statistics */
@@ -84,4 +83,4 @@ namespace mastercore
     extern COmniFeeHistory* pDbFeeHistory;
 }
 
-#endif // OMNICORE_FEES_H
+#endif // BITCOIN_OMNICORE_DBFEES_H
