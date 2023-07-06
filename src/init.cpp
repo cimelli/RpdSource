@@ -57,10 +57,6 @@
 #include "wallet/wallet.h"
 #include "wallet/walletdb.h"
 #include "wallet/rpcwallet.h"
-
-#include "omnicore/rpcpayload.h"
-#include "omnicore/rpcrawtx.h"
-#include "omnicore/rpctx.h"
 #include "omnicore/rpc.h"
 
 #endif
