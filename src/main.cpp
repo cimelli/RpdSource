@@ -2937,7 +2937,7 @@ static void PruneBlockIndexCandidates()
  * Try to make some progress towards making pindexMostWork the active block.
  * pblock is either NULL or a pointer to a CBlock corresponding to pindexMostWork.
  */
-static bool ActivateBestChainStep(CValidationState& state, CBlockIndex* pindexMostWork, const CBlock* pblock, bool fAlreadyChecked)
+static bool ActivateBestChainStep(CValidationState& state, CBlockIndex* pindexMostWork, const CBlock* pblock, bool fAlreadyChecked, std::list<CTransaction>& txConflicted, std::vector<std::tuple<CTransaction, CBlockIndex*, int> >& txChanged)
 {
     AssertLockHeld(cs_main);
     if (pblock == NULL)
@@ -3032,10 +3032,15 @@ bool ActivateBestChain(CValidationState& state, const CBlock* pblock, bool fAlre
 
     CBlockIndex* pindexNewTip = nullptr;
     CBlockIndex* pindexMostWork = nullptr;
+    std::vector<std::tuple<CTransaction, CBlockIndex*, int> > txChanged;
+    if (pblock)
+        txChanged.reserve(pblock->vtx.size());
     do {
+        txChanged.clear();
         boost::this_thread::interruption_point();
 
         const CBlockIndex *pindexFork;
+        std::list<CTransaction> txConflicted;
         bool fInitialDownload;
         while (true) {
             TRY_LOCK(cs_main, lockMain);
@@ -3051,7 +3056,7 @@ bool ActivateBestChain(CValidationState& state, const CBlock* pblock, bool fAlre
             if (pindexMostWork == NULL || pindexMostWork == chainActive.Tip())
                 return true;
 
-            if (!ActivateBestChainStep(state, pindexMostWork, pblock && pblock->GetHash() == pindexMostWork->GetBlockHash() ? pblock : NULL, fAlreadyChecked))
+            if (!ActivateBestChainStep(state, pindexMostWork, pblock && pblock->GetHash() == pindexMostWork->GetBlockHash() ? pblock : NULL, fAlreadyChecked, txConflicted, txChanged))
                 return false;
 
             pindexNewTip = chainActive.Tip();
