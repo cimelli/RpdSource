@@ -1,10 +1,10 @@
-#ifndef BITCOIN_OMNICORE_LOG_H
-#define BITCOIN_OMNICORE_LOG_H
+#ifndef OMNICORE_LOG_H
+#define OMNICORE_LOG_H
 
-#include <util/system.h>
-#include <tinyformat.h>
+#include "util/system.h"
+#include "tinyformat.h"
 
-#include <string>
+#include "string"
 
 /** Prints to the log file. */
 int LogFilePrint(const std::string& str);

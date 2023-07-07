@@ -1,25 +1,25 @@
-#include <omnicore/dbspinfo.h>
+#include "omnicore/dbspinfo.h"
 
-#include <omnicore/dbbase.h>
-#include <omnicore/log.h>
+#include "omnicore/dbbase.h"
+#include "omnicore/log.h"
 
-#include <base58.h>
-#include <clientversion.h>
-#include <fs.h>
-#include <key_io.h>
-#include <serialize.h>
-#include <streams.h>
-#include <tinyformat.h>
-#include <uint256.h>
+#include "base58.h"
+#include "clientversion.h"
+#include "fs.h"
+#include "key_io.h"
+#include "serialize.h"
+#include "streams.h"
+#include "tinyformat.h"
+#include "uint256.h"
 
-#include <leveldb/db.h>
-#include <leveldb/write_batch.h>
+#include "leveldb/db.h"
+#include "leveldb/write_batch.h"
 
-#include <boost/lexical_cast.hpp>
+#include "boost/lexical_cast.hpp"
 
-#include <stdint.h>
+#include "stdint.h"
 
-#include <string>
+#include "string"
 
 
 CMPSPInfo::Entry::Entry()

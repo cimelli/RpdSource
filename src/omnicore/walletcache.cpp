@@ -5,28 +5,28 @@
  * Omni state changes affected anything in the wallet.
  */
 
-#include <omnicore/walletcache.h>
+#include "omnicore/walletcache.h"
 
-#include <omnicore/log.h>
-#include <omnicore/omnicore.h>
-#include <omnicore/tally.h>
-#include <omnicore/walletutils.h>
+#include "omnicore/log.h"
+#include "omnicore/omnicore.h"
+#include "omnicore/tally.h"
+#include "omnicore/walletutils.h"
 
-#include <init.h>
-#include <sync.h>
-#include <uint256.h>
+#include "init.h"
+#include "sync.h"
+#include "uint256.h"
 #ifdef ENABLE_WALLET
-#include <wallet/wallet.h>
+#include "wallet/wallet.h"
 #endif
 
-#include <stdint.h>
-#include <algorithm>
-#include <list>
-#include <map>
-#include <set>
-#include <string>
-#include <utility>
-#include <vector>
+#include "stdint.h"
+#include "algorithm"
+#include "list"
+#include "map"
+#include "set"
+#include "string"
+#include "utility"
+#include "vector"
 
 namespace mastercore
 {

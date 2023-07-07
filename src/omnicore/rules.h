@@ -1,11 +1,11 @@
-#ifndef BITCOIN_OMNICORE_RULES_H
-#define BITCOIN_OMNICORE_RULES_H
+#ifndef OMNICORE_RULES_H
+#define OMNICORE_RULES_H
 
-#include <uint256.h>
+#include "uint256.h"
 
-#include <stdint.h>
-#include <string>
-#include <vector>
+#include "stdint.h"
+#include "string"
+#include "vector"
 
 namespace mastercore
 {

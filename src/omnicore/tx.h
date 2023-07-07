@@ -1,20 +1,20 @@
-#ifndef BITCOIN_OMNICORE_TX_H
-#define BITCOIN_OMNICORE_TX_H
+#ifndef OMNICORE_TX_H
+#define OMNICORE_TX_H
 
 class CMPMetaDEx;
 class CMPOffer;
 class CTransaction;
 
-#include <omnicore/omnicore.h>
-#include <omnicore/parsing.h>
+#include "omnicore/omnicore.h"
+#include "omnicore/parsing.h"
 
-#include <uint256.h>
-#include <util/strencodings.h>
+#include "uint256.h"
+#include "util/strencodings.h"
 
-#include <stdint.h>
-#include <string.h>
+#include "stdint.h"
+#include "string.h"
 
-#include <string>
+#include "string"
 
 using mastercore::strTransactionType;
 

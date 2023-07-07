@@ -1,13 +1,13 @@
-#include <omnicore/omnicore.h>
-#include <omnicore/nftdb.h>
+#include "omnicore/omnicore.h"
+#include "omnicore/nftdb.h"
 
-#include <stdint.h>
-#include <string>
-#include <utility>
+#include "stdint.h"
+#include "string"
+#include "utility"
 
-#include <test/util/setup_common.h>
+#include "test/util/setup_common.h"
 
-#include <boost/test/unit_test.hpp>
+#include "boost/test/unit_test.hpp"
 
 using namespace mastercore;
 

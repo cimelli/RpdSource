@@ -1,22 +1,22 @@
-#include <omnicore/createtx.h>
+#include "omnicore/createtx.h"
 
-#include <base58.h>
-#include <coins.h>
-#include <core_io.h>
-#include <key_io.h>
-#include <validation.h>
-#include <primitives/transaction.h>
-#include <script/script.h>
-#include <script/standard.h>
-#include <test/util/setup_common.h>
-#include <util/strencodings.h>
+#include "base58.h"
+#include "coins.h"
+#include "core_io.h"
+#include "key_io.h"
+#include "validation.h"
+#include "primitives/transaction.h"
+#include "script/script.h"
+#include "script/standard.h"
+#include "test/util/setup_common.h"
+#include "util/strencodings.h"
 
-#include <boost/test/unit_test.hpp>
+#include "boost/test/unit_test.hpp"
 
-#include <stdint.h>
-#include <string>
-#include <utility>
-#include <vector>
+#include "stdint.h"
+#include "string"
+#include "utility"
+#include "vector"
 
 // Is reset after the last test
 extern CFeeRate minRelayTxFee;

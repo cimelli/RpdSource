@@ -1,5 +1,5 @@
-#ifndef BITCOIN_OMNICORE_WALLETUTILS_H
-#define BITCOIN_OMNICORE_WALLETUTILS_H
+#ifndef OMNICORE_WALLETUTILS_H
+#define OMNICORE_WALLETUTILS_H
 
 class CCoinControl;
 class CPubKey;
@@ -9,11 +9,11 @@ namespace interfaces {
 class Wallet;
 } // namespace interfaces
 
-#include <wallet/ismine.h>             // For isminefilter, isminetype
-#include <script/standard.h>
+#include "wallet/ismine.h"             // For isminefilter, isminetype
+#include "script/standard.h"
 
-#include <stdint.h>
-#include <string>
+#include "stdint.h"
+#include "string"
 
 namespace mastercore
 {

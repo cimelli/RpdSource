@@ -1,9 +1,9 @@
-#ifndef BITCOIN_OMNICORE_NOTIFICATIONS_H
-#define BITCOIN_OMNICORE_NOTIFICATIONS_H
+#ifndef OMNICORE_NOTIFICATIONS_H
+#define OMNICORE_NOTIFICATIONS_H
 
-#include <stdint.h>
-#include <string>
-#include <vector>
+#include "stdint.h"
+#include "string"
+#include "vector"
 
 //! Alert types
 #define ALERT_FEATURE_UNSUPPORTED     0 // not allowed via alert broadcast

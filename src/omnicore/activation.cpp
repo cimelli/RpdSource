@@ -6,18 +6,18 @@
  * Note main functions 'ActivateFeature()' and 'DeactivateFeature()' are consensus breaking and reside in rules.cpp
  */
 
-#include <omnicore/activation.h>
+#include "omnicore/activation.h"
 
-#include <omnicore/log.h>
-#include <omnicore/version.h>
+#include "omnicore/log.h"
+#include "omnicore/version.h"
 
-#include <fs.h>
-#include <validation.h>
-#include <ui_interface.h>
+#include "fs.h"
+#include "validation.h"
+#include "ui_interface.h"
 
-#include <stdint.h>
-#include <string>
-#include <vector>
+#include "stdint.h"
+#include "string"
+#include "vector"
 
 namespace mastercore
 {

@@ -1,7 +1,7 @@
-#ifndef BITCOIN_OMNICORE_UTILSUI_H
-#define BITCOIN_OMNICORE_UTILSUI_H
+#ifndef OMNICORE_UTILSUI_H
+#define OMNICORE_UTILSUI_H
 
-#include <atomic>
+#include "atomic"
 
 /** Flag to indicate, whether Omni Core was launched with UI. */
 extern std::atomic<bool> fQtMode;

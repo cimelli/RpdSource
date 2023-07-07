@@ -1,28 +1,28 @@
 // Smart Properties & Crowd Sales
 
-#include <omnicore/sp.h>
+#include "omnicore/sp.h"
 
-#include <omnicore/log.h>
-#include <omnicore/omnicore.h>
-#include <omnicore/uint256_extensions.h>
+#include "omnicore/log.h"
+#include "omnicore/omnicore.h"
+#include "omnicore/uint256_extensions.h"
 
-#include <arith_uint256.h>
-#include <hash.h>
-#include <validation.h>
-#include <tinyformat.h>
-#include <uint256.h>
-#include <util/time.h>
+#include "arith_uint256.h"
+#include "hash.h"
+#include "validation.h"
+#include "tinyformat.h"
+#include "uint256.h"
+#include "util/time.h"
 
-#include <boost/algorithm/string.hpp>
-#include <boost/filesystem.hpp>
-#include <boost/lexical_cast.hpp>
+#include "boost/algorithm/string.hpp"
+#include "boost/filesystem.hpp"
+#include "boost/lexical_cast.hpp"
 
-#include <stdint.h>
+#include "stdint.h"
 
-#include <map>
-#include <string>
-#include <vector>
-#include <utility>
+#include "map"
+#include "string"
+#include "vector"
+#include "utility"
 
 using namespace mastercore;
 

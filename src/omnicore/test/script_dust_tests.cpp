@@ -1,18 +1,18 @@
-#include <omnicore/script.h>
+#include "omnicore/script.h"
 
-#include <amount.h>
-#include <policy/policy.h>
-#include <validation.h>
-#include <script/script.h>
-#include <test/util/setup_common.h>
-#include <util/strencodings.h>
-#include <primitives/transaction.h>
+#include "amount.h"
+#include "policy/policy.h"
+#include "validation.h"
+#include "script/script.h"
+#include "test/util/setup_common.h"
+#include "util/strencodings.h"
+#include "primitives/transaction.h"
 
-#include <boost/test/unit_test.hpp>
+#include "boost/test/unit_test.hpp"
 
-#include <stdint.h>
-#include <string>
-#include <vector>
+#include "stdint.h"
+#include "string"
+#include "vector"
 
 // Is reset to a norm value in each test
 extern CFeeRate minRelayTxFee;

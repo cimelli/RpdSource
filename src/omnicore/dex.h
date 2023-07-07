@@ -1,19 +1,19 @@
-#ifndef BITCOIN_OMNICORE_DEX_H
-#define BITCOIN_OMNICORE_DEX_H
+#ifndef OMNICORE_DEX_H
+#define OMNICORE_DEX_H
 
-#include <omnicore/log.h>
-#include <omnicore/omnicore.h>
-#include <omnicore/tx.h>
+#include "omnicore/log.h"
+#include "omnicore/omnicore.h"
+#include "omnicore/tx.h"
 
-#include <amount.h>
-#include <hash.h>
-#include <tinyformat.h>
-#include <uint256.h>
+#include "amount.h"
+#include "hash.h"
+#include "tinyformat.h"
+#include "uint256.h"
 
-#include <stdint.h>
-#include <fstream>
-#include <map>
-#include <string>
+#include "stdint.h"
+#include "fstream"
+#include "map"
+#include "string"
 
 /** Lookup key to find DEx offers. */
 inline std::string STR_SELLOFFER_ADDR_PROP_COMBO(const std::string& address, uint32_t propertyId)

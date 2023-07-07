@@ -1,38 +1,38 @@
-#include <omnicore/dbtxlist.h>
+#include "omnicore/dbtxlist.h"
 
-#include <omnicore/activation.h>
-#include <omnicore/dbtransaction.h>
-#include <omnicore/dex.h>
-#include <omnicore/log.h>
-#include <omnicore/notifications.h>
-#include <omnicore/omnicore.h>
-#include <omnicore/tx.h>
-#include <omnicore/utilsbitcoin.h>
+#include "omnicore/activation.h"
+#include "omnicore/dbtransaction.h"
+#include "omnicore/dex.h"
+#include "omnicore/log.h"
+#include "omnicore/notifications.h"
+#include "omnicore/omnicore.h"
+#include "omnicore/tx.h"
+#include "omnicore/utilsbitcoin.h"
 
-#include <chain.h>
-#include <chainparams.h>
-#include <fs.h>
-#include <validation.h>
-#include <sync.h>
-#include <tinyformat.h>
-#include <uint256.h>
-#include <util/system.h>
-#include <util/strencodings.h>
+#include "chain.h"
+#include "chainparams.h"
+#include "fs.h"
+#include "validation.h"
+#include "sync.h"
+#include "tinyformat.h"
+#include "uint256.h"
+#include "util/system.h"
+#include "util/strencodings.h"
 
-#include <leveldb/iterator.h>
-#include <leveldb/slice.h>
-#include <leveldb/status.h>
+#include "leveldb/iterator.h"
+#include "leveldb/slice.h"
+#include "leveldb/status.h"
 
-#include <boost/algorithm/string.hpp>
-#include <boost/lexical_cast.hpp>
+#include "boost/algorithm/string.hpp"
+#include "boost/lexical_cast.hpp"
 
-#include <stddef.h>
-#include <stdint.h>
+#include "stddef.h"
+#include "stdint.h"
 
-#include <algorithm>
-#include <string>
-#include <utility>
-#include <vector>
+#include "algorithm"
+#include "string"
+#include "utility"
+#include "vector"
 
 using mastercore::AddAlert;
 using mastercore::CheckAlertAuthorization;

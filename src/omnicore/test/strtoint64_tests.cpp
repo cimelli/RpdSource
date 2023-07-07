@@ -1,11 +1,11 @@
-#include <omnicore/parse_string.h>
+#include "omnicore/parse_string.h"
 
-#include <test/util/setup_common.h>
+#include "test/util/setup_common.h"
 
-#include <boost/test/unit_test.hpp>
+#include "boost/test/unit_test.hpp"
 
-#include <stdint.h>
-#include <string>
+#include "stdint.h"
+#include "string"
 
 using namespace mastercore;
 

@@ -1,25 +1,25 @@
-#include <omnicore/test/utils_tx.h>
+#include "omnicore/test/utils_tx.h"
 
-#include <omnicore/createpayload.h>
-#include <omnicore/encoding.h>
-#include <omnicore/omnicore.h>
-#include <omnicore/parsing.h>
-#include <omnicore/script.h>
-#include <omnicore/tx.h>
+#include "omnicore/createpayload.h"
+#include "omnicore/encoding.h"
+#include "omnicore/omnicore.h"
+#include "omnicore/parsing.h"
+#include "omnicore/script.h"
+#include "omnicore/tx.h"
 
-#include <base58.h>
-#include <coins.h>
-#include <key_io.h>
-#include <primitives/transaction.h>
-#include <script/script.h>
-#include <script/standard.h>
-#include <test/util/setup_common.h>
+#include "base58.h"
+#include "coins.h"
+#include "key_io.h"
+#include "primitives/transaction.h"
+#include "script/script.h"
+#include "script/standard.h"
+#include "test/util/setup_common.h"
 
-#include <stdint.h>
-#include <limits>
-#include <vector>
+#include "stdint.h"
+#include "limits"
+#include "vector"
 
-#include <boost/test/unit_test.hpp>
+#include "boost/test/unit_test.hpp"
 
 using namespace mastercore;
 

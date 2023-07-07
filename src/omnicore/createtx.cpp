@@ -1,21 +1,21 @@
-#include <omnicore/createtx.h>
+#include "omnicore/createtx.h"
 
-#include <omnicore/encoding.h>
-#include <omnicore/script.h>
+#include "omnicore/encoding.h"
+#include "omnicore/script.h"
 
-#include <base58.h>
-#include <coins.h>
-#include <key_io.h>
-#include <primitives/transaction.h>
-#include <pubkey.h>
-#include <script/script.h>
-#include <script/standard.h>
-#include <uint256.h>
+#include "base58.h"
+#include "coins.h"
+#include "key_io.h"
+#include "primitives/transaction.h"
+#include "pubkey.h"
+#include "script/script.h"
+#include "script/standard.h"
+#include "uint256.h"
 
-#include <stdint.h>
-#include <string>
-#include <utility>
-#include <vector>
+#include "stdint.h"
+#include "string"
+#include "utility"
+#include "vector"
 
 /** Creates a new previous output entry. */
 PrevTxsEntry::PrevTxsEntry(const uint256& txid, uint32_t nOut, int64_t nValue, const CScript& scriptPubKey)

@@ -1,24 +1,24 @@
-#include <omnicore/rpcvalues.h>
+#include "omnicore/rpcvalues.h"
 
-#include <omnicore/createtx.h>
-#include <omnicore/parse_string.h>
-#include <omnicore/walletutils.h>
+#include "omnicore/createtx.h"
+#include "omnicore/parse_string.h"
+#include "omnicore/walletutils.h"
 
-#include <base58.h>
-#include <core_io.h>
-#include <interfaces/wallet.h>
-#include <key_io.h>
-#include <primitives/transaction.h>
-#include <pubkey.h>
-#include <rpc/protocol.h>
-#include <rpc/util.h>
-#include <script/script.h>
-#include <uint256.h>
+#include "base58.h"
+#include "core_io.h"
+#include "interfaces/wallet.h"
+#include "key_io.h"
+#include "primitives/transaction.h"
+#include "pubkey.h"
+#include "rpc/protocol.h"
+#include "rpc/util.h"
+#include "script/script.h"
+#include "uint256.h"
 
-#include <univalue.h>
+#include "univalue.h"
 
-#include <string>
-#include <vector>
+#include "string"
+#include "vector"
 
 using mastercore::StrToInt64;
 

@@ -1,12 +1,12 @@
-#include <omnicore/script.h>
+#include "omnicore/script.h"
 
-#include <script/script.h>
-#include <test/util/setup_common.h>
-#include <util/system.h>
+#include "script/script.h"
+#include "test/util/setup_common.h"
+#include "util/system.h"
 
-#include <boost/test/unit_test.hpp>
+#include "boost/test/unit_test.hpp"
 
-#include <vector>
+#include "vector"
 
 /** To be set in the tests. */
 extern unsigned nMaxDatacarrierBytes;

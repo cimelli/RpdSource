@@ -1,16 +1,16 @@
-#include <omnicore/notifications.h>
-#include <omnicore/version.h>
+#include "omnicore/notifications.h"
+#include "omnicore/version.h"
 
-#include <util/system.h>
-#include <test/util/setup_common.h>
-#include <tinyformat.h>
+#include "util/system.h"
+#include "test/util/setup_common.h"
+#include "tinyformat.h"
 
-#include <boost/test/unit_test.hpp>
+#include "boost/test/unit_test.hpp"
 
-#include <stdint.h>
-#include <map>
-#include <string>
-#include <vector>
+#include "stdint.h"
+#include "map"
+#include "string"
+#include "vector"
 
 using namespace mastercore;
 

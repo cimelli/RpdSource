@@ -1,22 +1,22 @@
-#include <omnicore/dbtransaction.h>
+#include "omnicore/dbtransaction.h"
 
-#include <omnicore/errors.h>
-#include <omnicore/log.h>
+#include "omnicore/errors.h"
+#include "omnicore/log.h"
 
-#include <fs.h>
-#include <uint256.h>
-#include <tinyformat.h>
+#include "fs.h"
+#include "uint256.h"
+#include "tinyformat.h"
 
-#include <leveldb/status.h>
+#include "leveldb/status.h"
 
-#include <boost/algorithm/string.hpp>
-#include <boost/lexical_cast.hpp>
+#include "boost/algorithm/string.hpp"
+#include "boost/lexical_cast.hpp"
 
-#include <stddef.h>
-#include <stdint.h>
+#include "stddef.h"
+#include "stdint.h"
 
-#include <string>
-#include <vector>
+#include "string"
+#include "vector"
 
 COmniTransactionDB::COmniTransactionDB(const fs::path& path, bool fWipe)
 {

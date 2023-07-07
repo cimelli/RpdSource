@@ -1,31 +1,31 @@
-#include <omnicore/dbtradelist.h>
+#include "omnicore/dbtradelist.h"
 
-#include <omnicore/log.h>
-#include <omnicore/mdex.h>
-#include <omnicore/sp.h>
+#include "omnicore/log.h"
+#include "omnicore/mdex.h"
+#include "omnicore/sp.h"
 
-#include <amount.h>
-#include <fs.h>
-#include <uint256.h>
-#include <util/strencodings.h>
-#include <tinyformat.h>
+#include "amount.h"
+#include "fs.h"
+#include "uint256.h"
+#include "util/strencodings.h"
+#include "tinyformat.h"
 
-#include <univalue.h>
+#include "univalue.h"
 
-#include <leveldb/iterator.h>
-#include <leveldb/slice.h>
-#include <leveldb/status.h>
+#include "leveldb/iterator.h"
+#include "leveldb/slice.h"
+#include "leveldb/status.h"
 
-#include <boost/algorithm/string.hpp>
-#include <boost/lexical_cast.hpp>
+#include "boost/algorithm/string.hpp"
+#include "boost/lexical_cast.hpp"
 
-#include <stddef.h>
+#include "stddef.h"
 
-#include <algorithm>
-#include <map>
-#include <string>
-#include <utility>
-#include <vector>
+#include "algorithm"
+#include "map"
+#include "string"
+#include "utility"
+#include "vector"
 
 using mastercore::isPropertyDivisible;
 

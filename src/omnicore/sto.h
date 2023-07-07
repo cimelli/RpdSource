@@ -1,10 +1,10 @@
-#ifndef BITCOIN_OMNICORE_STO_H
-#define BITCOIN_OMNICORE_STO_H
+#ifndef OMNICORE_STO_H
+#define OMNICORE_STO_H
 
-#include <stdint.h>
-#include <set>
-#include <string>
-#include <utility>
+#include "stdint.h"
+#include "set"
+#include "string"
+#include "utility"
 
 namespace mastercore
 {

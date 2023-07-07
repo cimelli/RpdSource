@@ -1,42 +1,42 @@
 // Master Protocol transaction code
 
-#include <omnicore/tx.h>
+#include "omnicore/tx.h"
 
-#include <omnicore/activation.h>
-#include <omnicore/dbfees.h>
-#include <omnicore/dbspinfo.h>
-#include <omnicore/dbstolist.h>
-#include <omnicore/dbtradelist.h>
-#include <omnicore/dbtxlist.h>
-#include <omnicore/dex.h>
-#include <omnicore/log.h>
-#include <omnicore/mdex.h>
-#include <omnicore/notifications.h>
-#include <omnicore/omnicore.h>
-#include <omnicore/parsing.h>
-#include <omnicore/rules.h>
-#include <omnicore/sp.h>
-#include <omnicore/sto.h>
-#include <omnicore/nftdb.h>
-#include <omnicore/utilsbitcoin.h>
-#include <omnicore/version.h>
+#include "omnicore/activation.h"
+#include "omnicore/dbfees.h"
+#include "omnicore/dbspinfo.h"
+#include "omnicore/dbstolist.h"
+#include "omnicore/dbtradelist.h"
+#include "omnicore/dbtxlist.h"
+#include "omnicore/dex.h"
+#include "omnicore/log.h"
+#include "omnicore/mdex.h"
+#include "omnicore/notifications.h"
+#include "omnicore/omnicore.h"
+#include "omnicore/parsing.h"
+#include "omnicore/rules.h"
+#include "omnicore/sp.h"
+#include "omnicore/sto.h"
+#include "omnicore/nftdb.h"
+#include "omnicore/utilsbitcoin.h"
+#include "omnicore/version.h"
 
-#include <amount.h>
-#include <base58.h>
-#include <key_io.h>
-#include <validation.h>
-#include <sync.h>
-#include <util/time.h>
+#include "amount.h"
+#include "base58.h"
+#include "key_io.h"
+#include "validation.h"
+#include "sync.h"
+#include "util/time.h"
 
-#include <boost/algorithm/string.hpp>
-#include <boost/lexical_cast.hpp>
+#include "boost/algorithm/string.hpp"
+#include "boost/lexical_cast.hpp"
 
-#include <stdio.h>
-#include <string.h>
+#include "stdio.h"
+#include "string.h"
 
-#include <algorithm>
-#include <utility>
-#include <vector>
+#include "algorithm"
+#include "utility"
+#include "vector"
 
 using boost::algorithm::token_compress_on;
 

@@ -1,17 +1,17 @@
-#include <omnicore/encoding.h>
+#include "omnicore/encoding.h"
 
-#include <omnicore/script.h>
+#include "omnicore/script.h"
 
-#include <script/script.h>
-#include <test/util/setup_common.h>
-#include <util/strencodings.h>
+#include "script/script.h"
+#include "test/util/setup_common.h"
+#include "util/strencodings.h"
 
-#include <boost/test/unit_test.hpp>
+#include "boost/test/unit_test.hpp"
 
-#include <stdint.h>
-#include <string>
-#include <utility>
-#include <vector>
+#include "stdint.h"
+#include "string"
+#include "utility"
+#include "vector"
 
 // Is reset to a norm value in each test
 extern unsigned nMaxDatacarrierBytes;

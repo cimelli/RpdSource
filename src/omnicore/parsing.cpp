@@ -4,23 +4,23 @@
  * This file contains parsing and transaction decoding related functions.
  */
 
-#include <omnicore/parsing.h>
+#include "omnicore/parsing.h"
 
-#include <omnicore/log.h>
-#include <omnicore/script.h>
+#include "omnicore/log.h"
+#include "omnicore/script.h"
 
-#include <base58.h>
-#include <key_io.h>
-#include <uint256.h>
-#include <util/strencodings.h>
+#include "base58.h"
+#include "key_io.h"
+#include "uint256.h"
+#include "util/strencodings.h"
 
-#include <boost/algorithm/string.hpp>
+#include "boost/algorithm/string.hpp"
 
-#include <assert.h>
-#include <stdint.h>
-#include <string.h>
-#include <string>
-#include <vector>
+#include "assert.h"
+#include "stdint.h"
+#include "string.h"
+#include "string"
+#include "vector"
 
 /**
  * Checks whether the system uses big or little endian.

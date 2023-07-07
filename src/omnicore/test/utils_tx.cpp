@@ -1,20 +1,20 @@
-#include <omnicore/test/utils_tx.h>
+#include "omnicore/test/utils_tx.h"
 
-#include <omnicore/omnicore.h>
-#include <omnicore/script.h>
+#include "omnicore/omnicore.h"
+#include "omnicore/script.h"
 
-#include <base58.h>
-#include <key_io.h>
-#include <primitives/transaction.h>
-#include <pubkey.h>
-#include <script/script.h>
-#include <script/standard.h>
-#include <util/strencodings.h>
-#include <test/util/setup_common.h>
+#include "base58.h"
+#include "key_io.h"
+#include "primitives/transaction.h"
+#include "pubkey.h"
+#include "script/script.h"
+#include "script/standard.h"
+#include "util/strencodings.h"
+#include "test/util/setup_common.h"
 
-#include <boost/test/unit_test.hpp>
+#include "boost/test/unit_test.hpp"
 
-#include <stdint.h>
+#include "stdint.h"
 
 // Added to pacify test script that tries to run all test/ folder contents as tests
 BOOST_FIXTURE_TEST_SUITE(omnicore_transaction_utility, BasicTestingSetup)

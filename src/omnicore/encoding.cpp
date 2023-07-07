@@ -1,20 +1,20 @@
-#include <omnicore/encoding.h>
+#include "omnicore/encoding.h"
 
-#include <omnicore/omnicore.h>
-#include <omnicore/script.h>
-#include <omnicore/parsing.h>
+#include "omnicore/omnicore.h"
+#include "omnicore/script.h"
+#include "omnicore/parsing.h"
 
-#include <base58.h>
-#include <pubkey.h>
-#include <random.h>
-#include <script/script.h>
-#include <script/standard.h>
-#include <util/strencodings.h>
+#include "base58.h"
+#include "pubkey.h"
+#include "random.h"
+#include "script/script.h"
+#include "script/standard.h"
+#include "util/strencodings.h"
 
-#include <stdint.h>
-#include <string>
-#include <utility>
-#include <vector>
+#include "stdint.h"
+#include "string"
+#include "utility"
+#include "vector"
 
 /**
  * Embeds a payload in obfuscated multisig outputs, and adds an Exodus marker output.

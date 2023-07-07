@@ -1,21 +1,21 @@
-#include <test/util/setup_common.h>
+#include "test/util/setup_common.h"
 
-#include <boost/test/unit_test.hpp>
+#include "boost/test/unit_test.hpp"
 
-#include <omnicore/createpayload.h>
-#include <omnicore/script.h>
-#include <omnicore/wallettxbuilder.h>
+#include "omnicore/createpayload.h"
+#include "omnicore/script.h"
+#include "omnicore/wallettxbuilder.h"
 
-#include <consensus/validation.h>
-#include <interfaces/chain.h>
-#include <interfaces/wallet.h>
-#include <key_io.h>
-#include <script/standard.h>
-#include <validation.h>
-#include <wallet/coincontrol.h>
-#include <wallet/wallet.h>
+#include "consensus/validation.h"
+#include "interfaces/chain.h"
+#include "interfaces/wallet.h"
+#include "key_io.h"
+#include "script/standard.h"
+#include "validation.h"
+#include "wallet/coincontrol.h"
+#include "wallet/wallet.h"
 
-#include <vector>
+#include "vector"
 
 class FundedSendTestingSetup : public TestChain100Setup
 {

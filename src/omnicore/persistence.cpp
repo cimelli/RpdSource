@@ -4,36 +4,36 @@
  * This file contains file based persistence related functions.
  */
 
-#include <omnicore/persistence.h>
+#include "omnicore/persistence.h"
 
-#include <omnicore/dex.h>
-#include <omnicore/log.h>
-#include <omnicore/mdex.h>
-#include <omnicore/rules.h>
-#include <omnicore/sp.h>
-#include <omnicore/tally.h>
-#include <omnicore/utilsbitcoin.h>
+#include "omnicore/dex.h"
+#include "omnicore/log.h"
+#include "omnicore/mdex.h"
+#include "omnicore/rules.h"
+#include "omnicore/sp.h"
+#include "omnicore/tally.h"
+#include "omnicore/utilsbitcoin.h"
 
-#include <chain.h>
-#include <fs.h>
-#include <hash.h>
-#include <validation.h>
-#include <tinyformat.h>
-#include <uint256.h>
-#include <util/system.h>
+#include "chain.h"
+#include "fs.h"
+#include "hash.h"
+#include "validation.h"
+#include "tinyformat.h"
+#include "uint256.h"
+#include "util/system.h"
 
-#include <boost/algorithm/string.hpp>
-#include <boost/filesystem.hpp>
-#include <boost/lexical_cast.hpp>
+#include "boost/algorithm/string.hpp"
+#include "boost/filesystem.hpp"
+#include "boost/lexical_cast.hpp"
 
-#include <stdint.h>
+#include "stdint.h"
 
-#include <fstream>
-#include <set>
-#include <string>
-#include <unordered_map>
-#include <utility>
-#include <vector>
+#include "fstream"
+#include "set"
+#include "string"
+#include "unordered_map"
+#include "utility"
+#include "vector"
 
 using namespace mastercore;
 

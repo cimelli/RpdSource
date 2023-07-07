@@ -1,22 +1,22 @@
-#ifndef BITCOIN_OMNICORE_SP_H
-#define BITCOIN_OMNICORE_SP_H
+#ifndef OMNICORE_SP_H
+#define OMNICORE_SP_H
 
-#include <omnicore/dbbase.h>
-#include <omnicore/dbspinfo.h>
-#include <omnicore/log.h>
+#include "omnicore/dbbase.h"
+#include "omnicore/dbspinfo.h"
+#include "omnicore/log.h"
 
 class CBlockIndex;
 class CHash256;
 class uint256;
 
-#include <stdint.h>
-#include <stdio.h>
+#include "stdint.h"
+#include "stdio.h"
 
-#include <fstream>
-#include <map>
-#include <string>
-#include <utility>
-#include <vector>
+#include "fstream"
+#include "map"
+#include "string"
+#include "utility"
+#include "vector"
 
 
 /** A live crowdsale.

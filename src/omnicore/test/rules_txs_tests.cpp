@@ -1,12 +1,12 @@
-#include <omnicore/omnicore.h>
-#include <omnicore/rules.h>
+#include "omnicore/omnicore.h"
+#include "omnicore/rules.h"
 
-#include <test/util/setup_common.h>
+#include "test/util/setup_common.h"
 
-#include <stdint.h>
-#include <limits>
+#include "stdint.h"
+#include "limits"
 
-#include <boost/test/unit_test.hpp>
+#include "boost/test/unit_test.hpp"
 
 using namespace mastercore;
 

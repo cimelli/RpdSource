@@ -1,11 +1,11 @@
-#include <omnicore/dbspinfo.h>
+#include "omnicore/dbspinfo.h"
 
-#include <test/util/setup_common.h>
+#include "test/util/setup_common.h"
 
-#include <boost/test/unit_test.hpp>
+#include "boost/test/unit_test.hpp"
 
-#include <string>
-#include <stdint.h>
+#include "string"
+#include "stdint.h"
 
 BOOST_FIXTURE_TEST_SUITE(omnicore_change_issuer_tests, BasicTestingSetup)
 

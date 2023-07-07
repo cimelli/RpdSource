@@ -1,9 +1,9 @@
-#ifndef BITCOIN_OMNICORE_CREATEPAYLOAD_H
-#define BITCOIN_OMNICORE_CREATEPAYLOAD_H
+#ifndef OMNICORE_CREATEPAYLOAD_H
+#define OMNICORE_CREATEPAYLOAD_H
 
-#include <string>
-#include <vector>
-#include <stdint.h>
+#include "string"
+#include "vector"
+#include "stdint.h"
 
 std::vector<unsigned char> CreatePayload_SimpleSend(uint32_t propertyId, uint64_t amount);
 std::vector<unsigned char> CreatePayload_SendAll(uint8_t ecosystem);

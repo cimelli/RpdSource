@@ -1,9 +1,9 @@
-#ifndef BITCOIN_OMNICORE_RPCTXOBJECT_H
-#define BITCOIN_OMNICORE_RPCTXOBJECT_H
+#ifndef OMNICORE_RPCTXOBJECT_H
+#define OMNICORE_RPCTXOBJECT_H
 
-#include <univalue.h>
+#include "univalue.h"
 
-#include <string>
+#include "string"
 
 class uint256;
 class CMPTransaction;

@@ -1,19 +1,19 @@
-#include <omnicore/notifications.h>
+#include "omnicore/notifications.h"
 
-#include <omnicore/log.h>
-#include <omnicore/utilsbitcoin.h>
-#include <omnicore/version.h>
+#include "omnicore/log.h"
+#include "omnicore/utilsbitcoin.h"
+#include "omnicore/version.h"
 
-#include <validation.h>
-#include <util/system.h>
-#include <ui_interface.h>
+#include "validation.h"
+#include "util/system.h"
+#include "ui_interface.h"
 
-#include <boost/algorithm/string.hpp>
-#include <boost/lexical_cast.hpp>
+#include "boost/algorithm/string.hpp"
+#include "boost/lexical_cast.hpp"
 
-#include <stdint.h>
-#include <string>
-#include <vector>
+#include "stdint.h"
+#include "string"
+#include "vector"
 
 namespace mastercore
 {

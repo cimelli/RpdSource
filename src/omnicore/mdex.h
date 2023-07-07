@@ -1,21 +1,21 @@
-#ifndef BITCOIN_OMNICORE_MDEX_H
-#define BITCOIN_OMNICORE_MDEX_H
+#ifndef OMNICORE_MDEX_H
+#define OMNICORE_MDEX_H
 
-#include <omnicore/tx.h>
+#include "omnicore/tx.h"
 
-#include <uint256.h>
+#include "uint256.h"
 
-#include <boost/lexical_cast.hpp>
-#include <boost/multiprecision/cpp_dec_float.hpp>
-#include <boost/multiprecision/cpp_int.hpp>
-#include <boost/rational.hpp>
+#include "boost/lexical_cast.hpp"
+#include "boost/multiprecision/cpp_dec_float.hpp"
+#include "boost/multiprecision/cpp_int.hpp"
+#include "boost/rational.hpp"
 
-#include <stdint.h>
+#include "stdint.h"
 
-#include <fstream>
-#include <map>
-#include <set>
-#include <string>
+#include "fstream"
+#include "map"
+#include "set"
+#include "string"
 
 class CHash256;
 

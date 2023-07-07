@@ -1,5 +1,5 @@
-#ifndef BITCOIN_OMNICORE_RPCVALUES_H
-#define BITCOIN_OMNICORE_RPCVALUES_H
+#ifndef OMNICORE_RPCVALUES_H
+#define OMNICORE_RPCVALUES_H
 
 class CPubKey;
 class CTransaction;
@@ -11,11 +11,11 @@ namespace interfaces {
 class Wallet;
 } // namespace interfaces
 
-#include <univalue.h>
+#include "univalue.h"
 
-#include <stdint.h>
-#include <string>
-#include <vector>
+#include "stdint.h"
+#include "string"
+#include "vector"
 
 std::string ParseAddress(const UniValue& value);
 std::string ParseAddressOrEmpty(const UniValue& value);

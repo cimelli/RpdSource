@@ -1,21 +1,21 @@
-#include <omnicore/rpcrequirements.h>
+#include "omnicore/rpcrequirements.h"
 
-#include <omnicore/dbspinfo.h>
-#include <omnicore/dex.h>
-#include <omnicore/omnicore.h>
-#include <omnicore/sp.h>
-#include <omnicore/nftdb.h>
-#include <omnicore/utilsbitcoin.h>
+#include "omnicore/dbspinfo.h"
+#include "omnicore/dex.h"
+#include "omnicore/omnicore.h"
+#include "omnicore/sp.h"
+#include "omnicore/nftdb.h"
+#include "omnicore/utilsbitcoin.h"
 
-#include <amount.h>
-#include <validation.h>
-#include <rpc/protocol.h>
-#include <rpc/request.h>
-#include <sync.h>
-#include <tinyformat.h>
+#include "amount.h"
+#include "validation.h"
+#include "rpc/protocol.h"
+#include "rpc/request.h"
+#include "sync.h"
+#include "tinyformat.h"
 
-#include <stdint.h>
-#include <string>
+#include "stdint.h"
+#include "string"
 
 void RequireBalance(const std::string& address, uint32_t propertyId, int64_t amount)
 {

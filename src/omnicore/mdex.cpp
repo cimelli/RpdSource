@@ -1,33 +1,33 @@
-#include <omnicore/mdex.h>
+#include "omnicore/mdex.h"
 
-#include <omnicore/dbfees.h>
-#include <omnicore/dbtradelist.h>
-#include <omnicore/dbtxlist.h>
-#include <omnicore/log.h>
-#include <omnicore/rules.h>
-#include <omnicore/sp.h>
-#include <omnicore/uint256_extensions.h>
+#include "omnicore/dbfees.h"
+#include "omnicore/dbtradelist.h"
+#include "omnicore/dbtxlist.h"
+#include "omnicore/log.h"
+#include "omnicore/rules.h"
+#include "omnicore/sp.h"
+#include "omnicore/uint256_extensions.h"
 
-#include <arith_uint256.h>
-#include <chain.h>
-#include <hash.h>
-#include <validation.h>
-#include <tinyformat.h>
-#include <uint256.h>
+#include "arith_uint256.h"
+#include "chain.h"
+#include "hash.h"
+#include "validation.h"
+#include "tinyformat.h"
+#include "uint256.h"
 
-#include <univalue.h>
+#include "univalue.h"
 
-#include <boost/multiprecision/cpp_int.hpp>
-#include <boost/rational.hpp>
+#include "boost/multiprecision/cpp_int.hpp"
+#include "boost/rational.hpp"
 
-#include <assert.h>
-#include <stdint.h>
+#include "assert.h"
+#include "stdint.h"
 
-#include <fstream>
-#include <limits>
-#include <map>
-#include <set>
-#include <string>
+#include "fstream"
+#include "limits"
+#include "map"
+#include "set"
+#include "string"
 
 typedef boost::multiprecision::cpp_dec_float_100 dec_float;
 typedef boost::multiprecision::checked_int128_t int128_t;

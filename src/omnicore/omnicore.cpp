@@ -4,73 +4,73 @@
  * This file contains the core of Omni Core.
  */
 
-#include <omnicore/omnicore.h>
+#include "omnicore/omnicore.h"
 
-#include <omnicore/activation.h>
-#include <omnicore/consensushash.h>
-#include <omnicore/convert.h>
-#include <omnicore/dbbase.h>
-#include <omnicore/dbfees.h>
-#include <omnicore/dbspinfo.h>
-#include <omnicore/dbstolist.h>
-#include <omnicore/dbtradelist.h>
-#include <omnicore/dbtransaction.h>
-#include <omnicore/dbtxlist.h>
-#include <omnicore/dex.h>
-#include <omnicore/log.h>
-#include <omnicore/mdex.h>
-#include <omnicore/notifications.h>
-#include <omnicore/parsing.h>
-#include <omnicore/pending.h>
-#include <omnicore/persistence.h>
-#include <omnicore/rules.h>
-#include <omnicore/script.h>
-#include <omnicore/seedblocks.h>
-#include <omnicore/sp.h>
-#include <omnicore/tally.h>
-#include <omnicore/tx.h>
-#include <omnicore/utilsbitcoin.h>
-#include <omnicore/utilsui.h>
-#include <omnicore/version.h>
-#include <omnicore/walletcache.h>
-#include <omnicore/walletutils.h>
+#include "omnicore/activation.h"
+#include "omnicore/consensushash.h"
+#include "omnicore/convert.h"
+#include "omnicore/dbbase.h"
+#include "omnicore/dbfees.h"
+#include "omnicore/dbspinfo.h"
+#include "omnicore/dbstolist.h"
+#include "omnicore/dbtradelist.h"
+#include "omnicore/dbtransaction.h"
+#include "omnicore/dbtxlist.h"
+#include "omnicore/dex.h"
+#include "omnicore/log.h"
+#include "omnicore/mdex.h"
+#include "omnicore/notifications.h"
+#include "omnicore/parsing.h"
+#include "omnicore/pending.h"
+#include "omnicore/persistence.h"
+#include "omnicore/rules.h"
+#include "omnicore/script.h"
+#include "omnicore/seedblocks.h"
+#include "omnicore/sp.h"
+#include "omnicore/tally.h"
+#include "omnicore/tx.h"
+#include "omnicore/utilsbitcoin.h"
+#include "omnicore/utilsui.h"
+#include "omnicore/version.h"
+#include "omnicore/walletcache.h"
+#include "omnicore/walletutils.h"
 
-#include <base58.h>
-#include <chainparams.h>
-#include <coins.h>
-#include <core_io.h>
-#include <fs.h>
-#include <key_io.h>
-#include <init.h>
-#include <validation.h>
-#include <primitives/block.h>
-#include <primitives/transaction.h>
-#include <script/script.h>
-#include <script/standard.h>
-#include <shutdown.h>
-#include <sync.h>
-#include <tinyformat.h>
-#include <uint256.h>
-#include <ui_interface.h>
-#include <util/system.h>
-#include <util/strencodings.h>
-#include <util/time.h>
+#include "base58.h"
+#include "chainparams.h"
+#include "coins.h"
+#include "core_io.h"
+#include "fs.h"
+#include "key_io.h"
+#include "init.h"
+#include "validation.h"
+#include "primitives/block.h"
+#include "primitives/transaction.h"
+#include "script/script.h"
+#include "script/standard.h"
+#include "shutdown.h"
+#include "sync.h"
+#include "tinyformat.h"
+#include "uint256.h"
+#include "ui_interface.h"
+#include "util/system.h"
+#include "util/strencodings.h"
+#include "util/time.h"
 #ifdef ENABLE_WALLET
-#include <wallet/ismine.h>
-#include <wallet/wallet.h>
+#include "wallet/ismine.h"
+#include "wallet/wallet.h"
 #endif
 
-#include <boost/algorithm/string.hpp>
-#include <boost/lexical_cast.hpp>
+#include "boost/algorithm/string.hpp"
+#include "boost/lexical_cast.hpp"
 
-#include <assert.h>
-#include <stdint.h>
-#include <stdio.h>
+#include "assert.h"
+#include "stdint.h"
+#include "stdio.h"
 
-#include <set>
-#include <string>
-#include <unordered_map>
-#include <vector>
+#include "set"
+#include "string"
+#include "unordered_map"
+#include "vector"
 
 using namespace mastercore;
 

@@ -1,15 +1,15 @@
-#ifndef BITCOIN_OMNICORE_DBTRANSACTION_H
-#define BITCOIN_OMNICORE_DBTRANSACTION_H
+#ifndef OMNICORE_DBTRANSACTION_H
+#define OMNICORE_DBTRANSACTION_H
 
-#include <omnicore/dbbase.h>
+#include "omnicore/dbbase.h"
 
-#include <fs.h>
-#include <uint256.h>
+#include "fs.h"
+#include "uint256.h"
 
-#include <stdint.h>
+#include "stdint.h"
 
-#include <string>
-#include <vector>
+#include "string"
+#include "vector"
 
 /** LevelDB based storage for storing Omni transaction validation and position in block data.
  */

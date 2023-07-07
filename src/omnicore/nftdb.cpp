@@ -4,18 +4,18 @@
  * This file contains functionality for the non-fungible tokens database.
  */
 
-#include <omnicore/nftdb.h>
+#include "omnicore/nftdb.h"
 
-#include <omnicore/omnicore.h>
-#include <omnicore/errors.h>
-#include <omnicore/log.h>
+#include "omnicore/omnicore.h"
+#include "omnicore/errors.h"
+#include "omnicore/log.h"
 
-#include <validation.h>
+#include "validation.h"
 
-#include <stdint.h>
+#include "stdint.h"
 
-#include <boost/algorithm/string.hpp>
-#include <boost/lexical_cast.hpp>
+#include "boost/algorithm/string.hpp"
+#include "boost/lexical_cast.hpp"
 
 typedef std::underlying_type<NonFungibleStorage>::type StorageType;
 

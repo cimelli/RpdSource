@@ -1,17 +1,17 @@
-#ifndef BITCOIN_OMNICORE_DBTRADELIST_H
-#define BITCOIN_OMNICORE_DBTRADELIST_H
+#ifndef OMNICORE_DBTRADELIST_H
+#define OMNICORE_DBTRADELIST_H
 
-#include <omnicore/dbbase.h>
+#include "omnicore/dbbase.h"
 
-#include <fs.h>
-#include <uint256.h>
+#include "fs.h"
+#include "uint256.h"
 
-#include <univalue.h>
+#include "univalue.h"
 
-#include <stdint.h>
+#include "stdint.h"
 
-#include <string>
-#include <vector>
+#include "string"
+#include "vector"
 
 /** LevelDB based storage for the MetaDEx trade history. Trades are listed with key "txid1+txid2".
  */

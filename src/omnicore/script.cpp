@@ -1,16 +1,16 @@
-#include <omnicore/script.h>
+#include "omnicore/script.h"
 
-#include <amount.h>
-#include <policy/feerate.h>
-#include <policy/policy.h>
-#include <script/script.h>
-#include <script/standard.h>
-#include <serialize.h>
-#include <util/strencodings.h>
+#include "amount.h"
+#include "policy/feerate.h"
+#include "policy/policy.h"
+#include "script/script.h"
+#include "script/standard.h"
+#include "serialize.h"
+#include "util/strencodings.h"
 
-#include <string>
-#include <utility>
-#include <vector>
+#include "string"
+#include "utility"
+#include "vector"
 
 /** The minimum transaction relay fee. */
 extern CFeeRate minRelayTxFee;

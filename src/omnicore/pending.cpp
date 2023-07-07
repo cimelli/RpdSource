@@ -1,16 +1,16 @@
-#include <omnicore/pending.h>
+#include "omnicore/pending.h"
 
-#include <omnicore/log.h>
-#include <omnicore/sp.h>
+#include "omnicore/log.h"
+#include "omnicore/sp.h"
 
-#include <amount.h>
-#include <validation.h>
-#include <sync.h>
-#include <txmempool.h>
-#include <uint256.h>
-#include <ui_interface.h>
+#include "amount.h"
+#include "validation.h"
+#include "sync.h"
+#include "txmempool.h"
+#include "uint256.h"
+#include "ui_interface.h"
 
-#include <string>
+#include "string"
 
 namespace mastercore
 {

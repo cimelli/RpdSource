@@ -1,16 +1,16 @@
-#ifndef BITCOIN_OMNICORE_DBTXLIST_H
-#define BITCOIN_OMNICORE_DBTXLIST_H
+#ifndef OMNICORE_DBTXLIST_H
+#define OMNICORE_DBTXLIST_H
 
-#include <omnicore/dbbase.h>
-#include <omnicore/nftdb.h>
+#include "omnicore/dbbase.h"
+#include "omnicore/nftdb.h"
 
-#include <fs.h>
-#include <uint256.h>
+#include "fs.h"
+#include "uint256.h"
 
-#include <stdint.h>
+#include "stdint.h"
 
-#include <set>
-#include <string>
+#include "set"
+#include "string"
 
 /** LevelDB based storage for transactions, with txid as key and validity bit, and other data as value.
  */

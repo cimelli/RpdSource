@@ -1,13 +1,13 @@
-#ifndef BITCOIN_OMNICORE_NFTDB_H
-#define BITCOIN_OMNICORE_NFTDB_H
+#ifndef OMNICORE_NFTDB_H
+#define OMNICORE_NFTDB_H
 
-#include <omnicore/dbbase.h>
+#include "omnicore/dbbase.h"
 
-#include <omnicore/log.h>
-#include <omnicore/persistence.h>
+#include "omnicore/log.h"
+#include "omnicore/persistence.h"
 
-#include <stdint.h>
-#include <boost/filesystem.hpp>
+#include "stdint.h"
+#include "boost/filesystem.hpp"
 
 enum class NonFungibleStorage : unsigned char
 {
@@ -78,4 +78,4 @@ namespace mastercore
     extern CMPNonFungibleTokensDB *pDbNFT;
 }
 
-#endif // BITCOIN_OMNICORE_NFTDB_H
+#endif // OMNICORE_NFTDB_H

@@ -4,13 +4,13 @@
  * This file contains certain helpers to access information about Bitcoin.
  */
 
-#include <chain.h>
-#include <chainparams.h>
-#include <validation.h>
-#include <sync.h>
+#include "chain.h"
+#include "chainparams.h"
+#include "validation.h"
+#include "sync.h"
 
-#include <stdint.h>
-#include <string>
+#include "stdint.h"
+#include "string"
 
 namespace mastercore
 {

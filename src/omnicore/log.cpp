@@ -1,17 +1,17 @@
-#include <omnicore/log.h>
+#include "omnicore/log.h"
 
-#include <chainparamsbase.h>
-#include <fs.h>
-#include <logging.h>
-#include <util/system.h>
-#include <util/time.h>
+#include "chainparamsbase.h"
+#include "fs.h"
+#include "logging.h"
+#include "util/system.h"
+#include "util/time.h"
 
-#include <assert.h>
-#include <stdio.h>
-#include <atomic>
-#include <mutex>
-#include <string>
-#include <vector>
+#include "assert.h"
+#include "stdio.h"
+#include "atomic"
+#include "mutex"
+#include "string"
+#include "vector"
 
 // Default log files
 const std::string LOG_FILENAME    = "omnicore.log";

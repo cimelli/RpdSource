@@ -5,34 +5,34 @@
  * position in block and position in wallet including STO receipts.
  */
 
-#include <omnicore/walletfetchtxs.h>
+#include "omnicore/walletfetchtxs.h"
 
-#include <omnicore/dbstolist.h>
-#include <omnicore/dbtxlist.h>
-#include <omnicore/log.h>
-#include <omnicore/omnicore.h>
-#include <omnicore/pending.h>
-#include <omnicore/utilsbitcoin.h>
+#include "omnicore/dbstolist.h"
+#include "omnicore/dbtxlist.h"
+#include "omnicore/log.h"
+#include "omnicore/omnicore.h"
+#include "omnicore/pending.h"
+#include "omnicore/utilsbitcoin.h"
 
-#include <init.h>
-#include <interfaces/wallet.h>
-#include <validation.h>
-#include <sync.h>
-#include <tinyformat.h>
-#include <index/txindex.h>
+#include "init.h"
+#include "interfaces/wallet.h"
+#include "validation.h"
+#include "sync.h"
+#include "tinyformat.h"
+#include "index/txindex.h"
 #ifdef ENABLE_WALLET
-#include <wallet/wallet.h>
+#include "wallet/wallet.h"
 #endif
 
-#include <boost/algorithm/string.hpp>
+#include "boost/algorithm/string.hpp"
 
-#include <stdint.h>
-#include <list>
-#include <map>
-#include <set>
-#include <string>
-#include <utility>
-#include <vector>
+#include "stdint.h"
+#include "list"
+#include "map"
+#include "set"
+#include "string"
+#include "utility"
+#include "vector"
 
 namespace mastercore
 {

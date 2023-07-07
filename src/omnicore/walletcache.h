@@ -1,9 +1,9 @@
-#ifndef BITCOIN_OMNICORE_WALLETCACHE_H
-#define BITCOIN_OMNICORE_WALLETCACHE_H
+#ifndef OMNICORE_WALLETCACHE_H
+#define OMNICORE_WALLETCACHE_H
 
 class uint256;
 
-#include <vector>
+#include "vector"
 
 namespace mastercore
 {

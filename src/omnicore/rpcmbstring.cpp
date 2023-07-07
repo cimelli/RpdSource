@@ -5,10 +5,10 @@
  * UTF-8 encoded strings, including support for multibyte characters.
  */
 
-#include <omnicore/rpcmbstring.h>
+#include "omnicore/rpcmbstring.h"
 
-#include <stddef.h>
-#include <string>
+#include "stddef.h"
+#include "string"
 
 namespace mastercore
 {

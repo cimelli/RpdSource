@@ -1,11 +1,11 @@
-#include <omnicore/rpcmbstring.h>
+#include "omnicore/rpcmbstring.h"
 
-#include <test/util/setup_common.h>
+#include "test/util/setup_common.h"
 
-#include <boost/test/unit_test.hpp>
+#include "boost/test/unit_test.hpp"
 
-#include <stddef.h>
-#include <string>
+#include "stddef.h"
+#include "string"
 
 namespace mastercore {
 namespace mbstring {

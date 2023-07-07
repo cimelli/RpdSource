@@ -1,8 +1,8 @@
-#ifndef BITCOIN_OMNICORE_WALLETTXBUILDER_H
-#define BITCOIN_OMNICORE_WALLETTXBUILDER_H
+#ifndef OMNICORE_WALLETTXBUILDER_H
+#define OMNICORE_WALLETTXBUILDER_H
 
 #if defined(HAVE_CONFIG_H)
-#include <config/bitcoin-config.h>
+#include "config/bitcoin-config.h"
 #endif
 
 class uint256;
@@ -13,11 +13,11 @@ namespace interfaces {
 class Wallet;
 } // namespace interfaces
 
-#include <amount.h>
+#include "amount.h"
 
-#include <stdint.h>
-#include <string>
-#include <vector>
+#include "stdint.h"
+#include "string"
+#include "vector"
 
 /**
  * Creates and sends a transaction.

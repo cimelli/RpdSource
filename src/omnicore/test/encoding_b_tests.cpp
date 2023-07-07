@@ -1,20 +1,20 @@
-#include <omnicore/encoding.h>
+#include "omnicore/encoding.h"
 
-#include <omnicore/script.h>
+#include "omnicore/script.h"
 
-#include <base58.h>
-#include <key_io.h>
-#include <pubkey.h>
-#include <script/script.h>
-#include <script/standard.h>
-#include <test/util/setup_common.h>
-#include <util/strencodings.h>
+#include "base58.h"
+#include "key_io.h"
+#include "pubkey.h"
+#include "script/script.h"
+#include "script/standard.h"
+#include "test/util/setup_common.h"
+#include "util/strencodings.h"
 
-#include <boost/test/unit_test.hpp>
+#include "boost/test/unit_test.hpp"
 
-#include <stdint.h>
-#include <string>
-#include <vector>
+#include "stdint.h"
+#include "string"
+#include "vector"
 
 BOOST_FIXTURE_TEST_SUITE(omnicore_encoding_b_tests, BasicTestingSetup)
 

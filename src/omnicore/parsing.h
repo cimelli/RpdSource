@@ -1,8 +1,8 @@
-#ifndef BITCOIN_OMNICORE_PARSING_H
-#define BITCOIN_OMNICORE_PARSING_H
+#ifndef OMNICORE_PARSING_H
+#define OMNICORE_PARSING_H
 
-#include <string>
-#include <vector>
+#include "string"
+#include "vector"
 
 class CTransaction;
 class CMPTransaction;

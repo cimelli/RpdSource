@@ -1,18 +1,18 @@
-#ifndef BITCOIN_OMNICORE_DBSPINFO_H
-#define BITCOIN_OMNICORE_DBSPINFO_H
+#ifndef OMNICORE_DBSPINFO_H
+#define OMNICORE_DBSPINFO_H
 
-#include <omnicore/dbbase.h>
-#include <omnicore/log.h>
-#include <omnicore/omnicore.h>
+#include "omnicore/dbbase.h"
+#include "omnicore/log.h"
+#include "omnicore/omnicore.h"
 
-#include <fs.h>
-#include <serialize.h>
-#include <uint256.h>
+#include "fs.h"
+#include "serialize.h"
+#include "uint256.h"
 
-#include <stdint.h>
+#include "stdint.h"
 
-#include <map>
-#include <string>
+#include "map"
+#include "string"
 
 /** LevelDB based storage for currencies, smart properties and tokens.
  *

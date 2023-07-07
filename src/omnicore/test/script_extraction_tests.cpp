@@ -1,15 +1,15 @@
-#include <omnicore/script.h>
+#include "omnicore/script.h"
 
-#include <base58.h>
-#include <pubkey.h>
-#include <script/script.h>
-#include <test/util/setup_common.h>
-#include <util/strencodings.h>
+#include "base58.h"
+#include "pubkey.h"
+#include "script/script.h"
+#include "test/util/setup_common.h"
+#include "util/strencodings.h"
 
-#include <boost/test/unit_test.hpp>
+#include "boost/test/unit_test.hpp"
 
-#include <string>
-#include <vector>
+#include "string"
+#include "vector"
 
 BOOST_FIXTURE_TEST_SUITE(omnicore_script_extraction_tests, BasicTestingSetup)
 

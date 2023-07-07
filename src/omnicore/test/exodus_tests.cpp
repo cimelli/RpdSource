@@ -1,14 +1,14 @@
-#include <omnicore/omnicore.h>
-#include <omnicore/rules.h>
+#include "omnicore/omnicore.h"
+#include "omnicore/rules.h"
 
-#include <base58.h>
-#include <chainparams.h>
-#include <key_io.h>
-#include <test/util/setup_common.h>
+#include "base58.h"
+#include "chainparams.h"
+#include "key_io.h"
+#include "test/util/setup_common.h"
 
-#include <boost/test/unit_test.hpp>
+#include "boost/test/unit_test.hpp"
 
-#include <limits>
+#include "limits"
 
 using namespace mastercore;
 

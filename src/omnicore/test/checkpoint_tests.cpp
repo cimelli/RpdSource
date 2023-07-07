@@ -1,20 +1,20 @@
-#include <omnicore/consensushash.h>
-#include <omnicore/dex.h>
-#include <omnicore/mdex.h>
-#include <omnicore/sp.h>
-#include <omnicore/omnicore.h>
-#include <omnicore/rules.h>
-#include <omnicore/tally.h>
+#include "omnicore/consensushash.h"
+#include "omnicore/dex.h"
+#include "omnicore/mdex.h"
+#include "omnicore/sp.h"
+#include "omnicore/omnicore.h"
+#include "omnicore/rules.h"
+#include "omnicore/tally.h"
 
-#include <arith_uint256.h>
-#include <sync.h>
-#include <test/util/setup_common.h>
-#include <uint256.h>
+#include "arith_uint256.h"
+#include "sync.h"
+#include "test/util/setup_common.h"
+#include "uint256.h"
 
-#include <boost/test/unit_test.hpp>
+#include "boost/test/unit_test.hpp"
 
-#include <stdint.h>
-#include <string>
+#include "stdint.h"
+#include "string"
 
 namespace mastercore
 {

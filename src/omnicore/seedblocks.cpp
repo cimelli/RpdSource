@@ -1,17 +1,17 @@
-#include <omnicore/seedblocks.h>
+#include "omnicore/seedblocks.h"
 
-#include <omnicore/log.h>
+#include "omnicore/log.h"
 
-#include <chainparams.h>
-#include <util/time.h>
+#include "chainparams.h"
+#include "util/time.h"
 
-#include <boost/algorithm/string.hpp>
-#include <boost/lexical_cast.hpp>
+#include "boost/algorithm/string.hpp"
+#include "boost/lexical_cast.hpp"
 
-#include <stdint.h>
-#include <set>
-#include <string>
-#include <vector>
+#include "stdint.h"
+#include "set"
+#include "string"
+#include "vector"
 
 const int MAX_SEED_BLOCK = 490000;
 

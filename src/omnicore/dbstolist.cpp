@@ -1,29 +1,29 @@
-#include <omnicore/dbstolist.h>
+#include "omnicore/dbstolist.h"
 
-#include <omnicore/log.h>
-#include <omnicore/sp.h>
-#include <omnicore/walletutils.h>
+#include "omnicore/log.h"
+#include "omnicore/sp.h"
+#include "omnicore/walletutils.h"
 
-#include <fs.h>
-#include <interfaces/wallet.h>
-#include <uint256.h>
-#include <util/strencodings.h>
-#include <tinyformat.h>
+#include "fs.h"
+#include "interfaces/wallet.h"
+#include "uint256.h"
+#include "util/strencodings.h"
+#include "tinyformat.h"
 
-#include <univalue.h>
+#include "univalue.h"
 
-#include <leveldb/iterator.h>
-#include <leveldb/slice.h>
-#include <leveldb/status.h>
+#include "leveldb/iterator.h"
+#include "leveldb/slice.h"
+#include "leveldb/status.h"
 
-#include <boost/algorithm/string.hpp>
-#include <boost/lexical_cast.hpp>
+#include "boost/algorithm/string.hpp"
+#include "boost/lexical_cast.hpp"
 
-#include <stddef.h>
-#include <stdint.h>
+#include "stddef.h"
+#include "stdint.h"
 
-#include <string>
-#include <vector>
+#include "string"
+#include "vector"
 
 using mastercore::IsMyAddress;
 using mastercore::isPropertyDivisible;

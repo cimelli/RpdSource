@@ -1,10 +1,10 @@
-#include <omnicore/dex.h>
+#include "omnicore/dex.h"
 
-#include <test/util/setup_common.h>
+#include "test/util/setup_common.h"
 
-#include <boost/test/unit_test.hpp>
+#include "boost/test/unit_test.hpp"
 
-#include <stdint.h>
+#include "stdint.h"
 
 using mastercore::calculateDExPurchase;
 

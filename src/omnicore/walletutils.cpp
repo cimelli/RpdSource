@@ -1,34 +1,34 @@
-#include <omnicore/walletutils.h>
+#include "omnicore/walletutils.h"
 
-#include <omnicore/log.h>
-#include <omnicore/omnicore.h>
-#include <omnicore/rules.h>
-#include <omnicore/script.h>
-#include <omnicore/utilsbitcoin.h>
+#include "omnicore/log.h"
+#include "omnicore/omnicore.h"
+#include "omnicore/rules.h"
+#include "omnicore/script.h"
+#include "omnicore/utilsbitcoin.h"
 
-#include <amount.h>
-#include <base58.h>
-#include <init.h>
-#include <interfaces/wallet.h>
-#include <key_io.h>
-#include <validation.h>
-#include <policy/policy.h>
-#include <pubkey.h>
-#include <script/standard.h>
-#include <sync.h>
-#include <txmempool.h>
-#include <uint256.h>
-#include <util/strencodings.h>
+#include "amount.h"
+#include "base58.h"
+#include "init.h"
+#include "interfaces/wallet.h"
+#include "key_io.h"
+#include "validation.h"
+#include "policy/policy.h"
+#include "pubkey.h"
+#include "script/standard.h"
+#include "sync.h"
+#include "txmempool.h"
+#include "uint256.h"
+#include "util/strencodings.h"
 #ifdef ENABLE_WALLET
-#include <wallet/coincontrol.h>
-#include <wallet/ismine.h>
-#include <wallet/wallet.h>
+#include "wallet/coincontrol.h"
+#include "wallet/ismine.h"
+#include "wallet/wallet.h"
 #endif
 
-#include <stdint.h>
-#include <algorithm>
-#include <map>
-#include <string>
+#include "stdint.h"
+#include "algorithm"
+#include "map"
+#include "string"
 
 namespace mastercore
 {

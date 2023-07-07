@@ -11,8 +11,8 @@
  * Created on 13. Oktober 2016, 23:32
  */
 
-#ifndef BITCOIN_OMNICORE_RPC_H
-#define BITCOIN_OMNICORE_RPC_H
+#ifndef OMNICORE_RPC_H
+#define OMNICORE_RPC_H
 
 /** Throws a JSONRPCError, depending on error code. */
 void PopulateFailure(int error);

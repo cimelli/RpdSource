@@ -1,11 +1,11 @@
-#include <omnicore/parsing.h>
+#include "omnicore/parsing.h"
 
-#include <test/util/setup_common.h>
+#include "test/util/setup_common.h"
 
-#include <boost/test/unit_test.hpp>
+#include "boost/test/unit_test.hpp"
 
-#include <string>
-#include <vector>
+#include "string"
+#include "vector"
 
 BOOST_FIXTURE_TEST_SUITE(omnicore_obfuscation_tests, BasicTestingSetup)
 

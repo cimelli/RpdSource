@@ -1,7 +1,7 @@
-#ifndef BITCOIN_OMNICORE_CONVERT_H
-#define BITCOIN_OMNICORE_CONVERT_H
+#ifndef OMNICORE_CONVERT_H
+#define OMNICORE_CONVERT_H
 
-#include <stdint.h>
+#include "stdint.h"
 
 namespace mastercore
 {

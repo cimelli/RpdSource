@@ -1,10 +1,10 @@
-#ifndef BITCOIN_OMNICORE_UTILSBITCOIN_H
-#define BITCOIN_OMNICORE_UTILSBITCOIN_H
+#ifndef OMNICORE_UTILSBITCOIN_H
+#define OMNICORE_UTILSBITCOIN_H
 
 class CBlockIndex;
 class uint256;
 
-#include <stdint.h>
+#include "stdint.h"
 
 namespace mastercore
 {

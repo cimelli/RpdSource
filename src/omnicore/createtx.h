@@ -1,5 +1,5 @@
-#ifndef BITCOIN_OMNICORE_CREATETX_H
-#define BITCOIN_OMNICORE_CREATETX_H
+#ifndef OMNICORE_CREATETX_H
+#define OMNICORE_CREATETX_H
 
 class CCoinsViewCache;
 class CMutableTransaction;
@@ -9,12 +9,12 @@ class CScript;
 class CTxOut;
 class uint256;
 
-#include <script/standard.h>
+#include "script/standard.h"
 
-#include <stdint.h>
-#include <string>
-#include <utility>
-#include <vector>
+#include "stdint.h"
+#include "string"
+#include "utility"
+#include "vector"
 
 /**
  * A structure representing previous transaction outputs.

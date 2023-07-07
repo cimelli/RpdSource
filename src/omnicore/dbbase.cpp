@@ -1,14 +1,14 @@
-#include <omnicore/dbbase.h>
+#include "omnicore/dbbase.h"
 
-#include <omnicore/log.h>
+#include "omnicore/log.h"
 
-#include <fs.h>
-#include <util/system.h>
+#include "fs.h"
+#include "util/system.h"
 
-#include <leveldb/db.h>
-#include <leveldb/write_batch.h>
+#include "leveldb/db.h"
+#include "leveldb/write_batch.h"
 
-#include <stdint.h>
+#include "stdint.h"
 
 /**
  * Opens or creates a LevelDB based database.

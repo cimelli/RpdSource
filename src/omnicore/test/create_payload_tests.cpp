@@ -1,13 +1,13 @@
-#include <omnicore/createpayload.h>
+#include "omnicore/createpayload.h"
 
-#include <test/util/setup_common.h>
-#include <util/strencodings.h>
+#include "test/util/setup_common.h"
+#include "util/strencodings.h"
 
-#include <boost/test/unit_test.hpp>
+#include "boost/test/unit_test.hpp"
 
-#include <stdint.h>
-#include <vector>
-#include <string>
+#include "stdint.h"
+#include "vector"
+#include "string"
 
 BOOST_FIXTURE_TEST_SUITE(omnicore_create_payload_tests, BasicTestingSetup)
 

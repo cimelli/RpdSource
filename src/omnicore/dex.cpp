@@ -4,30 +4,30 @@
  * This file contains DEx logic.
  */
 
-#include <omnicore/dex.h>
+#include "omnicore/dex.h"
 
-#include <omnicore/convert.h>
-#include <omnicore/dbtxlist.h>
-#include <omnicore/log.h>
-#include <omnicore/rules.h>
-#include <omnicore/uint256_extensions.h>
+#include "omnicore/convert.h"
+#include "omnicore/dbtxlist.h"
+#include "omnicore/log.h"
+#include "omnicore/rules.h"
+#include "omnicore/uint256_extensions.h"
 
-#include <arith_uint256.h>
-#include <validation.h>
-#include <tinyformat.h>
-#include <uint256.h>
+#include "arith_uint256.h"
+#include "validation.h"
+#include "tinyformat.h"
+#include "uint256.h"
 
-#include <boost/algorithm/string.hpp>
-#include <boost/lexical_cast.hpp>
+#include "boost/algorithm/string.hpp"
+#include "boost/lexical_cast.hpp"
 
-#include <stdint.h>
+#include "stdint.h"
 
-#include <fstream>
-#include <map>
-#include <set>
-#include <string>
-#include <utility>
-#include <vector>
+#include "fstream"
+#include "map"
+#include "set"
+#include "string"
+#include "utility"
+#include "vector"
 
 namespace mastercore
 {

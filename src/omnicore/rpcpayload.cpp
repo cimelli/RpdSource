@@ -1,16 +1,16 @@
-#include <omnicore/createpayload.h>
-#include <omnicore/nftdb.h>
-#include <omnicore/rpcvalues.h>
-#include <omnicore/rpcrequirements.h>
-#include <omnicore/omnicore.h>
-#include <omnicore/sp.h>
-#include <omnicore/tx.h>
+#include "omnicore/createpayload.h"
+#include "omnicore/nftdb.h"
+#include "omnicore/rpcvalues.h"
+#include "omnicore/rpcrequirements.h"
+#include "omnicore/omnicore.h"
+#include "omnicore/sp.h"
+#include "omnicore/tx.h"
 
-#include <rpc/server.h>
-#include <rpc/util.h>
-#include <util/strencodings.h>
+#include "rpc/server.h"
+#include "rpc/util.h"
+#include "util/strencodings.h"
 
-#include <univalue.h>
+#include "univalue.h"
 
 using std::runtime_error;
 using namespace mastercore;

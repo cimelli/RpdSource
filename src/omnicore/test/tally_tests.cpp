@@ -1,10 +1,10 @@
-#include <omnicore/tally.h>
+#include "omnicore/tally.h"
 
-#include <test/util/setup_common.h>
+#include "test/util/setup_common.h"
 
-#include <stdint.h>
+#include "stdint.h"
 
-#include <boost/test/unit_test.hpp>
+#include "boost/test/unit_test.hpp"
 
 BOOST_FIXTURE_TEST_SUITE(omnicore_tally_tests, BasicTestingSetup)
 

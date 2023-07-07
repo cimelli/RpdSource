@@ -1,7 +1,7 @@
-#ifndef BITCOIN_OMNICORE_PERSISTENCE_H
-#define BITCOIN_OMNICORE_PERSISTENCE_H
+#ifndef OMNICORE_PERSISTENCE_H
+#define OMNICORE_PERSISTENCE_H
 
-#include <boost/filesystem.hpp>
+#include "boost/filesystem.hpp"
 
 class CBlockIndex;
 

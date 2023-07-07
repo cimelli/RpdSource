@@ -1,16 +1,16 @@
-#include <omnicore/test/utils_tx.h>
+#include "omnicore/test/utils_tx.h"
 
-#include <omnicore/omnicore.h>
-#include <omnicore/parsing.h>
-#include <omnicore/rules.h>
-#include <omnicore/script.h>
+#include "omnicore/omnicore.h"
+#include "omnicore/parsing.h"
+#include "omnicore/rules.h"
+#include "omnicore/script.h"
 
-#include <primitives/transaction.h>
-#include <test/util/setup_common.h>
+#include "primitives/transaction.h"
+#include "test/util/setup_common.h"
 
-#include <boost/test/unit_test.hpp>
+#include "boost/test/unit_test.hpp"
 
-#include <limits>
+#include "limits"
 
 using namespace mastercore;
 

@@ -1,5 +1,5 @@
-#ifndef BITCOIN_OMNICORE_WALLETFETCHTXS_H
-#define BITCOIN_OMNICORE_WALLETFETCHTXS_H
+#ifndef OMNICORE_WALLETFETCHTXS_H
+#define OMNICORE_WALLETFETCHTXS_H
 
 class CWallet;
 class uint256;
@@ -8,8 +8,8 @@ namespace interfaces {
 class Wallet;
 } // namespace interfaces
 
-#include <map>
-#include <string>
+#include "map"
+#include "string"
 
 namespace mastercore
 {

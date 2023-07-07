@@ -4,27 +4,27 @@
  * This file contains consensus rules and restrictions.
  */
 
-#include <omnicore/rules.h>
+#include "omnicore/rules.h"
 
-#include <omnicore/activation.h>
-#include <omnicore/consensushash.h>
-#include <omnicore/dbtxlist.h>
-#include <omnicore/log.h>
-#include <omnicore/omnicore.h>
-#include <omnicore/notifications.h>
-#include <omnicore/utilsbitcoin.h>
-#include <omnicore/version.h>
+#include "omnicore/activation.h"
+#include "omnicore/consensushash.h"
+#include "omnicore/dbtxlist.h"
+#include "omnicore/log.h"
+#include "omnicore/omnicore.h"
+#include "omnicore/notifications.h"
+#include "omnicore/utilsbitcoin.h"
+#include "omnicore/version.h"
 
-#include <chainparams.h>
-#include <validation.h>
-#include <script/standard.h>
-#include <uint256.h>
-#include <ui_interface.h>
+#include "chainparams.h"
+#include "validation.h"
+#include "script/standard.h"
+#include "uint256.h"
+#include "ui_interface.h"
 
-#include <stdint.h>
-#include <limits>
-#include <string>
-#include <vector>
+#include "stdint.h"
+#include "limits"
+#include "string"
+#include "vector"
 
 namespace mastercore
 {

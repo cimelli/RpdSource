@@ -1,9 +1,9 @@
-#ifndef BITCOIN_OMNICORE_ACTIVATION_H
-#define BITCOIN_OMNICORE_ACTIVATION_H
+#ifndef OMNICORE_ACTIVATION_H
+#define OMNICORE_ACTIVATION_H
 
-#include <stdint.h>
-#include <string>
-#include <vector>
+#include "stdint.h"
+#include "string"
+#include "vector"
 
 namespace mastercore
 {
@@ -33,4 +33,4 @@ void CheckLiveActivations(int blockHeight);
 void AddPendingActivation(uint16_t featureId, int activationBlock, uint32_t minClientVersion, const std::string& featureName);
 }
 
-#endif // BITCOIN_OMNICORE_ACTIVATION_H
+#endif // OMNICORE_ACTIVATION_H

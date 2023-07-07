@@ -1,9 +1,9 @@
-#ifndef BITCOIN_OMNICORE_ERRORS_H
-#define BITCOIN_OMNICORE_ERRORS_H
+#ifndef OMNICORE_ERRORS_H
+#define OMNICORE_ERRORS_H
 
-#include <string>
+#include "string"
 
-#include <omnicore/omnicore.h>
+#include "omnicore/omnicore.h"
 
 enum MPRPCErrorCode
 {

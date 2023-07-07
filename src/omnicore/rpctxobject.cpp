@@ -4,40 +4,40 @@
  * Handler for populating RPC transaction objects.
  */
 
-#include <omnicore/rpctxobject.h>
+#include "omnicore/rpctxobject.h"
 
-#include <omnicore/dbspinfo.h>
-#include <omnicore/dbstolist.h>
-#include <omnicore/dbtradelist.h>
-#include <omnicore/dbtransaction.h>
-#include <omnicore/dbtxlist.h>
-#include <omnicore/dex.h>
-#include <omnicore/errors.h>
-#include <omnicore/mdex.h>
-#include <omnicore/omnicore.h>
-#include <omnicore/parsing.h>
-#include <omnicore/pending.h>
-#include <omnicore/sp.h>
-#include <omnicore/sto.h>
-#include <omnicore/tx.h>
-#include <omnicore/utilsbitcoin.h>
-#include <omnicore/walletutils.h>
+#include "omnicore/dbspinfo.h"
+#include "omnicore/dbstolist.h"
+#include "omnicore/dbtradelist.h"
+#include "omnicore/dbtransaction.h"
+#include "omnicore/dbtxlist.h"
+#include "omnicore/dex.h"
+#include "omnicore/errors.h"
+#include "omnicore/mdex.h"
+#include "omnicore/omnicore.h"
+#include "omnicore/parsing.h"
+#include "omnicore/pending.h"
+#include "omnicore/sp.h"
+#include "omnicore/sto.h"
+#include "omnicore/tx.h"
+#include "omnicore/utilsbitcoin.h"
+#include "omnicore/walletutils.h"
 
-#include <chainparams.h>
-#include <index/txindex.h>
-#include <validation.h>
-#include <primitives/transaction.h>
-#include <sync.h>
-#include <uint256.h>
+#include "chainparams.h"
+#include "index/txindex.h"
+#include "validation.h"
+#include "primitives/transaction.h"
+#include "sync.h"
+#include "uint256.h"
 
-#include <univalue.h>
+#include "univalue.h"
 
-#include <boost/algorithm/string.hpp>
-#include <boost/lexical_cast.hpp>
+#include "boost/algorithm/string.hpp"
+#include "boost/lexical_cast.hpp"
 
-#include <stdint.h>
-#include <string>
-#include <vector>
+#include "stdint.h"
+#include "string"
+#include "vector"
 
 // Namespaces
 using namespace mastercore;

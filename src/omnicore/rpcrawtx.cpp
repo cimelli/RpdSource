@@ -1,26 +1,26 @@
-#include <omnicore/createtx.h>
-#include <omnicore/omnicore.h>
-#include <omnicore/rpc.h>
-#include <omnicore/rpctxobject.h>
-#include <omnicore/rpcvalues.h>
+#include "omnicore/createtx.h"
+#include "omnicore/omnicore.h"
+#include "omnicore/rpc.h"
+#include "omnicore/rpctxobject.h"
+#include "omnicore/rpcvalues.h"
 
-#include <coins.h>
-#include <core_io.h>
-#include <interfaces/wallet.h>
-#include <primitives/transaction.h>
-#include <pubkey.h>
-#include <rpc/server.h>
-#include <rpc/util.h>
-#include <sync.h>
-#include <uint256.h>
-#include <util/strencodings.h>
-#include <wallet/rpcwallet.h>
+#include "coins.h"
+#include "core_io.h"
+#include "interfaces/wallet.h"
+#include "primitives/transaction.h"
+#include "pubkey.h"
+#include "rpc/server.h"
+#include "rpc/util.h"
+#include "sync.h"
+#include "uint256.h"
+#include "util/strencodings.h"
+#include "wallet/rpcwallet.h"
 
-#include <univalue.h>
+#include "univalue.h"
 
-#include <stdint.h>
-#include <stdexcept>
-#include <string>
+#include "stdint.h"
+#include "stdexcept"
+#include "string"
 
 extern RecursiveMutex cs_main;
 

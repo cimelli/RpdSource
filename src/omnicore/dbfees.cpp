@@ -4,26 +4,26 @@
  * This file contains code for handling Omni fees.
  */
 
-#include <omnicore/dbfees.h>
+#include "omnicore/dbfees.h"
 
-#include <omnicore/log.h>
-#include <omnicore/rules.h>
-#include <omnicore/sp.h>
-#include <omnicore/sto.h>
+#include "omnicore/log.h"
+#include "omnicore/rules.h"
+#include "omnicore/sp.h"
+#include "omnicore/sto.h"
 
-#include <validation.h>
+#include "validation.h"
 
-#include <leveldb/db.h>
+#include "leveldb/db.h"
 
-#include <boost/algorithm/string.hpp>
-#include <boost/lexical_cast.hpp>
+#include "boost/algorithm/string.hpp"
+#include "boost/lexical_cast.hpp"
 
-#include <stdint.h>
+#include "stdint.h"
 
-#include <limits>
-#include <map>
-#include <string>
-#include <vector>
+#include "limits"
+#include "map"
+#include "string"
+#include "vector"
 
 using namespace mastercore;
 

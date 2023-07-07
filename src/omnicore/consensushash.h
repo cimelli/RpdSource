@@ -1,7 +1,7 @@
-#ifndef BITCOIN_OMNICORE_CONSENSUSHASH_H
-#define BITCOIN_OMNICORE_CONSENSUSHASH_H
+#ifndef OMNICORE_CONSENSUSHASH_H
+#define OMNICORE_CONSENSUSHASH_H
 
-#include <uint256.h>
+#include "uint256.h"
 
 namespace mastercore
 {

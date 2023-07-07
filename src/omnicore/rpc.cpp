@@ -4,67 +4,67 @@
  * This file contains RPC calls for data retrieval.
  */
 
-#include <omnicore/rpc.h>
+#include "omnicore/rpc.h"
 
-#include <omnicore/activation.h>
-#include <omnicore/consensushash.h>
-#include <omnicore/convert.h>
-#include <omnicore/dbfees.h>
-#include <omnicore/dbspinfo.h>
-#include <omnicore/dbstolist.h>
-#include <omnicore/dbtradelist.h>
-#include <omnicore/dbtxlist.h>
-#include <omnicore/dex.h>
-#include <omnicore/errors.h>
-#include <omnicore/log.h>
-#include <omnicore/mdex.h>
-#include <omnicore/notifications.h>
-#include <omnicore/omnicore.h>
-#include <omnicore/parsing.h>
-#include <omnicore/rpcrequirements.h>
-#include <omnicore/rpctxobject.h>
-#include <omnicore/rpcvalues.h>
-#include <omnicore/rules.h>
-#include <omnicore/sp.h>
-#include <omnicore/sto.h>
-#include <omnicore/tally.h>
-#include <omnicore/tx.h>
-#include <omnicore/nftdb.h>
-#include <omnicore/utilsbitcoin.h>
-#include <omnicore/version.h>
-#include <omnicore/walletfetchtxs.h>
-#include <omnicore/walletutils.h>
+#include "omnicore/activation.h"
+#include "omnicore/consensushash.h"
+#include "omnicore/convert.h"
+#include "omnicore/dbfees.h"
+#include "omnicore/dbspinfo.h"
+#include "omnicore/dbstolist.h"
+#include "omnicore/dbtradelist.h"
+#include "omnicore/dbtxlist.h"
+#include "omnicore/dex.h"
+#include "omnicore/errors.h"
+#include "omnicore/log.h"
+#include "omnicore/mdex.h"
+#include "omnicore/notifications.h"
+#include "omnicore/omnicore.h"
+#include "omnicore/parsing.h"
+#include "omnicore/rpcrequirements.h"
+#include "omnicore/rpctxobject.h"
+#include "omnicore/rpcvalues.h"
+#include "omnicore/rules.h"
+#include "omnicore/sp.h"
+#include "omnicore/sto.h"
+#include "omnicore/tally.h"
+#include "omnicore/tx.h"
+#include "omnicore/nftdb.h"
+#include "omnicore/utilsbitcoin.h"
+#include "omnicore/version.h"
+#include "omnicore/walletfetchtxs.h"
+#include "omnicore/walletutils.h"
 
-#include <amount.h>
-#include <base58.h>
-#include <chainparams.h>
-#include <init.h>
-#include <index/txindex.h>
-#include <interfaces/wallet.h>
-#include <key_io.h>
-#include <validation.h>
-#include <primitives/block.h>
-#include <primitives/transaction.h>
-#include <rpc/server.h>
-#include <rpc/util.h>
-#include <tinyformat.h>
-#include <txmempool.h>
-#include <uint256.h>
-#include <util/strencodings.h>
-#include <wallet/rpcwallet.h>
+#include "amount.h"
+#include "base58.h"
+#include "chainparams.h"
+#include "init.h"
+#include "index/txindex.h"
+#include "interfaces/wallet.h"
+#include "key_io.h"
+#include "validation.h"
+#include "primitives/block.h"
+#include "primitives/transaction.h"
+#include "rpc/server.h"
+#include "rpc/util.h"
+#include "tinyformat.h"
+#include "txmempool.h"
+#include "uint256.h"
+#include "util/strencodings.h"
+#include "wallet/rpcwallet.h"
 #ifdef ENABLE_WALLET
-#include <wallet/wallet.h>
+#include "wallet/wallet.h"
 #endif
 
-#include <univalue.h>
+#include "univalue.h"
 
-#include <stdint.h>
-#include <map>
-#include <stdexcept>
-#include <string>
-#include <tuple>
+#include "stdint.h"
+#include "map"
+#include "stdexcept"
+#include "string"
+#include "tuple"
 
-#include <boost/algorithm/string.hpp> // boost::split
+#include "boost/algorithm/string.hpp" // boost::split
 
 using std::runtime_error;
 using namespace mastercore;

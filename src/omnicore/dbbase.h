@@ -1,12 +1,12 @@
-#ifndef BITCOIN_OMNICORE_DBBASE_H
-#define BITCOIN_OMNICORE_DBBASE_H
+#ifndef OMNICORE_DBBASE_H
+#define OMNICORE_DBBASE_H
 
-#include <leveldb/db.h>
+#include "leveldb/db.h"
 
-#include <fs.h>
+#include "fs.h"
 
-#include <assert.h>
-#include <stddef.h>
+#include "assert.h"
+#include "stddef.h"
 
 /** Base class for LevelDB based storage.
  */

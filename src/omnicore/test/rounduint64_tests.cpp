@@ -1,10 +1,10 @@
-#include <omnicore/convert.h>
+#include "omnicore/convert.h"
 
-#include <test/util/setup_common.h>
+#include "test/util/setup_common.h"
 
-#include <stdint.h>
+#include "stdint.h"
 
-#include <boost/test/unit_test.hpp>
+#include "boost/test/unit_test.hpp"
 
 using namespace mastercore;
 

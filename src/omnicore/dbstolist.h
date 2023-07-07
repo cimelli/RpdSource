@@ -1,16 +1,16 @@
-#ifndef BITCOIN_OMNICORE_DBSTOLIST_H
-#define BITCOIN_OMNICORE_DBSTOLIST_H
+#ifndef OMNICORE_DBSTOLIST_H
+#define OMNICORE_DBSTOLIST_H
 
-#include <omnicore/dbbase.h>
+#include "omnicore/dbbase.h"
 
-#include <fs.h>
-#include <uint256.h>
+#include "fs.h"
+#include "uint256.h"
 
-#include <univalue.h>
+#include "univalue.h"
 
-#include <stdint.h>
+#include "stdint.h"
 
-#include <string>
+#include "string"
 
 namespace interfaces {
 class Wallet;

@@ -1,8 +1,8 @@
-#ifndef BITCOIN_OMNICORE_RPCREQUIREMENTS_H
-#define BITCOIN_OMNICORE_RPCREQUIREMENTS_H
+#ifndef OMNICORE_RPCREQUIREMENTS_H
+#define OMNICORE_RPCREQUIREMENTS_H
 
-#include <stdint.h>
-#include <string>
+#include "stdint.h"
+#include "string"
 
 void RequireBalance(const std::string& address, uint32_t propertyId, int64_t amount);
 void RequirePrimaryToken(uint32_t propertyId);

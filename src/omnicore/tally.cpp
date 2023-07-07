@@ -1,10 +1,10 @@
-#include <omnicore/tally.h>
+#include "omnicore/tally.h"
 
-#include <omnicore/log.h>
-#include <omnicore/omnicore.h>
+#include "omnicore/log.h"
+#include "omnicore/omnicore.h"
 
-#include <stdint.h>
-#include <map>
+#include "stdint.h"
+#include "map"
 
 /**
  * Creates an empty tally.

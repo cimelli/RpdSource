@@ -1,11 +1,11 @@
-#include <omnicore/version.h>
+#include "omnicore/version.h"
 
-#include <config/bitcoin-config.h>
-#include <test/util/setup_common.h>
+#include "config/bitcoin-config.h"
+#include "test/util/setup_common.h"
 
-#include <boost/test/unit_test.hpp>
+#include "boost/test/unit_test.hpp"
 
-#include <string>
+#include "string"
 
 BOOST_FIXTURE_TEST_SUITE(omnicore_version_tests, BasicTestingSetup)
 

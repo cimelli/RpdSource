@@ -4,21 +4,21 @@
  * This file contains the function to generate consensus hashes.
  */
 
-#include <omnicore/consensushash.h>
-#include <omnicore/dbspinfo.h>
-#include <omnicore/dex.h>
-#include <omnicore/mdex.h>
-#include <omnicore/log.h>
-#include <omnicore/parse_string.h>
-#include <omnicore/sp.h>
+#include "omnicore/consensushash.h"
+#include "omnicore/dbspinfo.h"
+#include "omnicore/dex.h"
+#include "omnicore/mdex.h"
+#include "omnicore/log.h"
+#include "omnicore/parse_string.h"
+#include "omnicore/sp.h"
 
-#include <arith_uint256.h>
-#include <uint256.h>
+#include "arith_uint256.h"
+#include "uint256.h"
 
-#include <stdint.h>
-#include <algorithm>
-#include <string>
-#include <vector>
+#include "stdint.h"
+#include "algorithm"
+#include "string"
+#include "vector"
 
 namespace mastercore
 {

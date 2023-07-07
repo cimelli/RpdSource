@@ -1,14 +1,14 @@
-#ifndef BITCOIN_OMNICORE_PENDING_H
-#define BITCOIN_OMNICORE_PENDING_H
+#ifndef OMNICORE_PENDING_H
+#define OMNICORE_PENDING_H
 
 class uint256;
 struct CMPPending;
 
-#include <sync.h>
+#include "sync.h"
 
-#include <stdint.h>
-#include <map>
-#include <string>
+#include "stdint.h"
+#include "map"
+#include "string"
 
 namespace mastercore
 {

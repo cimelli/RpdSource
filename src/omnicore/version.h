@@ -1,8 +1,8 @@
-#ifndef BITCOIN_OMNICORE_VERSION_H
-#define BITCOIN_OMNICORE_VERSION_H
+#ifndef OMNICORE_VERSION_H
+#define OMNICORE_VERSION_H
 
 #if defined(HAVE_CONFIG_H)
-#include <config/bitcoin-config.h>
+#include "config/bitcoin-config.h"
 #else
 
 //

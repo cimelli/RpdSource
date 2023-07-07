@@ -1,12 +1,12 @@
-#ifndef BITCOIN_OMNICORE_SCRIPT_H
-#define BITCOIN_OMNICORE_SCRIPT_H
+#ifndef OMNICORE_SCRIPT_H
+#define OMNICORE_SCRIPT_H
 
-#include <string>
-#include <vector>
+#include "string"
+#include "vector"
 
 class CScript;
 
-#include <script/standard.h>
+#include "script/standard.h"
 
 /** Determines the minimum output amount to be spent by an output. */
 int64_t OmniGetDustThreshold(const CScript& scriptPubKey);

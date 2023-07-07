@@ -1,8 +1,8 @@
-#ifndef BITCOIN_OMNICORE_PARSE_STRING_H
-#define BITCOIN_OMNICORE_PARSE_STRING_H
+#ifndef OMNICORE_PARSE_STRING_H
+#define OMNICORE_PARSE_STRING_H
 
-#include <stdint.h>
-#include <string>
+#include "stdint.h"
+#include "string"
 
 namespace mastercore
 {
