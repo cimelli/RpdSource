@@ -2933,7 +2933,7 @@ int CMPTransaction::logicMath_Alert()
             std::string msgText = "Client upgrade is required!  Shutting down due to unsupported consensus state!";
             PrintToLog(msgText);
             PrintToConsole(msgText);
-            if (!gArgs.GetBoolArg("-overrideforcedshutdown", false)) {
+            if (!mapArgs.GetBoolArg("-overrideforcedshutdown", false)) {
                 fs::path persistPath = GetDataDir() / "MP_persist";
                 if (fs::exists(persistPath)) fs::remove_all(persistPath); // prevent the node being restarted without a reparse after forced shutdown
                 AbortNode(msgText, msgText);

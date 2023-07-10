@@ -664,7 +664,7 @@ void CMPTxList::LoadActivations(int blockHeight)
     CheckLiveActivations(blockHeight);
 
     // This alert never expires as long as custom activations are used
-    if (gArgs.IsArgSet("-omniactivationallowsender") || gArgs.IsArgSet("-omniactivationignoresender")) {
+    if (mapArgs.IsArgSet("-omniactivationallowsender") || mapArgs.IsArgSet("-omniactivationignoresender")) {
         AddAlert("omnicore", ALERT_CLIENT_VERSION_EXPIRY, std::numeric_limits<uint32_t>::max(),
                 "Authorization for feature activation has been modified.  Data provided by this client should not be trusted.");
     }

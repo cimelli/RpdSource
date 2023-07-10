@@ -34,30 +34,30 @@ BOOST_AUTO_TEST_CASE(alert_unauthorized_source)
 BOOST_AUTO_TEST_CASE(alert_manual_sources)
 {
     // Add 1JwSSu as allowed source for alerts
-    gArgs.ForceSetArg("-omnialertallowsender", "1JwSSubhmg6iPtRjtyqhUYYH7bZg3Lfy1T");
-    BOOST_CHECK_EQUAL(gArgs.GetArgs("-omnialertallowsender").size(), 1);
+    mapArgs.ForceSetArg("-omnialertallowsender", "1JwSSubhmg6iPtRjtyqhUYYH7bZg3Lfy1T");
+    BOOST_CHECK_EQUAL(mapArgs.GetArgs("-omnialertallowsender").size(), 1);
     BOOST_CHECK(CheckAlertAuthorization("1JwSSubhmg6iPtRjtyqhUYYH7bZg3Lfy1T"));
 
     // Then ignore some sources explicitly
-    gArgs.ForceSetArg("-omnialertignoresender", "1JwSSubhmg6iPtRjtyqhUYYH7bZg3Lfy1T");
+    mapArgs.ForceSetArg("-omnialertignoresender", "1JwSSubhmg6iPtRjtyqhUYYH7bZg3Lfy1T");
     BOOST_CHECK(CheckAlertAuthorization("1HHv91gRxqBzQ3gydMob3LU8hqXcWoLfvd")); // should still be authorized
     BOOST_CHECK(!CheckAlertAuthorization("1JwSSubhmg6iPtRjtyqhUYYH7bZg3Lfy1T"));
-    gArgs.ForceSetArg("-omnialertignoresender", "16oDZYCspsczfgKXVj3xyvsxH21NpEj94F");
+    mapArgs.ForceSetArg("-omnialertignoresender", "16oDZYCspsczfgKXVj3xyvsxH21NpEj94F");
     BOOST_CHECK(!CheckAlertAuthorization("16oDZYCspsczfgKXVj3xyvsxH21NpEj94F"));
 
-    gArgs.ForceSetArg("-omnialertallowsender", "");
-    gArgs.ForceSetArg("-omnialertignoresender", "");
+    mapArgs.ForceSetArg("-omnialertallowsender", "");
+    mapArgs.ForceSetArg("-omnialertignoresender", "");
 }
 
 BOOST_AUTO_TEST_CASE(alert_authorize_any_source)
 {
     // Allow any source (e.g. for tests!)
-    gArgs.ForceSetArg("-omnialertallowsender", "any");
+    mapArgs.ForceSetArg("-omnialertallowsender", "any");
     BOOST_CHECK(CheckAlertAuthorization("1JwSSubhmg6iPtRjtyqhUYYH7bZg3Lfy1T"));
     BOOST_CHECK(CheckAlertAuthorization("137uFtQ5EgMsreg4FVvL3xuhjkYGToVPqs"));
     BOOST_CHECK(CheckAlertAuthorization("16oDZYCspsczfgKXVj3xyvsxH21NpEj94F"));
 
-    gArgs.ForceSetArg("-omnialertallowsender", "");
+    mapArgs.ForceSetArg("-omnialertallowsender", "");
 }
 
 BOOST_AUTO_TEST_SUITE_END()

@@ -98,8 +98,8 @@ bool CheckAlertAuthorization(const std::string& sender)
     // use -omnialertallowsender for testing
 
     // Add manually whitelisted sources
-    if (gArgs.IsArgSet("-omnialertallowsender")) {
-        const std::vector<std::string>& sources = gArgs.GetArgs("-omnialertallowsender");
+    if (mapArgs.IsArgSet("-omnialertallowsender")) {
+        const std::vector<std::string>& sources = mapArgs.GetArgs("-omnialertallowsender");
 
         for (std::vector<std::string>::const_iterator it = sources.begin(); it != sources.end(); ++it) {
             whitelisted.insert(*it);
@@ -107,8 +107,8 @@ bool CheckAlertAuthorization(const std::string& sender)
     }
 
     // Remove manually ignored sources
-    if (gArgs.IsArgSet("-omnialertignoresender")) {
-        const std::vector<std::string>& sources = gArgs.GetArgs("-omnialertignoresender");
+    if (mapArgs.IsArgSet("-omnialertignoresender")) {
+        const std::vector<std::string>& sources = mapArgs.GetArgs("-omnialertignoresender");
 
         for (std::vector<std::string>::const_iterator it = sources.begin(); it != sources.end(); ++it) {
             whitelisted.erase(*it);

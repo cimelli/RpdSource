@@ -177,8 +177,8 @@ bool CheckActivationAuthorization(const std::string& sender)
     // use -omniactivationallowsender for testing
 
     // Add manually whitelisted sources
-    if (gArgs.IsArgSet("-omniactivationallowsender")) {
-        const std::vector<std::string>& sources = gArgs.GetArgs("-omniactivationallowsender");
+    if (mapArgs.IsArgSet("-omniactivationallowsender")) {
+        const std::vector<std::string>& sources = mapArgs.GetArgs("-omniactivationallowsender");
 
         for (std::vector<std::string>::const_iterator it = sources.begin(); it != sources.end(); ++it) {
             whitelisted.insert(*it);
@@ -186,8 +186,8 @@ bool CheckActivationAuthorization(const std::string& sender)
     }
 
     // Remove manually ignored sources
-    if (gArgs.IsArgSet("-omniactivationignoresender")) {
-        const std::vector<std::string>& sources = gArgs.GetArgs("-omniactivationignoresender");
+    if (mapArgs.IsArgSet("-omniactivationignoresender")) {
+        const std::vector<std::string>& sources = mapArgs.GetArgs("-omniactivationignoresender");
 
         for (std::vector<std::string>::const_iterator it = sources.begin(); it != sources.end(); ++it) {
             whitelisted.erase(*it);
@@ -228,8 +228,8 @@ bool CheckDeactivationAuthorization(const std::string& sender)
     // use -omniactivationallowsender for testing
 
     // Add manually whitelisted sources - custom sources affect both activation and deactivation
-    if (gArgs.IsArgSet("-omniactivationallowsender")) {
-        const std::vector<std::string>& sources = gArgs.GetArgs("-omniactivationallowsender");
+    if (mapArgs.IsArgSet("-omniactivationallowsender")) {
+        const std::vector<std::string>& sources = mapArgs.GetArgs("-omniactivationallowsender");
 
         for (std::vector<std::string>::const_iterator it = sources.begin(); it != sources.end(); ++it) {
             whitelisted.insert(*it);
@@ -237,8 +237,8 @@ bool CheckDeactivationAuthorization(const std::string& sender)
     }
 
     // Remove manually ignored sources - custom sources affect both activation and deactivation
-    if (gArgs.IsArgSet("-omniactivationignoresender")) {
-        const std::vector<std::string>& sources = gArgs.GetArgs("-omniactivationignoresender");
+    if (mapArgs.IsArgSet("-omniactivationignoresender")) {
+        const std::vector<std::string>& sources = mapArgs.GetArgs("-omniactivationignoresender");
 
         for (std::vector<std::string>::const_iterator it = sources.begin(); it != sources.end(); ++it) {
             whitelisted.erase(*it);

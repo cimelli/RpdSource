@@ -533,7 +533,7 @@ bool mastercore::update_tally_map(const std::string& who, uint32_t propertyId, i
 static int64_t calculate_and_update_devmsc(unsigned int nTime, int block)
 {
     // Allow disable of Dev MSC for fee cache test on regtest only
-    if (Params().NetworkIDString() == CBaseChainParams::REGTEST && gArgs.GetBoolArg("-disabledevmsc", false)) {
+    if (Params().NetworkIDString() == CBaseChainParams::REGTEST && mapArgs.GetBoolArg("-disabledevmsc", false)) {
         return 0;
     }
 
@@ -872,7 +872,7 @@ static unsigned int nCacheMiss = 0;
  */
 static bool FillTxInputCache(const CTransaction& tx, const std::shared_ptr<std::map<COutPoint, Coin>> removedCoins)
 {
-    static unsigned int nCacheSize = gArgs.GetArg("-omnitxcache", 500000);
+    static unsigned int nCacheSize = mapArgs.GetArg("-omnitxcache", 500000);
 
     if (view.GetCacheSize() > nCacheSize) {
         PrintToLog("%s(): clearing cache before insertion [size=%d, hit=%d, miss=%d]\n",
@@ -1513,7 +1513,7 @@ public:
  */
 static int msc_initial_scan(int nFirstBlock)
 {
-    int nTimeBetweenProgressReports = gArgs.GetArg("-omniprogressfrequency", 30);  // seconds
+    int nTimeBetweenProgressReports = mapArgs.GetArg("-omniprogressfrequency", 30);  // seconds
     int64_t nNow = GetTime();
     unsigned int nTxsTotal = 0;
     unsigned int nTxsFoundTotal = 0;
@@ -1536,7 +1536,7 @@ static int msc_initial_scan(int nFirstBlock)
     ProgressReporter progressReporter(pFirstBlock, pLastBlock);
 
     // check if using seed block filter should be disabled
-    bool seedBlockFilterEnabled = gArgs.GetBoolArg("-omniseedblockfilter", true);
+    bool seedBlockFilterEnabled = mapArgs.GetBoolArg("-omniseedblockfilter", true);
 
     for (nBlock = nFirstBlock; nBlock <= nLastBlock; ++nBlock)
     {
@@ -1702,14 +1702,14 @@ int mastercore_init()
         }
 
         // check for --autocommit option and set transaction commit flag accordingly
-        if (!gArgs.GetBoolArg("-autocommit", true)) {
+        if (!mapArgs.GetBoolArg("-autocommit", true)) {
             PrintToLog("Process was started with --autocommit set to false. "
                     "Created Omni transactions will not be committed to wallet or broadcast.\n");
             autoCommit = false;
         }
 
         // check for --startclean option and delete MP_ folders if present
-        if (gArgs.GetBoolArg("-startclean", false)) {
+        if (mapArgs.GetBoolArg("-startclean", false)) {
             PrintToLog("Process was started with --startclean option, attempting to clear persistence files..\n");
             try {
                 fs::path persistPath = GetDataDir() / "MP_persist";
@@ -1841,7 +1841,7 @@ int mastercore_init()
         if (!pDbTransactionList->LoadFreezeState(nWaterlineBlock)) {
             std::string strShutdownReason = "Failed to load freeze state from levelDB.  It is unsafe to continue.\n";
             PrintToLog(strShutdownReason);
-            if (!gArgs.GetBoolArg("-overrideforcedshutdown", false)) {
+            if (!mapArgs.GetBoolArg("-overrideforcedshutdown", false)) {
                 AbortNode(strShutdownReason, strShutdownReason);
             }
         }
@@ -2015,7 +2015,7 @@ bool mastercore_handler_tx(const CTransaction& tx, int nBlock, unsigned int idx,
 bool mastercore::UseEncodingClassC(size_t nDataSize)
 {
     size_t nTotalSize = nDataSize + GetOmMarker().size(); // Marker "omni"
-    bool fDataEnabled = gArgs.GetBoolArg("-datacarrier", true);
+    bool fDataEnabled = mapArgs.GetBoolArg("-datacarrier", true);
     int nBlockNow = GetHeight();
     if (!IsAllowedOutputType(TX_NULL_DATA, nBlockNow)) {
         fDataEnabled = false;
@@ -2119,7 +2119,7 @@ int mastercore_handler_block_end(int nBlockNow, CBlockIndex const * pBlockIndex,
                     "Please restart with -startclean flag and if this doesn't work, please reach out to the support.\n",
                     nBlockNow, pBlockIndex->GetBlockHash().GetHex());
             PrintToLog(msg);
-            if (!gArgs.GetBoolArg("-overrideforcedshutdown", false)) {
+            if (!mapArgs.GetBoolArg("-overrideforcedshutdown", false)) {
                 fs::path persistPath = GetDataDir() / "MP_persist";
                 if (fs::exists(persistPath)) fs::remove_all(persistPath); // prevent the node being restarted without a reparse after forced shutdown
                 AbortNode(msg, msg);

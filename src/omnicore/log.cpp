@@ -95,7 +95,7 @@ extern std::atomic<bool> fReopenOmniCoreLog;
 static fs::path GetLogPath()
 {
     fs::path pathLogFile;
-    std::string strLogPath = gArgs.GetArg("-omnilogfile", "");
+    std::string strLogPath = mapArgs.GetArg("-omnilogfile", "");
 
     if (!strLogPath.empty()) {
         pathLogFile = fs::path(strLogPath);
@@ -226,11 +226,11 @@ int ConsolePrint(const std::string& str)
  */
 void InitDebugLogLevels()
 {
-    if (!gArgs.IsArgSet("-omnidebug")) {
+    if (!mapArgs.IsArgSet("-omnidebug")) {
         return;
     }
 
-    const std::vector<std::string>& debugLevels = gArgs.GetArgs("-omnidebug");
+    const std::vector<std::string>& debugLevels = mapArgs.GetArgs("-omnidebug");
 
     for (std::vector<std::string>::const_iterator it = debugLevels.begin(); it != debugLevels.end(); ++it) {
         if (*it == "parser_data") msc_debug_parser_data = true;
