@@ -13,6 +13,7 @@
 
 #include "fs.h"
 #include "../../src/consensus/validation.h"
+#include "../../src/main.h"
 #include "../../src/guiinterface.h"
 
 #include "stdint.h"
@@ -89,7 +90,7 @@ void CheckLiveActivations(int blockHeight)
             std::string msgText = strprintf("Shutting down due to unsupported feature activation (%d: %s)", liveActivation.featureId, liveActivation.featureName);
             PrintToLog(msgText);
             PrintToConsole(msgText);
-            if (!gArgs.GetBoolArg("-overrideforcedshutdown", false)) {
+            if (!GetBoolArg("-overrideforcedshutdown", false)) {
                 fs::path persistPath = GetDataDir() / "MP_persist";
                 if (fs::exists(persistPath)) fs::remove_all(persistPath); // prevent the node being restarted without a reparse after forced shutdown
                 AbortNode(msgText, msgText);
