@@ -12,7 +12,7 @@
 #include "omnicore/version.h"
 
 #include "fs.h"
-#include "validation.h"
+#include <validation.h>
 #include "ui_interface.h"
 
 #include "stdint.h"
