@@ -13,7 +13,7 @@
 
 #include "fs.h"
 #include "../../src/consensus/validation.h"
-#include "ui_interface.h"
+#include "../../src/guiinterface.h"
 
 #include "stdint.h"
 #include "string"
