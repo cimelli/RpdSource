@@ -9,7 +9,7 @@ class CTransaction;
 #include "omnicore/parsing.h"
 
 #include "uint256.h"
-#include "util/strencodings.h"
+#include "../../src/utilstrencodings.h"
 
 #include "stdint.h"
 #include "string.h"
