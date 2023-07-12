@@ -15,7 +15,7 @@ class Coin;
 #include "sync.h"
 #include "uint256.h"
 
-#include <util/system.h>
+//#include <util/system.h>
 
 #include <univalue.h>
 
