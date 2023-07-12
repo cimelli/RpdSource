@@ -10,20 +10,22 @@ class Coin;
 #include "omnicore/log.h"
 #include "omnicore/tally.h"
 
-#include "script/standard.h"
+#include <script/standard.h>
+
 #include "sync.h"
 #include "uint256.h"
-#include "util/system.h"
 
-#include "univalue.h"
+#include <util/system.h>
 
-#include "stdint.h"
+#include <univalue.h>
 
-#include "map"
-#include "string"
-#include "vector"
-#include "set"
-#include "unordered_map"
+#include <stdint.h>
+
+#include <map>
+#include <string>
+#include <vector>
+#include <set>
+#include <unordered_map>
 
 // Keep the state of the last 50 blocks to roll back quickly
 // in case of a block reorganization
