@@ -178,7 +178,7 @@ bool CheckActivationAuthorization(const std::string& sender)
 
     // Add manually whitelisted sources
     if (mapArgs.count("-omniactivationallowsender")) {
-        const std::vector<std::string>& sources = mapMultiArgs("-omniactivationallowsender");
+        const std::vector<std::string>& sources = mapMultiArgs["-omniactivationallowsender"];
 
         for (std::vector<std::string>::const_iterator it = sources.begin(); it != sources.end(); ++it) {
             whitelisted.insert(*it);
@@ -186,8 +186,8 @@ bool CheckActivationAuthorization(const std::string& sender)
     }
 
     // Remove manually ignored sources
-    if (mapArgs.IsArgSet("-omniactivationignoresender")) {
-        const std::vector<std::string>& sources = mapArgs.GetArgs("-omniactivationignoresender");
+    if (mapArgs.count("-omniactivationignoresender")) {
+        const std::vector<std::string>& sources = mapMultiArgs["-omniactivationignoresender"];
 
         for (std::vector<std::string>::const_iterator it = sources.begin(); it != sources.end(); ++it) {
             whitelisted.erase(*it);
@@ -228,8 +228,8 @@ bool CheckDeactivationAuthorization(const std::string& sender)
     // use -omniactivationallowsender for testing
 
     // Add manually whitelisted sources - custom sources affect both activation and deactivation
-    if (mapArgs.IsArgSet("-omniactivationallowsender")) {
-        const std::vector<std::string>& sources = mapArgs.GetArgs("-omniactivationallowsender");
+    if (mapArgs.count("-omniactivationallowsender")) {
+        const std::vector<std::string>& sources = mapMultiArgs["-omniactivationallowsender"];
 
         for (std::vector<std::string>::const_iterator it = sources.begin(); it != sources.end(); ++it) {
             whitelisted.insert(*it);
@@ -237,8 +237,8 @@ bool CheckDeactivationAuthorization(const std::string& sender)
     }
 
     // Remove manually ignored sources - custom sources affect both activation and deactivation
-    if (mapArgs.IsArgSet("-omniactivationignoresender")) {
-        const std::vector<std::string>& sources = mapArgs.GetArgs("-omniactivationignoresender");
+    if (mapArgs.count("-omniactivationignoresender")) {
+        const std::vector<std::string>& sources = mapMultiArgs["-omniactivationignoresender"];
 
         for (std::vector<std::string>::const_iterator it = sources.begin(); it != sources.end(); ++it) {
             whitelisted.erase(*it);
