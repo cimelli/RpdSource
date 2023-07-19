@@ -174,7 +174,7 @@ int mastercore_handler_block_end(int nBlockNow, CBlockIndex const * pBlockIndex,
 bool mastercore_handler_tx(const CTransaction& tx, int nBlock, unsigned int idx, const CBlockIndex* pBlockIndex, const std::shared_ptr<std::map<COutPoint, Coin>> removedCoins);
 
 /** Scans for marker and if one is found, add transaction to marker cache. */
-void TryToAddToMarkerCache(const CTransactionRef& tx);
+void TryToAddToMarkerCache(const CTransaction& tx);
 /** Removes transaction from marker cache. */
 void RemoveFromMarkerCache(const uint256& txHash);
 /** Checks, if transaction is in marker cache. */
