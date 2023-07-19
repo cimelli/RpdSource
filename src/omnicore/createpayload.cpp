@@ -5,11 +5,12 @@
 #include "omnicore/log.h"
 #include "omnicore/parsing.h"
 
-#include "base58.h"
+//#include "base58.h"
+#include "../../src/base58.h"
 
-#include "stdint.h"
-#include "string"
-#include "vector"
+#include <stdint.h>
+#include <string>
+#include <vector>
 
 /**
  * Pushes bytes to the end of a vector.
