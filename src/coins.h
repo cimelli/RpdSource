@@ -424,7 +424,7 @@ public:
      * allowed while accessing the returned pointer.
      * TODO: return a reference to a Coin after changing CCoinsViewCache storage.
      */
-    const Coin AccessCoin(const COutPoint &output) const;
+    const CCoins AccessCoin(const COutPoint &output) const;
 
     /**
      * Return a modifiable reference to a CCoins. If no entry with the given
@@ -448,14 +448,14 @@ public:
      * Add a coin. Set potential_overwrite to true if a non-pruned version may
      * already exist.
      */
-    void AddCoin(const COutPoint& outpoint, Coin&& coin, bool potential_overwrite);
+    void AddCoin(const COutPoint& outpoint, CCoins&& coin, bool potential_overwrite);
 
     /**
      * Spend a coin. Pass moveto in order to get the deleted data.
      * If no unspent output exists for the passed outpoint, this call
      * has no effect.
      */
-    void SpendCoin(const COutPoint &outpoint, Coin* moveto = nullptr);
+    void SpendCoin(const COutPoint& outpoint, CCoins* moveto = nullptr);
 
     /**
      * Push the modifications applied to this cache to its base.
@@ -513,6 +513,6 @@ private:
 void AddCoins(CCoinsViewCache& cache, const CTransaction& tx, int nHeight);
 
 //! Utility function to find any unspent output with a given txid.
-const Coin AccessByTxid(const CCoinsViewCache& cache, const uint256& txid);
+const CCoins AccessByTxid(const CCoinsViewCache& cache, const uint256& txid);
 
 #endif // BITCOIN_COINS_H

@@ -4,7 +4,7 @@
 #include "omnicore/script.h"
 
 #include "base58.h"
-#include "../coins.h"
+#include "coins.h"
 #include "key_io.h"
 #include "primitives/transaction.h"
 #include "pubkey.h"
@@ -177,7 +177,7 @@ OmniTxBuilder& OmniTxBuilder::addChange(const std::string& destination, const CC
 void InputsToView(const std::vector<PrevTxsEntry>& prevTxs, CCoinsViewCache& view)
 {
     for (std::vector<PrevTxsEntry>::const_iterator it = prevTxs.begin(); it != prevTxs.end(); ++it) {
-        Coin newcoin;
+        CCoins newcoin;
         newcoin.out.scriptPubKey = it->txOut.scriptPubKey;
         newcoin.out.nValue = it->txOut.nValue;
         view.AddCoin(it->outPoint, std::move(newcoin), true);
