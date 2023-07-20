@@ -178,8 +178,8 @@ void InputsToView(const std::vector<PrevTxsEntry>& prevTxs, CCoinsViewCache& vie
 {
     for (std::vector<PrevTxsEntry>::const_iterator it = prevTxs.begin(); it != prevTxs.end(); ++it) {
         CCoins newcoin;
-        newcoin.vout.scriptPubKey = it->txOut.scriptPubKey;
-        newcoin.vout.nValue = it->txOut.nValue;
+        newcoin.out.scriptPubKey = it->txOut.scriptPubKey;
+        newcoin.out.nValue = it->txOut.nValue;
         view.AddCoin(it->outPoint, std::move(newcoin), true);
     }
 }
