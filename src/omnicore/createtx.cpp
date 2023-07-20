@@ -4,7 +4,7 @@
 #include "omnicore/script.h"
 
 #include "base58.h"
-#include "coins.h"
+#include "../coins.h"
 #include "key_io.h"
 #include "primitives/transaction.h"
 #include "pubkey.h"
