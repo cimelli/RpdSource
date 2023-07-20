@@ -4,12 +4,14 @@
 
 #include "omnicore/log.h"
 #include "omnicore/parsing.h"
+#include "omnicore.h"
 
-//#include "base58.h"
-#include "../../src/base58.h"
+#include "base58.h"
 
 #include <stdint.h>
+#include <limits>
 #include <string>
+#include <tuple>
 #include <vector>
 
 /**
@@ -32,7 +34,7 @@
 static std::vector<unsigned char> AddressToBytes(const std::string& address)
 {
     std::vector<unsigned char> addressBytes;
-    bool success = DecodeBase58(address, addressBytes, 21 + 4);
+    bool success = DecodeBase58(address, addressBytes);
     if (!success) {
         PrintToLog("ERROR: failed to decode address %s.\n", address);
     }
