@@ -34,8 +34,22 @@ inline bool AllowFree(double dPriority)
 }
 
 
-/** Fake height value used in CCoins to signify they are only in the memory pool (since 0.8) */
-static const unsigned int MEMPOOL_HEIGHT = 0x7FFFFFFF;
+/** Fake height value used in Coin to signify they are only in the memory pool (since 0.8) */
+static const uint32_t MEMPOOL_HEIGHT = 0x7FFFFFFF;
+
+class SaltedTxidHasher
+{
+private:
+    /** Salt */
+    const uint64_t k0, k1;
+
+public:
+    SaltedTxidHasher();
+
+    size_t operator()(const uint256& txid) const {
+        return SipHashUint256(k0, k1, txid);
+    }
+};
 
 class CTxMemPool;
 
@@ -427,7 +441,7 @@ public:
     void _clear();  // lock-free
     void queryHashes(std::vector<uint256>& vtxid);
     void getTransactions(std::set<uint256>& setTxid);
-    void pruneSpent(const uint256& hash, CCoins& coins);
+    bool isSpent(const COutPoint& outpoint);
     unsigned int GetTransactionsUpdated() const;
     void AddTransactionsUpdated(unsigned int n);
     /**
@@ -477,8 +491,11 @@ public:
      */
     CFeeRate GetMinFee(size_t sizelimit) const;
 
-    /** Remove transactions from the mempool until its dynamic size is <= sizelimit. */
-    void TrimToSize(size_t sizelimit);
+    /** Remove transactions from the mempool until its dynamic size is <= sizelimit.
+      *  pvNoSpendsRemaining, if set, will be populated with the list of transactions
+      *  which are not in mempool which no longer have any spends in this mempool.
+      */
+    void TrimToSize(size_t sizelimit, std::vector<COutPoint>* pvNoSpendsRemaining = nullptr);
 
     /** Expire all transaction (and their dependencies) in the mempool older than time. Return the number of removed transactions. */
     int Expire(int64_t time);
@@ -498,6 +515,13 @@ public:
     {
         LOCK(cs);
         return (mapTx.count(hash) != 0);
+    }
+
+    bool exists(const COutPoint& outpoint) const
+    {
+        LOCK(cs);
+        auto it = mapTx.find(outpoint.hash);
+        return (it != mapTx.end() && outpoint.n < it->GetTx().vout.size());
     }
 
     bool lookup(uint256 hash, CTransaction& result) const;
@@ -568,8 +592,8 @@ protected:
 
 public:
     CCoinsViewMemPool(CCoinsView* baseIn, CTxMemPool& mempoolIn);
-    bool GetCoins(const uint256& txid, CCoins& coins) const;
-    bool HaveCoins(const uint256& txid) const;
+    bool GetCoin(const COutPoint& outpoint, Coin& coin) const;
+    bool HaveCoin(const COutPoint& outpoint) const;
 };
 
 #endif // BITCOIN_TXMEMPOOL_H

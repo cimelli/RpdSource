@@ -1,5 +1,5 @@
 // Copyright (c) 2009-2014 The Bitcoin developers
-// Copyright (c) 2015-2020 The RPDCHAIN developers
+// Copyright (c) 2015-2020 The PIVX developers
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -46,10 +46,10 @@ static bool AppInitRawTx(int argc, char* argv[])
 
     if (argc < 2 || mapArgs.count("-?") || mapArgs.count("-help")) {
         // First part of help message is specific to this utility
-        std::string strUsage = _("RpdChain Core rpdchain-tx utility version") + " " + FormatFullVersion() + "\n\n" +
+        std::string strUsage = _("Pivx Core pivx-tx utility version") + " " + FormatFullVersion() + "\n\n" +
                                _("Usage:") + "\n" +
-                               "  rpdchain-tx [options] <hex-tx> [commands]  " + _("Update hex-encoded rpdchain transaction") + "\n" +
-                               "  rpdchain-tx [options] -create [commands]   " + _("Create hex-encoded rpdchain transaction") + "\n" +
+                               "  pivx-tx [options] <hex-tx> [commands]  " + _("Update hex-encoded pivx transaction") + "\n" +
+                               "  pivx-tx [options] -create [commands]   " + _("Create hex-encoded pivx transaction") + "\n" +
                                "\n";
 
         fprintf(stdout, "%s", strUsage.c_str());
@@ -315,6 +315,24 @@ uint256 ParseHashUO(std::map<std::string, UniValue>& o, std::string strKey)
     return ParseHashUV(o[strKey], strKey);
 }
 
+static inline int64_t roundint64(double d)
+{
+    return (int64_t)(d > 0 ? d + 0.5 : d - 0.5);
+}
+
+static CAmount AmountFromValue(const UniValue& value)
+{
+    if (!value.isNum() && !value.isStr())
+        throw std::runtime_error("Amount is not a number or string");
+    double dAmount = value.get_real();
+    if (dAmount <= 0.0 || dAmount > 21000000.0)
+        throw std::runtime_error("Invalid amount");
+    CAmount nAmount = roundint64(dAmount * COIN);
+    if (!Params().GetConsensus().MoneyRange(nAmount))
+        throw std::runtime_error("Amount out of range");
+    return nAmount;
+}
+
 std::vector<unsigned char> ParseHexUO(std::map<std::string, UniValue>& o, std::string strKey)
 {
     if (!o.count(strKey)) {
@@ -379,25 +397,23 @@ static void MutateTxSign(CMutableTransaction& tx, const std::string& flagStr)
             if (nOut < 0)
                 throw std::runtime_error("vout must be positive");
 
-            COutPoint out(txid, nOut);
             std::vector<unsigned char> pkData(ParseHexUV(prevOut["scriptPubKey"], "scriptPubKey"));
             CScript scriptPubKey(pkData.begin(), pkData.end());
 
             {
-                const Coin& coin = view.AccessCoin(out);
-                if (!coin.IsSpent() && coin.out.scriptPubKey != scriptPubKey) {
+                CCoinsModifier coins = view.ModifyCoins(txid);
+                if (coins->IsAvailable(nOut) && coins->vout[nOut].scriptPubKey != scriptPubKey) {
                     std::string err("Previous output scriptPubKey mismatch:\n");
-                    err = err + ScriptToAsmStr(coin.out.scriptPubKey) + "\nvs:\n" +
-                          ScriptToAsmStr(scriptPubKey);
+                    err = err + ScriptToAsmStr(coins->vout[nOut].scriptPubKey) + "\nvs:\n"+
+                        ScriptToAsmStr(scriptPubKey);
                     throw std::runtime_error(err);
                 }
-
-                Coin newcoin;
-                newcoin.out.scriptPubKey = scriptPubKey;
-                newcoin.out.nValue = 0;
-                newcoin.nHeight = 1;
+                if ((unsigned int)nOut >= coins->vout.size())
+                    coins->vout.resize(nOut + 1);
+                coins->vout[nOut].scriptPubKey = scriptPubKey;
+                coins->vout[nOut].nValue = 0;
                 if (prevOut.exists("amount")) {
-                    newcoin.out.nValue = AmountFromValue(prevOut["amount"]);
+                    coins->vout[nOut].nValue = AmountFromValue(prevOut["amount"]);
                 }
             }
 
@@ -420,25 +436,30 @@ static void MutateTxSign(CMutableTransaction& tx, const std::string& flagStr)
     // Sign what we can:
     for (unsigned int i = 0; i < mergedTx.vin.size(); i++) {
         CTxIn& txin = mergedTx.vin[i];
-        const Coin& coin = view.AccessCoin(txin.prevout);
-        if (coin.IsSpent()) {
+        const CCoins* coins = view.AccessCoins(txin.prevout.hash);
+        if (!coins || !coins->IsAvailable(txin.prevout.n)) {
             fComplete = false;
             continue;
         }
+        const CScript& prevPubKey = coins->vout[txin.prevout.n].scriptPubKey;
+        const CAmount& amount = coins->vout[txin.prevout.n].nValue;
 
-        const CScript& prevPubKey = coin.out.scriptPubKey;
-        const CAmount& amount = coin.out.nValue;
-
-        txin.scriptSig.clear();
+        SignatureData sigdata;
         // Only sign SIGHASH_SINGLE if there's a corresponding output:
         if (!fHashSingle || (i < mergedTx.vout.size()))
-            SignSignature(keystore, prevPubKey, mergedTx, i, nHashType);
+            ProduceSignature(
+                    MutableTransactionSignatureCreator(&keystore, &mergedTx, i, amount, nHashType),
+                    prevPubKey,
+                    sigdata,
+                    false // no cold stake
+            );
 
         // ... and merge in other signatures:
         for (const CTransaction& txv : txVariants) {
-            txin.scriptSig = CombineSignatures(prevPubKey, mergedTx, i, txin.scriptSig, txv.vin[i].scriptSig);
+            sigdata = CombineSignatures(prevPubKey, MutableTransactionSignatureChecker(&mergedTx, i, amount), sigdata, DataFromTransaction(txv, i));
         }
-        if (!VerifyScript(txin.scriptSig, prevPubKey, STANDARD_SCRIPT_VERIFY_FLAGS, MutableTransactionSignatureChecker(&mergedTx, i)))
+        UpdateTransaction(mergedTx, i, sigdata);
+        if (!VerifyScript(txin.scriptSig, prevPubKey, STANDARD_SCRIPT_VERIFY_FLAGS, MutableTransactionSignatureChecker(&mergedTx, i, amount)))
             fComplete = false;
     }
 
@@ -571,7 +592,7 @@ static int CommandLineRawTx(int argc, char* argv[])
             if (argc < 2)
                 throw std::runtime_error("too few parameters");
 
-            // param: hex-encoded rpdchain transaction
+            // param: hex-encoded pivx transaction
             std::string strHexTx(argv[1]);
             if (strHexTx == "-") // "-" implies standard input
                 strHexTx = readStdin();

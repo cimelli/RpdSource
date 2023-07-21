@@ -331,17 +331,10 @@ CTxMemPool::~CTxMemPool()
     delete minerPolicyEstimator;
 }
 
-void CTxMemPool::pruneSpent(const uint256& hashTx, CCoins& coins)
+bool CTxMemPool::isSpent(const COutPoint& outpoint)
 {
     LOCK(cs);
-
-    std::map<COutPoint, CInPoint>::iterator it = mapNextTx.lower_bound(COutPoint(hashTx, 0));
-
-    // iterate over all COutPoints in mapNextTx whose hash equals the provided hashTx
-    while (it != mapNextTx.end() && it->first.hash == hashTx) {
-        coins.Spend(it->first.n); // and remove those outputs from coins
-        it++;
-    }
+    return mapNextTx.count(outpoint);
 }
 
 unsigned int CTxMemPool::GetTransactionsUpdated() const
@@ -499,9 +492,9 @@ void CTxMemPool::removeForReorg(const CCoinsViewCache *pcoins, unsigned int nMem
                 indexed_transaction_set::const_iterator it2 = mapTx.find(txin.prevout.hash);
                 if (it2 != mapTx.end())
                     continue;
-                const CCoins *coins = pcoins->AccessCoins(txin.prevout.hash);
-                if (nCheckFrequency != 0) assert(coins);
-                if (!coins || ((coins->IsCoinBase() || coins->IsCoinStake()) && ((signed long)nMemPoolHeight) - coins->nHeight < (unsigned)Params().GetConsensus().nCoinbaseMaturity)) {
+                const Coin &coin = pcoins->AccessCoin(txin.prevout);
+                if (nCheckFrequency != 0) assert(!coin.IsSpent());
+                if (coin.IsSpent() || ((coin.IsCoinBase() || coin.IsCoinStake()) && ((signed long)nMemPoolHeight) - coin.nHeight < Params().GetConsensus().nCoinbaseMaturity)) {
                     transactionsToRemove.push_back(tx);
                     break;
                 }
@@ -613,8 +606,7 @@ void CTxMemPool::check(const CCoinsViewCache* pcoins) const
                 fDependsWait = true;
                 setParentCheck.insert(it2);
             } else if(!txin.IsZerocoinSpend() && !txin.IsZerocoinPublicSpend()) {
-                const CCoins* coins = pcoins->AccessCoins(txin.prevout.hash);
-                assert(coins && coins->IsAvailable(txin.prevout.n));
+                assert(pcoins->HaveCoin(txin.prevout));
             } else {
                 fHasZerocoinSpends = true;
             }
@@ -807,22 +799,26 @@ bool CTxMemPool::HasNoInputsOf(const CTransaction &tx) const
 
 CCoinsViewMemPool::CCoinsViewMemPool(CCoinsView* baseIn, CTxMemPool& mempoolIn) : CCoinsViewBacked(baseIn), mempool(mempoolIn) {}
 
-bool CCoinsViewMemPool::GetCoins(const uint256& txid, CCoins& coins) const
+bool CCoinsViewMemPool::GetCoin(const COutPoint& outpoint, Coin& coin) const
 {
     // If an entry in the mempool exists, always return that one, as it's guaranteed to never
     // conflict with the underlying cache, and it cannot have pruned entries (as it contains full)
     // transactions. First checking the underlying cache risks returning a pruned entry instead.
     CTransaction tx;
-    if (mempool.lookup(txid, tx)) {
-        coins = CCoins(tx, MEMPOOL_HEIGHT);
-        return true;
+    if (mempool.lookup(outpoint.hash, tx)) {
+        if (outpoint.n < tx.vout.size()) {
+            coin = Coin(tx.vout[outpoint.n], MEMPOOL_HEIGHT, false, false);
+            return true;
+        } else {
+            return false;
+        }
     }
-    return (base->GetCoins(txid, coins) && !coins.IsPruned());
+    return (base->GetCoin(outpoint, coin) && !coin.IsSpent());
 }
 
-bool CCoinsViewMemPool::HaveCoins(const uint256& txid) const
+bool CCoinsViewMemPool::HaveCoin(const COutPoint& outpoint) const
 {
-    return mempool.exists(txid) || base->HaveCoins(txid);
+    return mempool.exists(outpoint) || base->HaveCoin(outpoint);
 }
 
 size_t CTxMemPool::DynamicMemoryUsage() const
@@ -938,7 +934,7 @@ void CTxMemPool::trackPackageRemoved(const CFeeRate& rate)
     }
 }
 
-void CTxMemPool::TrimToSize(size_t sizelimit)
+void CTxMemPool::TrimToSize(size_t sizelimit, std::vector<COutPoint>* pvNoSpendsRemaining)
 {
     LOCK(cs);
     unsigned nTxnRemoved = 0;
@@ -958,10 +954,21 @@ void CTxMemPool::TrimToSize(size_t sizelimit)
         setEntries stage;
         CalculateDescendants(mapTx.project<0>(it), stage);
         RemoveStaged(stage);
-        nTxnRemoved += stage.size();
+        if (pvNoSpendsRemaining) {
+            for (const CTransaction& tx: txn) {
+                for (const CTxIn& txin: tx.vin) {
+                    if (exists(txin.prevout.hash)) continue;
+                    if (!mapNextTx.count(txin.prevout)) {
+                        pvNoSpendsRemaining->push_back(txin.prevout);
+                    }
+                }
+            }
+        }
     }
 
     if (maxFeeRateRemoved > CFeeRate(0))
         LogPrint(BCLog::MEMPOOL, "Removed %u txn, rolling minimum fee bumped to %s\n", nTxnRemoved, maxFeeRateRemoved.ToString());
 }
+
+SaltedTxidHasher::SaltedTxidHasher() : k0(GetRand(std::numeric_limits<uint64_t>::max())), k1(GetRand(std::numeric_limits<uint64_t>::max())) {}
 
