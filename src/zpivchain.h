@@ -1,9 +1,9 @@
-// Copyright (c) 2018-2020 The PIVX developers
+// Copyright (c) 2018-2020 The RPDCHAIN developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef PIVX_ZPIVCHAIN_H
-#define PIVX_ZPIVCHAIN_H
+#ifndef RPDCHAIN_ZRPDCHAIN_H
+#define RPDCHAIN_ZRPDCHAIN_H
 
 #include "chain.h"
 #include "libzerocoin/Coin.h"
@@ -41,7 +41,7 @@ std::list<libzerocoin::CoinDenomination> ZerocoinSpendListFromBlock(const CBlock
 /** Global variable for the zerocoin supply */
 extern std::map<libzerocoin::CoinDenomination, int64_t> mapZerocoinSupply;
 int64_t GetZerocoinSupply();
-bool UpdateZPIVSupplyConnect(const CBlock& block, CBlockIndex* pindex, bool fJustCheck);
-bool UpdateZPIVSupplyDisconnect(const CBlock& block, CBlockIndex* pindex);
+bool UpdateZRPDSupplyConnect(const CBlock& block, CBlockIndex* pindex, bool fJustCheck);
+bool UpdateZRPDSupplyDisconnect(const CBlock& block, CBlockIndex* pindex);
 
-#endif //PIVX_ZPIVCHAIN_H
+#endif //RPDCHAIN_ZRPDCHAIN_H

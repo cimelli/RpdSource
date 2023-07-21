@@ -1,18 +1,18 @@
-// Copyright (c) 2017-2020 The PIVX developers
+// Copyright (c) 2017-2020 The RPDCHAIN developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#include "zpivwallet.h"
+#include "zrpdwallet.h"
 #include "main.h"
 #include "txdb.h"
 #include "wallet/walletdb.h"
 #include "init.h"
 #include "wallet/wallet.h"
 #include "deterministicmint.h"
-#include "zpivchain.h"
+#include "zrpdchain.h"
 
 
-CzPIVWallet::CzPIVWallet(CWallet* parent)
+CzRPDWallet::CzRPDWallet(CWallet* parent)
 {
     this->wallet = parent;
     CWalletDB walletdb(wallet->strWalletFile);
@@ -21,19 +21,19 @@ CzPIVWallet::CzPIVWallet(CWallet* parent)
     uint256 hashSeed;
     bool fFirstRun = !walletdb.ReadCurrentSeedHash(hashSeed);
 
-    //Check for old db version of storing zpiv seed
+    //Check for old db version of storing zrpd seed
     if (fFirstRun) {
         uint256 seed;
-        if (walletdb.ReadZPIVSeed_deprecated(seed)) {
+        if (walletdb.ReadZRPDSeed_deprecated(seed)) {
             //Update to new format, erase old
             seedMaster = seed;
             hashSeed = Hash(seed.begin(), seed.end());
             if (wallet->AddDeterministicSeed(seed)) {
-                if (walletdb.EraseZPIVSeed_deprecated()) {
-                    LogPrintf("%s: Updated zPIV seed databasing\n", __func__);
+                if (walletdb.EraseZRPDSeed_deprecated()) {
+                    LogPrintf("%s: Updated zRPD seed databasing\n", __func__);
                     fFirstRun = false;
                 } else {
-                    LogPrintf("%s: failed to remove old zpiv seed\n", __func__);
+                    LogPrintf("%s: failed to remove old zrpd seed\n", __func__);
                 }
             }
         }
@@ -55,7 +55,7 @@ CzPIVWallet::CzPIVWallet(CWallet* parent)
         key.MakeNewKey(true);
         seed = key.GetPrivKey_256();
         seedMaster = seed;
-        LogPrintf("%s: first run of zpiv wallet detected, new seed generated. Seedhash=%s\n", __func__, Hash(seed.begin(), seed.end()).GetHex());
+        LogPrintf("%s: first run of zrpd wallet detected, new seed generated. Seedhash=%s\n", __func__, Hash(seed.begin(), seed.end()).GetHex());
     } else if (!parent->GetDeterministicSeed(hashSeed, seed)) {
         LogPrintf("%s: failed to get deterministic seed for hashseed %s\n", __func__, hashSeed.GetHex());
         return;
@@ -68,7 +68,7 @@ CzPIVWallet::CzPIVWallet(CWallet* parent)
     this->mintPool = CMintPool(nCountLastUsed);
 }
 
-bool CzPIVWallet::SetMasterSeed(const uint256& seedMaster, bool fResetCount)
+bool CzRPDWallet::SetMasterSeed(const uint256& seedMaster, bool fResetCount)
 {
 
     CWalletDB walletdb(wallet->strWalletFile);
@@ -84,8 +84,8 @@ bool CzPIVWallet::SetMasterSeed(const uint256& seedMaster, bool fResetCount)
     nCountLastUsed = 0;
 
     if (fResetCount)
-        walletdb.WriteZPIVCount(nCountLastUsed);
-    else if (!walletdb.ReadZPIVCount(nCountLastUsed))
+        walletdb.WriteZRPDCount(nCountLastUsed);
+    else if (!walletdb.ReadZRPDCount(nCountLastUsed))
         nCountLastUsed = 0;
 
     mintPool.Reset();
@@ -93,18 +93,18 @@ bool CzPIVWallet::SetMasterSeed(const uint256& seedMaster, bool fResetCount)
     return true;
 }
 
-void CzPIVWallet::Lock()
+void CzRPDWallet::Lock()
 {
     seedMaster.SetNull();
 }
 
-void CzPIVWallet::AddToMintPool(const std::pair<uint256, uint32_t>& pMint, bool fVerbose)
+void CzRPDWallet::AddToMintPool(const std::pair<uint256, uint32_t>& pMint, bool fVerbose)
 {
     mintPool.Add(pMint, fVerbose);
 }
 
 //Add the next 20 mints to the mint pool
-void CzPIVWallet::GenerateMintPool(uint32_t nCountStart, uint32_t nCountEnd)
+void CzRPDWallet::GenerateMintPool(uint32_t nCountStart, uint32_t nCountEnd)
 {
 
     //Is locked
@@ -146,7 +146,7 @@ void CzPIVWallet::GenerateMintPool(uint32_t nCountStart, uint32_t nCountEnd)
         CBigNum bnSerial;
         CBigNum bnRandomness;
         CKey key;
-        SeedToZPIV(seedZerocoin, bnValue, bnSerial, bnRandomness, key);
+        SeedToZRPD(seedZerocoin, bnValue, bnSerial, bnRandomness, key);
 
         mintPool.Add(bnValue, i);
         CWalletDB(wallet->strWalletFile).WriteMintPoolPair(hashSeed, GetPubCoinHash(bnValue), i);
@@ -155,7 +155,7 @@ void CzPIVWallet::GenerateMintPool(uint32_t nCountStart, uint32_t nCountEnd)
 }
 
 // pubcoin hashes are stored to db so that a full accounting of mints belonging to the seed can be tracked without regenerating
-bool CzPIVWallet::LoadMintPoolFromDB()
+bool CzRPDWallet::LoadMintPoolFromDB()
 {
     std::map<uint256, std::vector<std::pair<uint256, uint32_t> > > mapMintPool = CWalletDB(wallet->strWalletFile).MapMintPool();
 
@@ -166,20 +166,20 @@ bool CzPIVWallet::LoadMintPoolFromDB()
     return true;
 }
 
-void CzPIVWallet::RemoveMintsFromPool(const std::vector<uint256>& vPubcoinHashes)
+void CzRPDWallet::RemoveMintsFromPool(const std::vector<uint256>& vPubcoinHashes)
 {
     for (const uint256& hash : vPubcoinHashes)
         mintPool.Remove(hash);
 }
 
-void CzPIVWallet::GetState(int& nCount, int& nLastGenerated)
+void CzRPDWallet::GetState(int& nCount, int& nLastGenerated)
 {
     nCount = this->nCountLastUsed + 1;
     nLastGenerated = mintPool.CountOfLastGenerated();
 }
 
 //Catch the counter up with the chain
-void CzPIVWallet::SyncWithChain(bool fGenerateMintPool)
+void CzRPDWallet::SyncWithChain(bool fGenerateMintPool)
 {
     uint32_t nLastCountUsed = 0;
     bool found = true;
@@ -202,7 +202,7 @@ void CzPIVWallet::SyncWithChain(bool fGenerateMintPool)
             if (ShutdownRequested())
                 return;
 
-            if (wallet->zpivTracker->HasPubcoinHash(pMint.first)) {
+            if (wallet->zrpdTracker->HasPubcoinHash(pMint.first)) {
                 mintPool.Remove(pMint.first);
                 continue;
             }
@@ -286,7 +286,7 @@ void CzPIVWallet::SyncWithChain(bool fGenerateMintPool)
     }
 }
 
-bool CzPIVWallet::SetMintSeen(const CBigNum& bnValue, const int& nHeight, const uint256& txid, const libzerocoin::CoinDenomination& denom)
+bool CzRPDWallet::SetMintSeen(const CBigNum& bnValue, const int& nHeight, const uint256& txid, const libzerocoin::CoinDenomination& denom)
 {
     if (!mintPool.Has(bnValue))
         return error("%s: value not in pool", __func__);
@@ -298,7 +298,7 @@ bool CzPIVWallet::SetMintSeen(const CBigNum& bnValue, const int& nHeight, const 
     CBigNum bnSerial;
     CBigNum bnRandomness;
     CKey key;
-    SeedToZPIV(seedZerocoin, bnValueGen, bnSerial, bnRandomness, key);
+    SeedToZRPD(seedZerocoin, bnValueGen, bnSerial, bnRandomness, key);
 
     //Sanity check
     if (bnValueGen != bnValue)
@@ -339,14 +339,14 @@ bool CzPIVWallet::SetMintSeen(const CBigNum& bnValue, const int& nHeight, const 
         wallet->AddToWallet(wtx);
     }
 
-    // Add to zpivTracker which also adds to database
-    wallet->zpivTracker->Add(dMint, true);
+    // Add to zrpdTracker which also adds to database
+    wallet->zrpdTracker->Add(dMint, true);
 
     //Update the count if it is less than the mint's count
     if (nCountLastUsed < pMint.second) {
         CWalletDB walletdb(wallet->strWalletFile);
         nCountLastUsed = pMint.second;
-        walletdb.WriteZPIVCount(nCountLastUsed);
+        walletdb.WriteZRPDCount(nCountLastUsed);
     }
 
     //remove from the pool
@@ -362,7 +362,7 @@ bool IsValidCoinValue(const CBigNum& bnValue)
     return bnValue >= params->accumulatorParams.minCoinValue && bnValue <= params->accumulatorParams.maxCoinValue && bnValue.isPrime();
 }
 
-void CzPIVWallet::SeedToZPIV(const uint512& seedZerocoin, CBigNum& bnValue, CBigNum& bnSerial, CBigNum& bnRandomness, CKey& key)
+void CzRPDWallet::SeedToZRPD(const uint512& seedZerocoin, CBigNum& bnValue, CBigNum& bnSerial, CBigNum& bnRandomness, CKey& key)
 {
     libzerocoin::ZerocoinParams* params = Params().GetConsensus().Zerocoin_Params(false);
 
@@ -411,7 +411,7 @@ void CzPIVWallet::SeedToZPIV(const uint512& seedZerocoin, CBigNum& bnValue, CBig
     }
 }
 
-uint512 CzPIVWallet::GetZerocoinSeed(uint32_t n)
+uint512 CzRPDWallet::GetZerocoinSeed(uint32_t n)
 {
     CDataStream ss(SER_GETHASH, 0);
     ss << seedMaster << n;
@@ -419,14 +419,14 @@ uint512 CzPIVWallet::GetZerocoinSeed(uint32_t n)
     return zerocoinSeed;
 }
 
-void CzPIVWallet::UpdateCount()
+void CzRPDWallet::UpdateCount()
 {
     nCountLastUsed++;
     CWalletDB walletdb(wallet->strWalletFile);
-    walletdb.WriteZPIVCount(nCountLastUsed);
+    walletdb.WriteZRPDCount(nCountLastUsed);
 }
 
-void CzPIVWallet::GenerateDeterministicZPIV(libzerocoin::CoinDenomination denom, libzerocoin::PrivateCoin& coin, CDeterministicMint& dMint, bool fGenerateOnly)
+void CzRPDWallet::GenerateDeterministicZRPD(libzerocoin::CoinDenomination denom, libzerocoin::PrivateCoin& coin, CDeterministicMint& dMint, bool fGenerateOnly)
 {
     GenerateMint(nCountLastUsed + 1, denom, coin, dMint);
     if (fGenerateOnly)
@@ -436,14 +436,14 @@ void CzPIVWallet::GenerateDeterministicZPIV(libzerocoin::CoinDenomination denom,
     //LogPrintf("%s : Generated new deterministic mint. Count=%d pubcoin=%s seed=%s\n", __func__, nCount, coin.getPublicCoin().getValue().GetHex().substr(0,6), seedZerocoin.GetHex().substr(0, 4));
 }
 
-void CzPIVWallet::GenerateMint(const uint32_t& nCount, const libzerocoin::CoinDenomination denom, libzerocoin::PrivateCoin& coin, CDeterministicMint& dMint)
+void CzRPDWallet::GenerateMint(const uint32_t& nCount, const libzerocoin::CoinDenomination denom, libzerocoin::PrivateCoin& coin, CDeterministicMint& dMint)
 {
     uint512 seedZerocoin = GetZerocoinSeed(nCount);
     CBigNum bnValue;
     CBigNum bnSerial;
     CBigNum bnRandomness;
     CKey key;
-    SeedToZPIV(seedZerocoin, bnValue, bnSerial, bnRandomness, key);
+    SeedToZRPD(seedZerocoin, bnValue, bnSerial, bnRandomness, key);
     coin = libzerocoin::PrivateCoin(Params().GetConsensus().Zerocoin_Params(false), denom, bnSerial, bnRandomness);
     coin.setPrivKey(key.GetPrivKey());
     coin.setVersion(libzerocoin::PrivateCoin::CURRENT_VERSION);
@@ -457,14 +457,14 @@ void CzPIVWallet::GenerateMint(const uint32_t& nCount, const libzerocoin::CoinDe
     dMint.SetDenomination(denom);
 }
 
-bool CzPIVWallet::CheckSeed(const CDeterministicMint& dMint)
+bool CzRPDWallet::CheckSeed(const CDeterministicMint& dMint)
 {
     //Check that the seed is correct    todo:handling of incorrect, or multiple seeds
     uint256 hashSeed = Hash(seedMaster.begin(), seedMaster.end());
     return hashSeed == dMint.GetSeedHash();
 }
 
-bool CzPIVWallet::RegenerateMint(const CDeterministicMint& dMint, CZerocoinMint& mint)
+bool CzRPDWallet::RegenerateMint(const CDeterministicMint& dMint, CZerocoinMint& mint)
 {
     if (!CheckSeed(dMint)) {
         uint256 hashSeed = Hash(seedMaster.begin(), seedMaster.end());

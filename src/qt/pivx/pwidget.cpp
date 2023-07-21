@@ -1,20 +1,20 @@
-// Copyright (c) 2019-2020 The PIVX developers
+// Copyright (c) 2019-2020 The RPDCHAIN developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#include "qt/pivx/pwidget.h"
-#include "qt/pivx/qtutils.h"
-#include "qt/pivx/loadingdialog.h"
+#include "qt/rpdchain/pwidget.h"
+#include "qt/rpdchain/qtutils.h"
+#include "qt/rpdchain/loadingdialog.h"
 #include <QRunnable>
 #include <QThreadPool>
 
-PWidget::PWidget(PIVXGUI* _window, QWidget *parent) : QWidget((parent) ? parent : _window), window(_window) { init(); }
+PWidget::PWidget(RPDCHAINGUI* _window, QWidget *parent) : QWidget((parent) ? parent : _window), window(_window) { init(); }
 PWidget::PWidget(PWidget* parent) : QWidget(parent), window(parent->getWindow()) { init(); }
 
 void PWidget::init()
 {
     if (window)
-        connect(window, &PIVXGUI::themeChanged, this, &PWidget::onChangeTheme);
+        connect(window, &RPDCHAINGUI::themeChanged, this, &PWidget::onChangeTheme);
 }
 
 void PWidget::setClientModel(ClientModel* model)

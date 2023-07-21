@@ -1,7 +1,7 @@
 // Copyright (c) 2010 Satoshi Nakamoto
 // Copyright (c) 2009-2014 The Bitcoin developers
 // Copyright (c) 2014-2015 The Dash developers
-// Copyright (c) 2015-2020 The PIVX developers
+// Copyright (c) 2015-2020 The RPDCHAIN developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -265,11 +265,11 @@ UniValue stop(const JSONRPCRequest& jsonRequest)
     if (jsonRequest.fHelp || jsonRequest.params.size() > 1)
         throw std::runtime_error(
             "stop\n"
-            "\nStop PIVX server.");
+            "\nStop RPDCHAIN server.");
     // Event loop will exit after current HTTP requests have been handled, so
     // this reply will get back to the client.
     StartShutdown();
-    return "PIVX server stopping";
+    return "RPDCHAIN server stopping";
 }
 
 
@@ -359,32 +359,32 @@ static const CRPCCommand vRPCCommands[] =
         { "hidden",             "waitforblock",           &waitforblock,           true },
         { "hidden",             "waitforblockheight",     &waitforblockheight,     true },
 
-        /* PIVX features */
-        {"pivx", "listmasternodes", &listmasternodes, true },
-        {"pivx", "getmasternodecount", &getmasternodecount, true },
-        {"pivx", "createmasternodebroadcast", &createmasternodebroadcast, true },
-        {"pivx", "decodemasternodebroadcast", &decodemasternodebroadcast, true },
-        {"pivx", "relaymasternodebroadcast", &relaymasternodebroadcast, true },
-        {"pivx", "masternodecurrent", &masternodecurrent, true },
-        {"pivx", "startmasternode", &startmasternode, true },
-        {"pivx", "createmasternodekey", &createmasternodekey, true },
-        {"pivx", "getmasternodeoutputs", &getmasternodeoutputs, true },
-        {"pivx", "listmasternodeconf", &listmasternodeconf, true },
-        {"pivx", "getmasternodestatus", &getmasternodestatus, true },
-        {"pivx", "getmasternodewinners", &getmasternodewinners, true },
-        {"pivx", "getmasternodescores", &getmasternodescores, true },
-        {"pivx", "preparebudget", &preparebudget, true },
-        {"pivx", "submitbudget", &submitbudget, true },
-        {"pivx", "mnbudgetvote", &mnbudgetvote, true },
-        {"pivx", "getbudgetvotes", &getbudgetvotes, true },
-        {"pivx", "getnextsuperblock", &getnextsuperblock, true },
-        {"pivx", "getbudgetprojection", &getbudgetprojection, true },
-        {"pivx", "getbudgetinfo", &getbudgetinfo, true },
-        {"pivx", "mnbudgetrawvote", &mnbudgetrawvote, true },
-        {"pivx", "mnfinalbudget", &mnfinalbudget, true },
-        {"pivx", "checkbudgets", &checkbudgets, true },
-        {"pivx", "mnsync", &mnsync, true },
-        {"pivx", "spork", &spork, true },
+        /* RPDCHAIN features */
+        {"rpdchain", "listmasternodes", &listmasternodes, true },
+        {"rpdchain", "getmasternodecount", &getmasternodecount, true },
+        {"rpdchain", "createmasternodebroadcast", &createmasternodebroadcast, true },
+        {"rpdchain", "decodemasternodebroadcast", &decodemasternodebroadcast, true },
+        {"rpdchain", "relaymasternodebroadcast", &relaymasternodebroadcast, true },
+        {"rpdchain", "masternodecurrent", &masternodecurrent, true },
+        {"rpdchain", "startmasternode", &startmasternode, true },
+        {"rpdchain", "createmasternodekey", &createmasternodekey, true },
+        {"rpdchain", "getmasternodeoutputs", &getmasternodeoutputs, true },
+        {"rpdchain", "listmasternodeconf", &listmasternodeconf, true },
+        {"rpdchain", "getmasternodestatus", &getmasternodestatus, true },
+        {"rpdchain", "getmasternodewinners", &getmasternodewinners, true },
+        {"rpdchain", "getmasternodescores", &getmasternodescores, true },
+        {"rpdchain", "preparebudget", &preparebudget, true },
+        {"rpdchain", "submitbudget", &submitbudget, true },
+        {"rpdchain", "mnbudgetvote", &mnbudgetvote, true },
+        {"rpdchain", "getbudgetvotes", &getbudgetvotes, true },
+        {"rpdchain", "getnextsuperblock", &getnextsuperblock, true },
+        {"rpdchain", "getbudgetprojection", &getbudgetprojection, true },
+        {"rpdchain", "getbudgetinfo", &getbudgetinfo, true },
+        {"rpdchain", "mnbudgetrawvote", &mnbudgetrawvote, true },
+        {"rpdchain", "mnfinalbudget", &mnfinalbudget, true },
+        {"rpdchain", "checkbudgets", &checkbudgets, true },
+        {"rpdchain", "mnsync", &mnsync, true },
+        {"rpdchain", "spork", &spork, true },
 
 #ifdef ENABLE_WALLET
         /* Wallet */
@@ -409,11 +409,11 @@ static const CRPCCommand vRPCCommands[] =
         {"zerocoin", "exportzerocoins", &exportzerocoins, false },
         {"zerocoin", "reconsiderzerocoins", &reconsiderzerocoins, false },
         {"zerocoin", "getspentzerocoinamount", &getspentzerocoinamount, false },
-        {"zerocoin", "getzpivseed", &getzpivseed, false },
-        {"zerocoin", "setzpivseed", &setzpivseed, false },
+        {"zerocoin", "getzrpdseed", &getzrpdseed, false },
+        {"zerocoin", "setzrpdseed", &setzrpdseed, false },
         {"zerocoin", "generatemintlist", &generatemintlist, false },
-        {"zerocoin", "searchdzpiv", &searchdzpiv, false },
-        {"zerocoin", "dzpivstate", &dzpivstate, false },
+        {"zerocoin", "searchdzrpd", &searchdzrpd, false },
+        {"zerocoin", "dzrpdstate", &dzrpdstate, false },
 
 #endif // ENABLE_WALLET
 };
@@ -597,7 +597,7 @@ std::vector<std::string> CRPCTable::listCommands() const
 
 std::string HelpExampleCli(std::string methodname, std::string args)
 {
-    return "> pivx-cli " + methodname + " " + args + "\n";
+    return "> rpdchain-cli " + methodname + " " + args + "\n";
 }
 
 std::string HelpExampleRpc(std::string methodname, std::string args)

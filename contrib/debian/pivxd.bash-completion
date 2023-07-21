@@ -1,2 +1,2 @@
-contrib/pivxd.bash-completion	pivxd
-contrib/pivx-cli.bash-completion pivx-cli
+contrib/rpdchaind.bash-completion	rpdchaind
+contrib/rpdchain-cli.bash-completion rpdchain-cli
