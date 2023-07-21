@@ -50,7 +50,6 @@ public:
         fCoinBase = false;
         fCoinStake = false;
         nHeight = 0;
-        nVersion = 0;
     }
 
     //! empty constructor
@@ -94,7 +93,8 @@ public:
 class SaltedOutpointHasher
 {
 private:
-    uint256 salt;
+    /** Salt */
+    const uint64_t k0, k1;
 
 public:
     SaltedOutpointHasher();
