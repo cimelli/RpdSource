@@ -9,7 +9,7 @@
 #include "key.h"
 #include "uint256.h"
 #include "util.h"
-#include "test/test_bitcoin.h"
+#include "test/test_rpdchain.h"
 
 #include <string>
 #include <vector>

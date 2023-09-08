@@ -3,7 +3,7 @@
 #include "amount.h"
 #include "main.h"
 #include "script/script.h"
-#include "test/test_bitcoin.h"
+#include "test/test_rpdchain.h"
 #include "utilstrencodings.h"
 #include "primitives/transaction.h"
 

@@ -1,6 +1,6 @@
 #include "omnicore/parsing.h"
 
-#include "test/test_bitcoin.h"
+#include "test/test_rpdchain.h"
 
 #include <boost/test/unit_test.hpp>
 

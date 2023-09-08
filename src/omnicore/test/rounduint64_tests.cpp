@@ -1,6 +1,6 @@
 #include "omnicore/convert.h"
 
-#include "test/test_bitcoin.h"
+#include "test/test_rpdchain.h"
 
 #include <stdint.h>
 

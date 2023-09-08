@@ -6,7 +6,7 @@
 #include "pubkey.h"
 #include "script/script.h"
 #include "script/standard.h"
-#include "test/test_bitcoin.h"
+#include "test/test_rpdchain.h"
 #include "utilstrencodings.h"
 
 #include <boost/test/unit_test.hpp>
