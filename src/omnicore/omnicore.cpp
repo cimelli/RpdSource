@@ -1022,10 +1022,7 @@ static int parseTransaction(bool bRPConly, const CTransaction& wtx, int nBlock, 
         }
     }
 
-    // Temporary hack, remove this later
-    int spendHeight = 1286001;
-
-    inAll = view.GetValueIn(wtx, spendHeight);
+    inAll = view.GetValueIn(wtx);
 
     } // end of LOCK(cs_tx_cache)
 
