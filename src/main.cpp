@@ -106,7 +106,7 @@ int64_t nMaxTipAge = DEFAULT_MAX_TIP_AGE;
  * We are ~100 times smaller then bitcoin now (2015-06-23), set minRelayTxFee only 10 times higher
  * so it's still 10 times lower comparing to bitcoin.
  */
-CFeeRate minRelayTxFee = CFeeRate(10000);
+CFeeRate minRelayTxFee = CFeeRate(DEFAULT_MIN_RELAY_TX_FEE);
 
 CTxMemPool mempool(::minRelayTxFee);
 

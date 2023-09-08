@@ -21,7 +21,7 @@ BOOST_FIXTURE_TEST_SUITE(omnicore_script_dust_tests, BasicTestingSetup)
 
 BOOST_AUTO_TEST_CASE(dust_threshold_pubkey_hash)
 {
-    minRelayTxFee = CFeeRate(1000);
+    minRelayTxFee = CFeeRate(DEFAULT_MIN_RELAY_TX_FEE);
     const int64_t nExpected = 546; // satoshi
     const size_t nScriptSize = 25; // byte
 
@@ -43,7 +43,7 @@ BOOST_AUTO_TEST_CASE(dust_threshold_pubkey_hash)
 
 BOOST_AUTO_TEST_CASE(dust_threshold_script_hash)
 {
-    minRelayTxFee = CFeeRate(1000);
+    minRelayTxFee = CFeeRate(DEFAULT_MIN_RELAY_TX_FEE);
     const int64_t nExpected = 540; // satoshi
     const size_t nScriptSize = 23; // byte
 
@@ -62,7 +62,7 @@ BOOST_AUTO_TEST_CASE(dust_threshold_script_hash)
 
 BOOST_AUTO_TEST_CASE(dust_threshold_multisig_compressed_compressed)
 {
-    minRelayTxFee = CFeeRate(1000);
+    minRelayTxFee = CFeeRate(DEFAULT_MIN_RELAY_TX_FEE);
     const int64_t nExpected = 684; // satoshi
     const size_t nScriptSize = 71; // byte
 
@@ -83,7 +83,7 @@ BOOST_AUTO_TEST_CASE(dust_threshold_multisig_compressed_compressed)
 
 BOOST_AUTO_TEST_CASE(dust_threshold_multisig_uncompressed_compressed)
 {
-    minRelayTxFee = CFeeRate(1000);
+    minRelayTxFee = CFeeRate(DEFAULT_MIN_RELAY_TX_FEE);
     const int64_t nExpected  = 780; // satoshi
     const size_t nScriptSize = 103; // byte
 
@@ -104,7 +104,7 @@ BOOST_AUTO_TEST_CASE(dust_threshold_multisig_uncompressed_compressed)
 
 BOOST_AUTO_TEST_CASE(dust_threshold_multisig_compressed_compressed_compressed)
 {
-    minRelayTxFee = CFeeRate(1000);
+    minRelayTxFee = CFeeRate(DEFAULT_MIN_RELAY_TX_FEE);
     const int64_t nExpected  = 786; // satoshi
     const size_t nScriptSize = 105; // byte
 
@@ -125,7 +125,7 @@ BOOST_AUTO_TEST_CASE(dust_threshold_multisig_compressed_compressed_compressed)
 
 BOOST_AUTO_TEST_CASE(dust_threshold_multisig_uncompressed_compressed_compressed)
 {
-    minRelayTxFee = CFeeRate(1000);
+    minRelayTxFee = CFeeRate(DEFAULT_MIN_RELAY_TX_FEE);
     const int64_t nExpected  = 882; // satoshi
     const size_t nScriptSize = 137; // byte
 

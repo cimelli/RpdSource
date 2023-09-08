@@ -219,7 +219,7 @@ BOOST_AUTO_TEST_CASE(omnitxbuilder_from_existing)
 
 BOOST_AUTO_TEST_CASE(omnitxbuilder_op_return)
 {
-    minRelayTxFee = CFeeRate(1000);
+    minRelayTxFee = CFeeRate(DEFAULT_MIN_RELAY_TX_FEE);
 
     std::string rawTx("01000000021dc7f242305900960a80cadd2a5d06d2cbbc4bbdd029db37c56a975487b8d4b20100000000"
         "fffffffff1c05e491be9b9c73b918e96b0774d0db4632b41ace5bfbc2fcb0a58561b02bc0200000000ffffffff03000000"
