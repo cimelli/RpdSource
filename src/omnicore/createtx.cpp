@@ -81,10 +81,7 @@ TxBuilder& TxBuilder::addChange(const CTxDestination& destination, const CCoinsV
 
     CScript scriptPubKey = GetScriptForDestination(destination);
 
-    // Temporary hack, remove this later
-    int spendHeight = 1286001;
-
-    int64_t txChange = view.GetValueIn(tx, spendHeight) - tx.GetValueOut() - txFee;
+    int64_t txChange = view.GetValueIn(tx) - tx.GetValueOut() - txFee;
     int64_t minValue = GetDustThreshold(scriptPubKey);
 
     if (txChange < minValue) {
