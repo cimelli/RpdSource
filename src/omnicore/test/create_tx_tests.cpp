@@ -137,8 +137,8 @@ BOOST_AUTO_TEST_CASE(txbuilder_add_change)
         78825000LL,
         CScript(scriptB.begin(), scriptB.end())));
     
-    CBitcoinAddress addrA("174TgzbFFWiKg1VWt8Z55EVP7rJ54jQSar");
-    CBitcoinAddress addrB("12gxzZL9g6tWsX6ut8srcgcUTQ4c9wWuGS");
+    CTxDestination addrA = DecodeDestination("174TgzbFFWiKg1VWt8Z55EVP7rJ54jQSar");
+    CTxDestination addrB = DecodeDestination("12gxzZL9g6tWsX6ut8srcgcUTQ4c9wWuGS");
 
     CCoinsView viewDummy;
     CCoinsViewCache viewTemp(&viewDummy);
@@ -177,7 +177,7 @@ BOOST_AUTO_TEST_CASE(txbuilder_add_change_position)
         500000000LL,
         CScript(script.begin(), script.end())));
 
-    CBitcoinAddress addr("1DJFjEV9U7TgyDZVT1tcCGJDhDeRYSQGuD");
+    CTxDestination addr = DecodeDestination("1DJFjEV9U7TgyDZVT1tcCGJDhDeRYSQGuD");
 
     CTransaction txBasis;
     BOOST_CHECK(DecodeHexTx(txBasis, rawTxBasis));
