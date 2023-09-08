@@ -146,14 +146,14 @@ BOOST_AUTO_TEST_CASE(txbuilder_add_change)
 
     CMutableTransaction tx = TxBuilder()
         .addInput(prevTxs[0].outPoint)
-        .addOutput(GetScriptForDestination(addrA.Get()), 150000000LL)
+        .addOutput(GetScriptForDestination(addrA), 150000000LL)
         .addInput(prevTxs[1].outPoint)
         .build();
 
     BOOST_CHECK(viewTemp.HaveInputs(CTransaction(tx)));
 
     tx = TxBuilder(tx)
-        .addChange(addrB.Get(), viewTemp, 13242LL)
+        .addChange(addrB, viewTemp, 13242LL)
         .build();
 
     BOOST_CHECK_EQUAL(rawTx, EncodeHexTx(CTransaction(tx)));
@@ -188,7 +188,7 @@ BOOST_AUTO_TEST_CASE(txbuilder_add_change_position)
     BOOST_CHECK(viewTemp.HaveInputs(CTransaction(txBasis)));
 
     CMutableTransaction tx = TxBuilder(txBasis)
-        .addChange(addr.Get(), viewTemp, 50000LL, 1)
+        .addChange(addr, viewTemp, 50000LL, 1)
         .build();
 
     BOOST_CHECK_EQUAL(rawTx, EncodeHexTx(CTransaction(tx)));
