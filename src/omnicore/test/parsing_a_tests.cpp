@@ -67,7 +67,7 @@ static CTransaction TxClassA(const std::vector<CTxOut>& txInputs, const std::vec
 /** Helper to create a CTxOut object. */
 static CTxOut createTxOut(int64_t amount, const std::string& dest)
 {
-    return CTxOut(amount, GetScriptForDestination(CBitcoinAddress(dest).Get()));
+    return CTxOut(amount, GetScriptForDestination(DecodeDestination(dest)));
 }
 
 BOOST_AUTO_TEST_CASE(valid_class_a)

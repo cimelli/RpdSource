@@ -383,7 +383,7 @@ static bool GetSenderByContribution(const std::vector<CTxOut>& vouts, std::strin
 /** Helper to create a CTxOut object. */
 static CTxOut createTxOut(int64_t amount, const std::string& dest)
 {
-    return CTxOut(amount, GetScriptForDestination(CBitcoinAddress(dest).Get()));
+    return CTxOut(amount, GetScriptForDestination(DecodeDestination(dest)));
 }
 
 /** Helper to create a CKeyID object with random value.*/

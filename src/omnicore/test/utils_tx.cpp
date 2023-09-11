@@ -14,7 +14,7 @@
 
 CTxOut PayToPubKeyHash_Exodus()
 {
-    CBitcoinAddress address = ExodusAddress();
+    CTxDestination address = ExodusAddress();
     CScript scriptPubKey = GetScriptForDestination(address.Get());
     int64_t amount = GetDustThreshold(scriptPubKey);
 
@@ -23,7 +23,7 @@ CTxOut PayToPubKeyHash_Exodus()
 
 CTxOut PayToPubKeyHash_ExodusCrowdsale(int nHeight)
 {
-    CBitcoinAddress address = ExodusCrowdsaleAddress(nHeight);
+    CTxDestination address = ExodusCrowdsaleAddress(nHeight);
     CScript scriptPubKey = GetScriptForDestination(address.Get());
     int64_t amount = GetDustThreshold(scriptPubKey);
 
@@ -32,7 +32,7 @@ CTxOut PayToPubKeyHash_ExodusCrowdsale(int nHeight)
 
 CTxOut PayToPubKeyHash_Unrelated()
 {
-    CBitcoinAddress address("1f2dj45pxYb8BCW5sSbCgJ5YvXBfSapeX");
+    CTxDestination address("1f2dj45pxYb8BCW5sSbCgJ5YvXBfSapeX");
     CScript scriptPubKey = GetScriptForDestination(address.Get());
     int64_t amount = GetDustThreshold(scriptPubKey);
 
@@ -41,7 +41,7 @@ CTxOut PayToPubKeyHash_Unrelated()
 
 CTxOut PayToScriptHash_Unrelated()
 {
-    CBitcoinAddress address("3MbYQMMmSkC3AgWkj9FMo5LsPTW1zBTwXL");
+    CTxDestination address("3MbYQMMmSkC3AgWkj9FMo5LsPTW1zBTwXL");
     CScript scriptPubKey = GetScriptForDestination(address.Get());
     int64_t amount = GetDustThreshold(scriptPubKey);
 
