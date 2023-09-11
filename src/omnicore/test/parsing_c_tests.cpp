@@ -78,7 +78,7 @@ BOOST_AUTO_TEST_CASE(reference_identification)
 
         std::vector<CTxOut> txOutputs;
         txOutputs.push_back(OpReturn_SimpleSend());
-        txOutputs.push_back(createTxOut(2700000, ExodusAddress().ToString()));
+        txOutputs.push_back(createTxOut(2700000, EncodeDestination(ExodusAddress())));
 
         CTransaction dummyTx = TxClassC(txInputs, txOutputs);
 
