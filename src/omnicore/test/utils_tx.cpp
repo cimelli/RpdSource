@@ -15,7 +15,7 @@
 CTxOut PayToPubKeyHash_Exodus()
 {
     CTxDestination address = ExodusAddress();
-    CScript scriptPubKey = GetScriptForDestination(address.Get());
+    CScript scriptPubKey = GetScriptForDestination(address);
     int64_t amount = GetDustThreshold(scriptPubKey);
 
     return CTxOut(amount, scriptPubKey);
@@ -24,7 +24,7 @@ CTxOut PayToPubKeyHash_Exodus()
 CTxOut PayToPubKeyHash_ExodusCrowdsale(int nHeight)
 {
     CTxDestination address = ExodusCrowdsaleAddress(nHeight);
-    CScript scriptPubKey = GetScriptForDestination(address.Get());
+    CScript scriptPubKey = GetScriptForDestination(address);
     int64_t amount = GetDustThreshold(scriptPubKey);
 
     return CTxOut(amount, scriptPubKey);
