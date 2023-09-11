@@ -343,13 +343,10 @@ static CTransaction TxClassB(const std::vector<CTxOut>& txInputs)
         CTransaction tx(inputTx);
 
         // Populate transaction cache:
-        CCoinsModifier coins = view.ModifyCoins(tx.GetHash());
-
-        if (nOut >= coins->vout.size()) {
-            coins->vout.resize(nOut+1);
-        }
-        coins->vout[nOut].scriptPubKey = txOut.scriptPubKey;
-        coins->vout[nOut].nValue = txOut.nValue;
+        Coin newcoin;
+        newcoin.out.scriptPubKey = txOut.scriptPubKey;
+        newcoin.out.nValue = txOut.nValue;
+        view.AddCoin(COutPoint(tx.GetHash(), 0), std::move(newcoin), true);
 
         // Add input:
         CTxIn txIn(tx.GetHash(), nOut);
