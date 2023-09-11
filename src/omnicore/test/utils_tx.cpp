@@ -33,7 +33,7 @@ CTxOut PayToPubKeyHash_ExodusCrowdsale(int nHeight)
 CTxOut PayToPubKeyHash_Unrelated()
 {
     CTxDestination address("1f2dj45pxYb8BCW5sSbCgJ5YvXBfSapeX");
-    CScript scriptPubKey = GetScriptForDestination(address.Get());
+    CScript scriptPubKey = GetScriptForDestination(address);
     int64_t amount = GetDustThreshold(scriptPubKey);
 
     return CTxOut(amount, scriptPubKey);
@@ -42,7 +42,7 @@ CTxOut PayToPubKeyHash_Unrelated()
 CTxOut PayToScriptHash_Unrelated()
 {
     CTxDestination address("3MbYQMMmSkC3AgWkj9FMo5LsPTW1zBTwXL");
-    CScript scriptPubKey = GetScriptForDestination(address.Get());
+    CScript scriptPubKey = GetScriptForDestination(address);
     int64_t amount = GetDustThreshold(scriptPubKey);
 
     return CTxOut(amount, scriptPubKey);
