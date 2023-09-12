@@ -83,6 +83,7 @@ public:
     CBaseChainParams::Network NetworkID() const { return networkID; }
     bool IsRegTestNet() const { return NetworkID() == CBaseChainParams::REGTEST; }
 
+    const std::string& DevFundAddress(int nHeight) const { return devFundAddress; }
 
 protected:
     CChainParams() {}
@@ -97,6 +98,8 @@ protected:
     std::vector<unsigned char> base58Prefixes[MAX_BASE58_TYPES];
     std::string bech32HRPs[MAX_BECH32_TYPES];
     std::vector<SeedSpec6> vFixedSeeds;
+
+    std::string devFundAddress;
 };
 
 /**

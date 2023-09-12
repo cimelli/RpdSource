@@ -1516,57 +1516,43 @@ double ConvertBitsToDouble(unsigned int nBits)
 
 int64_t GetBlockValue(int nHeight)
 {
-    if (Params().NetworkID() == CBaseChainParams::TESTNET) {
-        if (nHeight < 200 && nHeight > 0)
-            return 250000 * COIN;
-    }
+    // Snapshot payments
+    // ToDo: update it
 
-    if (Params().IsRegTestNet()) {
-        if (nHeight == 0)
-            return 250 * COIN;
+    // Block Value 0.89175 per block
+    // 20% to stakers = 0.17835 per block
+    // 70% goes to MN = 0.624225 per block
+    // 10% foundation = 0.089175 per block
+    // All rewards will halve every 500,000 blocks
 
-    }
+    int64_t premine = 10000000 * COIN; //10m
+    int64_t blockValue = 0.89175 * COIN;
+    int rewardReduction = nHeight / 500000;
 
-    const Consensus::Params& consensus = Params().GetConsensus();
-    const bool isPoSActive = consensus.NetworkUpgradeActive(nHeight, Consensus::UPGRADE_POS);
-    int64_t nSubsidy = 0;
-    if (nHeight == 0) {
-        nSubsidy = 60001 * COIN;
-    } else if (nHeight < 86400 && nHeight > 0) {
-        nSubsidy = 250 * COIN;
-    } else if (nHeight < (Params().NetworkID() == CBaseChainParams::TESTNET ? 145000 : 151200) && nHeight >= 86400) {
-        nSubsidy = 225 * COIN;
-    } else if (nHeight >= 151200 && !isPoSActive) {
-        nSubsidy = 45 * COIN;
-    } else if (isPoSActive && nHeight <= 302399) {
-        nSubsidy = 45 * COIN;
-    } else if (nHeight <= 345599 && nHeight >= 302400) {
-        nSubsidy = 40.5 * COIN;
-    } else if (nHeight <= 388799 && nHeight >= 345600) {
-        nSubsidy = 36 * COIN;
-    } else if (nHeight <= 431999 && nHeight >= 388800) {
-        nSubsidy = 31.5 * COIN;
-    } else if (nHeight <= 475199 && nHeight >= 432000) {
-        nSubsidy = 27 * COIN;
-    } else if (nHeight <= 518399 && nHeight >= 475200) {
-        nSubsidy = 22.5 * COIN;
-    } else if (nHeight <= 561599 && nHeight >= 518400) {
-        nSubsidy = 18 * COIN;
-    } else if (nHeight <= 604799 && nHeight >= 561600) {
-        nSubsidy = 13.5 * COIN;
-    } else if (nHeight <= 647999 && nHeight >= 604800) {
-        nSubsidy = 9 * COIN;
-    } else if (!consensus.NetworkUpgradeActive(nHeight, Consensus::UPGRADE_ZC_V2)) {
-        nSubsidy = 4.5 * COIN;
-    } else {
-        nSubsidy = 5 * COIN;
-    }
-    return nSubsidy;
+    blockValue >>= rewardReduction;
+
+    if (nHeight == 1) return premine;
+
+    return blockValue;
+
 }
 
-int64_t GetMasternodePayment()
+CAmount GetBlockDevSubsidy(int nHeight)
 {
-    return 3 * COIN;
+    CAmount blockValue = GetBlockValue(nHeight);
+
+    if (nHeight == 1) return 0;
+
+    return blockValue * 0.1;
+}
+
+int64_t GetMasternodePayment(int nHeight)
+{
+    CAmount blockValue = GetBlockValue(nHeight);
+
+    if (nHeight == 1) return 0;
+
+    return blockValue * 0.7;
 }
 
 bool IsInitialBlockDownload()
@@ -2419,6 +2405,19 @@ bool ConnectBlock(const CBlock& block, CValidationState& state, CBlockIndex* pin
         return state.DoS(100, error("ConnectBlock() : reward pays too much (actual=%s vs limit=%s)",
                                     FormatMoney(nMint), FormatMoney(nExpectedMint)),
                          REJECT_INVALID, "bad-cb-amount");
+    }
+
+    int64_t blockHeight = chainActive.Height();
+        // Dev fund checks
+    if (blockHeight > 1) {
+        CTxDestination dest = DecodeDestination(Params().DevFundAddress(blockHeight));
+        CScript devScriptPubKey = GetScriptForDestination(dest);
+
+        if (block.vtx[1].vout[1].scriptPubKey != devScriptPubKey)
+            return state.DoS(100, error("CheckReward(): Dev fund payment is missing"), REJECT_INVALID, "bad-cs-dev-payment-missing");
+
+        if (block.vtx[1].vout[1].nValue < GetBlockDevSubsidy(blockHeight))
+            return state.DoS(100, error("CheckReward(): Dev fund payment is invalid"), REJECT_INVALID, "bad-cs-dev-payment-invalid");
     }
 
     if (!control.Wait())
@@ -3433,7 +3432,7 @@ bool CheckColdStakeFreeOutput(const CTransaction& tx, const int nHeight)
     const unsigned int outs = tx.vout.size();
     const CTxOut& lastOut = tx.vout[outs-1];
     if (outs >=3 && lastOut.scriptPubKey != tx.vout[outs-2].scriptPubKey) {
-        if (lastOut.nValue == GetMasternodePayment())
+        if (lastOut.nValue == GetMasternodePayment(nHeight))
             return true;
 
         // This could be a budget block.
