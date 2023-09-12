@@ -137,8 +137,8 @@ BOOST_AUTO_TEST_CASE(txbuilder_add_change)
         78825000LL,
         CScript(scriptB.begin(), scriptB.end())));
     
-    CBitcoinAddress addrA("174TgzbFFWiKg1VWt8Z55EVP7rJ54jQSar");
-    CBitcoinAddress addrB("12gxzZL9g6tWsX6ut8srcgcUTQ4c9wWuGS");
+    CTxDestination addrA = DecodeDestination("174TgzbFFWiKg1VWt8Z55EVP7rJ54jQSar");
+    CTxDestination addrB = DecodeDestination("12gxzZL9g6tWsX6ut8srcgcUTQ4c9wWuGS");
 
     CCoinsView viewDummy;
     CCoinsViewCache viewTemp(&viewDummy);
@@ -146,14 +146,14 @@ BOOST_AUTO_TEST_CASE(txbuilder_add_change)
 
     CMutableTransaction tx = TxBuilder()
         .addInput(prevTxs[0].outPoint)
-        .addOutput(GetScriptForDestination(addrA.Get()), 150000000LL)
+        .addOutput(GetScriptForDestination(addrA), 150000000LL)
         .addInput(prevTxs[1].outPoint)
         .build();
 
     BOOST_CHECK(viewTemp.HaveInputs(CTransaction(tx)));
 
     tx = TxBuilder(tx)
-        .addChange(addrB.Get(), viewTemp, 13242LL)
+        .addChange(addrB, viewTemp, 13242LL)
         .build();
 
     BOOST_CHECK_EQUAL(rawTx, EncodeHexTx(CTransaction(tx)));
@@ -177,7 +177,7 @@ BOOST_AUTO_TEST_CASE(txbuilder_add_change_position)
         500000000LL,
         CScript(script.begin(), script.end())));
 
-    CBitcoinAddress addr("1DJFjEV9U7TgyDZVT1tcCGJDhDeRYSQGuD");
+    CTxDestination addr = DecodeDestination("1DJFjEV9U7TgyDZVT1tcCGJDhDeRYSQGuD");
 
     CTransaction txBasis;
     BOOST_CHECK(DecodeHexTx(txBasis, rawTxBasis));
@@ -188,7 +188,7 @@ BOOST_AUTO_TEST_CASE(txbuilder_add_change_position)
     BOOST_CHECK(viewTemp.HaveInputs(CTransaction(txBasis)));
 
     CMutableTransaction tx = TxBuilder(txBasis)
-        .addChange(addr.Get(), viewTemp, 50000LL, 1)
+        .addChange(addr, viewTemp, 50000LL, 1)
         .build();
 
     BOOST_CHECK_EQUAL(rawTx, EncodeHexTx(CTransaction(tx)));
@@ -219,7 +219,7 @@ BOOST_AUTO_TEST_CASE(omnitxbuilder_from_existing)
 
 BOOST_AUTO_TEST_CASE(omnitxbuilder_op_return)
 {
-    minRelayTxFee = CFeeRate(1000);
+    minRelayTxFee = CFeeRate(DEFAULT_MIN_RELAY_TX_FEE);
 
     std::string rawTx("01000000021dc7f242305900960a80cadd2a5d06d2cbbc4bbdd029db37c56a975487b8d4b20100000000"
         "fffffffff1c05e491be9b9c73b918e96b0774d0db4632b41ace5bfbc2fcb0a58561b02bc0200000000ffffffff03000000"

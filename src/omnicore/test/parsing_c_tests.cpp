@@ -43,13 +43,10 @@ static CTransaction TxClassC(const std::vector<CTxOut>& txInputs, const std::vec
         CTransaction tx(inputTx);
 
         // Populate transaction cache:
-        CCoinsModifier coins = view.ModifyCoins(tx.GetHash());
-
-        if (nOut >= coins->vout.size()) {
-            coins->vout.resize(nOut+1);
-        }
-        coins->vout[nOut].scriptPubKey = txOut.scriptPubKey;
-        coins->vout[nOut].nValue = txOut.nValue;
+        Coin newcoin;
+        newcoin.out.scriptPubKey = txOut.scriptPubKey;
+        newcoin.out.nValue = txOut.nValue;
+        view.AddCoin(COutPoint(tx.GetHash(), 0), std::move(newcoin), true);
 
         // Add input:
         CTxIn txIn(tx.GetHash(), nOut);
@@ -68,7 +65,7 @@ static CTransaction TxClassC(const std::vector<CTxOut>& txInputs, const std::vec
 /** Helper to create a CTxOut object. */
 static CTxOut createTxOut(int64_t amount, const std::string& dest)
 {
-    return CTxOut(amount, GetScriptForDestination(CBitcoinAddress(dest).Get()));
+    return CTxOut(amount, GetScriptForDestination(DecodeDestination(dest)));
 }
 
 BOOST_AUTO_TEST_CASE(reference_identification)
@@ -81,7 +78,7 @@ BOOST_AUTO_TEST_CASE(reference_identification)
 
         std::vector<CTxOut> txOutputs;
         txOutputs.push_back(OpReturn_SimpleSend());
-        txOutputs.push_back(createTxOut(2700000, ExodusAddress().ToString()));
+        txOutputs.push_back(createTxOut(2700000, EncodeDestination(ExodusAddress())));
 
         CTransaction dummyTx = TxClassC(txInputs, txOutputs);
 

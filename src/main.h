@@ -63,6 +63,8 @@ struct PrecomputedTransactionData;
 struct CBlockTemplate;
 struct CNodeStateStats;
 
+/** Default for -minrelaytxfee, minimum relay fee for transactions */
+static const unsigned int DEFAULT_MIN_RELAY_TX_FEE = 100000; // change this when adjusting TX fees (satoshis/kB)
 /** Default for -limitancestorcount, max number of in-mempool ancestors */
 static const unsigned int DEFAULT_ANCESTOR_LIMIT = 25;
 /** Default for -limitancestorsize, maximum kilobytes of tx + all in-mempool ancestors */
