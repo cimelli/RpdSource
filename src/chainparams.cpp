@@ -71,7 +71,7 @@ void GenesisGeneratorV2(CBlock genesis)
     //
     // /////////////////////////////////////////////////////////////////
 
-    uint32_t nGenesisTime = 1694531982;
+    uint32_t nGenesisTime = 1694549122;
 
     arith_uint256 test;
     uint256 hashGenesisBlock;
@@ -133,7 +133,7 @@ static Checkpoints::MapCheckpoints mapCheckpoints =
 
 static const Checkpoints::CCheckpointData data = {
     &mapCheckpoints,
-    1694531982, // * UNIX timestamp of last checkpoint block
+    1694549122, // * UNIX timestamp of last checkpoint block
     0,    // * total number of transactions between genesis and last checkpoint
                 //   (the tx=... number in the UpdateTip debug.log lines)
     1440        // * estimated number of transactions per day after checkpoint
@@ -141,19 +141,21 @@ static const Checkpoints::CCheckpointData data = {
 
 static Checkpoints::MapCheckpoints mapCheckpointsTestnet =
     boost::assign::map_list_of
-    (0, uint256S("0x001")); //!< RPDCHAIN v4.1.1 enforced
+    (0, uint256S("0x00000a105b6fbe4df4bbe4728f0a26ee85e92dbe8a4f7522235c116494ab6096"));
 
 static const Checkpoints::CCheckpointData dataTestnet = {
     &mapCheckpointsTestnet,
-    1591225230,
+    1694531982,
     3501914,
     3000};
 
 static Checkpoints::MapCheckpoints mapCheckpointsRegtest =
-    boost::assign::map_list_of(0, uint256S("0x001"));
+    boost::assign::map_list_of
+    (0, uint256S("0x00000a105b6fbe4df4bbe4728f0a26ee85e92dbe8a4f7522235c116494ab6096"));
+
 static const Checkpoints::CCheckpointData dataRegtest = {
     &mapCheckpointsRegtest,
-    1454124731,
+    1694531982,
     0,
     100};
 
@@ -172,11 +174,11 @@ public:
         Genesis Merkle 0x5ac6154bb64fbe61995558afc487bb0e02746b33ffabbd7e1ca949f331dcc42a
         */
 
-        genesis = CreateGenesisBlock(1694531982, 174605, 0x1e0ffff0, 1, 0 * COIN);
-        consensus.hashGenesisBlock = genesis.GetHash();
-        assert(consensus.hashGenesisBlock == uint256S("0x00000a105b6fbe4df4bbe4728f0a26ee85e92dbe8a4f7522235c116494ab6096"));
-        assert(genesis.hashMerkleRoot == uint256S("0x5ac6154bb64fbe61995558afc487bb0e02746b33ffabbd7e1ca949f331dcc42a"));
-        //GenesisGeneratorV2(genesis);
+        //genesis = CreateGenesisBlock(1694549122, 174605, 0x1e0ffff0, 1, 0 * COIN);
+        //consensus.hashGenesisBlock = genesis.GetHash();
+        //assert(consensus.hashGenesisBlock == uint256S("0x00000a105b6fbe4df4bbe4728f0a26ee85e92dbe8a4f7522235c116494ab6096"));
+        //assert(genesis.hashMerkleRoot == uint256S("0x5ac6154bb64fbe61995558afc487bb0e02746b33ffabbd7e1ca949f331dcc42a"));
+        GenesisGeneratorV2(genesis);
 
         consensus.fPowAllowMinDifficultyBlocks = false;
         consensus.powLimit   = ~UINT256_ZERO >> 2;
@@ -320,10 +322,17 @@ public:
         networkID = CBaseChainParams::TESTNET;
         strNetworkID = "test";
 
-        genesis = CreateGenesisBlock(1454124731, 2402015, 0x1e0ffff0, 1, 250 * COIN);
+                /*
+        time: 1694531982
+        hashGenesisBlock to 0x00000a105b6fbe4df4bbe4728f0a26ee85e92dbe8a4f7522235c116494ab6096
+        Genesis Nonce to 174605
+        Genesis Merkle 0x5ac6154bb64fbe61995558afc487bb0e02746b33ffabbd7e1ca949f331dcc42a
+        */
+
+        genesis = CreateGenesisBlock(1694531982, 174605, 0x1e0ffff0, 1, 0 * COIN);
         consensus.hashGenesisBlock = genesis.GetHash();
-        assert(consensus.hashGenesisBlock == uint256S("0x0000041e482b9b9691d98eefb48473405c0b8ec31b76df3797c74a78680ef818"));
-        assert(genesis.hashMerkleRoot == uint256S("0x1b2ef6e2f28be914103a277377ae7729dcd125dfeb8bf97bd5964ba72b6dc39b"));
+        assert(consensus.hashGenesisBlock == uint256S("0x00000a105b6fbe4df4bbe4728f0a26ee85e92dbe8a4f7522235c116494ab6096"));
+        assert(genesis.hashMerkleRoot == uint256S("0x5ac6154bb64fbe61995558afc487bb0e02746b33ffabbd7e1ca949f331dcc42a"));
 
         consensus.fPowAllowMinDifficultyBlocks = true;
         consensus.powLimit   = ~UINT256_ZERO >> 20;   // RPDCHAIN starting difficulty is 1 / 2^12
@@ -461,10 +470,17 @@ public:
         networkID = CBaseChainParams::REGTEST;
         strNetworkID = "regtest";
 
-        genesis = CreateGenesisBlock(1454124731, 2402015, 0x1e0ffff0, 1, 250 * COIN);
+                        /*
+        time: 1694531982
+        hashGenesisBlock to 0x00000a105b6fbe4df4bbe4728f0a26ee85e92dbe8a4f7522235c116494ab6096
+        Genesis Nonce to 174605
+        Genesis Merkle 0x5ac6154bb64fbe61995558afc487bb0e02746b33ffabbd7e1ca949f331dcc42a
+        */
+
+        genesis = CreateGenesisBlock(1694531982, 174605, 0x1e0ffff0, 1, 0 * COIN);
         consensus.hashGenesisBlock = genesis.GetHash();
-        assert(consensus.hashGenesisBlock == uint256S("0x0000041e482b9b9691d98eefb48473405c0b8ec31b76df3797c74a78680ef818"));
-        assert(genesis.hashMerkleRoot == uint256S("0x1b2ef6e2f28be914103a277377ae7729dcd125dfeb8bf97bd5964ba72b6dc39b"));
+        assert(consensus.hashGenesisBlock == uint256S("0x00000a105b6fbe4df4bbe4728f0a26ee85e92dbe8a4f7522235c116494ab6096"));
+        assert(genesis.hashMerkleRoot == uint256S("0x5ac6154bb64fbe61995558afc487bb0e02746b33ffabbd7e1ca949f331dcc42a"));
 
         consensus.fPowAllowMinDifficultyBlocks = true;
         consensus.powLimit   = ~UINT256_ZERO >> 20;   // RPDCHAIN starting difficulty is 1 / 2^12
