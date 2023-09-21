@@ -61,6 +61,11 @@
 #include "wallet/walletdb.h"
 #include "wallet/rpcwallet.h"
 
+#include "omnicore/rpcpayload.h"
+#include "omnicore/rpcrawtx.h"
+#include "omnicore/rpctx.h"
+#include "omnicore/rpc.h"
+
 #endif
 
 #include <fstream>
@@ -1101,6 +1106,13 @@ bool AppInit2()
         // Register wallet RPC commands
         walletRegisterRPCCommands();
     }
+
+    // Register Omni RPC commands
+    RegisterOmniDataRetrievalRPCCommands();
+    RegisterOmniPayloadCreationRPCCommands();
+    RegisterOmniRawTransactionRPCCommands();
+    RegisterOmniTransactionCreationRPCCommands();
+
 #endif
 
     nConnectTimeout = GetArg("-timeout", DEFAULT_CONNECT_TIMEOUT);
