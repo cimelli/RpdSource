@@ -1,14 +1,29 @@
-<svg xmlns="http://www.w3.org/2000/svg" id="ic_rpd" width="24" height="24" viewBox="0 0 24 24">
-    <defs>
-        <style type="text/css">
-            .cls-1{fill:#5c4b7d}.cls-2{fill:none}
-        </style>
-    </defs>
-    <g id="Group_8935" data-name="Group 8935">
-        <g id="Group_8934" data-name="Group 8934">
-            <path id="Path_18928" d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm0 19.25A9.25 9.25 0 1 1 21.25 12 9.25 9.25 0 0 1 12 21.25z" class="cls-1" data-name="Path 18928"/>
-            <path id="Path_18929" d="M12 3.5a8.5 8.5 0 1 0 8.5 8.5A8.5 8.5 0 0 0 12 3.5zM8 9.181h4.525v.941H8zm5.127 4.113h-2.973V18H8.978v-5.77h3.989a2.436 2.436 0 0 0 2.644-2.607 2.4 2.4 0 0 0-2.625-2.56h-1.242l-2.973.01V6h4.346a3.47 3.47 0 0 1 3.707 3.623 3.5 3.5 0 0 1-3.697 3.671z" class="cls-1" data-name="Path 18929"/>
-        </g>
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="ic_piv" data-name="ic piv" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: none;
+      }
+
+      .cls-2 {
+        fill: #f53;
+      }
+
+      .cls-3 {
+        fill: #fff;
+      }
+    </style>
+  </defs>
+  <circle class="cls-2" cx="12" cy="12" r="10.34"/>
+  <g>
+    <path class="cls-3" d="m17.24,13.74h-4.11c-.07,0-.11.07-.07.13.66,1.02,1.84,1.7,3.2,1.7h3.13s.08-.04.08-.08v-1.66s-.04-.08-.08-.08h-2.15Z"/>
+    <path class="cls-3" d="m13.06,10.12c-.04.06,0,.15.08.15h3.14s.95,0,.95,0h2.13c.05,0,.1-.04.1-.1v-1.65s-.04-.09-.09-.09h-3.13c-1.35,0-2.52.67-3.18,1.68Z"/>
+    <g>
+      <path class="cls-3" d="m6.76,10.26h4.11c.07,0,.11-.07.07-.13-.66-1.02-1.84-1.7-3.2-1.7h-3.13s-.08.04-.08.08v1.66s.04.08.08.08h2.15Z"/>
+      <path class="cls-3" d="m10.94,13.88c.04-.06,0-.15-.08-.15h-3.14s-.95,0-.95,0h-2.13c-.05,0-.1.04-.1.1v1.65s.04.09.09.09h3.13c1.35,0,2.52-.67,3.18-1.68Z"/>
     </g>
-    <path id="Rectangle_4543" d="M0 0h24v24H0z" class="cls-2" data-name="Rectangle 4543"/>
+    <rect class="cls-3" x="8.29" y="11.13" width="7.61" height="1.75" rx=".87" ry=".87"/>
+  </g>
+  <path id="Rectangle_4543" data-name="Rectangle 4543" class="cls-1" d="m0,0h24v24H0V0Z"/>
 </svg>

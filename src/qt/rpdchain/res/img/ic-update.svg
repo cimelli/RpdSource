@@ -1,12 +1,17 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-    <!-- Generator: Sketch 55.2 (78181) - https://sketchapp.com -->
-    <title>Artboard</title>
-    <desc>Created with Sketch.</desc>
-    <g id="Artboard" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-        <g id="ic-update" transform="translate(2.000000, 2.000000)">
-            <polygon id="Rectangle_4642" points="0 0 20 0 20 20 0 20"></polygon>
-            <path d="M13,8.5 L18,8.5 L18,3.5 L16,3.5 L16,4.715 C13.5656847,1.94871304 9.55671298,1.2030267 6.29053814,2.90899747 C3.0243633,4.61496824 1.34594778,8.33125994 2.22552783,11.9096078 C3.10510789,15.4879556 6.31513536,18.0026378 10,18.0000301 C12.1229023,18.0058338 14.1599129,17.1621506 15.657,15.657 L14.243,14.243 C12.4656191,16.0235516 9.76616433,16.5061689 7.48194074,15.4517642 C5.19771716,14.3973595 3.81387589,12.02988 4.01596945,9.52217092 C4.21806302,7.01446183 5.96316833,4.89914079 8.38676331,4.2241341 C10.8103583,3.5491274 13.3976904,4.45780116 14.867,6.5 L13,6.5 L13,8.5 Z" id="Path_18962" fill="#5C4B7D" fill-rule="nonzero"></path>
-        </g>
-    </g>
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 27.2.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 50 50" style="enable-background:new 0 0 50 50;" xml:space="preserve">
+<style type="text/css">
+	.st0{fill:none;}
+	.st1{fill:#FF5533;}
+</style>
+<g id="Artboard">
+	<g id="ic-update-liliac" transform="translate(2.000000, 2.000000)">
+		<polygon id="Rectangle_4642" class="st0" points="-2,-2 48,-2 48,48 -2,48 		"/>
+		<path id="Path_18962" class="st1" d="M30.5,19.2H43V6.8h-5v3c-6-7-16-8.8-24.2-4.5S1.5,18.8,3.5,27.8S13.8,43,23,43
+			c5.2,0,10.5-2,14.2-5.8l-3.5-3.5c-4.5,4.5-11.2,5.8-17,3S7.5,28,8,21.8s5-11.5,11-13.2S31.5,9,35.2,14.2h-4.8V19.2z"/>
+	</g>
+</g>
+<rect x="0.5" class="st0" width="50" height="50"/>
 </svg>
