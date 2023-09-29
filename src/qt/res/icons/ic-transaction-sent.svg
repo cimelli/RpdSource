@@ -1,14 +1,21 @@
-<svg xmlns="http://www.w3.org/2000/svg" id="ic-transaction-sent" width="24" height="24" viewBox="0 0 24 24">
-    <defs>
-        <style type="text/css">
-            .cls-1{fill:#707070}.cls-2{fill:none}
-        </style>
-    </defs>
-    <g id="Group_8832" data-name="Group 8832">
-        <path id="Path_18891" d="M22.2 1.8L1.8 9.782l6.37 3.43-.1-.1 1.445-1.445-2.964-1.597 12.122-4.744-4.743 12.123-1.593-2.958-1.445 1.445-.1-.1 3.43 6.37z" class="cls-1" data-name="Path 18891"/>
-        <g id="Group_8831" data-name="Group 8831">
-            <path id="Rectangle_4411" d="M0 0h7v2H0z" class="cls-1" data-name="Rectangle 4411" transform="rotate(-45 21.062 -3.68)"/>
-        </g>
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="ic-transaction-sent" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: none;
+      }
+
+      .cls-2 {
+        fill: #f53;
+      }
+    </style>
+  </defs>
+  <g id="Group_8832" data-name="Group 8832">
+    <path id="Path_18891" data-name="Path 18891" class="cls-2" d="m22.2,1.8L1.8,9.78l6.37,3.43-.1-.1,1.44-1.44-2.96-1.6,12.12-4.74-4.74,12.12-1.59-2.96-1.44,1.44-.1-.1,3.43,6.37L22.2,1.8Z"/>
+    <g id="Group_8831" data-name="Group 8831">
+      <path id="Rectangle_4411" data-name="Rectangle 4411" class="cls-2" d="m8.77,13.82l4.95-4.95,1.41,1.41-4.95,4.95-1.41-1.41Z"/>
     </g>
-    <path id="Rectangle_4412" d="M0 0h24v24H0z" class="cls-2" data-name="Rectangle 4412"/>
+  </g>
+  <path id="Rectangle_4412" data-name="Rectangle 4412" class="cls-1" d="m0,0h24v24H0V0Z"/>
 </svg>
