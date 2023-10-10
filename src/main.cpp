@@ -2410,15 +2410,16 @@ bool ConnectBlock(const CBlock& block, CValidationState& state, CBlockIndex* pin
                          REJECT_INVALID, "bad-cb-amount");
     }
 
+    int64_t blockHeight = chainActive.Height();
     if (isPoSActive) {
         // Dev fund checks
-        CTxDestination dest = DecodeDestination(Params().DevFundAddress());
-        CScript foundationScriptPubKey = GetScriptForDestination(dest);
+        CTxDestination dest = DecodeDestination(Params().DevFundAddress(blockHeight));
+        CScript devScriptPubKey = GetScriptForDestination(dest);
 
-        if (block.vtx[1].vout[1].scriptPubKey != foundationScriptPubKey)
+        if (block.vtx[1].vout[1].scriptPubKey != devScriptPubKey)
             return state.DoS(100, error("CheckReward(): Foundation payment is missing"), REJECT_INVALID, "bad-cs-foundation-payment-missing");
 
-        if (block.vtx[1].vout[1].nValue < GetBlockFoundationSubsidy(nHeight))
+        if (block.vtx[1].vout[1].nValue < GetBlockDevSubsidy(nHeight))
             return state.DoS(100, error("CheckReward(): Foundation payment is invalid"), REJECT_INVALID, "bad-cs-foundation-payment-invalid");
     }
 
