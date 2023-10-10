@@ -198,7 +198,7 @@ public:
         consensus.nProposalEstablishmentTime = 60 * 60 * 24;    // must be at least a day old to make it into a budget
 
         consensus.nMaxMoneyOut = 35000000 * COIN; // 35m
-        devFundAddress = "yKRXYbZGkewZF1qaj4FuaA5Gh8FrRbzgyR";
+        devFundAddress = "RqBgL6TgHdX4GQoWCNTfW2UjjQ3MR7Nyv2";
         
         consensus.nStakeMinAge = 60 * 60;
         consensus.nStakeMinDepth = 600;
