@@ -337,7 +337,7 @@ void CMasternodePayments::FillBlockPayee(CMutableTransaction& txNew, const CBloc
     }
 
      if (hasPayment) {
-        CAmount masternodePayment = GetBlockMasternodeSubsidy(nHeight);
+        CAmount masternodePayment = GetBlockMasternodePayment(nHeight);
 
         // Now Rapids using GetBlockStakeSubsidy function with
         // masternode payment already subtracted, so there is
