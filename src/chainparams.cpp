@@ -278,7 +278,7 @@ public:
         pchMessageStart[1] = 0xa2;
         pchMessageStart[2] = 0xf5;
         pchMessageStart[3] = 0xcb;
-        nDefaultPort = 51472;
+        nDefaultPort = 1591;
 
         // Note that of those with the service bits flag, most only support a subset of possible options
         vSeeds.push_back(CDNSSeedData("96.30.194.80 ", "96.30.194.80 ", true));
