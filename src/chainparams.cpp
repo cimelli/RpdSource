@@ -200,12 +200,12 @@ public:
         consensus.nMaxMoneyOut = 35000000 * COIN; // 35m
         devFundAddress = "RqBgL6TgHdX4GQoWCNTfW2UjjQ3MR7Nyv2";
         
-        consensus.nStakeMinAge = 60 * 60;
-        consensus.nStakeMinDepth = 600;
-        consensus.nTargetTimespan = 40 * 60;
-        consensus.nTargetTimespanV2 = 30 * 60;
-        consensus.nTargetSpacing = 1 * 60;
-        consensus.nTimeSlotLength = 15;
+        consensus.nStakeMinAge = 1 * 60;        // 60 seconds
+        consensus.nStakeMinDepth = 60;          // 60 blocks
+        consensus.nTargetTimespan = 30 * 60;    // 30 minutes
+        consensus.nTargetTimespanV2 = 30 * 60;  // 30 minutes
+        consensus.nTargetSpacing = 1 * 60;      // 60 seconds
+        consensus.nTimeSlotLength = 15;         // 15 seconds
 
         // spork keys
         consensus.strSporkPubKey = "040F129DE6546FE405995329A887329BED4321325B1A73B0A257423C05C1FCFE9E40EF0678AEF59036A22C42E61DFD29DF7EFB09F56CC73CADF64E05741880E3E7";

@@ -45,8 +45,8 @@ const std::string CLIENT_NAME("RPDCHAIN Core");
 //! git will put "#define GIT_ARCHIVE 1" on the next line inside archives. 
 #define GIT_ARCHIVE 1
 #ifdef GIT_ARCHIVE
-#define GIT_COMMIT_ID "1ff92c01f008817c21d2bded7c6f73e2d7ea64d9"
-#define GIT_COMMIT_DATE "Sun, 27 Sep 2020 02:02:41 -0700"
+#define GIT_COMMIT_ID "$Format:%H$"
+#define GIT_COMMIT_DATE "$Format:%cD$"
 #endif
 
 #define BUILD_DESC_WITH_SUFFIX(maj, min, rev, build, suffix) \
