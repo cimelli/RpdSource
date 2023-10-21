@@ -2396,21 +2396,12 @@ bool ConnectBlock(const CBlock& block, CValidationState& state, CBlockIndex* pin
     nTimeConnect += nTime1 - nTimeStart;
     LogPrint(BCLog::BENCH, "      - Connect %u transactions: %.2fms (%.3fms/tx, %.3fms/txin) [%.2fs]\n", (unsigned)block.vtx.size(), 0.001 * (nTime1 - nTimeStart), 0.001 * (nTime1 - nTimeStart) / block.vtx.size(), nInputs <= 1 ? 0 : 0.001 * (nTime1 - nTimeStart) / (nInputs - 1), nTimeConnect * 0.000001);
 
-    //PoW phase redistributed fees to miner. PoS stage destroys fees.
+    //We just destroy the fees
     int nHeight = pindex->pprev->nHeight;
-    CAmount nExpectedMint = nFees + GetBlockValue(nHeight);
-
-    if (block.IsProofOfWork()) {
-        nExpectedMint = GetBlockValue(nHeight);
-    }
+    CAmount nExpectedMint = GetBlockValue(nHeight);
 
     // Check that the block does not overmint
     if (!(nMint <= nExpectedMint)) {
-        LogPrintf("Value Out:", nValueOut);
-        LogPrintf("Value In:", nValueIn);
-        LogPrintf("Current Fee:", nFees);
-        LogPrintf("Current mint:", nMint);
-        LogPrintf("Current expected mint:", nExpectedMint);
         return state.DoS(100, error("ConnectBlock() : reward pays too much (actual=%s vs limit=%s)",
                                     FormatMoney(nMint), FormatMoney(nExpectedMint)),
                          REJECT_INVALID, "bad-cb-amount");
