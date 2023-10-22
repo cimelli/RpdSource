@@ -1522,7 +1522,7 @@ int64_t GetBlockValue(int nHeight)
     // Block Value 0.89175 per block
     // 20% to stakers = 0.17835 per block
     // 70% goes to MN = 0.624225 per block
-    // 10% foundation = 0.089175 per block
+    // 10% foundation = 0.089175 per ca
     // All rewards will halve every 500,000 blocks
 
     int64_t premine = 10000000 * COIN; //10m
@@ -2396,9 +2396,13 @@ bool ConnectBlock(const CBlock& block, CValidationState& state, CBlockIndex* pin
     nTimeConnect += nTime1 - nTimeStart;
     LogPrint(BCLog::BENCH, "      - Connect %u transactions: %.2fms (%.3fms/tx, %.3fms/txin) [%.2fs]\n", (unsigned)block.vtx.size(), 0.001 * (nTime1 - nTimeStart), 0.001 * (nTime1 - nTimeStart) / block.vtx.size(), nInputs <= 1 ? 0 : 0.001 * (nTime1 - nTimeStart) / (nInputs - 1), nTimeConnect * 0.000001);
 
-    //We just destroy the fees
+    // PoW phase redistributed fees to miner. PoS stage destroys fees.
     int nHeight = pindex->pprev->nHeight;
-    CAmount nExpectedMint = GetBlockValue(nHeight) + nFees;
+
+    CAmount nExpectedMint = nFees + GetBlockValue(nHeight);
+    if (block.IsProofOfWork()) {
+        nExpectedMint = GetBlockValue(nHeight);
+    }
 
     // TODO TFinch: Fix nFees for mainnet launch
     // Just add the fees on the nExpectedMint
