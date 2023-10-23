@@ -2398,10 +2398,9 @@ bool ConnectBlock(const CBlock& block, CValidationState& state, CBlockIndex* pin
 
     //We just destroy the fees
     int nHeight = pindex->pprev->nHeight;
-    CAmount nExpectedMint = GetBlockValue(nHeight) + nFees;
+    CAmount nExpectedMint = GetBlockValue(nHeight);
 
-    // TODO TFinch: Fix nFees for mainnet launch
-    // Just add the fees on the nExpectedMint
+    // Check that the block does not overmint
     if (!(nMint <= nExpectedMint)) {
         return state.DoS(100, error("ConnectBlock() : reward pays too much (actual=%s vs limit=%s)",
                                     FormatMoney(nMint), FormatMoney(nExpectedMint)),
