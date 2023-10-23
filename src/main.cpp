@@ -2399,18 +2399,12 @@ bool ConnectBlock(const CBlock& block, CValidationState& state, CBlockIndex* pin
     //PoW phase redistributed fees to miner. PoS stage destroys fees.
     int nHeight = pindex->pprev->nHeight;
     CAmount nExpectedMint = nFees + GetBlockValue(nHeight);
-
     if (block.IsProofOfWork()) {
         nExpectedMint = GetBlockValue(nHeight);
     }
 
     // Check that the block does not overmint
     if (!(nMint <= nExpectedMint)) {
-        LogPrintf("Value Out:" nValueOut);
-        LogPrintf("Value In:" nValueIn);
-        LogPrintf("Current Fee:" nFees);
-        LogPrintf("Current mint:" nMint);
-        LogPrintf("Current expected mint:" nExpectedMint);
         return state.DoS(100, error("ConnectBlock() : reward pays too much (actual=%s vs limit=%s)",
                                     FormatMoney(nMint), FormatMoney(nExpectedMint)),
                          REJECT_INVALID, "bad-cb-amount");
