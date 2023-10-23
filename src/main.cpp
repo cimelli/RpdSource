@@ -2412,9 +2412,10 @@ bool ConnectBlock(const CBlock& block, CValidationState& state, CBlockIndex* pin
                          REJECT_INVALID, "bad-cb-amount");
     }
 
+    int64_t blockHeight = chainActive.Height();
     if (isPoSActive) {
         // Dev fund checks
-        CTxDestination dest = DecodeDestination(Params().DevFundAddress());
+        CTxDestination dest = DecodeDestination(Params().DevFundAddress(blockHeight));
         CScript devScriptPubKey = GetScriptForDestination(dest);
 
         if (block.vtx[1].vout[1].scriptPubKey != devScriptPubKey)

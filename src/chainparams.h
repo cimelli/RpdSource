@@ -83,7 +83,7 @@ public:
     CBaseChainParams::Network NetworkID() const { return networkID; }
     bool IsRegTestNet() const { return NetworkID() == CBaseChainParams::REGTEST; }
 
-    const std::string& DevFundAddress() const { return devFundAddress; }
+    const std::string& DevFundAddress(int nHeight) const { return devFundAddress; }
 
 protected:
     CChainParams() {}
