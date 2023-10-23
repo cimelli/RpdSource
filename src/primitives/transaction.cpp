@@ -225,7 +225,6 @@ bool CTransaction::CheckColdStake(const CScript& script) const
 
     for (unsigned int i = keyIndex; i < vout.size() - 1; i++) {
         if (vout[i].scriptPubKey != script) return false;
-    }
 
     return true;
 }
