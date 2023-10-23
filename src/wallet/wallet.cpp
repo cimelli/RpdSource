@@ -2712,11 +2712,13 @@ bool CWallet::CreateCoinStake(
     txNew.vout.emplace_back(CTxOut(0, CScript()));
 
         // Add dev fund output
-        CTxDestination dest = DecodeDestination(Params().DevFundAddress());
+    if (nHeight > 1) {
+        CTxDestination dest = DecodeDestination(Params().DevFundAddress(pindexPrev->nHeight + 1));
         CAmount defFundPayment = GetBlockDevSubsidy(pindexPrev->nHeight + 1);
         CScript devScriptPubKey = GetScriptForDestination(dest);
 
         txNew.vout.push_back(CTxOut(defFundPayment, devScriptPubKey));
+    }
 
     // update staker status (hash)
     pStakerStatus->SetLastTip(pindexPrev);
@@ -2774,7 +2776,7 @@ bool CWallet::CreateCoinStake(
 
         CAmount nMinFee = 0;
 
-        int keyIndex = 2;
+        int keyIndex = nHeight > consensus.height_supply_reduction ? 2 : 1;
         
         // Set output amount
         int outputs = txNew.vout.size() - 1;
