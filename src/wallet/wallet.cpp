@@ -2775,23 +2775,21 @@ bool CWallet::CreateCoinStake(
         txNew.vout.insert(txNew.vout.end(), vout.begin(), vout.end());
 
         CAmount nMinFee = 0;
-
-        int keyIndex = nHeight > consensus.height_supply_reduction ? 2 : 1;
         
         // Set output amount
-        int outputs = txNew.vout.size() - 1;
+        int outputs = txNew.vout.size() - 2;
         CAmount nRemaining = nCredit - nMinFee;
-        if (outputs > keyIndex) {
+        if (outputs > 1) {
             // Split the stake across the outputs
             CAmount nShare = nRemaining / outputs;
-            for (int i = keyIndex; i < outputs; i++) {
+            for (int i = 2; i < outputs; i++) {
                 // loop through all but the last one.
                 txNew.vout[i].nValue = nShare;
                 nRemaining -= nShare;
             }
         }
         // put the remaining on the last output (which all into the first if only one output)
-        txNew.vout[outputs].nValue += nRemaining;
+        txNew.vout[outputs + 1].nValue += nRemaining;
 
         // Limit size
         unsigned int nBytes = ::GetSerializeSize(txNew, SER_NETWORK, PROTOCOL_VERSION);
