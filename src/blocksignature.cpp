@@ -28,7 +28,12 @@ bool SignBlock(CBlock& block, const CKeyStore& keystore)
         if (!fFoundID)
             return error("%s: failed to find key for PoW", __func__);
     } else {
-        if (!block.vtx[1].vout[1].GetKeyIDFromUTXO(keyID))
+        if (block.vtx[1].vout.size() < 3)
+            return error("%s: invalid number of outputs for PoS", __func__);
+
+       int keyIndex = 2;
+
+        if (!block.vtx[1].vout[keyIndex].GetKeyIDFromUTXO(keyID))
             return error("%s: failed to find key for PoS", __func__);
     }
 
