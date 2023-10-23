@@ -2711,15 +2711,6 @@ bool CWallet::CreateCoinStake(
     txNew.vout.clear();
     txNew.vout.emplace_back(CTxOut(0, CScript()));
 
-        // Add dev fund output
-    if (nHeight > 1) {
-        CTxDestination dest = DecodeDestination(Params().DevFundAddress(pindexPrev->nHeight + 1));
-        CAmount defFundPayment = GetBlockDevSubsidy(pindexPrev->nHeight + 1);
-        CScript devScriptPubKey = GetScriptForDestination(dest);
-
-        txNew.vout.push_back(CTxOut(defFundPayment, devScriptPubKey));
-    }
-
     // update staker status (hash)
     pStakerStatus->SetLastTip(pindexPrev);
     pStakerStatus->SetLastCoins((int) availableCoins->size());
@@ -2777,19 +2768,19 @@ bool CWallet::CreateCoinStake(
         CAmount nMinFee = 0;
         
         // Set output amount
-        int outputs = txNew.vout.size() - 2;
+        int outputs = txNew.vout.size() - 1;
         CAmount nRemaining = nCredit - nMinFee;
         if (outputs > 1) {
             // Split the stake across the outputs
             CAmount nShare = nRemaining / outputs;
-            for (int i = 2; i < outputs; i++) {
+            for (int i = 1; i < outputs; i++) {
                 // loop through all but the last one.
                 txNew.vout[i].nValue = nShare;
                 nRemaining -= nShare;
             }
         }
         // put the remaining on the last output (which all into the first if only one output)
-        txNew.vout[outputs + 1].nValue += nRemaining;
+        txNew.vout[outputs].nValue += nRemaining;
 
         // Limit size
         unsigned int nBytes = ::GetSerializeSize(txNew, SER_NETWORK, PROTOCOL_VERSION);

@@ -1537,15 +1537,6 @@ int64_t GetBlockValue(int nHeight)
 
 }
 
-CAmount GetBlockDevSubsidy(int nHeight)
-{
-    CAmount blockValue = GetBlockValue(nHeight);
-
-    if (nHeight == 1) return 0;
-
-    return blockValue * 0.1;
-}
-
 int64_t GetMasternodePayment(int nHeight)
 {
     CAmount blockValue = GetBlockValue(nHeight);
@@ -2397,8 +2388,7 @@ bool ConnectBlock(const CBlock& block, CValidationState& state, CBlockIndex* pin
     LogPrint(BCLog::BENCH, "      - Connect %u transactions: %.2fms (%.3fms/tx, %.3fms/txin) [%.2fs]\n", (unsigned)block.vtx.size(), 0.001 * (nTime1 - nTimeStart), 0.001 * (nTime1 - nTimeStart) / block.vtx.size(), nInputs <= 1 ? 0 : 0.001 * (nTime1 - nTimeStart) / (nInputs - 1), nTimeConnect * 0.000001);
 
     //PoW phase redistributed fees to miner. PoS stage destroys fees.
-    int nHeight = pindex->pprev->nHeight;
-    CAmount nExpectedMint = nFees + GetBlockValue(nHeight);
+    CAmount nExpectedMint = nFees + GetBlockValue(pindex->pprev->nHeight);
     if (block.IsProofOfWork()) {
         nExpectedMint = GetBlockValue(nHeight);
     }
@@ -2408,19 +2398,6 @@ bool ConnectBlock(const CBlock& block, CValidationState& state, CBlockIndex* pin
         return state.DoS(100, error("ConnectBlock() : reward pays too much (actual=%s vs limit=%s)",
                                     FormatMoney(nMint), FormatMoney(nExpectedMint)),
                          REJECT_INVALID, "bad-cb-amount");
-    }
-
-    int64_t blockHeight = chainActive.Height();
-    if (isPoSActive) {
-        // Dev fund checks
-        CTxDestination dest = DecodeDestination(Params().DevFundAddress(blockHeight));
-        CScript devScriptPubKey = GetScriptForDestination(dest);
-
-        if (block.vtx[1].vout[1].scriptPubKey != devScriptPubKey)
-            return state.DoS(100, error("CheckReward(): Foundation payment is missing"), REJECT_INVALID, "bad-cs-foundation-payment-missing");
-
-        if (block.vtx[1].vout[1].nValue < GetBlockDevSubsidy(nHeight))
-            return state.DoS(100, error("CheckReward(): Foundation payment is invalid"), REJECT_INVALID, "bad-cs-foundation-payment-invalid");
     }
 
     if (!control.Wait())
