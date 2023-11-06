@@ -7,6 +7,7 @@
 
 #include "clientversion.h"
 #include "fs.h"
+#include <boost/filesystem.hpp>
 #include "init.h"
 #include "main.h"
 #include "masternodeconfig.h"
