@@ -1803,8 +1803,14 @@ bool mastercore_handler_tx(const CTransaction& tx, int nBlock, unsigned int idx,
     int pop_ret = parseTransaction(false, tx, nBlock, idx, mp_obj, nBlockTime);
 
     if (0 == pop_ret) {
+        // ToDo: Add amount check here
+
+        // TOKEN_TYPE_CREATE_PROPERTY_FIXED
+        // TOKEN_TYPE_CREATE_PROPERTY_VARIABLE
+        // TOKEN_TYPE_CREATE_PROPERTY_MANUAL
+
         int interp_ret = mp_obj.interpretPacket();
-        if (interp_ret) PrintToLog("!!! interpretPacket() returned %d !!!\n", interp_ret);
+        if (interp_ret) PrintToLog("interpretPacket() returned error %d\n", interp_ret);
 
         // Only structurally valid transactions get recorded in levelDB
         // PKT_ERROR - 2 = interpret_Transaction failed, structurally invalid payload
