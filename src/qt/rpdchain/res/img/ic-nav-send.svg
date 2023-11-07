@@ -1,13 +1,17 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- Generator: Adobe Illustrator 27.2.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
-<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-	 viewBox="0 0 50 50" style="enable-background:new 0 0 50 50;" xml:space="preserve">
-<style type="text/css">
-	.st0{fill:#FFFFFF;}
-</style>
-<path class="st0" d="M25,0C11.2,0,0,11.2,0,25s11.2,25,25,25s25-11.2,25-25S38.8,0,25,0z M17.5,13.8l5.8-5.8c0.4-0.4,1-0.6,1.7-0.6
-	l0,0l0,0l0,0c0.6,0,1.2,0.2,1.7,0.6l5.8,5.8c0.2,0.2,0.2,0.8,0,1C32.3,15,32.1,15,32.1,15s-0.4,0-0.4-0.2L25.8,9v21.5
-	c0,0.4-0.4,0.8-0.8,0.8s-0.8-0.4-0.8-0.8V9l-5.6,5.8c-0.2,0.2-0.8,0.2-1,0C17.1,14.4,17.1,14,17.5,13.8z M41.2,34.6
-	c0,2.7-2.1,5-4.4,5H13.3c-2.5,0-4.4-2.3-4.4-5v-4.2c0-0.4,0.4-0.8,0.8-0.8c0.4,0,0.8,0.4,0.8,0.8v4.2c0,1.9,1.2,3.5,2.9,3.5h23.5
-	c1.7,0,2.9-1.7,2.9-3.5v-4.2c0-0.4,0.4-0.8,0.8-0.8s0.8,0.4,0.8,0.8v4.2H41.2z"/>
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="40px" viewBox="0 0 24 40" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 52.6 (67491) - http://www.bohemiancoding.com/sketch -->
+    <title>Send Off Copy</title>
+    <desc>Created with Sketch.</desc>
+    <g id="Send-Off-Copy" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="ic-send-off" transform="translate(0.000000, 11.000000)">
+            <g id="Group_8811" transform="translate(0.000000, 1.000000)" fill="#938DA5">
+                <polygon id="Path_18865" points="0.352 9.1 7.562 13.606 9.014 12.154 4.914 9.59 19.714 4.283 14.407 19.083 11.842 14.983 10.391 16.434 14.9 23.648 23.025 0.975"></polygon>
+                <g id="Group_8810" transform="translate(8.000000, 8.000000)">
+                    <polygon id="Rectangle_4394" transform="translate(3.823718, 4.176339) rotate(-45.000000) translate(-3.823718, -4.176339) " points="-0.176282346 3.17633883 7.82371765 3.17633883 7.82371765 5.17633883 -0.176282346 5.17633883"></polygon>
+                </g>
+            </g>
+            <polygon id="Rectangle_4395" points="1 0 27 0 27 26 1 26"></polygon>
+        </g>
+    </g>
 </svg>

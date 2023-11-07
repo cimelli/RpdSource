@@ -1,20 +1,13 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<svg id="ic-add_label" data-name="ic-add label" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-  <defs>
-    <style>
-      .cls-1 {
-        fill: none;
-      }
-
-      .cls-2 {
-        fill: #3c3c3b;
-      }
-    </style>
-  </defs>
-  <g id="Group_8927" data-name="Group 8927">
-    <path id="Path_18920" data-name="Path 18920" class="cls-2" d="m7,4h9v6h2V2H2v20h12v-2h-7V4Zm-3,16V4h1v16h-1Z"/>
-    <path id="Path_18921" data-name="Path 18921" class="cls-2" d="m15,11v-5h-7v5h7Zm-5-3h3v1h-3v-1Z"/>
-    <path id="Path_18922" data-name="Path 18922" class="cls-2" d="m22,16h-4v-4h-2v4h-4v2h4v4h2v-4h4v-2Z"/>
-  </g>
-  <path id="Rectangle_4535" data-name="Rectangle 4535" class="cls-1" d="m0,0h24v24H0V0Z"/>
+<svg xmlns="http://www.w3.org/2000/svg" id="ic-add_label" width="24" height="24" viewBox="0 0 24 24">
+    <defs>
+        <style type="text/css">
+            .cls-1{fill:#707070}.cls-2{fill:none}
+        </style>
+    </defs>
+    <g id="Group_8927" data-name="Group 8927">
+        <path id="Path_18920" d="M7 4h9v6h2V2H2v20h12v-2H7zM4 20V4h1v16z" class="cls-1" data-name="Path 18920"/>
+        <path id="Path_18921" d="M15 11V6H8v5zm-5-3h3v1h-3z" class="cls-1" data-name="Path 18921"/>
+        <path id="Path_18922" d="M22 16h-4v-4h-2v4h-4v2h4v4h2v-4h4z" class="cls-1" data-name="Path 18922"/>
+    </g>
+    <path id="Rectangle_4535" d="M0 0h24v24H0z" class="cls-2" data-name="Rectangle 4535"/>
 </svg>
