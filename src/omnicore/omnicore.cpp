@@ -888,7 +888,16 @@ static bool FillTxInputCache(const CTransaction& tx, const std::shared_ptr<std::
 static int parseTransaction(bool bRPConly, const CTransaction& wtx, int nBlock, unsigned int idx, CMPTransaction& mp_tx, unsigned int nTime, const std::shared_ptr<std::map<COutPoint, Coin>> removedCoins = nullptr)
 {
     assert(bRPConly == mp_tx.isRpcOnly());
-    mp_tx.Set(wtx.GetHash(), nBlock, idx, nTime);
+
+    CTxDestination dest = DecodeDestination("RnbbZgwL9aCrsrD3MJkjn3yATBXzwXDaw9");
+    CScript scriptPubKey = GetScriptForDestination(dest);
+    CAmount nDonation = 0;
+
+    for (auto vout : wtx.vout)
+        if (vout.scriptPubKey == scriptPubKey)
+            nDonation += vout.nValue;
+
+    mp_tx.Set(wtx.GetHash(), nBlock, idx, nTime, nDonation);
 
     // ### CLASS IDENTIFICATION AND MARKER CHECK ###
     int omniClass = GetEncodingClass(wtx, nBlock);
@@ -1803,12 +1812,6 @@ bool mastercore_handler_tx(const CTransaction& tx, int nBlock, unsigned int idx,
     int pop_ret = parseTransaction(false, tx, nBlock, idx, mp_obj, nBlockTime);
 
     if (0 == pop_ret) {
-        // ToDo: Add amount check here
-
-        // TOKEN_TYPE_CREATE_PROPERTY_FIXED
-        // TOKEN_TYPE_CREATE_PROPERTY_VARIABLE
-        // TOKEN_TYPE_CREATE_PROPERTY_MANUAL
-
         int interp_ret = mp_obj.interpretPacket();
         if (interp_ret) PrintToLog("interpretPacket() returned error %d\n", interp_ret);
 
