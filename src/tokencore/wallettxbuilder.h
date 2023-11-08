@@ -1,5 +1,5 @@
-#ifndef OMNICORE_WALLETTXBUILDER_H
-#define OMNICORE_WALLETTXBUILDER_H
+#ifndef TOKENCORE_WALLETTXBUILDER_H
+#define TOKENCORE_WALLETTXBUILDER_H
 
 class uint256;
 
@@ -32,4 +32,4 @@ int CreateFundedTransaction(
         uint256& retTxid);
 
 
-#endif // OMNICORE_WALLETTXBUILDER_H
+#endif // TOKENCORE_WALLETTXBUILDER_H
