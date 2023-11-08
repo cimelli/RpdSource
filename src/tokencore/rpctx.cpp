@@ -127,7 +127,7 @@ static UniValue token_funded_sendall(const JSONRPCRequest& request)
     return retTxid.ToString();
 }
 
-static UniValue sendtokenrawtx(const JSONRPCRequest& request)
+static UniValue token_sendrawtx(const JSONRPCRequest& request)
 {
     if (request.fHelp || request.params.size() < 2 || request.params.size() > 5)
         throw runtime_error(
@@ -142,8 +142,8 @@ static UniValue sendtokenrawtx(const JSONRPCRequest& request)
             "\nResult:\n"
             "\"hash\"                  (string) the hex-encoded transaction hash\n"
             "\nExamples:\n"
-            + HelpExampleCli("sendtokenrawtx", "\"1MCHESTptvd2LnNp7wmr2sGTpRomteAkq8\" \"000000000000000100000000017d7840\" \"1EqTta1Rt8ixAA32DuC29oukbsSWU62qAV\"")
-            + HelpExampleRpc("sendtokenrawtx", "\"1MCHESTptvd2LnNp7wmr2sGTpRomteAkq8\", \"000000000000000100000000017d7840\", \"1EqTta1Rt8ixAA32DuC29oukbsSWU62qAV\"")
+            + HelpExampleCli("token_sendrawtx", "\"1MCHESTptvd2LnNp7wmr2sGTpRomteAkq8\" \"000000000000000100000000017d7840\" \"1EqTta1Rt8ixAA32DuC29oukbsSWU62qAV\"")
+            + HelpExampleRpc("token_sendrawtx", "\"1MCHESTptvd2LnNp7wmr2sGTpRomteAkq8\", \"000000000000000100000000017d7840\", \"1EqTta1Rt8ixAA32DuC29oukbsSWU62qAV\"")
         );
 
     std::string fromAddress = ParseAddress(request.params[0]);
@@ -457,11 +457,11 @@ static UniValue token_senddexaccept(const JSONRPCRequest& request)
     }
 }
 
-static UniValue sendtokenissuancecrowdsale(const JSONRPCRequest& request)
+static UniValue token_sendissuancecrowdsale(const JSONRPCRequest& request)
 {
     if (request.fHelp || request.params.size() != 14)
         throw runtime_error(
-            "sendtokenissuancecrowdsale \"fromaddress\" ecosystem type previousid \"category\" \"subcategory\" \"name\" \"url\" \"data\" tokendesired tokensperunit deadline ( earlybonus issuerpercentage )\n"
+            "token_sendissuancecrowdsale \"fromaddress\" ecosystem type previousid \"category\" \"subcategory\" \"name\" \"url\" \"data\" tokendesired tokensperunit deadline ( earlybonus issuerpercentage )\n"
 
             "Create new tokens as crowdsale."
 
@@ -485,8 +485,8 @@ static UniValue sendtokenissuancecrowdsale(const JSONRPCRequest& request)
             "\"hash\"                  (string) the hex-encoded transaction hash\n"
 
             "\nExamples:\n"
-            + HelpExampleCli("sendtokenissuancecrowdsale", "\"3JYd75REX3HXn1vAU83YuGfmiPXW7BpYXo\" 2 1 0 \"Companies\" \"Bitcoin Mining\" \"Quantum Miner\" \"\" \"\" TOKEN \"100\" 1483228800 30 2")
-            + HelpExampleRpc("sendtokenissuancecrowdsale", "\"3JYd75REX3HXn1vAU83YuGfmiPXW7BpYXo\", 2, 1, 0, \"Companies\", \"Bitcoin Mining\", \"Quantum Miner\", \"\", \"\", TOKEN, \"100\", 1483228800, 30, 2")
+            + HelpExampleCli("token_sendissuancecrowdsale", "\"3JYd75REX3HXn1vAU83YuGfmiPXW7BpYXo\" 2 1 0 \"Companies\" \"Bitcoin Mining\" \"Quantum Miner\" \"\" \"\" TOKEN \"100\" 1483228800 30 2")
+            + HelpExampleRpc("token_sendissuancecrowdsale", "\"3JYd75REX3HXn1vAU83YuGfmiPXW7BpYXo\", 2, 1, 0, \"Companies\", \"Bitcoin Mining\", \"Quantum Miner\", \"\", \"\", TOKEN, \"100\", 1483228800, 30, 2")
         );
 
     // obtain parameters & info
@@ -856,7 +856,7 @@ static UniValue sendtokenrevoke(const JSONRPCRequest& request)
     }
 }
 
-static UniValue sendtokenclosecrowdsale(const JSONRPCRequest& request)
+static UniValue token_sendclosecrowdsale(const JSONRPCRequest& request)
 {
     if (request.fHelp || request.params.size() != 2)
         throw runtime_error(
@@ -872,8 +872,8 @@ static UniValue sendtokenclosecrowdsale(const JSONRPCRequest& request)
             "\"hash\"                  (string) the hex-encoded transaction hash\n"
 
             "\nExamples:\n"
-            + HelpExampleCli("sendtokenclosecrowdsale", "\"3JYd75REX3HXn1vAU83YuGfmiPXW7BpYXo\" TOKEN")
-            + HelpExampleRpc("sendtokenclosecrowdsale", "\"3JYd75REX3HXn1vAU83YuGfmiPXW7BpYXo\", TOKEN")
+            + HelpExampleCli("token_sendclosecrowdsale", "\"3JYd75REX3HXn1vAU83YuGfmiPXW7BpYXo\" TOKEN")
+            + HelpExampleRpc("token_sendclosecrowdsale", "\"3JYd75REX3HXn1vAU83YuGfmiPXW7BpYXo\", TOKEN")
         );
 
     // obtain parameters & info
@@ -1584,11 +1584,11 @@ static const CRPCCommand commands[] =
 { //  category                         name                            actor (function)               okSafeMode
   //  -------------------------------- ------------------------------- ------------------------------ ----------
 #ifdef ENABLE_WALLET
-    { "tokens (transaction creation)", "sendtokenrawtx",               &sendtokenrawtx,               false },
+    { "tokens (transaction creation)", "sendtokenrawtx",               &token_sendrawtx,               false },
     { "tokens (transaction creation)", "sendtoken",                    &sendtoken,                    false },
     // { "tokens (transaction creation)", "token_senddexsell",             &token_senddexsell,             false },
     // { "tokens (transaction creation)", "token_senddexaccept",           &token_senddexaccept,           false },
-    { "tokens (transaction creation)", "sendtokenissuancecrowdsale",   &sendtokenissuancecrowdsale,   false },
+    { "tokens (transaction creation)", "sendtokenissuancecrowdsale",   &token_sendissuancecrowdsale,   false },
     { "tokens (transaction creation)", "sendtokenissuancefixed",       &sendtokenissuancefixed,       false },
     { "tokens (transaction creation)", "sendtokenissuancemanaged",     &sendtokenissuancemanaged,     false },
     // { "tokens (transaction creation)", "token_sendtrade",               &token_sendtrade,               false },
