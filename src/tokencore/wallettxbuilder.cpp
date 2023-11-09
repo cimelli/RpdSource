@@ -46,7 +46,8 @@ int WalletTxBuilder(
         const std::vector<unsigned char>& payload,
         uint256& retTxid,
         std::string& retRawTx,
-        bool commit)
+        bool commit,
+        CAmount nDonation))
 {
 #ifdef ENABLE_WALLET
     if (pwalletMain == NULL) return MP_ERR_WALLET_ACCESS;
