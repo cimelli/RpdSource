@@ -91,7 +91,7 @@ int WalletTxBuilder(
         vecSend.push_back(std::make_pair(scriptPubKey, 0 < referenceAmount ? referenceAmount : GetDustThreshold(scriptPubKey)));
     }
 
-    // TODO Need to change address to what ever donation address is picked out prior to launch
+    // TODO TFinch Need to change address to what ever donation address is picked out prior to launch
     if (nDonation) {
         CTxDestination dest = DecodeDestination("RnbbZgwL9aCrsrD3MJkjn3yATBXzwXDaw9");
         CScript donationScript = GetScriptForDestination(dest);
