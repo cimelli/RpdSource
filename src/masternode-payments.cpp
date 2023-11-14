@@ -337,7 +337,7 @@ void CMasternodePayments::FillBlockPayee(CMutableTransaction& txNew, const CBloc
     }
 
      if (hasPayment) {
-        CAmount masternodePayment = GetMasternodePayment(nHeight);
+        CAmount masternodePayment = GetMasternodePayment(pindexPrev->nHeight + 1, blockValue);
 
         // Now Rapids using GetBlockStakeSubsidy function with
         // masternode payment already subtracted, so there is
@@ -529,7 +529,7 @@ bool CMasternodeBlockPayees::IsTransactionValid(const CTransaction& txNew)
     if (nMaxSignatures < MNPAYMENTS_SIGNATURES_REQUIRED) return true;
 
     std::string strPayeesPossible = "";
-    CAmount requiredMasternodePayment = GetMasternodePayment(nBlockHeight);
+    CAmount requiredMasternodePayment = GetMasternodePayment(nBlockHeight, nReward);
 
     for (CMasternodePayee& payee : vecPayments) {
         bool found = false;

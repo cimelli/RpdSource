@@ -1537,9 +1537,8 @@ int64_t GetBlockValue(int nHeight)
 
 }
 
-int64_t GetMasternodePayment(int nHeight)
+int64_t GetMasternodePayment(int nHeight, int64_t blockValue)
 {
-    CAmount blockValue = GetBlockValue(nHeight);
 
     if (nHeight == 1) return 0;
 
