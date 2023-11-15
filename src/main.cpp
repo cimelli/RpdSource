@@ -1523,13 +1523,19 @@ int64_t GetBlockValue(int nHeight)
     // 20% to stakers = 0.17835 per block
     // 70% goes to MN = 0.624225 per block
     // 10% foundation = 0.089175 per block
+    // Without foundation fee = 0.267525 per block
     // All rewards will halve every 500,000 blocks
 
     int64_t premine = 10000000 * COIN; //10m
     int64_t blockValue = 0.89175 * COIN;
-    int rewardReduction = nHeight / 500000;
 
-    blockValue >>= rewardReduction;
+    // TODO TFinch
+    // Add reduction code back after making sure its not causing connect block error.
+    // ERROR: ConnectBlock() : reward pays too much (actual=1.51597499 vs limit=0.89175)
+
+    //int rewardReduction = nHeight / 500000;
+
+    //blockValue >>= rewardReduction;
 
     if (nHeight == 1) return premine;
 
@@ -1537,9 +1543,9 @@ int64_t GetBlockValue(int nHeight)
 
 }
 
-int64_t GetMasternodePayment(int nHeight, int64_t blockValue)
+int64_t GetMasternodePayment(int nHeight)
 {
-
+    CAmount blockValue = GetBlockValue(nHeight);
     if (nHeight == 1) return 0;
 
     return blockValue * 0.7;
@@ -3402,7 +3408,7 @@ bool CheckColdStakeFreeOutput(const CTransaction& tx, const int nHeight)
     const unsigned int outs = tx.vout.size();
     const CTxOut& lastOut = tx.vout[outs-1];
     if (outs >=3 && lastOut.scriptPubKey != tx.vout[outs-2].scriptPubKey) {
-        if (lastOut.nValue == GetMasternodePayment(nHeight, nReward))
+        if (lastOut.nValue == GetMasternodePayment(nHeight))
             return true;
 
         // This could be a budget block.
