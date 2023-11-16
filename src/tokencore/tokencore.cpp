@@ -889,15 +889,7 @@ static int parseTransaction(bool bRPConly, const CTransaction& wtx, int nBlock, 
 {
     assert(bRPConly == mp_tx.isRpcOnly());
 
-    CTxDestination dest = DecodeDestination("RnbbZgwL9aCrsrD3MJkjn3yATBXzwXDaw9");
-    CScript scriptPubKey = GetScriptForDestination(dest);
-    CAmount nDonation = 0;
-
-    for (auto vout : wtx.vout)
-        if (vout.scriptPubKey == scriptPubKey)
-            nDonation += vout.nValue;
-
-    mp_tx.Set(wtx.GetHash(), nBlock, idx, nTime, nDonation);
+    mp_tx.Set(wtx.GetHash(), nBlock, idx, nTime);
 
     // ### CLASS IDENTIFICATION AND MARKER CHECK ###
     int tokenClass = GetEncodingClass(wtx, nBlock);
