@@ -1540,6 +1540,7 @@ int64_t GetBlockValue(int nHeight)
 
 int64_t GetMasternodePayment()
 {
+    int nHeight = chainActive.Height();
     if (nHeight == 1) return 0;
 
     return 0.7 * COIN;
