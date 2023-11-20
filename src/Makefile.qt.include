@@ -290,6 +290,7 @@ RES_ICONS = \
   qt/res/icons/ic-transaction-sent.svg \
   qt/res/icons/ic-transaction-staked.svg \
   qt/rpdchain/res/img/bg-dashboard-banner.png \
+  qt/rpdchain/res/img/bg-dashboard-banner-light.png \
   qt/rpdchain/res/img/bg-multi-number-dark.svg \
   qt/rpdchain/res/img/ic-check-locked.svg \
   qt/rpdchain/res/img/ic-nav-address.svg \

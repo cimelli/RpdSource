@@ -3,8 +3,8 @@
 <svg version="1.1" id="Group_9058" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
 	 viewBox="0 0 100 100" style="enable-background:new 0 0 100 100;" xml:space="preserve">
 <style type="text/css">
-	.st0{fill:#D1D5DB;}
-	.st1{fill:#A09EA5;}
+	.st0{fill:#FFFFFF;}
+	.st1{fill:#D1D5DB;}
 	.st2{fill:none;}
 </style>
 <g id="Group_9057">
@@ -21,10 +21,10 @@
 		<path id="Rectangle_4715" class="st1" d="M28,76h2v4h-2V76z"/>
 		<path id="Path_19003" class="st1" d="M87,30V16h-5V7H72v2h8v82H30v-7h-2v7h-9V9h9v63h2V9h30V7H17v86h65V72h5V58h-5v-7h5V37h-5v-7
 			H87z M82,18h3v10h-3V18z M85,60v10h-3V60H85z M85,39v10h-3V39H85z"/>
-		<path id="Path_19004" class="st1" d="M45,36c0,5.5,4.5,10,10,10s10-4.5,10-10s-4.5-10-10-10C49.5,26,45,30.5,45,36z M63,36
-			c0,4.4-3.6,8-8,8s-8-3.6-8-8s3.6-8,8-8C59.4,28,63,31.6,63,36z"/>
+		<path id="Path_19004" class="st1" d="M45,36c0,5.5,4.5,10,10,10s10-4.5,10-10s-4.5-10-10-10S45,30.5,45,36z M63,36
+			c0,4.4-3.6,8-8,8s-8-3.6-8-8s3.6-8,8-8S63,31.6,63,36z"/>
 		<path id="Path_19005" class="st1" d="M55.2,48c-9.7,0-14,8.4-16.7,15.7L38.1,65H72l-0.5-1.3C68.8,55.9,64.8,48,55.2,48z M41,63
-			c3.6-9.1,7.9-13,14.3-13c6.4,0,10.4,3.8,13.9,13H41z"/>
+			c3.6-9.1,7.9-13,14.3-13s10.4,3.8,13.9,13H41z"/>
 	</g>
 </g>
 <path id="Rectangle_4716" class="st2" d="M0,0h100v100H0V0z"/>
