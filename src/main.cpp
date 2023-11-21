@@ -1521,29 +1521,43 @@ int64_t GetBlockValue(int nHeight)
 
     // Block Value 0.89175 per block
     // 20% to stakers = 0.17835 per block
+    // Without foundation fee 30% to stakers = 0.267525 per block
     // 70% goes to MN = 0.624225 per block
+    // 
+    // Foundation fee turned off currently
     // 10% foundation = 0.089175 per block
-    // Without foundation fee = 0.267525 per block
+    
+    // Removing reduction code for now during testing.
     // All rewards will halve every 500,000 blocks
+    int64_t nSubsidy = 0;
+    int64_t premine = 10000000; //10m
+    int64_t rpdBlockValue = 0.89175;
+    //int rewardReduction = nHeight / 500000;    
+    
 
-    int64_t premine = 10000000 * COIN; //10m
-    int64_t rpdBlockValue = 0.89175 * COIN;
-    int64_t rewardReduction = nHeight / 500000;    
+    //rpdBlockValue >>= rewardReduction;
+    nHeight--;
+    if (nHeight == 1)           { nSubsidy = premine * COIN;
+    } else if (nHeight > 1)     { nSubsidy = rpdBlockValue * COIN;
+    }
+    
+    	// Check if we reached the coin max supply.
+    int64_t nMoneySupply = chainActive.Tip()->nMoneySupply;
 
-    rpdBlockValue >>= rewardReduction;
+    if (nMoneySupply + nSubsidy >= Params().MaxMoneyOut())
+        nSubsidy = Params().MaxMoneyOut() - nMoneySupply;
+    if (nMoneySupply >= Params().MaxMoneyOut())
+        nSubsidy = 0;
 
-    if (nHeight == 1) return premine;
-
-    return rpdBlockValue;
+    return nSubsidy;
 
 }
 
-int64_t GetMasternodePayment()
+int64_t GetMasternodePayment(int nHeight, int64_t blockValue)
 {
-    int nHeight = chainActive.Height();
-    if (nHeight == 1) return 0;
+    if (nHeight > 1) return blockValue * 0.7;
 
-    return 0.7 * COIN;
+    return 0;
 }
 
 bool IsInitialBlockDownload()
