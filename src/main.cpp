@@ -1541,12 +1541,13 @@ int64_t GetBlockValue(int nHeight)
     } else if (nHeight > 1)     { nSubsidy = rpdBlockValue * COIN;
     }
     
+    const Consensus::Params& consensus = Params().GetConsensus();
     	// Check if we reached the coin max supply.
-    int64_t nMoneySupply = chainActive.Tip()->nMoneySupply;
+    int64_t MaxMoney = Params().GetConsensus().nMaxMoneyOut;
 
-    if (nMoneySupply + nSubsidy >= Params().MaxMoneyOut())
-        nSubsidy = Params().MaxMoneyOut() - nMoneySupply;
-    if (nMoneySupply >= Params().MaxMoneyOut())
+    if (nMoneySupply + nSubsidy >= MaxMoney)
+        nSubsidy = MaxMoney - nMoneySupply;
+    if (nMoneySupply >= MaxMoney)
         nSubsidy = 0;
 
     return nSubsidy;
