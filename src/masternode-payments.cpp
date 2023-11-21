@@ -550,7 +550,8 @@ bool CMasternodeBlockPayees::IsTransactionValid(const CTransaction& txNew)
     if (nMaxSignatures < MNPAYMENTS_SIGNATURES_REQUIRED) return true;
 
     std::string strPayeesPossible = "";
-    CAmount requiredMasternodePayment = GetMasternodePayment();
+    CAmount nReward = GetBlockValue(nBlockHeight);
+    CAmount requiredMasternodePayment = GetMasternodePayment(nBlockHeight, nReward);
 
     for (CMasternodePayee& payee : vecPayments) {
         bool found = false;
