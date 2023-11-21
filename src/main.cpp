@@ -1527,28 +1527,23 @@ int64_t GetBlockValue(int nHeight)
     // All rewards will halve every 500,000 blocks
 
     int64_t premine = 10000000 * COIN; //10m
-    int64_t blockValue = 0.89175 * COIN;
+    int64_t rpdBlockValue = 0.89175 * COIN;
+    int64_t rewardReduction = nHeight / 500000;    
 
-    // TODO TFinch
-    // Add reduction code back after making sure its not causing connect block error.
-    // ERROR: ConnectBlock() : reward pays too much (actual=1.51597499 vs limit=0.89175)
-
-    //int rewardReduction = nHeight / 500000;
-
-    //blockValue >>= rewardReduction;
+    rpdBlockValue >>= rewardReduction;
 
     if (nHeight == 1) return premine;
 
-    return blockValue;
+    return rpdBlockValue;
 
 }
 
-int64_t GetMasternodePayment(int nHeight)
+int64_t GetMasternodePayment()
 {
-    CAmount blockValue = GetBlockValue(nHeight);
+    int nHeight = chainActive.Height();
     if (nHeight == 1) return 0;
 
-    return blockValue * 0.7;
+    return 0.7 * COIN;
 }
 
 bool IsInitialBlockDownload()
@@ -3408,7 +3403,7 @@ bool CheckColdStakeFreeOutput(const CTransaction& tx, const int nHeight)
     const unsigned int outs = tx.vout.size();
     const CTxOut& lastOut = tx.vout[outs-1];
     if (outs >=3 && lastOut.scriptPubKey != tx.vout[outs-2].scriptPubKey) {
-        if (lastOut.nValue == GetMasternodePayment(nHeight))
+        if (lastOut.nValue == GetMasternodePayment())
             return true;
 
         // This could be a budget block.
