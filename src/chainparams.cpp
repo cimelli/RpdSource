@@ -71,7 +71,7 @@ void GenesisGeneratorV2(CBlock genesis)
     //
     // /////////////////////////////////////////////////////////////////
 
-    uint32_t nGenesisTime = 1697725249;
+    uint32_t nGenesisTime = 1700679790;
 
     arith_uint256 test;
     uint256 hashGenesisBlock;
@@ -129,11 +129,11 @@ void GenesisGeneratorV2(CBlock genesis)
  */
 static Checkpoints::MapCheckpoints mapCheckpoints =
     boost::assign::map_list_of
-    (0, uint256S("0x0000049bddc73eb648a14790f81a48bcf4a8c4ab8b046d97de4fdbcbd22d3d90"));
+    (0, uint256S("0x001"));
 
 static const Checkpoints::CCheckpointData data = {
     &mapCheckpoints,
-    1697725249, // * UNIX timestamp of last checkpoint block
+    1700679790, // * UNIX timestamp of last checkpoint block
     0,    // * total number of transactions between genesis and last checkpoint
                 //   (the tx=... number in the UpdateTip debug.log lines)
     1440        // * estimated number of transactions per day after checkpoint
@@ -174,11 +174,11 @@ public:
         Genesis Merkle 0x5ac6154bb64fbe61995558afc487bb0e02746b33ffabbd7e1ca949f331dcc42a
         */
 
-        genesis = CreateGenesisBlock(1697725249, 160689, 0x1e0ffff0, 1, 0 * COIN);
-        consensus.hashGenesisBlock = genesis.GetHash();
-        assert(consensus.hashGenesisBlock == uint256S("0x0000049bddc73eb648a14790f81a48bcf4a8c4ab8b046d97de4fdbcbd22d3d90"));
-        assert(genesis.hashMerkleRoot == uint256S("0x5ac6154bb64fbe61995558afc487bb0e02746b33ffabbd7e1ca949f331dcc42a"));
-        //GenesisGeneratorV2(genesis);
+        //genesis = CreateGenesisBlock(1700679790, 160689, 0x1e0ffff0, 1, 0 * COIN);
+        //consensus.hashGenesisBlock = genesis.GetHash();
+        //assert(consensus.hashGenesisBlock == uint256S("0x0000049bddc73eb648a14790f81a48bcf4a8c4ab8b046d97de4fdbcbd22d3d90"));
+        //assert(genesis.hashMerkleRoot == uint256S("0x5ac6154bb64fbe61995558afc487bb0e02746b33ffabbd7e1ca949f331dcc42a"));
+        GenesisGeneratorV2(genesis);
 
         consensus.fPowAllowMinDifficultyBlocks = true;
         consensus.powLimit   = ~UINT256_ZERO >> 2;
@@ -206,11 +206,29 @@ public:
         consensus.nTargetSpacing = 1 * 60;      // 60 seconds
         consensus.nTimeSlotLength = 15;         // 15 seconds
 
+        /*
+        * Remove prior to going live and generate new spork keys
+        {
+            "isvalid": true,
+            "address": "RtXjTWK4ec8aNnQX9ALryz9W6t4Vx5f6Zx",
+            "address": "RtXjTWK4ec8aNnQX9ALryz9W6t4Vx5f6Zx",
+            "scriptPubKey": "76a914da6d6d1876038d169df04eb353359360d431647f88ac",
+            "ismine": true,
+            "isstaking": false,
+            "iswatchonly": false,
+            "isscript": false,
+            "pubkey": "0339a27679e996609203dca6ff0efc3c39e1dac26f7d3377d5045d663d19a9cea7",
+            "iscompressed": true,
+            "account": "spork"
+            "privkey": "7wFfoEmee4AA6Mv1qJrGaRhLafa4bDbjKRFtus2kziw4EwmXGAp6"
+        }
+        */
+
         // spork keys
-        consensus.strSporkPubKey = "040F129DE6546FE405995329A887329BED4321325B1A73B0A257423C05C1FCFE9E40EF0678AEF59036A22C42E61DFD29DF7EFB09F56CC73CADF64E05741880E3E7";
+        consensus.strSporkPubKey = "0339a27679e996609203dca6ff0efc3c39e1dac26f7d3377d5045d663d19a9cea7";
         consensus.strSporkPubKeyOld = "0499A7AF4806FC6DE640D23BC5936C29B77ADF2174B4F45492727F897AE63CF8D27B2F05040606E0D14B547916379FA10716E344E745F880EDC037307186AA25B7";
-        consensus.nTime_EnforceNewSporkKey = 1694531982;    //!> August 26, 2019 11:00:00 PM GMT
-        consensus.nTime_RejectOldSporkKey = 1694531982;     //!> September 26, 2019 11:00:00 PM GMT
+        consensus.nTime_EnforceNewSporkKey = 1700679790; //!> August 26, 2019 11:00:00 PM GMT
+        consensus.nTime_RejectOldSporkKey = 1700679790;  //!> September 26, 2019 11:00:00 PM GMT
 
         // height-based activations
         consensus.height_last_ZC_AccumCheckpoint = std::numeric_limits<int>::max();
