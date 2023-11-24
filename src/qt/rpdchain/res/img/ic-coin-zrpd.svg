@@ -1,26 +1,25 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<svg id="ic_piv" data-name="ic piv" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-  <defs>
-    <style>
-      .cls-1 {
-        fill: none;
-      }
-
-      .cls-2 {
-        fill: #f0583a;
-      }
-
-      .cls-3 {
-        fill: #f0593a;
-      }
-    </style>
-  </defs>
-  <path id="Rectangle_4543" data-name="Rectangle 4543" class="cls-1" d="m0,0h24v24H0V0Z"/>
-  <path class="cls-3" d="m19.25,14.4h-5.69c-.09,0-.15.1-.1.18.91,1.41,2.55,2.35,4.42,2.35h4.34c.06,0,.11-.05.11-.11v-2.3c0-.06-.05-.11-.11-.11h-2.97Z"/>
-  <path class="cls-3" d="m13.47,9.39c-.06.09,0,.2.11.2h4.35s1.31,0,1.31,0h2.95c.07,0,.13-.06.13-.13v-2.28c0-.06-.05-.12-.12-.12h-4.33c-1.86,0-3.49.93-4.41,2.33Z"/>
-  <g>
-    <path class="cls-3" d="m4.75,9.6h5.69c.09,0,.15-.1.1-.18-.91-1.41-2.55-2.35-4.42-2.35H1.78c-.06,0-.11.05-.11.11v2.3c0,.06.05.11.11.11h2.97Z"/>
-    <path class="cls-3" d="m10.53,14.61c.06-.09,0-.2-.11-.2h-4.35s-1.31,0-1.31,0H1.8c-.07,0-.13.06-.13.13v2.28c0,.06.05.12.12.12h4.33c1.86,0,3.49-.93,4.41-2.33Z"/>
-  </g>
-  <rect class="cls-2" x="6.86" y="10.79" width="10.53" height="2.42" rx="1.21" ry="1.21"/>
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 28.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<svg version="1.1" id="ic_piv" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 24 24" style="enable-background:new 0 0 24 24;" xml:space="preserve">
+<style type="text/css">
+	.st0{fill:none;}
+	.st1{fill:#F0593A;}
+	.st2{fill:#F0583A;}
+</style>
+<path id="Rectangle_4543" class="st0" d="M0,0h24v24H0V0z"/>
+<g>
+	<path class="st1" d="M17.8,13.9h-4.5c-0.1,0-0.1,0.1-0.1,0.1c0.8,1.2,2.1,1.9,3.5,1.9H20c0.1,0,0.1-0.1,0.1-0.1V14
+		c0-0.1-0.1-0.1-0.1-0.1H17.8L17.8,13.9z"/>
+	<path class="st1" d="M13.2,10c-0.1,0.1,0,0.1,0.1,0.1h3.4h1h2.3c0.1,0,0.1-0.1,0.1-0.1V8.2C20.2,8,20.1,8,20.1,8h-3.4
+		C15.3,8,14,8.8,13.2,10z"/>
+	<g>
+		<path class="st1" d="M6.4,10.1h4.5C11,10.1,11,10,11,10C10.2,8.8,9,8.2,7.4,8.2H3.9c0-0.1,0,0,0,0V10c0,0.1,0.1,0.1,0.1,0.1H6.4
+			L6.4,10.1z"/>
+		<path class="st1" d="M10.9,14.1c0.1-0.1,0-0.1-0.1-0.1H7.4h-1H3.9c-0.1,0-0.1,0.1-0.1,0.1V16c0.1,0,0.1,0,0.1,0h3.4
+			C8.8,16,10.1,15.2,10.9,14.1z"/>
+	</g>
+	<path class="st2" d="M15.4,13H9C8.4,13,8,12.6,8,12.1l0,0c0-0.5,0.4-0.9,0.9-0.9h6.5c0.5,0,0.9,0.4,0.9,0.9l0,0
+		C16.3,12.6,16,13,15.4,13z"/>
+</g>
 </svg>
