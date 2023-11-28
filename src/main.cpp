@@ -1537,8 +1537,8 @@ int64_t GetBlockValue(int nHeight)
 
     //rpdBlockValue >>= rewardReduction;
     nHeight--;
-    if (nHeight == 1)           { nSubsidy = premine * COIN;
-    } else if (nHeight > 1)     { nSubsidy = rpdBlockValue * COIN;
+    if (nHeight == 1)           { nSubsidy = premine;
+    } else if (nHeight > 1)     { nSubsidy = rpdBlockValue;
     }
     
     const Consensus::Params& consensus = Params().GetConsensus();
