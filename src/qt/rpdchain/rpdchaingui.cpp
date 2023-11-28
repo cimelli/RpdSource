@@ -192,7 +192,7 @@ void RPDCHAINGUI::connectActions()
         goToSettings();
     });
     connect(topBar, &TopBar::showHide, this, &RPDCHAINGUI::showHide);
-    connect(topBar, &TopBar::themeChanged, this, &RPDCHAINGUI::changeTheme);
+    // connect(topBar, &TopBar::themeChanged, this, &RPDCHAINGUI::changeTheme);
     connect(topBar, &TopBar::onShowHideColdStakingChanged, navMenu, &NavMenuWidget::onShowHideColdStakingChanged);
     connect(settingsWidget, &SettingsWidget::showHide, this, &RPDCHAINGUI::showHide);
     connect(sendWidget, &SendWidget::showHide, this, &RPDCHAINGUI::showHide);

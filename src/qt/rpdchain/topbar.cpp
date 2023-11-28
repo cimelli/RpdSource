@@ -93,13 +93,13 @@ TopBar::TopBar(RPDCHAINGUI* _mainWindow, QWidget *parent) :
 
     ui->pushButtonLock->setButtonClassStyle("cssClass", "btn-check-lock");
 
-    if (isLightTheme()) {
-        ui->pushButtonTheme->setButtonClassStyle("cssClass", "btn-check-theme-light");
-        ui->pushButtonTheme->setButtonText(tr("Light Theme"));
-    } else {
-        ui->pushButtonTheme->setButtonClassStyle("cssClass", "btn-check-theme-dark");
-        ui->pushButtonTheme->setButtonText(tr("Dark Theme"));
-    }
+    // if (isLightTheme()) {
+        // ui->pushButtonTheme->setButtonClassStyle("cssClass", "btn-check-theme-light");
+        // ui->pushButtonTheme->setButtonText(tr("Light Theme"));
+    // } else {
+        //ui->pushButtonTheme->setButtonClassStyle("cssClass", "btn-check-theme-dark");
+        // ui->pushButtonTheme->setButtonText(tr("Dark Theme"));
+    // }
 
     setCssProperty(ui->qrContainer, "container-qr");
     setCssProperty(ui->pushButtonQR, "btn-qr");
@@ -120,7 +120,7 @@ TopBar::TopBar(RPDCHAINGUI* _mainWindow, QWidget *parent) :
     connect(ui->pushButtonQR, &QPushButton::clicked, this, &TopBar::onBtnReceiveClicked);
     connect(ui->btnQr, &QPushButton::clicked, this, &TopBar::onBtnReceiveClicked);
     connect(ui->pushButtonLock, &ExpandableButton::Mouse_Pressed, this, &TopBar::onBtnLockClicked);
-    connect(ui->pushButtonTheme, &ExpandableButton::Mouse_Pressed, this, &TopBar::onThemeClicked);
+    // connect(ui->pushButtonTheme, &ExpandableButton::Mouse_Pressed, this, &TopBar::onThemeClicked);
     connect(ui->pushButtonFAQ, &ExpandableButton::Mouse_Pressed, [this](){window->openFAQ();});
     connect(ui->pushButtonColdStaking, &ExpandableButton::Mouse_Pressed, this, &TopBar::onColdStakingClicked);
     connect(ui->pushButtonSync, &ExpandableButton::Mouse_HoverLeave, this, &TopBar::refreshProgressBarSize);
@@ -129,24 +129,24 @@ TopBar::TopBar(RPDCHAINGUI* _mainWindow, QWidget *parent) :
     connect(ui->pushButtonConnection, &ExpandableButton::Mouse_Pressed, [this](){window->openNetworkMonitor();});
 }
 
-void TopBar::onThemeClicked()
-{
+// void TopBar::onThemeClicked()
+// {
     // Store theme
-    bool lightTheme = !isLightTheme();
+    // bool lightTheme = !isLightTheme();
 
-    setTheme(lightTheme);
+    // setTheme(lightTheme);
 
-    if (lightTheme) {
-        ui->pushButtonTheme->setButtonClassStyle("cssClass", "btn-check-theme-light",  true);
-        ui->pushButtonTheme->setButtonText(tr("Light Theme"));
-    } else {
-        ui->pushButtonTheme->setButtonClassStyle("cssClass", "btn-check-theme-dark", true);
-        ui->pushButtonTheme->setButtonText(tr("Dark Theme"));
-    }
-    updateStyle(ui->pushButtonTheme);
+    // if (lightTheme) {
+        //ui->pushButtonTheme->setButtonClassStyle("cssClass", "btn-check-theme-light",  true);
+        // ui->pushButtonTheme->setButtonText(tr("Light Theme"));
+    // } else {
+        // ui->pushButtonTheme->setButtonClassStyle("cssClass", "btn-check-theme-dark", true);
+        // ui->pushButtonTheme->setButtonText(tr("Dark Theme"));
+    // }
+    // updateStyle(ui->pushButtonTheme);
 
-    Q_EMIT themeChanged(lightTheme);
-}
+    // Q_EMIT themeChanged(lightTheme);
+// }
 
 void TopBar::onBtnLockClicked()
 {
