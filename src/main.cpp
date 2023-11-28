@@ -1529,36 +1529,39 @@ int64_t GetBlockValue(int nHeight)
     
     // Removing reduction code for now during testing.
     // All rewards will halve every 500,000 blocks
-    int64_t nSubsidy = 0;
-    int64_t premine = 10000000; //10m
-    int64_t rpdBlockValue = 0.89175;
-    //int rewardReduction = nHeight / 500000;    
+    //int64_t nSubsidy = 0;
+    int64_t premine = 10000000 * COIN; //10m
+    int64_t rpdBlockValue = 0.89175 * COIN;
+    int rewardReduction = nHeight / 500000;    
     
+    if (nHeight == 1) return premine;
 
-    //rpdBlockValue >>= rewardReduction;
-    nHeight--;
-    if (nHeight == 1)           { nSubsidy = premine;
-    } else if (nHeight > 1)     { nSubsidy = rpdBlockValue;
-    }
+    rpdBlockValue >>= rewardReduction;
+
+    return rpdBlockValue;
+    //nHeight--;
+    //if (nHeight == 1)           { return premine;
+    //} else if (nHeight > 1)     { return rpdBlockValue;
+    //}
     
-    const Consensus::Params& consensus = Params().GetConsensus();
+    //const Consensus::Params& consensus = Params().GetConsensus();
     	// Check if we reached the coin max supply.
-    int64_t MaxMoney = Params().GetConsensus().nMaxMoneyOut;
+    //int64_t MaxMoney = Params().GetConsensus().nMaxMoneyOut;
 
-    if (nMoneySupply + nSubsidy >= MaxMoney)
-        nSubsidy = MaxMoney - nMoneySupply;
-    if (nMoneySupply >= MaxMoney)
-        nSubsidy = 0;
+    //if (nMoneySupply + rpdBlockValue >= MaxMoney)
+    //    rpdBlockValue = MaxMoney - nMoneySupply;
+    //if (nMoneySupply >= MaxMoney)
+    //    rpdBlockValue = 0;
 
-    return nSubsidy;
+    //return rpdBlockValue;
 
 }
 
 int64_t GetMasternodePayment(int nHeight, int64_t blockValue)
 {
-    if (nHeight > 1) return blockValue * 0.7;
+    if (nHeight == 1) return 0;
 
-    return 0;
+    return blockValue * 0.7;
 }
 
 bool IsInitialBlockDownload()
