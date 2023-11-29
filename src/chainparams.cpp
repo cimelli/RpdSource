@@ -129,7 +129,7 @@ void GenesisGeneratorV2(CBlock genesis)
  */
 static Checkpoints::MapCheckpoints mapCheckpoints =
     boost::assign::map_list_of
-    (0, uint256S("0x001"));
+    (0, uint256S("0x00000b28ec229e66d733ce9172e57a02d7c3e9d7a8dc03eff983e5d1fc8644a1"));
 
 static const Checkpoints::CCheckpointData data = {
     &mapCheckpoints,
@@ -168,17 +168,17 @@ public:
         strNetworkID = "main";
 
         /*
-time: 1700679790
-hashGenesisBlock to 0x0000040c6712b6149badd359c6d4a17983114596d2bb9cbc0eac3880c1b087cd
-Genesis Nonce to 1514540
+time: 1701269755
+hashGenesisBlock to 0x00000b28ec229e66d733ce9172e57a02d7c3e9d7a8dc03eff983e5d1fc8644a1
+Genesis Nonce to 2846127
 Genesis Merkle 0x5ac6154bb64fbe61995558afc487bb0e02746b33ffabbd7e1ca949f331dcc42a
         */
 
-        //genesis = CreateGenesisBlock(1701269755, 1514540, 0x1e0ffff0, 1, 0 * COIN);
-        //consensus.hashGenesisBlock = genesis.GetHash();
-        //assert(consensus.hashGenesisBlock == uint256S("0x0000040c6712b6149badd359c6d4a17983114596d2bb9cbc0eac3880c1b087cd"));
-        //assert(genesis.hashMerkleRoot == uint256S("0x5ac6154bb64fbe61995558afc487bb0e02746b33ffabbd7e1ca949f331dcc42a"));
-        GenesisGeneratorV2(genesis);
+        genesis = CreateGenesisBlock(1701269755, 2846127, 0x1e0ffff0, 1, 0 * COIN);
+        consensus.hashGenesisBlock = genesis.GetHash();
+        assert(consensus.hashGenesisBlock == uint256S("0x00000b28ec229e66d733ce9172e57a02d7c3e9d7a8dc03eff983e5d1fc8644a1"));
+        assert(genesis.hashMerkleRoot == uint256S("0x5ac6154bb64fbe61995558afc487bb0e02746b33ffabbd7e1ca949f331dcc42a"));
+        //GenesisGeneratorV2(genesis);
 
         consensus.fPowAllowMinDifficultyBlocks = true;
         consensus.powLimit   = ~UINT256_ZERO >> 2;
