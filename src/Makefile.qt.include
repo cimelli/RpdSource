@@ -277,11 +277,11 @@ BITCOIN_QT_H = \
   qt/rpdchain/splash.h
 
 RES_ICONS = \
-  qt/res/icons/bitcoin.ico \
-  qt/res/icons/bitcoin.png \
-  qt/res/icons/bitcoin_testnet.ico \
-  qt/res/icons/bitcoin_testnet.png \
-  qt/res/icons/bitcoin_regtest.png \
+  qt/res/icons/rpdchain.ico \
+  qt/res/icons/rpdchain.png \
+  qt/res/icons/rpdchain_testnet.ico \
+  qt/res/icons/rpdchain_testnet.png \
+  qt/res/icons/rpdchain_regtest.png \
   qt/res/icons/lock_closed.png \
   qt/res/icons/lock_open.png \
   qt/res/icons/overview.png \
