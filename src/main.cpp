@@ -1532,11 +1532,11 @@ int64_t GetBlockValue(int nHeight)
     //int64_t nSubsidy = 0;
     int64_t premine = 10000000 * COIN; //10m
     int64_t rpdBlockValue = 0.89175 * COIN;
-    int rewardReduction = nHeight / 500000;    
+    //int rewardReduction = nHeight / 500000;    
     
-    if (nHeight == 1) return premine;
+    if (nHeight == 0) return premine;
 
-    rpdBlockValue >>= rewardReduction;
+    //rpdBlockValue >>= rewardReduction;
 
     return rpdBlockValue;
     //nHeight--;
@@ -1559,9 +1559,10 @@ int64_t GetBlockValue(int nHeight)
 
 int64_t GetMasternodePayment(int nHeight, int64_t blockValue)
 {
-    if (nHeight == 1) return 0;
 
-    return blockValue * 0.7;
+    if (nHeight > 200) return blockValue * 0.7;
+
+    return 0;
 }
 
 bool IsInitialBlockDownload()
