@@ -314,15 +314,11 @@ RES_ICONS = \
   qt/rpdchain/res/img/bg-welcome-container.jpg \
   qt/rpdchain/res/img/bg-welcome-container.png \
   qt/rpdchain/res/img/bg-welcome-container.svg \
-  qt/rpdchain/res/img/bg-welcome-container@2x.png \
-  qt/rpdchain/res/img/bg-welcome-container@3x.png \
   qt/rpdchain/res/img/ic-check-staking-off.svg \
   qt/rpdchain/res/img/ic-nav-master-hover.svg \
   qt/rpdchain/res/img/ic-watch-password.svg \
   qt/rpdchain/res/img/bg-welcome.jpg \
   qt/rpdchain/res/img/bg-welcome.svg \
-  qt/rpdchain/res/img/bg-welcome@2x.jpg \
-  qt/rpdchain/res/img/bg-welcome@3x.jpg \
   qt/rpdchain/res/img/bg-welcome.png \
   qt/rpdchain/res/img/ic-check-staking.svg \
   qt/rpdchain/res/img/ic-nav-master.svg \
