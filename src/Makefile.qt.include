@@ -396,11 +396,9 @@ RES_ICONS = \
   qt/rpdchain/res/img/ic-arrow-drop-white-down.svg \
   qt/rpdchain/res/img/ic-combo-box.svg \
   qt/rpdchain/res/img/ic-send.svg \
-  qt/rpdchain/res/img/img-logo-rpdchain@2x.png \
   qt/rpdchain/res/img/ic-arrow-purple-down.svg \
   qt/rpdchain/res/img/ic-connect.svg \
   qt/rpdchain/res/img/ic-submenu-lock.svg \
-  qt/rpdchain/res/img/img-logo-rpdchain@3x.png \
   qt/rpdchain/res/img/img-logo-rpdchain.svg \
   qt/rpdchain/res/img/ic-arrow-right-white.svg \
   qt/rpdchain/res/img/ic-arrow-left-white.svg \
