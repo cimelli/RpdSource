@@ -95,7 +95,7 @@ QPushButton[cssClass="img-nav-logo"] {
     qproperty-iconSize: 24px 40px;
     background-color: #3c3c3b;
     font-size:14px;
-    color: #d1d5db;
+    color: #ff5533;
 }
 
 /*HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH
@@ -357,7 +357,7 @@ QPushButton[cssClass="btn-check-cold-staking"]:checked {
     qproperty-iconSize: 24px 40px;
     background-color: #3c3c3b;
     font-size:14px;
-    color: #d1d5db;
+    color: #ff5533;
 }
 
 *[cssClass="btn-nav-master"] {
@@ -391,7 +391,7 @@ QPushButton[cssClass="btn-check-cold-staking"]:checked {
     qproperty-iconSize: 24px 30px;
     background-color: #3c3c3b;
     font-size:14px;
-    color: #d1d5db;
+    color: #ff5533;
 }
 
 /*HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH
@@ -2576,9 +2576,9 @@ QPushButton[cssClass="btn-settings-check"]:checked {
     background-image: url("://ic-arrow-drop-up-white");
     background-position:right center;
     background-repeat:no-repeat;
-    background-color: #ff5533;
+    background-color: #3c3c3b;
     border:none;
-    border-bottom:1px solid #3c3c3b;
+    border-bottom:1px solid #d1d5db;
     font-size:20px;
     color: #d1d5db;
     text-align:left;
@@ -2729,7 +2729,7 @@ QPushButton[cssClass="btn-faq-web"] {
 
 
 QPushButton[cssClass="btn-faq-options"] {
-    background-color:transparent;
+    background-color: #3c3c3b;
     border:none;
     font-size:18px;
     color: #d1d5db;
