@@ -29,10 +29,6 @@
         <file alias="img-nav-logo-rpdchain">rpdchain/res/img/img-nav-logo-rpdchain.png</file>
         <file alias="img-qr-test-big">rpdchain/res/img/img-qr-test-big.png</file>
         <file alias="img-qr-test">rpdchain/res/img/img-qr-test.png</file>
-        <file alias="img-welcome-step1">rpdchain/res/img/img-welcome-step1.png</file>
-        <file alias="img-welcome-step2">rpdchain/res/img/img-welcome-step2.png</file>
-        <file alias="img-welcome-step3">rpdchain/res/img/img-welcome-step3.png</file>
-        <file alias="img-welcome-step4">rpdchain/res/img/img-welcome-step4.png</file>
         <file alias="bg-multi-number-dark">rpdchain/res/img/bg-multi-number-dark.svg</file>
         <file alias="bg-multi-number">rpdchain/res/img/bg-multi-number.svg</file>
         <file alias="btn-radio-active">rpdchain/res/img/btn-radio-active.svg</file>
@@ -89,7 +85,6 @@
         <file alias="ic-close-white">rpdchain/res/img/ic-close-white.svg</file>
         <file alias="ic-close">rpdchain/res/img/ic-close.svg</file>
         <file alias="ic-coin-rpd">rpdchain/res/img/ic-coin-rpd.svg</file>
-        <file alias="ic-coin-zrpd">rpdchain/res/img/ic-coin-zrpd.svg</file>
         <file alias="ic-combo-box">rpdchain/res/img/ic-combo-box.svg</file>
         <file alias="ic-connect">rpdchain/res/img/ic-connect.svg</file>
         <file alias="ic-copy-liliac">rpdchain/res/img/ic-copy-liliac.svg</file>
@@ -186,9 +181,7 @@
         <file alias="ic-arrow-drop-up-purple">rpdchain/res/img/ic-arrow-drop-up-purple.svg</file>
         <file alias="img-logo-rpdchain">rpdchain/res/img/img-logo-rpdchain.svg</file>
         <file alias="bg-welcome-svg">rpdchain/res/img/bg-welcome.svg</file>
-        <file alias="bg-welcome-container">rpdchain/res/img/bg-welcome-container.svg</file>
         <file alias="bg-welcome">rpdchain/res/img/bg-welcome.png</file>
-        <file alias="bg-welcome-container-png">rpdchain/res/img/bg-welcome-container.png</file>
         <file alias="bg-dashboard-banner">rpdchain/res/img/bg-dashboard-banner.png</file>
         <file alias="ic-check-box-dark-active">rpdchain/res/img/ic-check-box-dark-active.svg</file>
         <file alias="ic-check-box-indeterminate">rpdchain/res/img/ic-check-box-indeterminate.svg</file>

@@ -2844,40 +2844,11 @@ QPushButton[cssClass="ic-step-confirm-welcome"] {
 }
 
 *[cssClass="container-welcome-stack"] {
-    background-image: url("://bg-welcome-container-png");
     background-position:center;
     background-repeat:no-repeat;
     background-color: transparent;
     border:  1px solid #d1d5db;
     border-radius: 4px;
-}
-
-*[cssClass="container-welcome-step1"] {
-    background-image: url("://img-welcome-step1");
-    background-position:left bottom;
-    background-repeat:no-repeat;
-    background-color: transparent;
-}
-
-*[cssClass="container-welcome-step2"] {
-    background-image: url("://img-welcome-step2");
-    background-position:left bottom;
-    background-repeat:no-repeat;
-    background-color: transparent;
-}
-
-*[cssClass="container-welcome-step3"] {
-    background-image: url("://img-welcome-step3");
-    background-position:left bottom;
-    background-repeat:no-repeat;
-    background-color: transparent;
-}
-
-*[cssClass="container-welcome-step4"] {
-    background-image: url("://img-welcome-step4");
-    background-position:left bottom;
-    background-repeat:no-repeat;
-    background-color: transparent;
 }
 
 QComboBox[cssClass="btn-combo-welcome"] {
@@ -2887,7 +2858,6 @@ QComboBox[cssClass="btn-combo-welcome"] {
     border:1px solid #d1d5db;
     color: #d1d5db;
 }
-
 
 QComboBox[cssClass="btn-combo-welcome"]::down-arrow {
     image: url("://ic-arrow-purple-down");
@@ -2912,7 +2882,6 @@ QPushButton[cssClass="btn-welcome-next"] {
     background-color: #3c3c3b;
     color: #d1d5db;
 }
-
 
 QPushButton[cssClass="btn-welcome-number-check"] {
     border:  1px solid #d1d5db;

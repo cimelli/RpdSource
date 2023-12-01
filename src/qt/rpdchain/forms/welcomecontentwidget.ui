@@ -698,7 +698,7 @@
                      <enum>Qt::NoFocus</enum>
                     </property>
                     <property name="text">
-                     <string>Privacy</string>
+                     <string>Blockchain</string>
                     </property>
                     <property name="checkable">
                      <bool>true</bool>
@@ -739,7 +739,7 @@
                      <enum>Qt::NoFocus</enum>
                     </property>
                     <property name="text">
-                     <string>Masternodes</string>
+                     <string>Governance</string>
                     </property>
                     <property name="checkable">
                      <bool>true</bool>
@@ -962,7 +962,10 @@
                    <item alignment="Qt::AlignHCenter">
                     <widget class="QLabel" name="labelMessage2">
                      <property name="text">
-                      <string>Welcome to your blockchain journey! Unleash the power of decentralized possibilities. Your wallet, your keys, your control. Let the blockchain adventure begin!</string>
+                      <string>Welcome to your blockchain journey!
+                          Unleash the power of decentralized possibilities.
+                          Your wallet, your keys, your control.
+                          Let the blockchain adventure begin!</string>
                      </property>
                      <property name="alignment">
                       <set>Qt::AlignHCenter|Qt::AlignTop</set>
@@ -1055,7 +1058,7 @@
                 <item>
                  <widget class="QLabel" name="labelMessage3">
                   <property name="text">
-                   <string>Decentralization brings back the power and control to the users and can set the foundation for web3. As new blockchain solutions make a massive impact across different sectors, the significance of decentralization becomes more relevant than ever.</string>
+                   <string>Decentralization brings back the power and control to the users and can set the foundation for web3. As new blockchain solutions make a huge impact across different sectors, the significance of decentralization becomes more relevant than ever.</string>
                   </property>
                   <property name="alignment">
                    <set>Qt::AlignHCenter|Qt::AlignTop</set>
@@ -1115,7 +1118,7 @@
                    </size>
                   </property>
                   <property name="text">
-                   <string>Be part of Governance... Run A Masternode!</string>
+                   <string>Be a part of Governance... Run A Masternode!</string>
                   </property>
                  </widget>
                 </item>

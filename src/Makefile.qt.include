@@ -311,9 +311,6 @@ RES_ICONS = \
   qt/rpdchain/res/img/ic-check-peers.svg \
   qt/rpdchain/res/img/ic-nav-master-active.svg \
   qt/rpdchain/res/img/ic-watch-password-white.svg \
-  qt/rpdchain/res/img/bg-welcome-container.jpg \
-  qt/rpdchain/res/img/bg-welcome-container.png \
-  qt/rpdchain/res/img/bg-welcome-container.svg \
   qt/rpdchain/res/img/ic-check-staking-off.svg \
   qt/rpdchain/res/img/ic-nav-master-hover.svg \
   qt/rpdchain/res/img/ic-watch-password.svg \
@@ -386,11 +383,9 @@ RES_ICONS = \
   qt/rpdchain/res/img/ic-receive-off.svg \
   qt/rpdchain/res/img/img-empty-staking-on.svg \
   qt/rpdchain/res/img/ic-arrow-drop-up-white.svg \
-  qt/rpdchain/res/img/ic-coin-zrpd.png \
   qt/rpdchain/res/img/ic-receive-on.svg \
   qt/rpdchain/res/img/img-empty-transactions.svg \
   qt/rpdchain/res/img/ic-arrow-drop-up.svg \
-  qt/rpdchain/res/img/ic-coin-zrpd.svg \
   qt/rpdchain/res/img/ic-received.svg \
   qt/rpdchain/res/img/img-logo-rpdchain.png \
   qt/rpdchain/res/img/ic-arrow-drop-white-down.svg \
@@ -449,25 +444,21 @@ RES_ICONS = \
   qt/rpdchain/res/img/dark/ic-transaction-mint-inactive.svg \
   qt/rpdchain/res/img/ic-transaction-received-inactive.svg \
   qt/rpdchain/res/img/dark/ic-transaction-received-inactive.svg \
-  qt/rpdchain/res/img/img-welcome-step1.png \
   qt/rpdchain/res/img/ic-check-connect.svg \
   qt/rpdchain/res/img/ic-menu-hover.svg \
   qt/rpdchain/res/img/ic-transaction-sent.svg \
   qt/rpdchain/res/img/ic-transaction-sent-inactive.svg \
   qt/rpdchain/res/img/dark/ic-transaction-sent.svg \
   qt/rpdchain/res/img/dark/ic-transaction-sent-inactive.svg \
-  qt/rpdchain/res/img/img-welcome-step2.png \
   qt/rpdchain/res/img/ic-check-dark.svg \
   qt/rpdchain/res/img/ic-mint.svg \
   qt/rpdchain/res/img/ic-transaction-staked.svg \
   qt/rpdchain/res/img/ic-transaction-staked-inactive.svg \
   qt/rpdchain/res/img/dark/ic-transaction-staked.svg \
   qt/rpdchain/res/img/dark/ic-transaction-staked-inactive.svg \
-  qt/rpdchain/res/img/img-welcome-step3.png \
   qt/rpdchain/res/img/ic-check-liliac-on.svg \
   qt/rpdchain/res/img/ic-nav-address-active.svg \
   qt/rpdchain/res/img/ic-unlock-staking.svg \
-  qt/rpdchain/res/img/img-welcome-step4.png \
   qt/rpdchain/res/img/ic-check-locked-off.svg \
   qt/rpdchain/res/img/ic-nav-address-hover.svg \
   qt/rpdchain/res/img/ic-update-liliac.svg \
