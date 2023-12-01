@@ -936,7 +936,8 @@
                       <string notr="true">padding:1px;</string>
                      </property>
                      <property name="text">
-                      <string>Welcome to your RPD Chain Core Wallet</string>
+                      <string>Welcome to your &lt;a style='color: #ff5533'&gt;
+                          RPD Chain&lt;/a&gt;Core Wallet</string>
                      </property>
                      <property name="alignment">
                       <set>Qt::AlignCenter</set>
@@ -962,10 +963,8 @@
                    <item alignment="Qt::AlignHCenter">
                     <widget class="QLabel" name="labelMessage2">
                      <property name="text">
-                      <string>Welcome to your blockchain journey!
-                          Unleash the power of decentralized possibilities.
-                          Your wallet, your keys, your control.
-                          Let the blockchain adventure begin!</string>
+                      <string>Welcome to your blockchain journey!<br>Unleash the power of decentralized possibilities.<br>&lt;a style='color: #ff5533'&gt;
+                          Your wallet, Your keys, Your control.&lt;/a&gt;.<br>Let the blockchain adventure begin!</string>
                      </property>
                      <property name="alignment">
                       <set>Qt::AlignHCenter|Qt::AlignTop</set>
@@ -1058,7 +1057,7 @@
                 <item>
                  <widget class="QLabel" name="labelMessage3">
                   <property name="text">
-                   <string>Decentralization brings back the power and control to the users and can set the foundation for web3. As new blockchain solutions make a huge impact across different sectors, the significance of decentralization becomes more relevant than ever.</string>
+                   <string>Decentralization brings back the power and control<br>to the users and can set the foundation for web3.<br>As new blockchain solutions make a huge impact<br>across different sectors, the significance of<br>decentralization becomes more relevant than ever.</string>
                   </property>
                   <property name="alignment">
                    <set>Qt::AlignHCenter|Qt::AlignTop</set>

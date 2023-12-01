@@ -17,9 +17,9 @@ SettingsFaqWidget::SettingsFaqWidget(RPDCHAINGUI *parent) :
 
 #ifdef Q_OS_MAC
     ui->container->load("://bg-welcome");
-    setCssProperty(ui->container, "container-welcome-no-image");
+    setCssProperty(ui->container, "bg-welcome");
 #else
-    setCssProperty(ui->container, "container-welcome");
+    setCssProperty(ui->container, "bg-welcome");
 #endif
     setCssProperty(ui->labelTitle, "text-title-faq");
     setCssProperty(ui->labelWebLink, "text-content-white");

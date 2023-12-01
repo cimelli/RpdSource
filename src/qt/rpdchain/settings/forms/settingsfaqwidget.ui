@@ -495,7 +495,7 @@
                       <item>
                        <widget class="QLabel" name="labelSubtitle_Intro">
                         <property name="text">
-                         <string>What is RPDCHAIN?</string>
+                         <string>What is RPD Chain?</string>
                         </property>
                         <property name="wordWrap">
                          <bool>true</bool>
