@@ -163,7 +163,7 @@
                       <enum>Qt::NoFocus</enum>
                      </property>
                      <property name="text">
-                      <string>1) What is RPDCHAIN?</string>
+                      <string>1) What is RPD Chain?</string>
                      </property>
                      <property name="checkable">
                       <bool>true</bool>
