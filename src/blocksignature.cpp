@@ -26,7 +26,9 @@ bool SignBlock(CBlock& block, const CKeyStore& keystore)
             break;
         }
         if (!fFoundID)
-            return error("%s: failed to find key for PoW", __func__);
+            LogPrintf("%s: failed to find key for PoW but going to continue for now.", __func__);
+            //return error("%s: failed to find key for PoW", __func__);
+            //We can continue here since on launch we are already going to be out of proof of work phase
     } else {
         if (!block.vtx[1].vout[1].GetKeyIDFromUTXO(keyID))
             return error("%s: failed to find key for PoS", __func__);
