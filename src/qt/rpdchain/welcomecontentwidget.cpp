@@ -60,15 +60,31 @@ WelcomeContentWidget::WelcomeContentWidget(QWidget *parent) :
 
     // position
     backButton->move(backX, backY);
-<<<<<<< HEAD
-    backButton->setStyleSheet("background: url(://ic-arrow-white-left); background-repeat:no-repeat;background-position:center;border:  0;background-color: #3c3c3b;color: transparent; border-radius:2px;hover-color: #ff5533;");
+    backButton->setStyleSheet("QPushButton {"
+                                  "    background: url(://ic-arrow-white-left);"
+                                  "    background-repeat: no-repeat;"
+                                  "    background-position: center;"
+                                  "    border: 0;"
+                                  "    background-color: #3c3c3b;"
+                                  "    color: transparent;"
+                                  "    border-radius: 2px;"
+                                  "}"
+                                  "QPushButton:hover {"
+                                  "    background-color: #ff5533;"
+                                  "}");
     nextButton->move(nextX, nextY);
-    nextButton->setStyleSheet("background: url(://ic-arrow-white-right);background-repeat:no-repeat;background-position:center;border:  0;background-color: #3c3c3b;color: transparent;border-radius:2px;hover-color: #ff5533;");
-=======
-    backButton->setStyleSheet("background: url(://ic-arrow-white-left); background-repeat:no-repeat;background-position:center;border:  0;background-color: #3c3c3b; color: transparent; border-radius:2px; hover #ff5533;");
-    nextButton->move(nextX, nextY);
-    nextButton->setStyleSheet("background: url(://ic-arrow-white-right);background-repeat:no-repeat;background-position:center;border:  0;background-color: #3c3c3b; color: transparent; border-radius:2px; hover #ff5533;");
->>>>>>> c4f23502964e946b6b8253ec3f14ee0e52429c01
+    nextButton->setStyleSheet("QPushButton {"
+                              "    background: url(://ic-arrow-white-right);"
+                              "    background-repeat: no-repeat;"
+                              "    background-position: center;"
+                              "    border: 0;"
+                              "    background-color: #3c3c3b;"
+                              "    color: transparent;"
+                              "    border-radius: 2px;"
+                              "}"
+                              "QPushButton:hover {"
+                              "    background-color: #ff5533;"
+                              "}");
 
     if (pos == 0) {
         backButton->setVisible(false);

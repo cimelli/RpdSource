@@ -613,7 +613,7 @@
                      <enum>Qt::NoFocus</enum>
                     </property>
                     <property name="text">
-                     <string>Language</string>
+                    <string>&lt;b&gt;a style='color: #ff5533'&gt;Language&lt;/a&gt;/b&gt;</string>
                     </property>
                     <property name="checkable">
                      <bool>true</bool>
@@ -657,7 +657,7 @@
                      <enum>Qt::NoFocus</enum>
                     </property>
                     <property name="text">
-                     <string>Welcome</string>
+                    <string>&lt;b&gt;a style='color: #ff5533'&gt;Welcome&lt;/a&gt;/b&gt;</string>
                     </property>
                     <property name="checkable">
                      <bool>true</bool>
@@ -698,7 +698,7 @@
                      <enum>Qt::NoFocus</enum>
                     </property>
                     <property name="text">
-                     <string>Blockchain</string>
+                     <string>&lt;b&gt;a style='color: #ff5533'&gt;Blockchain&lt;/a&gt;/b&gt;</string>
                     </property>
                     <property name="checkable">
                      <bool>true</bool>
@@ -739,7 +739,7 @@
                      <enum>Qt::NoFocus</enum>
                     </property>
                     <property name="text">
-                     <string>Governance</string>
+                     <string>&lt;b&gt;a style='color: #ff5533'&gt;Governance&lt;/a&gt;/b&gt;</string>
                     </property>
                     <property name="checkable">
                      <bool>true</bool>
@@ -847,8 +847,7 @@
                    </size>
                   </property>
                   <property name="text">
-                   <string>Select your &lt;a style='color: #ff5533'&gt;
-                       language&lt;/a&gt;</string>
+                   <string>Select your &lt;b&gt;a style='color: #ff5533'&gt;Language&lt;/a&gt;/b&gt;</string>
                   </property>
                  </widget>
                 </item>
@@ -937,8 +936,7 @@
                       <string notr="true">padding:1px;</string>
                      </property>
                      <property name="text">
-                      <string>Welcome to your &lt;a style='color: #ff5533'&gt;
-                          RPD Chain&lt;/a&gt; core Wallet</string>
+                      <string>Welcome to your &lt;b&gt;a style='color: #ff5533'&gt;RPDCHAIN&lt;/a&gt;/b&gt; Core Wallet!</string>
                      </property>
                      <property name="alignment">
                       <set>Qt::AlignCenter</set>
@@ -964,8 +962,7 @@
                    <item alignment="Qt::AlignHCenter">
                     <widget class="QLabel" name="labelMessage2">
                      <property name="text">
-                      <string>Welcome to your blockchain journey! Unleash the power of decentralized possibilities. &lt;a style='color: #ff5533'&gt;
-                          Your wallet, your keys, your control.&lt;/a&gt;. Let the blockchain adventure begin!</string>
+                      <string>Welcome to your blockchain journey!&#xa;Unleash the power of decentralized possibilities.&#xa;&lt;b&gt;a style='color: #ff5533'&gt;Your wallet, Your keys, Your control.&lt;/a&gt;/b&gt;.&#xa;Let the blockchain adventure begin!</string>
                      </property>
                      <property name="alignment">
                       <set>Qt::AlignHCenter|Qt::AlignTop</set>
@@ -1038,7 +1035,7 @@
                    </size>
                   </property>
                   <property name="text">
-                   <string>Why is &lt;a style='color: #ff5533'&gt;decentralization&lt;/a&gt; important to us?!</string>
+                   <string>Why is &lt;b&gt;a style='color: #ff5533'&gt;Decentralization&lt;/a&gt;/b&gt; Important to us?!</string>
                   </property>
                  </widget>
                 </item>
@@ -1058,7 +1055,7 @@
                 <item>
                  <widget class="QLabel" name="labelMessage3">
                   <property name="text">
-                   <string>Decentralization brings back the &lt;a style='color: #ff5533'&gt;power and control&lt;/a&gt; to the users and can set the foundation for web3. As new blockchain solutions make a huge impact across different sectors, the significance of decentralization becomes more relevant than ever.</string>
+                   <string>Decentralization brings back the &lt;b&gt;a style='color: #ff5533'&gt;power and control&lt;/a&gt;/b&gt;&#xa;to the users and can set the foundation for web3.&#xa;As new blockchain solutions make a huge impact across&#xa;different sectors, the significance of decentralization&#xa;becomes more relevant than ever.</string>
                   </property>
                   <property name="alignment">
                    <set>Qt::AlignHCenter|Qt::AlignTop</set>
@@ -1118,7 +1115,7 @@
                    </size>
                   </property>
                   <property name="text">
-                   <string>Be a part of &lt;a style='color: #ff5533'&gt;governance&lt;/a&gt;... Run A Masternode!</string>
+                   <string>Be a Part of &lt;/b&gt;a style='color: #ff5533'&gt;Governance&lt;/a&gt;/b&gt;... Run A Masternode!</string>
                   </property>
                  </widget>
                 </item>
@@ -1141,7 +1138,7 @@
                 <item>
                  <widget class="QLabel" name="labelMessage4">
                   <property name="text">
-                   <string>Decentralized Autonomous Organization (or DAO) is a decentralized system powered by the &lt;a style='color: #ff5533'&gt;masternodes&lt;/a&gt;. The DAO allows each masternode to submit proposals and to vote on others.</string>
+                   <string>Decentralized Autonomous Organization (or DAO) is a&#xa;decentralized system &lt;b&gt;a style='color: #ff5533'&gt;powered by the masternodes&lt;/a&gt;/b&gt;.&#xa;The DAO allows each masternode to submit proposals&#xa;and to vote on others.</string>
                   </property>
                   <property name="alignment">
                    <set>Qt::AlignCenter</set>
