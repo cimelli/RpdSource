@@ -318,7 +318,7 @@ std::string GetRequiredPaymentsString(int nBlockHeight)
 
 void CMasternodePayments::FillBlockPayee(CMutableTransaction& txNew, const CBlockIndex* pindexPrev, bool fProofOfStake)
 {
-    CBlockIndex* pindexPrev = chainActive.Tip();
+    //CBlockIndex* pindexPrev = chainActive.Tip();
     if (!pindexPrev) return;
 
     bool hasPayment = true;
@@ -331,7 +331,7 @@ void CMasternodePayments::FillBlockPayee(CMutableTransaction& txNew, const CBloc
         if (winningNode) {
             payee = GetScriptForDestination(winningNode->pubKeyCollateralAddress.GetID());
         } else {
-            LogPrint("masternode", "CreateNewBlock: Failed to detect masternode to pay\n");
+            LogPrint(BCLog::MASTERNODE, "CreateNewBlock: Failed to detect masternode to pay\n");
             hasPayment = false;
         }
     }
@@ -371,15 +371,13 @@ void CMasternodePayments::FillBlockPayee(CMutableTransaction& txNew, const CBloc
             txNew.vout.resize(2);
             txNew.vout[1].scriptPubKey = payee;
             txNew.vout[1].nValue = masternodePayment;
-            txNew.vout[0].nValue = blockValue - masternodePayment;
+            txNew.vout[0].nValue = GetBlockValue - masternodePayment;
         }
 
         CTxDestination address1;
         ExtractDestination(payee, address1);
-        //CBitcoinAddress address2(address1);
-        CTxDestination address2 = DecodeDestination(address1);
 
-        LogPrint("masternode", "Masternode payment of %s to %s\n", FormatMoney(masternodePayment).c_str(), EncodeDestination(address2).c_str());
+        LogPrint(BCLog::MASTERNODE, "Masternode payment of %s to %s\n", FormatMoney(masternodePayment).c_str(), EncodeDestination(address1).c_str());
     }
 }
 
