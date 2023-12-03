@@ -320,14 +320,13 @@ void CMasternodePayments::FillBlockPayee(CMutableTransaction& txNew, const CBloc
 {
     if (!pindexPrev) return;
 
-    //int nHeight = pindexPrev->nHeight + 1;
     bool hasPayment = true;
     CScript payee;
 
     // spork
     if (!masternodePayments.GetBlockPayee(pindexPrev->nHeight + 1, payee)) {
         // no masternode detected
-        const CMasternode* winningNode = mnodeman.GetCurrentMasterNode(1);
+        CMasternode* winningNode = mnodeman.GetCurrentMasterNode(1);
         if (winningNode) {
             payee = GetScriptForDestination(winningNode->pubKeyCollateralAddress.GetID());
         } else {
@@ -336,10 +335,10 @@ void CMasternodePayments::FillBlockPayee(CMutableTransaction& txNew, const CBloc
         }
     }
 
-        CAmount blockValue = GetBlockValue(pindexPrev->nHeight + 1);
-        CAmount masternodePayment = GetMasternodePayment(pindexPrev->nHeight, blockValue);
+    CAmount blockValue = GetBlockValue(pindexPrev->nHeight + 1);
+    CAmount masternodePayment = GetMasternodePayment(pindexPrev->nHeight, blockValue);
 
-     if (hasPayment) {
+    if (hasPayment) {
         if (fProofOfStake) {
             int nHeight = pindexPrev->nHeight + 1;
             int offset = nHeight > Params().GetConsensus().height_supply_reduction ? 3 : 2;
@@ -368,9 +367,9 @@ void CMasternodePayments::FillBlockPayee(CMutableTransaction& txNew, const CBloc
                     for (unsigned int j = keyIndex; j <= outputs; j++) {
                         txNew.vout[j].nValue -= mnPaymentSplit;
                     }
+                    // in case it's not an even division, take the last bit of dust from the last one
+                    txNew.vout[outputs].nValue -= mnPaymentRemainder;
                 }
-                // in case it's not an even division, take the last bit of dust from the last one
-                txNew.vout[outputs].nValue -= mnPaymentRemainder;
             }
         } else {
             txNew.vout.resize(2);
@@ -381,8 +380,9 @@ void CMasternodePayments::FillBlockPayee(CMutableTransaction& txNew, const CBloc
 
         CTxDestination address1;
         ExtractDestination(payee, address1);
+
         LogPrint(BCLog::MASTERNODE, "Masternode payment of %s to %s\n", FormatMoney(masternodePayment).c_str(), EncodeDestination(address1).c_str());
-     }
+    }
 }
 
 void CMasternodePayments::ProcessMessageMasternodePayments(CNode* pfrom, std::string& strCommand, CDataStream& vRecv)
