@@ -141,58 +141,6 @@ QPushButton[cssClass="img-nav-logo"] {
 !#############
  ################################*/
 
-/*******************
-******cold staking top bar*********
- ********************/
-
-QPushButton[cssClass="btn-check-cold-staking"] {
-    qproperty-icon: url("://ic-check-cold-staking");
-    qproperty-iconSize: 24px 24px;
-    color:#d1d5db;
-    background-color:3c3c3b;
-    border-bottom:2px solid #3c3c3b;
-    border-radius:2px;
-}
-
-
-QPushButton[cssClass="btn-check-cold-staking-inactive"] {
-    qproperty-icon: url("://ic-check-cold-staking-off");
-    qproperty-iconSize: 24px 24px;
-    color:#B3FFFFFF;
-    background-color:transparent;
-    border-bottom:2px solid #3c3c3b;
-    border-radius:2px;
-}
-
-QPushButton[cssClass="btn-check-cold-staking-checked"] {
-    qproperty-icon: url("://ic-check-cold-staking-enabled");
-    qproperty-iconSize: 24px 24px;
-    background-color:3c3c3b;
-    color:#d1d5db;
-    border-bottom:2px solid #d1d5db;
-}
-
-QPushButton[cssClass="btn-check-cold-staking-unchecked"] {
-    qproperty-icon: url("://ic-check-cold-staking-enabled");
-    qproperty-iconSize: 24px 24px;
-    color:#B3FFFFFF;
-    background-color:transparent;
-    border-bottom:2px solid #3c3c3b;
-    border-radius:2px;
-}
-
-QPushButton[cssClass="btn-check-cold-staking"]:checked {
-    qproperty-icon: url("://ic-check-cold-staking-enabled");
-    qproperty-iconSize: 24px 24px;
-    background-color:3c3c3b;
-    color:#d1d5db;
-    border-bottom:2px solid #d1d5db;
-}
-
-/*******************
-******end cold staking*********
- ********************/transparent
-
 *[cssClass="btn-nav-settings"] {
     qproperty-icon: url("://ic-nav-settings") off,
     url("://ic-nav-settings-active") on;
@@ -1789,9 +1737,9 @@ QProgressBar[cssClass="progress-splash"]::chunk:horizontal {
     y1: 0.5,
     x2: 1,
     y2: 0.5,
-    stop: 0 #80211a2f,
-    stop: 1 #80b088ff,
-    stop: 2 #80211a2f,);
+    stop: 0 #3c3c3b,
+    stop: 1 #3c3c3b,
+    stop: 2 #3c3c3b,);
     margin-right: 2px;
 }
 
@@ -2424,7 +2372,7 @@ QPushButton[cssClass="btn-name-check"] {
     background-color: #fafafa;
     border:none;
     font-size:20px;
-    color: rgba(92, 75, 125, 0.5);
+    color: #3c3c3b;
 }
 
 QPushButton[cssClass="btn-name-check"]:checked {
@@ -2530,6 +2478,17 @@ QPushButton[cssClass="btn-dialog-cancel"] {
     border-radius: 2px;
 }
 
+QPushButton[cssClass="btn-dialog-cancel"]:focus {
+    color: #3c3c3b;
+}
+
+QPushButton[cssClass="btn-dialog-cancel"]:focus:hover {
+    color: #ff5533;
+}
+
+QPushButton[cssClass="btn-dialog-cancel"]:hover {
+    color: #ff5533;
+}
 
 QLineEdit[cssClass="edit-primary-dialog"] {
     border:  1px solid #3c3c3b;
@@ -2651,7 +2610,7 @@ QPushButton[cssClass="btn-settings-options"]:checked {
 }
 
 QPushButton[cssClass="btn-settings-options"]:hover {
-    background-color: rgba(135, 123, 159, 0.7);
+    background-color: #ff5533;
     border:none;
     font-size:20px;
     color: #fafafa;
@@ -2791,7 +2750,7 @@ QPushButton[cssClass="btn-faq-options"] {
 }
 
 QPushButton[cssClass="btn-faq-options"]:checked {
-    background-color: rgba(176 ,136 ,255, 0.2);
+    background-color: #ff5533;
     border:none;
     font-size:18px;
     color: #fafafa;
@@ -2905,36 +2864,8 @@ QPushButton[cssClass="ic-step-confirm-welcome"] {
     border-radius: 4px;
 }
 
-*[cssClass="container-welcome-step1"] {
-    background-image: url("://img-welcome-step1");
-    background-position:left bottom;
-    background-repeat:no-repeat;
-    background-color: transparent;
-}
-
-*[cssClass="container-welcome-step2"] {
-    background-image: url("://img-welcome-step2");
-    background-position:left bottom;
-    background-repeat:no-repeat;
-    background-color: transparent;
-}
-
-*[cssClass="container-welcome-step3"] {
-    background-image: url("://img-welcome-step3");
-    background-position:left bottom;
-    background-repeat:no-repeat;
-    background-color: transparent;
-}
-
-*[cssClass="container-welcome-step4"] {
-    background-image: url("://img-welcome-step4");
-    background-position:left bottom;
-    background-repeat:no-repeat;
-    background-color: transparent;
-}
-
 QComboBox[cssClass="btn-combo-welcome"] {
-    background-color:#171022;
+    background-color:#fafafa;
     padding:10px 20px 10px 10px;
     font-size:16px;
     border:1px solid #3c3c3b;
