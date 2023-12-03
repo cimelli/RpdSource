@@ -318,6 +318,7 @@ std::string GetRequiredPaymentsString(int nBlockHeight)
 
 void CMasternodePayments::FillBlockPayee(CMutableTransaction& txNew, const CBlockIndex* pindexPrev, bool fProofOfStake)
 {
+    CBlockIndex* pindexPrev = chainActive.Tip();
     if (!pindexPrev) return;
 
     bool hasPayment = true;
@@ -330,20 +331,16 @@ void CMasternodePayments::FillBlockPayee(CMutableTransaction& txNew, const CBloc
         if (winningNode) {
             payee = GetScriptForDestination(winningNode->pubKeyCollateralAddress.GetID());
         } else {
-            LogPrint(BCLog::MASTERNODE, "CreateNewBlock: Failed to detect masternode to pay\n");
+            LogPrint("masternode", "CreateNewBlock: Failed to detect masternode to pay\n");
             hasPayment = false;
         }
     }
 
-    CAmount blockValue = GetBlockValue(pindexPrev->nHeight + 1);
-    CAmount masternodePayment = GetMasternodePayment(pindexPrev->nHeight, blockValue);
+    CAmount blockValue = GetBlockValue(pindexPrev->nHeight);
+    CAmount masternodePayment = GetMasternodePayment(pindexPrev->nHeight, blockValue, 0, fZPIVStake);
 
     if (hasPayment) {
         if (fProofOfStake) {
-            int nHeight = pindexPrev->nHeight + 1;
-            int offset = nHeight > Params().GetConsensus().height_supply_reduction ? 3 : 2;
-            int keyIndex = nHeight > Params().GetConsensus().height_supply_reduction ? 2 : 1;
-
             /**For Proof Of Stake vout[0] must be null
              * Stake reward can be split into many different outputs, so we must
              * use vout.size() to align with several different cases.
@@ -355,33 +352,33 @@ void CMasternodePayments::FillBlockPayee(CMutableTransaction& txNew, const CBloc
             txNew.vout[i].nValue = masternodePayment;
 
             // subtract mn payment from the stake reward
-            if (!txNew.vout[1].IsZerocoinMint()) {
-                if (i == offset) {
+            if (!txNew.vout[1].IsZerocoinMint())
+                if (i == 2) {
                     // Majority of cases; do it quick and move on
                     txNew.vout[i - 1].nValue -= masternodePayment;
-                } else if (i > offset) {
+                } else if (i > 2) {
                     // special case, stake is split between (i-1) outputs
                     unsigned int outputs = i - 1;
-                    CAmount mnPaymentSplit = masternodePayment / (outputs - keyIndex - 1);
-                    CAmount mnPaymentRemainder = masternodePayment - (mnPaymentSplit * (outputs - keyIndex - 1));
-                    for (unsigned int j = keyIndex; j <= outputs; j++) {
+                    CAmount mnPaymentSplit = masternodePayment / outputs;
+                    CAmount mnPaymentRemainder = masternodePayment - (mnPaymentSplit * outputs);
+                    for (unsigned int j = 1; j <= outputs; j++) {
                         txNew.vout[j].nValue -= mnPaymentSplit;
                     }
                     // in case it's not an even division, take the last bit of dust from the last one
                     txNew.vout[outputs].nValue -= mnPaymentRemainder;
                 }
-            }
         } else {
             txNew.vout.resize(2);
             txNew.vout[1].scriptPubKey = payee;
             txNew.vout[1].nValue = masternodePayment;
-            txNew.vout[0].nValue = GetBlockValue(pindexPrev->nHeight) - masternodePayment;
+            txNew.vout[0].nValue = blockValue - masternodePayment;
         }
 
         CTxDestination address1;
         ExtractDestination(payee, address1);
+        CBitcoinAddress address2(address1);
 
-        LogPrint(BCLog::MASTERNODE, "Masternode payment of %s to %s\n", FormatMoney(masternodePayment).c_str(), EncodeDestination(address1).c_str());
+        LogPrint("masternode", "Masternode payment of %s to %s\n", FormatMoney(masternodePayment).c_str(), address2.ToString().c_str());
     }
 }
 
