@@ -320,12 +320,12 @@ void CMasternodePayments::FillBlockPayee(CMutableTransaction& txNew, const CBloc
 {
     if (!pindexPrev) return;
 
-    int nHeight = pindexPrev->nHeight + 1;
+    //int nHeight = pindexPrev->nHeight + 1;
     bool hasPayment = true;
     CScript payee;
 
     // spork
-    if (!masternodePayments.GetBlockPayee(nHeight, payee)) {
+    if (!masternodePayments.GetBlockPayee(pindexPrev->nHeight + 1, payee)) {
         // no masternode detected
         const CMasternode* winningNode = mnodeman.GetCurrentMasterNode(1);
         if (winningNode) {
@@ -336,25 +336,53 @@ void CMasternodePayments::FillBlockPayee(CMutableTransaction& txNew, const CBloc
         }
     }
 
+        CAmount blockValue = GetBlockValue(pindexPrev->nHeight + 1);
+        CAmount masternodePayment = GetMasternodePayment(pindexPrev->nHeight, blockValue);
+
      if (hasPayment) {
-        CAmount masternodePayment = GetMasternodePayment(nHeight);
-
-        // Now Rapids using GetBlockStakeSubsidy function with
-        // masternode payment already subtracted, so there is
-        // no need to do it here
-
         if (fProofOfStake) {
+            int nHeight = pindexPrev->nHeight + 1;
+            int offset = nHeight > Params().GetConsensus().height_supply_reduction ? 3 : 2;
+            int keyIndex = nHeight > Params().GetConsensus().height_supply_reduction ? 2 : 1;
+
+            /**For Proof Of Stake vout[0] must be null
+             * Stake reward can be split into many different outputs, so we must
+             * use vout.size() to align with several different cases.
+             * An additional output is appended as the masternode payment
+             */
             unsigned int i = txNew.vout.size();
             txNew.vout.resize(i + 1);
             txNew.vout[i].scriptPubKey = payee;
             txNew.vout[i].nValue = masternodePayment;
+
+            // subtract mn payment from the stake reward
+            if (!txNew.vout[1].IsZerocoinMint()) {
+                if (i == offset) {
+                    // Majority of cases; do it quick and move on
+                    txNew.vout[i - 1].nValue -= masternodePayment;
+                } else if (i > offset) {
+                    // special case, stake is split between (i-1) outputs
+                    unsigned int outputs = i - 1;
+                    CAmount mnPaymentSplit = masternodePayment / (outputs - keyIndex - 1);
+                    CAmount mnPaymentRemainder = masternodePayment - (mnPaymentSplit * (outputs - keyIndex - 1));
+                    for (unsigned int j = keyIndex; j <= outputs; j++) {
+                        txNew.vout[j].nValue -= mnPaymentSplit;
+                    }
+                }
+                // in case it's not an even division, take the last bit of dust from the last one
+                txNew.vout[outputs].nValue -= mnPaymentRemainder;
+            }
+        } else {
+            txNew.vout.resize(2);
+            txNew.vout[1].scriptPubKey = payee;
+            txNew.vout[1].nValue = masternodePayment;
+            txNew.vout[0].nValue = GetBlockValue(pindexPrev->nHeight) - masternodePayment;
         }
 
         CTxDestination address1;
         ExtractDestination(payee, address1);
-
         LogPrint(BCLog::MASTERNODE, "Masternode payment of %s to %s\n", FormatMoney(masternodePayment).c_str(), EncodeDestination(address1).c_str());
-    }
+     }
 }
 
 void CMasternodePayments::ProcessMessageMasternodePayments(CNode* pfrom, std::string& strCommand, CDataStream& vRecv)
