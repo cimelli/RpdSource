@@ -2483,6 +2483,11 @@ QPushButton[cssClass="btn-dialog-cancel"] {
     border-radius: 2px;
 }
 
+QPushButton[cssClass=\"btn-dialog-cancel"]:hover {
+    background-color: #3c3c3b;
+    color: #ff5533;
+}
+
 
 QLineEdit[cssClass="edit-primary-dialog"] {
     border:  1px solid #d1d5db;
