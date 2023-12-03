@@ -337,7 +337,7 @@ void CMasternodePayments::FillBlockPayee(CMutableTransaction& txNew, const CBloc
     }
 
     CAmount blockValue = GetBlockValue(pindexPrev->nHeight);
-    CAmount masternodePayment = GetMasternodePayment(pindexPrev->nHeight, blockValue, 0, fZPIVStake);
+    CAmount masternodePayment = GetMasternodePayment(pindexPrev->nHeight, blockValue);
 
     if (hasPayment) {
         if (fProofOfStake) {
@@ -376,9 +376,10 @@ void CMasternodePayments::FillBlockPayee(CMutableTransaction& txNew, const CBloc
 
         CTxDestination address1;
         ExtractDestination(payee, address1);
-        CBitcoinAddress address2(address1);
+        //CBitcoinAddress address2(address1);
+        CTxDestination address2 = DecodeDestination(address1);
 
-        LogPrint("masternode", "Masternode payment of %s to %s\n", FormatMoney(masternodePayment).c_str(), address2.ToString().c_str());
+        LogPrint("masternode", "Masternode payment of %s to %s\n", FormatMoney(masternodePayment).c_str(), EncodeDestination(address2).c_str());
     }
 }
 
