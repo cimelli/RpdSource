@@ -754,5 +754,5 @@ if ENABLE_QT_TESTS
 include Makefile.qttest.include
 endif
 
-# Token Core
-include Makefile.tokencore.include
+# Omni Core
+include Makefile.omnicore.include

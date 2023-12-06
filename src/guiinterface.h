@@ -108,17 +108,17 @@ public:
     /** Banlist did change. */
     boost::signals2::signal<void (void)> BannedListChanged;
 
-    /** Token balances have been updated. */
-    boost::signals2::signal<void ()> TokenBalanceChanged;
+    /** Omni balances have been updated. */
+    boost::signals2::signal<void ()> OmniBalanceChanged;
 
-    /** Token state has been changed. */
-    boost::signals2::signal<void ()> TokenStateChanged;
+    /** Omni state has been changed. */
+    boost::signals2::signal<void ()> OmniStateChanged;
 
-    /** Token pending status has been changed */
-    boost::signals2::signal<void (bool pending)> TokenPendingChanged;
+    /** Omni pending status has been changed */
+    boost::signals2::signal<void (bool pending)> OmniPendingChanged;
 
-    /** Token state has been invalidated due to a reorg */
-    boost::signals2::signal<void ()> TokenStateInvalidated;
+    /** Omni state has been invalidated due to a reorg */
+    boost::signals2::signal<void ()> OmniStateInvalidated;
 };
 
 extern CClientUIInterface uiInterface;
