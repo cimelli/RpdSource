@@ -1059,9 +1059,9 @@ bool AppInit2()
     if (mapArgs.count("-checklevel"))
         return UIError(_("Error: Unsupported argument -checklevel found. Checklevel must be level 4."));
     // Exit early if -masternode=1 and -listen=0
-    if (GetBoolArg("-masternode", DEFAULT_MASTERNODE) && !GetBoolArg("-listen", DEFAULT_LISTEN))
+    //if (GetBoolArg("-masternode", DEFAULT_MASTERNODE) && !GetBoolArg("-listen", DEFAULT_LISTEN))
         // return UIError(_("Error: -listen must be true if -masternode is set."));
-        LogPrintf("Silly bird you are most likely trying to run more than one masternode per vps right?");
+        //LogPrintf("Silly bird you are most likely trying to run more than one masternode per vps right?");
     // Exit early if -masternode=1 and -port is not the default port
     if (GetBoolArg("-masternode", DEFAULT_MASTERNODE) && GetListenPort() != Params().GetDefaultPort())
         return UIError(strprintf(_("Error: Invalid port %d for running a masternode."), GetListenPort()) + "\n\n" +
