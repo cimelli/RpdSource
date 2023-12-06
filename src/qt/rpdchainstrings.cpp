@@ -307,7 +307,7 @@ QT_TRANSLATE_NOOP("rpdchain-core", "Error reading from database, shutting down."
 QT_TRANSLATE_NOOP("rpdchain-core", "Error upgrading chainstate database"),
 QT_TRANSLATE_NOOP("rpdchain-core", "Error writing zerocoinDB to disk"),
 QT_TRANSLATE_NOOP("rpdchain-core", "Error"),
-QT_TRANSLATE_NOOP("rpdchain-core", "Error: -listen must be true if -masternode is set."),
+//QT_TRANSLATE_NOOP("rpdchain-core", "Error: -listen must be true if -masternode is set."),
 QT_TRANSLATE_NOOP("rpdchain-core", "Error: -maxmempool must be at least %d MB"),
 QT_TRANSLATE_NOOP("rpdchain-core", "Error: A fatal internal error occured, see debug.log for details"),
 QT_TRANSLATE_NOOP("rpdchain-core", "Error: A fatal internal error occurred, see debug.log for details"),
