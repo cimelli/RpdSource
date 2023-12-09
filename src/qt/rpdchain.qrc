@@ -1,13 +1,17 @@
 <RCC>
     <qresource prefix="/icons">
-        <file alias="bitcoin">res/icons/bitcoin.png</file>
-        <file alias="bitcoin_testnet">res/icons/bitcoin_testnet.png</file>
-        <file alias="bitcoin_regtest">res/icons/bitcoin_regtest.png</file>
+        <file alias="rpdchain">res/icons/rpdchain.png</file>
+        <file alias="rpdchain_testnet">res/icons/rpdchain_testnet.png</file>
+        <file alias="rpdchain_regtest">res/icons/rpdchain_regtest.png</file>
         <file alias="overview">res/icons/overview.png</file>
         <file alias="ic-transaction-mint">res/icons/ic-transaction-mint.svg</file>
         <file alias="ic-transaction-received">res/icons/ic-transaction-received.svg</file>
         <file alias="ic-transaction-sent">res/icons/ic-transaction-sent.svg</file>
         <file alias="ic-transaction-staked">res/icons/ic-transaction-staked.svg</file>
+        <file alias="ic-transaction-mint">res/icons/ic-transaction-mint.png</file>
+        <file alias="ic-transaction-received">res/icons/ic-transaction-received.png</file>
+        <file alias="ic-transaction-sent">res/icons/ic-transaction-sent.png</file>
+        <file alias="ic-transaction-staked">res/icons/ic-transaction-staked.png</file>
         <file alias="lock_closed">res/icons/lock_closed.png</file>
         <file alias="lock_open">res/icons/lock_open.png</file>
     </qresource>
@@ -26,15 +30,9 @@
         <file alias="bg-splash">rpdchain/res/img/bg-splash.svg</file>
         <file alias="bg-splash-png">rpdchain/res/img/bg-splash.png</file>
         <file alias="img-logo-rpdchain-png">rpdchain/res/img/img-logo-rpdchain.png</file>
-        <file alias="img-logo-rpdchain-2x">rpdchain/res/img/img-logo-rpdchain@2x.png</file>
-        <file alias="img-logo-rpdchain-3x">rpdchain/res/img/img-logo-rpdchain@3x.png</file>
         <file alias="img-nav-logo-rpdchain">rpdchain/res/img/img-nav-logo-rpdchain.png</file>
         <file alias="img-qr-test-big">rpdchain/res/img/img-qr-test-big.png</file>
         <file alias="img-qr-test">rpdchain/res/img/img-qr-test.png</file>
-        <file alias="img-welcome-step1">rpdchain/res/img/img-welcome-step1.png</file>
-        <file alias="img-welcome-step2">rpdchain/res/img/img-welcome-step2.png</file>
-        <file alias="img-welcome-step3">rpdchain/res/img/img-welcome-step3.png</file>
-        <file alias="img-welcome-step4">rpdchain/res/img/img-welcome-step4.png</file>
         <file alias="bg-multi-number-dark">rpdchain/res/img/bg-multi-number-dark.svg</file>
         <file alias="bg-multi-number">rpdchain/res/img/bg-multi-number.svg</file>
         <file alias="btn-radio-active">rpdchain/res/img/btn-radio-active.svg</file>
@@ -91,7 +89,6 @@
         <file alias="ic-close-white">rpdchain/res/img/ic-close-white.svg</file>
         <file alias="ic-close">rpdchain/res/img/ic-close.svg</file>
         <file alias="ic-coin-rpd">rpdchain/res/img/ic-coin-rpd.svg</file>
-        <file alias="ic-coin-zrpd">rpdchain/res/img/ic-coin-zrpd.svg</file>
         <file alias="ic-combo-box">rpdchain/res/img/ic-combo-box.svg</file>
         <file alias="ic-connect">rpdchain/res/img/ic-connect.svg</file>
         <file alias="ic-copy-liliac">rpdchain/res/img/ic-copy-liliac.svg</file>
@@ -186,15 +183,9 @@
         <file alias="ic-contact-arrow-down-white">rpdchain/res/img/ic-contact-arrow-down-white.svg</file>
         <file alias="ic-arrow-drop-down-purple">rpdchain/res/img/ic-arrow-drop-down-purple.svg</file>
         <file alias="ic-arrow-drop-up-purple">rpdchain/res/img/ic-arrow-drop-up-purple.svg</file>
-        <file alias="bg-welcome-2x">rpdchain/res/img/bg-welcome@2x.jpg</file>
-        <file alias="bg-welcome-3x">rpdchain/res/img/bg-welcome@3x.jpg</file>
         <file alias="img-logo-rpdchain">rpdchain/res/img/img-logo-rpdchain.svg</file>
         <file alias="bg-welcome-svg">rpdchain/res/img/bg-welcome.svg</file>
-        <file alias="bg-welcome-container">rpdchain/res/img/bg-welcome-container.svg</file>
         <file alias="bg-welcome">rpdchain/res/img/bg-welcome.png</file>
-        <file alias="bg-welcome-container-png">rpdchain/res/img/bg-welcome-container.png</file>
-        <file alias="bg-welcome-container-2x">rpdchain/res/img/bg-welcome-container@2x.png</file>
-        <file alias="bg-welcome-container-3x">rpdchain/res/img/bg-welcome-container@3x.png</file>
         <file alias="bg-dashboard-banner">rpdchain/res/img/bg-dashboard-banner.png</file>
         <file alias="ic-check-box-dark-active">rpdchain/res/img/ic-check-box-dark-active.svg</file>
         <file alias="ic-check-box-indeterminate">rpdchain/res/img/ic-check-box-indeterminate.svg</file>

@@ -184,7 +184,7 @@ bool Intro::pickDataDirectory()
         // If current default data directory does not exist, let the user choose one
         Intro intro;
         intro.setDataDirectory(dataDir);
-        intro.setWindowIcon(QIcon(":icons/bitcoin"));
+        intro.setWindowIcon(QIcon(":icons/rpdchain"));
 
         while (true) {
             if (!intro.exec()) {
@@ -224,7 +224,7 @@ void Intro::setStatus(int status, const QString& message, quint64 bytesAvailable
         break;
     case FreespaceChecker::ST_ERROR:
         ui->errorMessage->setText(tr("Error") + ": " + message);
-        ui->errorMessage->setStyleSheet("QLabel { color: #f84444 }");
+        ui->errorMessage->setStyleSheet("QLabel { color: #ff5533 }");
         break;
     }
     /* Indicate number of bytes available */
@@ -234,7 +234,7 @@ void Intro::setStatus(int status, const QString& message, quint64 bytesAvailable
         QString freeString = tr("%1 GB of free space available").arg(bytesAvailable / GB_BYTES);
         if (bytesAvailable < BLOCK_CHAIN_SIZE) {
             freeString += " " + tr("(of %1 GB needed)").arg(BLOCK_CHAIN_SIZE / GB_BYTES);
-            ui->freeSpace->setStyleSheet("QLabel { color: #800000 }");
+            ui->freeSpace->setStyleSheet("QLabel { color: #ff5533 }");
         } else {
             ui->freeSpace->setStyleSheet("");
         }

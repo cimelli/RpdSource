@@ -53,7 +53,7 @@ public Q_SLOTS:
     void updateHDState(const bool& upgraded, const QString& upgradeError);
 
 Q_SIGNALS:
-    void themeChanged(bool isLight);
+    // void themeChanged(bool isLight);
     void walletSynced(bool isSync);
     void onShowHideColdStakingChanged(bool show);
 
@@ -61,7 +61,7 @@ protected:
     void resizeEvent(QResizeEvent *event) override;
 private Q_SLOTS:
     void onBtnReceiveClicked();
-    void onThemeClicked();
+    // void onThemeClicked();
     void onBtnLockClicked();
     void lockDropdownMouseLeave();
     void lockDropdownClicked(const StateClicked&);

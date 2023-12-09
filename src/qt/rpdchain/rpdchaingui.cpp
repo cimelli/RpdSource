@@ -192,7 +192,7 @@ void RPDCHAINGUI::connectActions()
         goToSettings();
     });
     connect(topBar, &TopBar::showHide, this, &RPDCHAINGUI::showHide);
-    connect(topBar, &TopBar::themeChanged, this, &RPDCHAINGUI::changeTheme);
+    // connect(topBar, &TopBar::themeChanged, this, &RPDCHAINGUI::changeTheme);
     connect(topBar, &TopBar::onShowHideColdStakingChanged, navMenu, &NavMenuWidget::onShowHideColdStakingChanged);
     connect(settingsWidget, &SettingsWidget::showHide, this, &RPDCHAINGUI::showHide);
     connect(sendWidget, &SendWidget::showHide, this, &RPDCHAINGUI::showHide);
@@ -561,10 +561,10 @@ void RPDCHAINGUI::showHide(bool show)
         op->setVisible(false);
         opEnabled = false;
     } else {
-        QColor bg("#000000");
+        QColor bg("#3c3c3b");
         bg.setAlpha(200);
         if (!isLightTheme()) {
-            bg = QColor("#00000000");
+            bg = QColor("#3c3c3b");
             bg.setAlpha(150);
         }
 
