@@ -1979,7 +1979,7 @@ QPushButton[cssClass="btn-check-time"]:disabled {
     font-size:14px;
     padding:4px;
     color: #d1d5db;
-    border:1px solid #d1d5db;
+    border:0px solid #d1d5db;
 }
 
 /*HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH
@@ -2939,8 +2939,8 @@ HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH*/
 
 
 QToolTip {
-    color: white;
-    background-color: #d1d5db;
+    color: #d1d5db;
+    background-color: #3c3c3b;
     border: none;
     padding:4px;
     border-radius:3px;
@@ -2956,7 +2956,7 @@ HH        ROW LIST
 HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH*/
 
 *[cssClass="container-list-menu"]{
-    background-color:white;
+    background-color: #3c3c3b;
     border-radius:2px;
     padding:15px;
     border: 1px solid #d1d5db;

@@ -30,7 +30,7 @@ void AddressLabelRow::updateState(bool isLightTheme, bool isHovered, bool isSele
     if (isLightTheme)
         ui->lblDivisory->setStyleSheet("background-color:#bababa");
     else
-        ui->lblDivisory->setStyleSheet("background-color:#40ffffff");
+        ui->lblDivisory->setStyleSheet("background-color:#3c3c3b");
 
      ui->btnMenu->setVisible(isHovered);
 }

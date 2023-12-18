@@ -8,12 +8,12 @@
         <file alias="ic-transaction-received">res/icons/ic-transaction-received.svg</file>
         <file alias="ic-transaction-sent">res/icons/ic-transaction-sent.svg</file>
         <file alias="ic-transaction-staked">res/icons/ic-transaction-staked.svg</file>
-        <file alias="ic-transaction-mint">res/icons/ic-transaction-mint.png</file>
-        <file alias="ic-transaction-received">res/icons/ic-transaction-received.png</file>
-        <file alias="ic-transaction-sent">res/icons/ic-transaction-sent.png</file>
-        <file alias="ic-transaction-staked">res/icons/ic-transaction-staked.png</file>
-        <file alias="lock_closed">res/icons/lock_closed.png</file>
-        <file alias="lock_open">res/icons/lock_open.png</file>
+        <file alias="lock_closed">res/icons/lock_closed.svg</file>
+        <file alias="lock_open">res/icons/lock_open.svg</file>
+        <file alias="tx_input">res/icons/ic-chevron-right.svg</file>
+        <file alias="tx_output">res/icons/ic-chevron-left.svg</file>
+        <file alias="tx_mined">res/icons/ic-transaction-staked.svg</file>
+        <file alias="transaction_confirmed">res/icons/ic-transaction-staked.svg</file>
     </qresource>
     <qresource prefix="/css">
         <file>res/css/default.css</file>
