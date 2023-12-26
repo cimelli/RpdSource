@@ -1,14 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Generator: Adobe Illustrator 28.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
-<svg version="1.1" id="ic-transaction-received" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
-	 x="0px" y="0px" viewBox="0 0 24 24" style="enable-background:new 0 0 24 24;" xml:space="preserve">
+<svg version="1.1" id="ic_send" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 26 26" style="enable-background:new 0 0 26 26;" xml:space="preserve">
 <style type="text/css">
-	.st0{fill:#FF5533;}
-	.st1{fill:none;}
+	.st0{fill:none;}
+	.st1{fill-rule:evenodd;clip-rule:evenodd;fill:#FF5533;}
 </style>
-<g id="Group_8834">
-	<path id="Path_18892" class="st0" d="M5.3,8.1l1.4,1.5l4.3-4l0,12.2h2l0-12.2l4.3,4l1.4-1.5L12,2L5.3,8.1z"/>
-	<path id="Path_18893" class="st0" d="M20,16v4H4v-4H2v6h20v-6H20z"/>
+<path id="Rectangle_4395" class="st0" d="M0,0h26v26H0V0z"/>
+<g id="Group_8987" transform="translate(2.000000, 2.000000)">
+	<g id="Group_8986">
+		<polygon id="Path_18953" class="st1" points="3.8,6.7 5.2,8.1 10,3.7 10,17.4 12,17.4 12,3.7 16.8,8.1 18.2,6.7 11,0 		"/>
+		<polygon id="Path_18954" class="st1" points="20,15 20,20 2,20 2,15 0,15 0,22 22,22 22,15 		"/>
+	</g>
 </g>
-<path id="Rectangle_4413" class="st1" d="M0,0h24v24H0V0z"/>
 </svg>

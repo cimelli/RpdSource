@@ -466,10 +466,11 @@ void DashboardWidget::changeChartColors()
     QColor backgroundColor;
     QColor gridY;
     if (isLightTheme()) {
-        gridLineColorX = QColor(209,213,219);
-        linePenColorY = gridLineColorX;
+        gridY = QColor("#d1d5db");
+        axisY->setGridLineColor(gridY);
+        gridLineColorX = QColor(60,60,59);
+        linePenColorY =  gridLineColorX;
         backgroundColor = linePenColorY;
-        axisY->setGridLineColor(QColor("#d1d5db"));
     } else {
         gridY = QColor("#d1d5db");
         axisY->setGridLineColor(gridY);

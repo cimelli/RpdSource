@@ -119,9 +119,9 @@ void TxRow::setType(bool isLightTheme, int type, bool isConfirmed)
             break;
     }
 
-    if (!isLightTheme && !sameIcon){
-        path += "-dark";
-    }
+    //if (!isLightTheme && !sameIcon){
+        // path += "-dark";
+    //}
 
     if (!isConfirmed){
         css = "text-list-amount-unconfirmed";

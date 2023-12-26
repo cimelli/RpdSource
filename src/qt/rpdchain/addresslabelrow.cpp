@@ -28,7 +28,7 @@ void AddressLabelRow::updateView(QString address, QString label)
 void AddressLabelRow::updateState(bool isLightTheme, bool isHovered, bool isSelected)
 {
     if (isLightTheme)
-        ui->lblDivisory->setStyleSheet("background-color:#bababa");
+        ui->lblDivisory->setStyleSheet("background-color:#3c3c3b");
     else
         ui->lblDivisory->setStyleSheet("background-color:#3c3c3b");
 
