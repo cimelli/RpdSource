@@ -715,7 +715,7 @@ QPushButton[cssClass="btn-check-theme-light"] {
     qproperty-icon: url("://ic-check-theme-light") off,
     url("://ic-check-theme-light") on ;
     qproperty-iconSize: 24px 24px;
-    color:white;
+    color: #d1d5db;
     border-radius:2px;
 }
 
@@ -857,11 +857,6 @@ HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH*/
     font-size:16px;
 }
 
-*[cssClass="text-list-title1"] {
-    color:#d1d5db;
-    font-size:16px;
-}
-
 *[cssClass="text-list-body1-purple"] {
     color:#d1d5db;
     font-size:14px;
@@ -886,7 +881,6 @@ HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH*/
     color:#d1d5db;
     font-size:16px;
 }
-
 
 *[cssClass="text-list-body1-grey"] {
     color:#d1d5db;
@@ -1651,8 +1645,6 @@ QPushButton[cssClass="btn-text-primary"]:pressed {
 }
 
 
-
-
 /*HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH
 HH       LINE EDIT
 HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH*/
@@ -2074,13 +2066,13 @@ HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH*/
 
 
 QSpinBox[cssClass="btn-spin-box"], QDoubleSpinBox[cssClass="btn-spin-box"] {
-    background-color:#3c3c3b;
+    background-color:#fafafa;
     padding:10px 20px 10px 10px;
     font-size:16px;
-    border:1px solid #d1d5db;
-    color: #d1d5db;
+    border:1px solid #3c3c3b;
+    color: #3c3c3b;
     selection-background-color: #3c3c3b;
-    selection-color: #d1d5db;
+    selection-color: #fafafa;
 }
 
 
