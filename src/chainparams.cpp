@@ -206,9 +206,32 @@ public:
         consensus.nTargetSpacing = 1 * 60;      // 60 seconds
         consensus.nTimeSlotLength = 15;         // 15 seconds
 
+        /*
+        root@vultr:~/live# sudo ./rpdchain-cli getnewaddress sporkeky
+RkBEiLDP3haDsTj6ExUHdjq5dxXLotEeYq
+root@vultr:~/live# sudo ./rpdchain-cli validateaddress RkBEiLDP3haDsTj6ExUHdjq5dxXLotEeYq
+{
+  "isvalid": true,
+  "address": "RkBEiLDP3haDsTj6ExUHdjq5dxXLotEeYq",
+  "address": "RkBEiLDP3haDsTj6ExUHdjq5dxXLotEeYq",
+  "scriptPubKey": "76a9147ecc1b25ee1698580e29a6dd09981bfa0fee885088ac",
+  "ismine": true,
+  "isstaking": false,
+  "iswatchonly": false,
+  "isscript": false,
+  "pubkey": "039d6562bd3a47c79859965450fb3289506a1268fc11588599e072e2427308daca",
+  "iscompressed": true,
+  "account": "sporkeky"
+}
+root@vultr:~/live# sudo ./rpdchain-cli dumpprivkey RkBEiLDP3haDsTj6ExUHdjq5dxXLotEeYq
+7x4tZqkrhB1rQYS7gczYrQKT8MqGa6VYJfodfH6i1eLMtYUnXt5Q
+root@vultr:~/live#
+
+*/
+
         // spork keys
-        consensus.strSporkPubKey = "040F129DE6546FE405995329A887329BED4321325B1A73B0A257423C05C1FCFE9E40EF0678AEF59036A22C42E61DFD29DF7EFB09F56CC73CADF64E05741880E3E7";
-        consensus.strSporkPubKeyOld = "0499A7AF4806FC6DE640D23BC5936C29B77ADF2174B4F45492727F897AE63CF8D27B2F05040606E0D14B547916379FA10716E344E745F880EDC037307186AA25B7";
+        consensus.strSporkPubKey = "039d6562bd3a47c79859965450fb3289506a1268fc11588599e072e2427308daca";
+        consensus.strSporkPubKeyOld = "040F129DE6546FE405995329A887329BED4321325B1A73B0A257423C05C1FCFE9E40EF0678AEF59036A22C42E61DFD29DF7EFB09F56CC73CADF64E05741880E3E7";
         consensus.nTime_EnforceNewSporkKey = 1694531982;    //!> August 26, 2019 11:00:00 PM GMT
         consensus.nTime_RejectOldSporkKey = 1694531982;     //!> September 26, 2019 11:00:00 PM GMT
 
