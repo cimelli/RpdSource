@@ -206,6 +206,7 @@ static const CRPCConvertParam vRPCConvertParams[] =
         { "token_getfeetrigger", 0 },
         { "token_getfeedistribution", 0 },
         { "token_getfeedistributions", 0 },
+        { "gettokenbalanceshash", 0 },
         { "getwallettokenbalances", 0 },
         { "getwalletaddresstokenbalances", 0 },
 
@@ -252,7 +253,8 @@ static const CRPCConvertParam vRPCConvertParams[] =
         { "token_sendactivation", 3 },
         { "token_sendalert", 1 },
         { "token_sendalert", 2 },
-        { "sendtokenfundedall", 2 },
+        { "token_funded_send", 2 },
+        { "token_funded_sendall", 2 },
 
         /* Token Core - raw transaction calls */
         { "decodetokentransaction", 1 },

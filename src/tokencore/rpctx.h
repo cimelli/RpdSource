@@ -20,7 +20,7 @@ UniValue token_sendtrade(const UniValue& params, bool fHelp);
 UniValue token_sendcanceltradesbyprice(const UniValue& params, bool fHelp);
 UniValue token_sendcanceltradesbypair(const UniValue& params, bool fHelp);
 UniValue token_sendcancelalltrades(const UniValue& params, bool fHelp);
-UniValue sendtokenchangeissuer(const UniValue& params, bool fHelp);
+UniValue token_sendchangeissuer(const UniValue& params, bool fHelp);
 UniValue token_sendactivation(const UniValue& params, bool fHelp);
 UniValue token_sendalert(const UniValue& params, bool fHelp);
 

@@ -27,10 +27,10 @@ All available commands can be listed with `"help"`, and information about a spec
   - [token_sendcanceltradesbyprice](#token_sendcanceltradesbyprice)
   - [token_sendcanceltradesbypair](#token_sendcanceltradesbypair)
   - [token_sendcancelalltrades](#token_sendcancelalltrades)
-  - [sendtokenchangeissuer](#sendtokenchangeissuer)
+  - [token_sendchangeissuer](#token_sendchangeissuer)
   - [token_sendall](#token_sendall)
-  - [sendtokenenablefreezing](#sendtokenenablefreezing)
-  - [sendtokendisablefreezing](#sendtokendisablefreezing)
+  - [token_sendenablefreezing](#token_sendenablefreezing)
+  - [token_senddisablefreezing](#token_senddisablefreezing)
   - [token_sendfreeze](#token_sendfreeze)
   - [token_sendunfreeze](#token_sendunfreeze)
   - [token_sendrawtx](#token_sendrawtx)
@@ -136,7 +136,7 @@ $ tokencore-cli "token_send" "3M9qvHKtgARhqcMtM5cRT9VaiDJ5PSfQGY" "37FaKponF7zqo
 
 ---
 
-### sendtokendexsell
+### token_senddexsell
 
 Place, update or cancel a sell offer on the traditional distributed TOKEN/BTC exchange.
 
@@ -160,12 +160,12 @@ Place, update or cancel a sell offer on the traditional distributed TOKEN/BTC ex
 **Example:**
 
 ```bash
-$ tokencore-cli "sendtokendexsell" "37FaKponF7zqoMLUjEiko25pDiuVH5YLEa" 1 "1.5" "0.75" 25 "0.0005" 1
+$ tokencore-cli "token_senddexsell" "37FaKponF7zqoMLUjEiko25pDiuVH5YLEa" 1 "1.5" "0.75" 25 "0.0005" 1
 ```
 
 ---
 
-### sendtokendexaccept
+### token_senddexaccept
 
 Create and broadcast an accept offer for the specified token and amount.
 
@@ -187,7 +187,7 @@ Create and broadcast an accept offer for the specified token and amount.
 **Example:**
 
 ```bash
-$ tokencore-cli "sendtokendexaccept" \
+$ tokencore-cli "token_senddexaccept" \
     "35URq1NN3xL6GeRKUP6vzaQVcxoJiiJKd8" "37FaKponF7zqoMLUjEiko25pDiuVH5YLEa" 1 "15.0"
 ```
 
@@ -505,7 +505,7 @@ $ tokencore-cli "token_sendcancelalltrades" "3BydPiSLPP3DR5cf726hDQ89fpqWLxPKLR"
 
 ---
 
-### sendtokenchangeissuer
+### token_sendchangeissuer
 
 Change the issuer on record of the given tokens.
 
@@ -525,7 +525,7 @@ Change the issuer on record of the given tokens.
 **Example:**
 
 ```bash
-$ tokencore-cli "sendtokenchangeissuer" \
+$ tokencore-cli "token_sendchangeissuer" \
     "1ARjWDkZ7kT9fwjPrjcQyvbXDkEySzKHwu" "3HTHRxu3aSDV4deakjC7VmsiUp7c6dfbvs" 3
 ```
 
@@ -558,7 +558,7 @@ $ tokencore-cli "token_sendall" "3M9qvHKtgARhqcMtM5cRT9VaiDJ5PSfQGY" "37FaKponF7
 
 ---
 
-### sendtokenenablefreezing
+### token_sendenablefreezing
 
 Enables address freezing for a centrally managed property.
 
@@ -577,12 +577,12 @@ Enables address freezing for a centrally managed property.
 **Example:**
 
 ```bash
-$ tokencore-cli "sendtokenenablefreezing" "3M9qvHKtgARhqcMtM5cRT9VaiDJ5PSfQGY" 2
+$ tokencore-cli "token_sendenablefreezing" "3M9qvHKtgARhqcMtM5cRT9VaiDJ5PSfQGY" 2
 ```
 
 ---
 
-### sendtokendisablefreezing
+### token_senddisablefreezing
 
 Disables address freezing for a centrally managed property.
 
@@ -603,7 +603,7 @@ IMPORTANT NOTE:  Disabling freezing for a property will UNFREEZE all frozen addr
 **Example:**
 
 ```bash
-$ tokencore-cli "sendtokendisablefreezing" "3M9qvHKtgARhqcMtM5cRT9VaiDJ5PSfQGY" 2
+$ tokencore-cli "token_senddisablefreezing" "3M9qvHKtgARhqcMtM5cRT9VaiDJ5PSfQGY" 2
 ```
 
 ---
@@ -693,7 +693,7 @@ $ tokencore-cli "token_sendrawtx" \
 
 ---
 
-### sendtokenfunded
+### token_funded_send
 
 Creates and sends a funded simple send transaction.
 
@@ -717,14 +717,14 @@ All bitcoins from the sender are consumed and if there are bitcoins missing, the
 **Example:**
 
 ```bash
-$ tokencore-cli "sendtokenfunded" "1DFa5bT6KMEr6ta29QJouainsjaNBsJQhH" \
+$ tokencore-cli "token_funded_send" "1DFa5bT6KMEr6ta29QJouainsjaNBsJQhH" \
     "15cWrfuvMxyxGst2FisrQcvcpF48x6sXoH" 1 "100.0" \
     "15Jhzz4omEXEyFKbdcccJwuVPea5LqsKM1"
 ```
 
 ---
 
-### sendtokenfundedall
+### token_funded_sendall
 
 Creates and sends a transaction that transfers all available tokens in the given ecosystem to the recipient.
 
@@ -747,7 +747,7 @@ All bitcoins from the sender are consumed and if there are bitcoins missing, the
 **Example:**
 
 ```bash
-$ tokencore-cli "sendtokenfundedall" "1DFa5bT6KMEr6ta29QJouainsjaNBsJQhH" \
+$ tokencore-cli "token_funded_sendall" "1DFa5bT6KMEr6ta29QJouainsjaNBsJQhH" \
     "15cWrfuvMxyxGst2FisrQcvcpF48x6sXoH" 1 "15Jhzz4omEXEyFKbdcccJwuVPea5LqsKM1"
 ```
 
