@@ -1612,12 +1612,6 @@ int CMPTransaction::logicMath_CreatePropertyFixed()
         return (PKT_ERROR_SP -72);
     }
 
-    CAmount nMandatory = 0.0001 * COIN;
-    if (nDonation < nMandatory) {
-        PrintToLog("%s(): rejected: token creation fee is missing\n", __func__);
-        return (PKT_ERROR_SP -73);
-    }
-
     if (!IsTokenIPFSValid(data))
     {
         PrintToLog("%s(): rejected: token IPFS hash %s is invalid\n", __func__, name);
@@ -1732,12 +1726,6 @@ int CMPTransaction::logicMath_CreatePropertyVariable()
     {
         PrintToLog("%s(): rejected: token name %s is invalid\n", __func__, name);
         return (PKT_ERROR_SP -72);
-    }
-
-    CAmount nMandatory = 0.0001 * COIN;
-    if (nDonation < nMandatory) {
-        PrintToLog("%s(): rejected: token creation fee is missing\n", __func__);
-        return (PKT_ERROR_SP -73);
     }
 
     if (!IsTokenIPFSValid(data))
@@ -1892,12 +1880,6 @@ int CMPTransaction::logicMath_CreatePropertyManaged()
     {
         PrintToLog("%s(): rejected: token name %s is invalid\n", __func__, name);
         return (PKT_ERROR_SP -72);
-    }
-
-    CAmount nMandatory = 0.0001 * COIN;
-    if (nDonation < nMandatory) {
-        PrintToLog("%s(): rejected: token creation fee is missing\n", __func__);
-        return (PKT_ERROR_SP -73);
     }
 
     if (!IsTokenIPFSValid(data))
