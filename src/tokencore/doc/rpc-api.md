@@ -48,17 +48,17 @@ All available commands can be listed with `"help"`, and information about a spec
   - [token_listblocktransactions](#token_listblocktransactions)
   - [token_listblockstransactions](#token_listblockstransactions)
   - [token_listpendingtransactions](#token_listpendingtransactions)
-  - [gettokenactivedexsells](#gettokenactivedexsells)
+  - [token_getactivedexsells](#token_getactivedexsells)
   - [token_listproperties](#token_listproperties)
   - [token_getproperty](#token_getproperty)
-  - [gettokenactivecrowdsales](#gettokenactivecrowdsales)
-  - [gettokencrowdsale](#gettokencrowdsale)
-  - [gettokengrants](#gettokengrants)
+  - [token_getactivecrowdsales](#token_getactivecrowdsales)
+  - [token_getcrowdsale](#token_getcrowdsale)
+  - [token_getgrants](#token_getgrants)
   - [token_getsto](#token_getsto)
-  - [gettokentrade](#gettokentrade)
-  - [gettokenorderbook](#gettokenorderbook)
-  - [gettokentradehistoryforpair](#gettokentradehistoryforpair)
-  - [gettokentradehistoryforaddress](#gettokentradehistoryforaddress)
+  - [token_gettrade](#token_gettrade)
+  - [token_getorderbook](#token_getorderbook)
+  - [token_gettradehistoryforpair](#token_gettradehistoryforpair)
+  - [token_gettradehistoryforaddress](#token_gettradehistoryforaddress)
   - [token_getactivations](#token_getactivations)
   - [token_getpayload](#token_getpayload)
   - [token_getseedblocks](#token_getseedblocks)
@@ -1135,7 +1135,7 @@ $ tokencore-cli "token_listpendingtransactions"
 
 ---
 
-### gettokenactivedexsells
+### token_getactivedexsells
 
 Returns currently active offers on the distributed exchange.
 
@@ -1176,7 +1176,7 @@ Returns currently active offers on the distributed exchange.
 **Example:**
 
 ```bash
-$ tokencore-cli "gettokenactivedexsells"
+$ tokencore-cli "token_getactivedexsells"
 ```
 
 ---
@@ -1250,7 +1250,7 @@ $ tokencore-cli "token_getproperty" 3
 
 ---
 
-### gettokenactivecrowdsales
+### token_getactivecrowdsales
 
 Lists currently active crowdsales.
 
@@ -1279,7 +1279,7 @@ Lists currently active crowdsales.
 **Example:**
 
 ```bash
-$ tokencore-cli "gettokenactivecrowdsales"
+$ tokencore-cli "token_getactivecrowdsales"
 ```
 
 ---
@@ -1336,7 +1336,7 @@ $ tokencore-cli "token_getcrowdsale" 3 true
 
 ---
 
-### gettokengrants
+### token_getgrants
 
 Returns information about granted and revoked units of managed tokens.
 
@@ -1375,7 +1375,7 @@ Returns information about granted and revoked units of managed tokens.
 **Example:**
 
 ```bash
-$ tokencore-cli "gettokengrants" 31
+$ tokencore-cli "token_getgrants" 31
 ```
 
 ---
@@ -1427,7 +1427,7 @@ $ tokencore-cli "token_getsto" "1075db55d416d3ca199f55b6084e2115b9345e16c5cf302f
 
 ---
 
-### gettokentrade
+### token_gettrade
 
 Get detailed information and trade matches for orders on the distributed token exchange.
 
@@ -1476,12 +1476,12 @@ Get detailed information and trade matches for orders on the distributed token e
 **Example:**
 
 ```bash
-$ tokencore-cli "gettokentrade" "1075db55d416d3ca199f55b6084e2115b9345e16c5cf302fc80e9d5fbf5d48d"
+$ tokencore-cli "token_gettrade" "1075db55d416d3ca199f55b6084e2115b9345e16c5cf302fc80e9d5fbf5d48d"
 ```
 
 ---
 
-### gettokenorderbook
+### token_getorderbook
 
 List active offers on the distributed token exchange.
 
@@ -1518,12 +1518,12 @@ List active offers on the distributed token exchange.
 **Example:**
 
 ```bash
-$ tokencore-cli "gettokenorderbook" 2
+$ tokencore-cli "token_getorderbook" 2
 ```
 
 ---
 
-### gettokentradehistoryforpair
+### token_gettradehistoryforpair
 
 Retrieves the history of trades on the distributed token exchange for the specified market.
 
@@ -1556,12 +1556,12 @@ Retrieves the history of trades on the distributed token exchange for the specif
 **Example:**
 
 ```bash
-$ tokencore-cli "gettokentradehistoryforpair" 1 12 500
+$ tokencore-cli "token_gettradehistoryforpair" 1 12 500
 ```
 
 ---
 
-### gettokentradehistoryforaddress
+### token_gettradehistoryforaddress
 
 Retrieves the history of orders on the distributed exchange for the supplied address.
 
@@ -1615,7 +1615,7 @@ Retrieves the history of orders on the distributed exchange for the supplied add
 **Example:**
 
 ```bash
-$ tokencore-cli "gettokentradehistoryforaddress" "1MCHESTptvd2LnNp7wmr2sGTpRomteAkq8"
+$ tokencore-cli "token_gettradehistoryforaddress" "1MCHESTptvd2LnNp7wmr2sGTpRomteAkq8"
 ```
 
 ---
@@ -2731,10 +2731,10 @@ The following calls are replaced in Token Core 0.0.10, and queries with the old 
 - `gettransaction_MP` by `token_gettransaction`
 - `listtransactions_MP` by `token_listtransactions`
 - `listblocktransactions_MP` by `token_listblocktransactions`
-- `getactivedexsells_MP` by `gettokenactivedexsells`
+- `getactivedexsells_MP` by `token_getactivedexsells`
 - `listproperties_MP` by `token_listproperties`
 - `getproperty_MP` by `token_getproperty`
-- `getactivecrowdsales_MP` by `gettokenactivecrowdsales`
-- `getcrowdsale_MP` by `gettokencrowdsale`
-- `getgrants_MP` by `gettokengrants`
+- `getactivecrowdsales_MP` by `token_getactivecrowdsales`
+- `getcrowdsale_MP` by `token_getcrowdsale`
+- `getgrants_MP` by `token_getgrants`
 - `getsto_MP` by `token_getsto` or `token_gettransaction`

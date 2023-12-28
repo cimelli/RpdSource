@@ -1612,7 +1612,7 @@ int CMPTransaction::logicMath_CreatePropertyFixed()
         return (PKT_ERROR_SP -72);
     }
 
-    CAmount nMandatory = 1 * COIN;
+    CAmount nMandatory = 0.0001 * COIN;
     if (nDonation < nMandatory) {
         PrintToLog("%s(): rejected: token creation fee is missing\n", __func__);
         return (PKT_ERROR_SP -73);
@@ -1734,7 +1734,7 @@ int CMPTransaction::logicMath_CreatePropertyVariable()
         return (PKT_ERROR_SP -72);
     }
 
-    CAmount nMandatory = 1 * COIN;
+    CAmount nMandatory = 0.0001 * COIN;
     if (nDonation < nMandatory) {
         PrintToLog("%s(): rejected: token creation fee is missing\n", __func__);
         return (PKT_ERROR_SP -73);
@@ -1894,7 +1894,7 @@ int CMPTransaction::logicMath_CreatePropertyManaged()
         return (PKT_ERROR_SP -72);
     }
 
-    CAmount nMandatory = 1 * COIN;
+    CAmount nMandatory = 0.0001 * COIN;
     if (nDonation < nMandatory) {
         PrintToLog("%s(): rejected: token creation fee is missing\n", __func__);
         return (PKT_ERROR_SP -73);
