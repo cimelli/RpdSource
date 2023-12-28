@@ -20,9 +20,9 @@ All available commands can be listed with `"help"`, and information about a spec
   - [token_sendissuancefixed](#token_sendissuancefixed)
   - [token_sendissuancemanaged](#token_sendissuancemanaged)
   - [token_sendsto](#token_sendsto)
-  - [token_sendgrant](#token_sendgrant)
+  - [sendtokengrant](#sendtokengrant)
   - [token_sendrevoke](#token_sendrevoke)
-  - [token_sendclosecrowdsale](#token_sendclosecrowdsale)
+  - [sendtokenclosecrowdsale](#sendtokenclosecrowdsale)
   - [token_sendtrade](#token_sendtrade)
   - [token_sendcanceltradesbyprice](#token_sendcanceltradesbyprice)
   - [token_sendcanceltradesbypair](#token_sendcanceltradesbypair)
@@ -325,7 +325,7 @@ $ tokencore-cli "token_sendsto" \
 
 ---
 
-### token_sendgrant
+### sendtokengrant
 
 Issue or grant new units of managed tokens.
 
@@ -347,7 +347,7 @@ Issue or grant new units of managed tokens.
 **Example:**
 
 ```bash
-$ tokencore-cli "token_sendgrant" "3HsJvhr9qzgRe3ss97b1QHs38rmaLExLcH" "" 51 "7000"
+$ tokencore-cli "sendtokengrant" "3HsJvhr9qzgRe3ss97b1QHs38rmaLExLcH" "" 51 "7000"
 ```
 
 ---
@@ -378,7 +378,7 @@ $ tokencore-cli "sendtokenrevoke" "RpAVz7YHGFjVrr29iiSmezkvd3SzBbuK7p" "" 51 "10
 
 ---
 
-### token_sendclosecrowdsale
+### sendtokenclosecrowdsale
 
 Manually close a crowdsale.
 
@@ -397,7 +397,7 @@ Manually close a crowdsale.
 **Example:**
 
 ```bash
-$ tokencore-cli "token_sendclosecrowdsale" "3JYd75REX3HXn1vAU83YuGfmiPXW7BpYXo" 70
+$ tokencore-cli "sendtokenclosecrowdsale" "3JYd75REX3HXn1vAU83YuGfmiPXW7BpYXo" 70
 ```
 
 ---

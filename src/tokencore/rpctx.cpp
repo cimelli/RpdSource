@@ -742,7 +742,7 @@ static UniValue token_sendsto(const JSONRPCRequest& request)
     }
 }
 
-static UniValue token_sendgrant(const JSONRPCRequest& request)
+static UniValue sendtokengrant(const JSONRPCRequest& request)
 {
     if (request.fHelp || request.params.size() < 4 || request.params.size() > 5)
         throw runtime_error(
@@ -761,8 +761,8 @@ static UniValue token_sendgrant(const JSONRPCRequest& request)
             "\"hash\"                  (string) the hex-encoded transaction hash\n"
 
             "\nExamples:\n"
-            + HelpExampleCli("token_sendgrant", "\"3HsJvhr9qzgRe3ss97b1QHs38rmaLExLcH\" \"\" TOKEN \"7000\"")
-            + HelpExampleRpc("token_sendgrant", "\"3HsJvhr9qzgRe3ss97b1QHs38rmaLExLcH\", \"\", TOKEN, \"7000\"")
+            + HelpExampleCli("sendtokengrant", "\"3HsJvhr9qzgRe3ss97b1QHs38rmaLExLcH\" \"\" TOKEN \"7000\"")
+            + HelpExampleRpc("sendtokengrant", "\"3HsJvhr9qzgRe3ss97b1QHs38rmaLExLcH\", \"\", TOKEN, \"7000\"")
         );
 
     // obtain parameters & info
@@ -861,11 +861,11 @@ static UniValue sendtokenrevoke(const JSONRPCRequest& request)
     }
 }
 
-static UniValue token_sendclosecrowdsale(const JSONRPCRequest& request)
+static UniValue sendtokenclosecrowdsale(const JSONRPCRequest& request)
 {
     if (request.fHelp || request.params.size() != 2)
         throw runtime_error(
-            "token_sendclosecrowdsale \"fromaddress\" propertyid\n"
+            "sendtokenclosecrowdsale \"fromaddress\" propertyid\n"
 
             "\nManually close a crowdsale.\n"
 
@@ -877,8 +877,8 @@ static UniValue token_sendclosecrowdsale(const JSONRPCRequest& request)
             "\"hash\"                  (string) the hex-encoded transaction hash\n"
 
             "\nExamples:\n"
-            + HelpExampleCli("token_sendclosecrowdsale", "\"3JYd75REX3HXn1vAU83YuGfmiPXW7BpYXo\" 70")
-            + HelpExampleRpc("token_sendclosecrowdsale", "\"3JYd75REX3HXn1vAU83YuGfmiPXW7BpYXo\", 70")
+            + HelpExampleCli("sendtokenclosecrowdsale", "\"3JYd75REX3HXn1vAU83YuGfmiPXW7BpYXo\" 70")
+            + HelpExampleRpc("sendtokenclosecrowdsale", "\"3JYd75REX3HXn1vAU83YuGfmiPXW7BpYXo\", 70")
         );
 
     // obtain parameters & info
