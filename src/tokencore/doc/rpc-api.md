@@ -20,13 +20,13 @@ All available commands can be listed with `"help"`, and information about a spec
   - [token_sendissuancefixed](#token_sendissuancefixed)
   - [token_sendissuancemanaged](#token_sendissuancemanaged)
   - [token_sendsto](#token_sendsto)
-  - [sendtokengrant](#sendtokengrant)
-  - [sendtokenrevoke](#sendtokenrevoke)
-  - [sendtokenclosecrowdsale](#sendtokenclosecrowdsale)
-  - [sendtokentrade](#sendtokentrade)
-  - [sendtokencanceltradesbyprice](#sendtokencanceltradesbyprice)
-  - [sendtokencanceltradesbypair](#sendtokencanceltradesbypair)
-  - [sendtokencancelalltrades](#sendtokencancelalltrades)
+  - [token_sendgrant](#token_sendgrant)
+  - [token_sendrevoke](#token_sendrevoke)
+  - [token_sendclosecrowdsale](#token_sendclosecrowdsale)
+  - [token_sendtrade](#token_sendtrade)
+  - [token_sendcanceltradesbyprice](#token_sendcanceltradesbyprice)
+  - [token_sendcanceltradesbypair](#token_sendcanceltradesbypair)
+  - [token_sendcancelalltrades](#token_sendcancelalltrades)
   - [sendtokenchangeissuer](#sendtokenchangeissuer)
   - [token_sendall](#token_sendall)
   - [sendtokenenablefreezing](#sendtokenenablefreezing)
@@ -402,7 +402,7 @@ $ tokencore-cli "token_sendclosecrowdsale" "3JYd75REX3HXn1vAU83YuGfmiPXW7BpYXo" 
 
 ---
 
-### sendtokentrade
+### token_sendtrade
 
 Place a trade offer on the distributed token exchange.
 
@@ -424,12 +424,12 @@ Place a trade offer on the distributed token exchange.
 **Example:**
 
 ```bash
-$ tokencore-cli "sendtokentrade" "3BydPiSLPP3DR5cf726hDQ89fpqWLxPKLR" 31 "250.0" 1 "10.0"
+$ tokencore-cli "token_sendtrade" "3BydPiSLPP3DR5cf726hDQ89fpqWLxPKLR" 31 "250.0" 1 "10.0"
 ```
 
 ---
 
-### sendtokencanceltradesbyprice
+### token_sendcanceltradesbyprice
 
 Cancel offers on the distributed token exchange with the specified price.
 
@@ -451,12 +451,12 @@ Cancel offers on the distributed token exchange with the specified price.
 **Example:**
 
 ```bash
-$ tokencore-cli "sendtokencanceltradesbyprice" "3BydPiSLPP3DR5cf726hDQ89fpqWLxPKLR" 31 "100.0" 1 "5.0"
+$ tokencore-cli "token_sendcanceltradesbyprice" "3BydPiSLPP3DR5cf726hDQ89fpqWLxPKLR" 31 "100.0" 1 "5.0"
 ```
 
 ---
 
-### sendtokencanceltradesbypair
+### token_sendcanceltradesbypair
 
 Cancel all offers on the distributed token exchange with the given currency pair.
 
@@ -476,12 +476,12 @@ Cancel all offers on the distributed token exchange with the given currency pair
 **Example:**
 
 ```bash
-$ tokencore-cli "sendtokencanceltradesbypair" "3BydPiSLPP3DR5cf726hDQ89fpqWLxPKLR" 1 31
+$ tokencore-cli "token_sendcanceltradesbypair" "3BydPiSLPP3DR5cf726hDQ89fpqWLxPKLR" 1 31
 ```
 
 ---
 
-### sendtokencancelalltrades
+### token_sendcancelalltrades
 
 Cancel all offers on the distributed token exchange.
 
@@ -500,7 +500,7 @@ Cancel all offers on the distributed token exchange.
 **Example:**
 
 ```bash
-$ tokencore-cli "sendtokencancelalltrades" "3BydPiSLPP3DR5cf726hDQ89fpqWLxPKLR" 1
+$ tokencore-cli "token_sendcancelalltrades" "3BydPiSLPP3DR5cf726hDQ89fpqWLxPKLR" 1
 ```
 
 ---
