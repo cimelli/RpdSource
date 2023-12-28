@@ -193,7 +193,7 @@ $ tokencore-cli "sendtokendexaccept" \
 
 ---
 
-### token_sendissuancecrowdsale
+### sendtokenissuancecrowdsale
 
 Create new tokens as crowdsale.
 
@@ -224,7 +224,7 @@ Create new tokens as crowdsale.
 **Example:**
 
 ```bash
-$ tokencore-cli "token_sendissuancecrowdsale" \
+$ tokencore-cli "sendtokenissuancecrowdsale" \
     "3JYd75REX3HXn1vAU83YuGfmiPXW7BpYXo" 2 1 0 "Companies" "Bitcoin Mining" \
     "Quantum Miner" "" "" 2 "100" 1483228800 30 2
 ```
