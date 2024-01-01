@@ -24,7 +24,7 @@ Table of contents
   - [Two new RPCs to get and list all wallet balances](#two-new-rpcs-to-get-and-list-all-wallet-balances)
   - [Information about freeze transactions added to "token_gettransaction"](#information-about-freeze-transactions-added-to-token_gettransaction)
   - [Fix behavior of "token_listtransactions"](#fix-behavior-of-token_listtransactions)
-  - [Add field "issuerbonustokens" to "token_getcrowdsale"](#add-field-issuerbonustokens-to-token_getcrowdsale)
+  - [Add field "issuerbonustokens" to "gettokencrowdsale"](#add-field-issuerbonustokens-to-gettokencrowdsale)
   - [Show receiving destination, when sending to self](#show-receiving-destination-when-sending-to-self)
   - [Always show frozen balance in balance RPCs](#always-show-frozen-balance-in-balance-rpcs)
   - [Add "name" field to "token_getallbalancesforaddress"](#add-name-field-to-token_getallbalancesforaddress)
@@ -240,10 +240,10 @@ Previously, when trying to skip transactions with "token_listtransactions", the 
 
 This behavior was fixed and proper cutting of the result is done.
 
-Add field "issuerbonustokens" to "token_getcrowdsale"
+Add field "issuerbonustokens" to "gettokencrowdsale"
 ----------------------------------------------------
 
-While the field "addedissuertokens" of the RPC "token_getcrowdsale" shows the amount of issuer bonus tokens not yet emitted, the new field "issuerbonustokens" now also shows the amount of tokens already granted to the issuer as bonus of a crowdsale.
+While the field "addedissuertokens" of the RPC "gettokencrowdsale" shows the amount of issuer bonus tokens not yet emitted, the new field "issuerbonustokens" now also shows the amount of tokens already granted to the issuer as bonus of a crowdsale.
 
 Show receiving destination, when sending to self
 ------------------------------------------------
@@ -331,7 +331,7 @@ The following list includes relevant pull requests merged into this release:
 - #630 Update checkpoint for block 520000
 - #634 Fix fail safe iteration when forming ECDSA point
 - #649 Fix .gitignore
-- #650 Add field "issuerbonustokens" to "token_getcrowdsale"
+- #650 Add field "issuerbonustokens" to "gettokencrowdsale"
 - #651 Update default value for end block of token_listtransactions
 - #658 Add API to create funded raw transactions
 - #690 Fix erasing from persistence set

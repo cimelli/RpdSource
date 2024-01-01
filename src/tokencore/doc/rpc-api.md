@@ -1284,7 +1284,7 @@ $ tokencore-cli "gettokenactivecrowdsales"
 
 ---
 
-### token_getcrowdsale
+### gettokencrowdsale
 
 Returns information about a crowdsale.
 
@@ -1331,7 +1331,7 @@ Returns information about a crowdsale.
 **Example:**
 
 ```bash
-$ tokencore-cli "token_getcrowdsale" 3 true
+$ tokencore-cli "gettokencrowdsale" 3 true
 ```
 
 ---
