@@ -10,8 +10,8 @@
 #include <vector>
 
 /**
- * CBaseChainParams defines the base parameters (shared between rpdchain-cli and rpdchaind)
- * of a given instance of the RpdChain system.
+ * CBaseChainParams defines the base parameters (shared between rapids-cli and rapidsd)
+ * of a given instance of the Rapids system.
  */
 class CBaseChainParams
 {
