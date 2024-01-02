@@ -362,7 +362,7 @@ static const CRPCCommand vRPCCommands[] =
 
         /* RPD features */
         {"rapids", "listmasternodes", &listmasternodes, true },
-        {"rapids", "getcachedblockhashes", &getcachedblockhashes, true },
+        //{"rapids", "getcachedblockhashes", &getcachedblockhashes, true },
         {"rapids", "getmasternodecount", &getmasternodecount, true },
         {"rapids", "createmasternodebroadcast", &createmasternodebroadcast, true },
         {"rapids", "decodemasternodebroadcast", &decodemasternodebroadcast, true },
