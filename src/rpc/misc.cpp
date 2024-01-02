@@ -49,6 +49,8 @@ static bool getAddressesFromParams(const UniValue& params, std::vector<std::pair
         CScript scriptPubKey = GetScriptForDestination(dest);
         uint160 hashBytes;
         int addressType;
+    }
+}
 
 /**
  * @note Do not add or change anything in the information returned by this
