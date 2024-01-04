@@ -342,7 +342,7 @@
                   <enum>Qt::NoFocus</enum>
                  </property>
                  <property name="text">
-                  <string>https://RPDCHAIN.org/</string>
+                  <string>https://rpd.foundation/</string>
                  </property>
                 </widget>
                </item>
@@ -526,8 +526,7 @@
                            RPDCHAIN is a form of digital online money using blockchain technology
                            that can be easily transferred globally, instantly, and with near
                            zero fees.  RPDCHAIN incorporates market leading security &amp;
-                           privacy and is also the first PoS (Proof of Stake) Cryptocurrency
-                           to implement ZeroCoin(zRPD) and Zerocoin staking.
+                           privacy and is also the first PoS (Proof of Stake) Cryptocurrency.
                            &lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;
                            RPDCHAIN utilizes a Proof of Stake (PoS) consensus system algorithm,
                            allowing all owners of RPDCHAIN to participate in earning block rewards
@@ -629,7 +628,7 @@
                         <property name="text">
                          <string>
                            &lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;justify&quot;&gt;
-                           Newly received RPDCHAIN requires 6 confirmations on the network
+                           Newly received RPD requires 6 confirmations on the network
                            to become eligible for spending which can take ~6 minutes.
                            &lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;
                            Your RPDCHAIN wallet also needs to be completely synchronized
@@ -817,12 +816,9 @@
                         <property name="text">
                          <string>
                            &lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;justify&quot;&gt;
-                           We have support channels in most of our official chat groups, for example
-                           &lt;a style='color: #b088ff' href='https://discord.RPDCHAIN.org'&gt;
-                           #support in our Discord&lt;/a&gt;.
-                           If you prefer to submit a ticket, You can do so at
-                           &lt;a style='color: #b088ff' href='https://RPDCHAIN.freshdesk.com'&gt;
-                           our Freshdesk support site&lt;/a&gt;.
+                           Submit a support ticket, You can do so at
+                           &lt;a style='color: #ff5533' href='https://discord.gg/DPJ4kPpcg4'&gt;
+                           our Discord server&lt;/a&gt;.
                            &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;
                          </string>
                         </property>

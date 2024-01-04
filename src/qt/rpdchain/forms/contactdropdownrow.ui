@@ -77,7 +77,7 @@
            <string notr="true"/>
           </property>
           <property name="text">
-           <string notr="true">DN6i46dytMPVhV1JMGZFuQBh7BZZ6nNLox</string>
+           <string notr="true">RN6i46dytMPVhV1JMGZFuQBh7BZZ6nNLox</string>
           </property>
          </widget>
         </item>
@@ -101,7 +101,7 @@
       </size>
      </property>
      <property name="styleSheet">
-      <string notr="true">background-color:#bababa;</string>
+      <string notr="true">background-color:#3c3c3b;</string>
      </property>
      <property name="text">
       <string/>

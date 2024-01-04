@@ -35,7 +35,7 @@ QT_TRANSLATE_NOOP("rpdchain-core", ""
 "Please run 'sapling-fetch-params' or './util/fetch-params.sh' and then "
 "restart."),
 QT_TRANSLATE_NOOP("rpdchain-core", ""
-"Cannot obtain a lock on data directory %s. RPDCHAIN Core is probably already "
+"Cannot obtain a lock on data directory %s. RPDCHAIN Core Wallet is probably already "
 "running."),
 QT_TRANSLATE_NOOP("rpdchain-core", ""
 "Cannot upgrade to Sapling wallet (already running Sapling support). Version: "

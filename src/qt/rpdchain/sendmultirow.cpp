@@ -35,18 +35,19 @@ SendMultiRow::SendMultiRow(PWidget *parent) :
     ui->btnMenu->setVisible(false);
 
     // Button Contact
-    btnContact = ui->lineEditAddress->addAction(QIcon("://ic-contact-arrow-down"), QLineEdit::TrailingPosition);
+    btnContact = ui->lineEditAddress->addAction(QIcon("://ic-arrow-drop-down"), QLineEdit::TrailingPosition);
+    
     // Icon Number
-    ui->stackedAddress->addWidget(iconNumber);
-    iconNumber->show();
-    iconNumber->raise();
+    //ui->stackedAddress->addWidget(iconNumber);
+    //iconNumber->show();
+    //iconNumber->raise();
 
-    setCssProperty(iconNumber, "ic-multi-number");
-    iconNumber->setText("1");
-    iconNumber->setVisible(false);
-    QSize size = QSize(24, 24);
-    iconNumber->setMinimumSize(size);
-    iconNumber->setMaximumSize(size);
+    //setCssProperty(iconNumber, "ic-multi-number");
+    //iconNumber->setText("1");
+    //iconNumber->setVisible(false);
+    //QSize size = QSize(24, 24);
+    //iconNumber->setMinimumSize(size);
+    //iconNumber->setMaximumSize(size);
 
     int posIconX = 0;
     int posIconY = 14;

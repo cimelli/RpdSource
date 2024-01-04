@@ -19,24 +19,24 @@ static const int STATUSBAR_ICONSIZE = 16;
 static const bool DEFAULT_SPLASHSCREEN = true;
 
 /* Invalid field background style */
-#define STYLE_INVALID "background:#FF8080"
+#define STYLE_INVALID "background:#FF5533"
 
 /* Transaction list -- unconfirmed transaction */
-#define COLOR_UNCONFIRMED QColor(91, 76, 134)
+#define COLOR_UNCONFIRMED QColor(209, 213, 219)
 /* Transaction list -- negative amount */
-#define COLOR_NEGATIVE QColor(206, 0, 188)
+#define COLOR_NEGATIVE QColor(250, 250, 250)
 /* Transaction list -- bare address (without label) */
-#define COLOR_BAREADDRESS QColor(140, 140, 140)
+#define COLOR_BAREADDRESS QColor(209, 213, 219)
 /* Transaction list -- TX status decoration - open until date */
-#define COLOR_TX_STATUS_OPENUNTILDATE QColor(64, 64, 255)
+#define COLOR_TX_STATUS_OPENUNTILDATE QColor(209, 213, 219)
 /* Transaction list -- TX status decoration - default color */
-#define COLOR_BLACK QColor(51, 51, 51)
+#define COLOR_BLACK QColor(60, 60, 59)
 /* Transaction list -- TX status decoration - conflicted */
-#define COLOR_CONFLICTED QColor(255, 0, 0)
-/* Transaction list -- TX status decoration - orphan (Light Gray #D3D3D3) */
-#define COLOR_ORPHAN QColor(211, 211, 211)
-/* Transaction list -- TX status decoration - stake (BlueViolet #8A2BE2) */
-#define COLOR_STAKE QColor(138,43,226)
+#define COLOR_CONFLICTED QColor(209, 213, 219)
+/* Transaction list -- TX status decoration - orphan (RPD Light Gray #d1d5db) */
+#define COLOR_ORPHAN QColor(209, 213, 219)
+/* Transaction list -- TX status decoration - stake (RPD Orange #ff5533) */
+#define COLOR_STAKE QColor(255, 85, 51)
 /* Tooltips longer than this (in characters) are converted into rich text,
    so that they can be word-wrapped.
  */

@@ -45,11 +45,11 @@ const struct {
     const char* url;
     const char* source;
 } ICON_MAPPING[] = {
-        {"cmd-request", ":/icons/ic-transaction-received"},
-        {"cmd-reply", ":/icons/ic-transaction-sent"},
-        {"cmd-error", ":/icons/ic-transaction-sent"},
-        {"misc", ":/icons/ic-transaction-staked"},
-        {NULL, NULL}};
+    {"cmd-request", ":/icons/tx_input"},
+    {"cmd-reply", ":/icons/tx_output"},
+    {"cmd-error", ":/icons/tx_output"},
+    {"misc", ":/icons/tx_inout"},
+    {NULL, NULL}};
 
 /* Object for executing console RPC commands in a separate thread.
 */
@@ -425,7 +425,7 @@ void SettingsConsoleWidget::clear(bool clearHistory)
                         tr("Use up and down arrows to navigate history, and %1 to clear screen.").arg("<b>"+clsKey+"</b>") + "<br>" +
                         tr("Type <b>help</b> for an overview of available commands.") +
                         "<br><span class=\"secwarning\"><br>" +
-                        tr("WARNING: Scammers have been active, telling users to type commands here, stealing their wallet contents. Do not use this console without fully understanding the ramifications of a command.") +
+                        tr("WARNING: Do not use this console without fully understanding the ramifications of a command.") +
                         "</span>"),
             true);
 }
@@ -518,22 +518,22 @@ void SettingsConsoleWidget::changeTheme(bool isLightTheme, QString &theme)
     // Set default style sheet
     if (isLightTheme) {
         ui->messagesWidget->document()->setDefaultStyleSheet(
-                "table { color: #707070;  }"
-                "td.time { color: #808080; padding-top: 3px; } "
-                "td.message { color: #707070;font-family: Courier, Courier New, Lucida Console, monospace; font-size: 12px; } " // Todo: Remove fixed font-size
-                "td.cmd-request { color: #006060; } "
-                "td.cmd-error { color: red; } "
-                ".secwarning { color: red; }"
-                "b { color: #707070; } ");
+                "table { color: #3c3c3b; }"
+                "td.time { color: #d1d5db; padding-top: 3px; } "
+                "td.message { color: #d1d5db;font-family: Courier, Courier New, Lucida Console, monospace; font-size: 12px; } " // Todo: Remove fixed font-size
+                "td.cmd-request { color: #d1d5db; } "
+                "td.cmd-error { color: #ff5533; } "
+                ".secwarning { color: #ff5533; }"
+                "b { color: #d1d5db; } ");
     } else {
         ui->messagesWidget->document()->setDefaultStyleSheet(
-                "table { color: #FFFFFF; }"
-                "td.time { color: #808080; padding-top: 3px; } "
-                "td.message { color: #FFFFFF;font-family: Courier, Courier New, Lucida Console, monospace; font-size: 12px; } " // Todo: Remove fixed font-size
-                "td.cmd-request { color: #006060; } "
-                "td.cmd-error { color: red; } "
-                ".secwarning { color: red; }"
-                "b { color: #FFFFFF; } ");
+                "table { color: #3c3c3b; }"
+                "td.time { color: #d1d5db; padding-top: 3px; } "
+                "td.message { color: #d1d5db;font-family: Courier, Courier New, Lucida Console, monospace; font-size: 12px; } " // Todo: Remove fixed font-size
+                "td.cmd-request { color: #d1d5db; } "
+                "td.cmd-error { color: #ff5533; } "
+                ".secwarning { color: #ff5533; }"
+                "b { color: #d1d5db; } ");
     }
     updateStyle(ui->messagesWidget);
 }
