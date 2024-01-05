@@ -66,7 +66,7 @@ RPDCHAINGUI::RPDCHAINGUI(const NetworkStyle* networkStyle, QWidget* parent) :
 
     QString windowTitle = QString::fromStdString(GetArg("-windowtitle", ""));
     if (windowTitle.isEmpty()) {
-        windowTitle = tr("RPDCHAIN Core ");
+        windowTitle = tr("RPDCHAIN Core") + " - ";
         windowTitle += ((enableWallet) ? tr("Wallet") : tr("Node"));
     }
     windowTitle += " " + networkStyle->getTitleAddText();
@@ -561,10 +561,10 @@ void RPDCHAINGUI::showHide(bool show)
         op->setVisible(false);
         opEnabled = false;
     } else {
-        QColor bg("#3c3c3b");
+        QColor bg("#000000");
         bg.setAlpha(200);
         if (!isLightTheme()) {
-            bg = QColor("#3c3c3b");
+            bg = QColor("#00000000");
             bg.setAlpha(150);
         }
 

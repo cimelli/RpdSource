@@ -283,7 +283,7 @@
                </size>
               </property>
               <property name="styleSheet">
-               <string notr="true">background-color:#3c3c3b;</string>
+               <string notr="true">background-color:#bababa;</string>
               </property>
               <property name="text">
                <string/>
@@ -519,7 +519,7 @@
             <item>
              <widget class="QLabel" name="labelMessage">
               <property name="text">
-               <string>Amount of RPD staked.</string>
+               <string>Amount of RPD and zRPD staked.</string>
               </property>
              </widget>
             </item>

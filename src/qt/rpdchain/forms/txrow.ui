@@ -160,7 +160,7 @@
          </size>
         </property>
         <property name="styleSheet">
-         <string notr="true">background-color:#3c3c3b;</string>
+         <string notr="true">background-color:#bababa;</string>
         </property>
         <property name="text">
          <string/>

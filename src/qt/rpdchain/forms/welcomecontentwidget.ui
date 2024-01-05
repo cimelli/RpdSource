@@ -613,7 +613,7 @@
                      <enum>Qt::NoFocus</enum>
                     </property>
                     <property name="text">
-                    <string>Language</string>
+                     <string>Language</string>
                     </property>
                     <property name="checkable">
                      <bool>true</bool>
@@ -657,7 +657,7 @@
                      <enum>Qt::NoFocus</enum>
                     </property>
                     <property name="text">
-                    <string>Welcome</string>
+                     <string>Welcome</string>
                     </property>
                     <property name="checkable">
                      <bool>true</bool>
@@ -698,7 +698,7 @@
                      <enum>Qt::NoFocus</enum>
                     </property>
                     <property name="text">
-                     <string>Blockchain</string>
+                     <string>Privacy</string>
                     </property>
                     <property name="checkable">
                      <bool>true</bool>
@@ -739,7 +739,7 @@
                      <enum>Qt::NoFocus</enum>
                     </property>
                     <property name="text">
-                     <string>Governance</string>
+                     <string>Masternodes</string>
                     </property>
                     <property name="checkable">
                      <bool>true</bool>
@@ -847,7 +847,7 @@
                    </size>
                   </property>
                   <property name="text">
-                   <string>Select your &lt;a style='color: #ff5533'&gt;Language&lt;/a&gt;</string>
+                   <string>Select your language</string>
                   </property>
                  </widget>
                 </item>
@@ -883,26 +883,20 @@
                </layout>
               </widget>
               <widget class="QWidget" name="page_2">
-               <layout class="QVBoxLayout" name="verticalLayout_6" stretch="0,0,0,3">
-                   <property name="spacing">
-                    <number>6</number>
-                   </property>
-                   <property name="leftMargin">
-                    <number>140</number>
-                   </property>
-                   <property name="topMargin">
-                    <number>12</number>
-                   </property>
-                   <property name="rightMargin">
-                    <number>140</number>
-                   </property>
-                   <property name="bottomMargin">
-                    <number>12</number>
-                   </property>
-                   <item>
+               <layout class="QVBoxLayout" name="verticalLayout_6">
+                <property name="leftMargin">
+                 <number>40</number>
+                </property>
+                <property name="rightMargin">
+                 <number>40</number>
+                </property>
+                <item>
                  <spacer name="verticalSpacer_5">
                   <property name="orientation">
                    <enum>Qt::Vertical</enum>
+                  </property>
+                  <property name="sizeType">
+                   <enum>QSizePolicy::Minimum</enum>
                   </property>
                   <property name="sizeHint" stdset="0">
                    <size>
@@ -912,27 +906,75 @@
                   </property>
                  </spacer>
                 </item>
-                <item alignment="Qt::AlignHCenter">
-                  <widget class="QLabel" name="labelTitle2">
-                   <property name="minimumSize">
-                    <size>
-                     <width>0</width>
-                      <height>50</height>
-                     </size>
-                    </property>
-                    <property name="maximumSize">
+                <item>
+                 <widget class="QWidget" name="widget_3" native="true">
+                  <layout class="QVBoxLayout" name="verticalLayout_7" stretch="1,0,1,0">
+                   <property name="spacing">
+                    <number>0</number>
+                   </property>
+                   <property name="leftMargin">
+                    <number>0</number>
+                   </property>
+                   <property name="topMargin">
+                    <number>0</number>
+                   </property>
+                   <property name="rightMargin">
+                    <number>0</number>
+                   </property>
+                   <property name="bottomMargin">
+                    <number>0</number>
+                   </property>
+                   <item alignment="Qt::AlignHCenter">
+                    <widget class="QLabel" name="labelTitle2">
+                     <property name="maximumSize">
                       <size>
-                      <width>16777215</width>
-                      <height>50</height>
-                     </size>
-                    </property>
-                    <property name="text">
-                     <string>Welcome to your &lt;a style='color: #ff5533'&gt;RPDCHAIN&lt;/a&gt; Core Wallet!</string>
-                    </property>
+                       <width>16777215</width>
+                       <height>60</height>
+                      </size>
+                     </property>
+                     <property name="styleSheet">
+                      <string notr="true">padding:1px;</string>
+                     </property>
+                     <property name="text">
+                      <string>Welcome to
+RPDCHAIN Core Wallet</string>
+                     </property>
+                     <property name="alignment">
+                      <set>Qt::AlignCenter</set>
+                     </property>
                     </widget>
                    </item>
                    <item>
                     <spacer name="verticalSpacer_5_1">
+                     <property name="orientation">
+                      <enum>Qt::Vertical</enum>
+                     </property>
+                     <property name="sizeType">
+                      <enum>QSizePolicy::Fixed</enum>
+                     </property>
+                     <property name="sizeHint" stdset="0">
+                      <size>
+                       <width>20</width>
+                       <height>40</height>
+                      </size>
+                     </property>
+                    </spacer>
+                   </item>
+                   <item alignment="Qt::AlignHCenter">
+                    <widget class="QLabel" name="labelMessage2">
+                     <property name="text">
+                      <string>RPDCHAIN is the world’s most innovative Proof of Stake blockchain based technology. Developed by a team of highly experienced developers and cryptographers.</string>
+                     </property>
+                     <property name="alignment">
+                      <set>Qt::AlignHCenter|Qt::AlignTop</set>
+                     </property>
+                     <property name="wordWrap">
+                      <bool>true</bool>
+                     </property>
+                    </widget>
+                   </item>
+                   <item>
+                    <spacer name="verticalSpacer_5_2">
                      <property name="orientation">
                       <enum>Qt::Vertical</enum>
                      </property>
@@ -944,23 +986,13 @@
                      </property>
                     </spacer>
                    </item>
-                   <item>
-                    <widget class="QLabel" name="labelMessage2">
-                     <property name="text">
-                      <string>Welcome to your blockchain journey! Unleash the power of decentralized possibilities. your wallet, your keys, your control. Let the blockchain adventure begin!</string>
-                     </property>
-                     <property name="alignment">
-                      <set>Qt::AlignHCenter|Qt::AlignTop</set>
-                     </property>
-                     <property name="wordWrap">
-                      <bool>true</bool>
-                     </property>
-                    </widget>
-                   </item>
                   </layout>
                  </widget>
-                 <widget class="QWidget" name="page_3">
-                <layout class="QVBoxLayout" name="verticalLayout_8" stretch="0,0,0,3">
+                </item>
+               </layout>
+              </widget>
+              <widget class="QWidget" name="page_3">
+               <layout class="QVBoxLayout" name="verticalLayout_8" stretch="0,0,0,3">
                 <property name="spacing">
                  <number>6</number>
                 </property>
@@ -1004,7 +1036,7 @@
                    </size>
                   </property>
                   <property name="text">
-                   <string>Why is &lt;a style='color: #ff5533'&gt;Decentralization&lt;/a&gt; Important to us?!</string>
+                   <string>How RPDCHAIN respects your privacy?</string>
                   </property>
                  </widget>
                 </item>
@@ -1024,7 +1056,7 @@
                 <item>
                  <widget class="QLabel" name="labelMessage3">
                   <property name="text">
-                   <string>Decentralization brings back the power and control to the users and can set the foundation for web3. As new blockchain solutions make a huge impact across different sectors, the significance of decentralization becomes more relevant than ever.</string>
+                   <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;As our manifesto says: Privacy is a non-negotiable basic human right; it grants users the freedom to share their data whenever and with whomever they want - RPDCHAIN believes in self sovereignty.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                   </property>
                   <property name="alignment">
                    <set>Qt::AlignHCenter|Qt::AlignTop</set>
@@ -1084,7 +1116,7 @@
                    </size>
                   </property>
                   <property name="text">
-                   <string>Be a Part of &lt;a style='color: #ff5533'&gt;Governance&lt;/a&gt;... Run A Masternode!</string>
+                   <string>What is a Masternode?</string>
                   </property>
                  </widget>
                 </item>
@@ -1107,7 +1139,7 @@
                 <item>
                  <widget class="QLabel" name="labelMessage4">
                   <property name="text">
-                   <string>Decentralized Autonomous Organization (or DAO) is a decentralized system powered by the masternodes. The DAO allows each masternode to submit proposals and to vote on others.</string>
+                   <string>The masternode network is RPDCHAIN's second layer network on top of the blockchain that enables our DAO to provide decentralized governance and a treasury.</string>
                   </property>
                   <property name="alignment">
                    <set>Qt::AlignCenter</set>

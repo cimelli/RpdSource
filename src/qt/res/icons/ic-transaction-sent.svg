@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="ic-transaction-sent" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: none;
+      }
+
+      .cls-2 {
+        fill: #f53;
+      }
+    </style>
+  </defs>
+  <g id="Group_8832" data-name="Group 8832">
+    <path id="Path_18891" data-name="Path 18891" class="cls-2" d="m22.2,1.8L1.8,9.78l6.37,3.43-.1-.1,1.44-1.44-2.96-1.6,12.12-4.74-4.74,12.12-1.59-2.96-1.44,1.44-.1-.1,3.43,6.37L22.2,1.8Z"/>
+    <g id="Group_8831" data-name="Group 8831">
+      <path id="Rectangle_4411" data-name="Rectangle 4411" class="cls-2" d="m8.77,13.82l4.95-4.95,1.41,1.41-4.95,4.95-1.41-1.41Z"/>
+    </g>
+  </g>
+  <path id="Rectangle_4412" data-name="Rectangle 4412" class="cls-1" d="m0,0h24v24H0V0Z"/>
+</svg>

@@ -138,14 +138,14 @@ void SettingsBitToolWidget::onEncryptKeyButtonENCClicked()
     QString qstrPassphrase = ui->passphraseIn_ENC->text();
     QString strInvalid;
     if (!isValidPassphrase(qstrPassphrase, strInvalid)) {
-        ui->statusLabel_ENC->setStyleSheet("QLabel { color: #ff5533; }");
+        ui->statusLabel_ENC->setStyleSheet("QLabel { color: red; }");
         ui->statusLabel_ENC->setText(tr("The entered passphrase is invalid. ") + strInvalid + QString(" is not valid") + QString(" ") + tr("Allowed: 0-9,a-z,A-Z,") + specialChar);
         return;
     }
 
     CTxDestination dest = DecodeDestination(ui->addressIn_ENC->text().toStdString());
     if (!IsValidDestination(dest)) {
-        ui->statusLabel_ENC->setStyleSheet("QLabel { color: #ff5533; }");
+        ui->statusLabel_ENC->setStyleSheet("QLabel { color: red; }");
         ui->statusLabel_ENC->setText(tr("The entered address is invalid.") + QString(" ") + tr("Please check the address and try again."));
         return;
     }
@@ -153,21 +153,21 @@ void SettingsBitToolWidget::onEncryptKeyButtonENCClicked()
     CKeyID keyID = *boost::get<CKeyID>(&dest);
     if (!keyID) {
         //ui->addressIn_ENC->setValid(false);
-        ui->statusLabel_ENC->setStyleSheet("QLabel { color: #ff5533; }");
+        ui->statusLabel_ENC->setStyleSheet("QLabel { color: red; }");
         ui->statusLabel_ENC->setText(tr("The entered address does not refer to a key.") + QString(" ") + tr("Please check the address and try again."));
         return;
     }
 
     WalletModel::UnlockContext ctx(walletModel->requestUnlock());
     if (!ctx.isValid()) {
-        ui->statusLabel_ENC->setStyleSheet("QLabel { color: #ff5533; }");
+        ui->statusLabel_ENC->setStyleSheet("QLabel { color: red; }");
         ui->statusLabel_ENC->setText(tr("Wallet unlock was cancelled."));
         return;
     }
 
     CKey key;
     if (!pwalletMain->GetKey(keyID, key)) {
-        ui->statusLabel_ENC->setStyleSheet("QLabel { color: #ff5533; }");
+        ui->statusLabel_ENC->setStyleSheet("QLabel { color: red; }");
         ui->statusLabel_ENC->setText(tr("Private key for the entered address is not available."));
         return;
     }
@@ -258,7 +258,7 @@ void SettingsBitToolWidget::onDecryptClicked()
     uint256 privKey;
     bool fCompressed;
     if (!BIP38_Decrypt(strPassphrase, strKey, privKey, fCompressed)) {
-        ui->statusLabel_DEC->setStyleSheet("QLabel { color: #ff5533; }");
+        ui->statusLabel_DEC->setStyleSheet("QLabel { color: red; }");
         ui->statusLabel_DEC->setText(tr("Failed to decrypt.") + QString(" ") + tr("Please check the key and passphrase and try again."));
         return;
     }
@@ -273,7 +273,7 @@ void SettingsBitToolWidget::importAddressFromDecKey()
 {
     WalletModel::UnlockContext ctx(walletModel->requestUnlock());
     if (!ctx.isValid()) {
-        ui->statusLabel_DEC->setStyleSheet("QLabel { color: #ff5533; }");
+        ui->statusLabel_DEC->setStyleSheet("QLabel { color: red; }");
         ui->statusLabel_DEC->setText(tr("Wallet unlock was cancelled."));
         return;
     }
@@ -282,14 +282,14 @@ void SettingsBitToolWidget::importAddressFromDecKey()
     CPubKey pubkey = key.GetPubKey();
 
     if (!IsValidDestination(dest) || !key.IsValid() || EncodeDestination(pubkey.GetID()) != EncodeDestination(dest)) {
-        ui->statusLabel_DEC->setStyleSheet("QLabel { color: #ff5533; }");
+        ui->statusLabel_DEC->setStyleSheet("QLabel { color: red; }");
         ui->statusLabel_DEC->setText(tr("Data Not Valid.") + QString(" ") + tr("Please try again."));
         return;
     }
 
     CKeyID vchAddress = pubkey.GetID();
     {
-        ui->statusLabel_DEC->setStyleSheet("QLabel { color: #ff5533; }");
+        ui->statusLabel_DEC->setStyleSheet("QLabel { color: red; }");
         ui->statusLabel_DEC->setText(tr("Please wait while key is imported"));
 
         pwalletMain->MarkDirty();
@@ -297,7 +297,7 @@ void SettingsBitToolWidget::importAddressFromDecKey()
 
         // Don't throw error in case a key is already there
         if (pwalletMain->HaveKey(vchAddress)) {
-            ui->statusLabel_DEC->setStyleSheet("QLabel { color: #ff5533; }");
+            ui->statusLabel_DEC->setStyleSheet("QLabel { color: red; }");
             ui->statusLabel_DEC->setText(tr("Cannot import address, key already held by the wallet"));
             return;
         }
@@ -305,7 +305,7 @@ void SettingsBitToolWidget::importAddressFromDecKey()
         pwalletMain->mapKeyMetadata[vchAddress].nCreateTime = 1;
 
         if (!pwalletMain->AddKeyPubKey(key, pubkey)) {
-            ui->statusLabel_DEC->setStyleSheet("QLabel { color: #ff5533; }");
+            ui->statusLabel_DEC->setStyleSheet("QLabel { color: red; }");
             ui->statusLabel_DEC->setText(tr("Error adding key to the wallet"));
             return;
         }

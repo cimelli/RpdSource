@@ -160,7 +160,7 @@ void ReceiveWidget::updateLabel()
         if (!label.isEmpty()) {
             ui->labelLabel->setVisible(true);
             ui->labelLabel->setText(label);
-            ui->pushButtonLabel->setText(tr("Label"));
+            ui->pushButtonLabel->setText(tr("Edit Label"));
         } else {
             ui->labelLabel->setVisible(false);
         }
@@ -174,7 +174,7 @@ void ReceiveWidget::updateQr(QString address)
     ui->labelQrImg->setText("");
 
     QString error;
-    QColor qrColor("#3c3c3b");
+    QColor qrColor("#382d4d");
     QPixmap pixmap = encodeToQr(uri, error, qrColor);
     if (!pixmap.isNull()) {
         qrImage = &pixmap;

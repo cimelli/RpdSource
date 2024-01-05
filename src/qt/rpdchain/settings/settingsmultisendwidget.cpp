@@ -112,7 +112,7 @@ public:
             lblDivisory->setObjectName(QStringLiteral("lblDivisory"));
             lblDivisory->setMinimumSize(QSize(0, 1));
             lblDivisory->setMaximumSize(QSize(16777215, 1));
-            lblDivisory->setStyleSheet(QStringLiteral("background-color:#3c3c3b;"));
+            lblDivisory->setStyleSheet(QStringLiteral("background-color:#bababa;"));
             lblDivisory->setAlignment(Qt::AlignBottom | Qt::AlignLeading | Qt::AlignLeft);
             verticalLayout_2->addWidget(lblDivisory);
         }

@@ -131,7 +131,7 @@ TopBar::TopBar(RPDCHAINGUI* _mainWindow, QWidget *parent) :
 
 void TopBar::onThemeClicked()
 {
-    //Store theme
+    // Store theme
     bool lightTheme = !isLightTheme();
 
     setTheme(lightTheme);

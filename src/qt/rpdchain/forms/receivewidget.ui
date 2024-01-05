@@ -266,7 +266,7 @@
                 <enum>Qt::NoFocus</enum>
                </property>
                <property name="text">
-                <string>Label</string>
+                <string>Add Label</string>
                </property>
               </widget>
              </item>
@@ -276,7 +276,7 @@
                 <enum>Qt::NoFocus</enum>
                </property>
                <property name="text">
-                <string>Generate</string>
+                <string>Generate Address</string>
                </property>
               </widget>
              </item>

@@ -1,16 +1,14 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- Generator: Adobe Illustrator 28.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
-<svg version="1.1" id="ic_send" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-	 viewBox="0 0 26 26" style="enable-background:new 0 0 26 26;" xml:space="preserve">
-<style type="text/css">
-	.st0{fill:none;}
-	.st1{fill-rule:evenodd;clip-rule:evenodd;fill:#FF5533;}
-</style>
-<path id="Rectangle_4395" class="st0" d="M0,0h26v26H0V0z"/>
-<g id="Group_8987" transform="translate(2.000000, 2.000000)">
-	<g id="Group_8986">
-		<polygon id="Path_18953" class="st1" points="3.8,6.7 5.2,8.1 10,3.7 10,17.4 12,17.4 12,3.7 16.8,8.1 18.2,6.7 11,0 		"/>
-		<polygon id="Path_18954" class="st1" points="20,15 20,20 2,20 2,15 0,15 0,22 22,22 22,15 		"/>
-	</g>
-</g>
+<svg xmlns="http://www.w3.org/2000/svg" id="ic_send" width="26" height="26" viewBox="0 0 26 26">
+    <defs>
+        <style>
+            .cls-1{fill:#7c7687}.cls-2{fill:none}
+        </style>
+    </defs>
+    <g id="Group_8811" data-name="Group 8811">
+        <path id="Path_18865" d="M1.352 10.1l7.21 4.506 1.452-1.452-4.1-2.564 14.8-5.307-5.307 14.8-2.565-4.1-1.451 1.451 4.509 7.214 8.125-22.673z" class="cls-1" data-name="Path 18865"/>
+        <g id="Group_8810" data-name="Group 8810">
+            <path id="Rectangle_4394" d="M0 0h8v2H0z" class="cls-1" data-name="Rectangle 4394" transform="rotate(-45 23.11 -3.563)"/>
+        </g>
+    </g>
+    <path id="Rectangle_4395" d="M0 0h26v26H0z" class="cls-2" data-name="Rectangle 4395"/>
 </svg>

@@ -276,7 +276,7 @@ void OptionsDialog::on_cancelButton_clicked()
 
 void OptionsDialog::showRestartWarning(bool fPersistent)
 {
-    ui->statusLabel->setStyleSheet("QLabel { color: #ff5533; }");
+    ui->statusLabel->setStyleSheet("QLabel { color: red; }");
 
     if (fPersistent) {
         ui->statusLabel->setText(tr("Client restart required to activate changes."));
@@ -309,14 +309,14 @@ void OptionsDialog::doProxyIpChecks(QValidatedLineEdit* pUiProxyIp, QLineEdit* p
     if (!(fProxyIpValid = addrProxy.IsValid())) {
         disableOkButton();
         pUiProxyIp->setValid(false);
-        ui->statusLabel->setStyleSheet("QLabel { color: #ff5533; }");
+        ui->statusLabel->setStyleSheet("QLabel { color: red; }");
         ui->statusLabel->setText(tr("The supplied proxy address is invalid."));
         return;
     }
     // Check proxy port
     if (!pUiProxyPort->hasAcceptableInput()) {
         disableOkButton();
-        ui->statusLabel->setStyleSheet("QLabel { color: #ff5533; }");
+        ui->statusLabel->setStyleSheet("QLabel { color: red; }");
         ui->statusLabel->setText(tr("The supplied proxy port is invalid."));
         return;
     }
@@ -324,7 +324,7 @@ void OptionsDialog::doProxyIpChecks(QValidatedLineEdit* pUiProxyIp, QLineEdit* p
     proxyType checkProxy = proxyType(addrProxy);
     if (!checkProxy.IsValid()) {
         disableOkButton();
-        ui->statusLabel->setStyleSheet("QLabel { color: #ff5533; }");
+        ui->statusLabel->setStyleSheet("QLabel { color: red; }");
         ui->statusLabel->setText(tr("The supplied proxy settings are invalid."));
         return;
     }
