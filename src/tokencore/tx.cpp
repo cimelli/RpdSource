@@ -42,12 +42,23 @@ using namespace mastercore;
 
 static const std::regex IPFS_CHARACTERS("Qm[1-9A-HJ-NP-Za-km-z]{44,}|b[A-Za-z2-7]{58,}|B[A-Z2-7]{58,}|z[1-9A-HJ-NP-Za-km-z]{48,}|F[0-9A-F]{50,}");
 static const std::regex PROTECTED_NAMES("^RPD$|^RAPIDS$|^RAPIDSNETWORK$");
-static const std::regex TOKEN_NAME_CHARACTERS("^[A-Z0-9._]{3,25}$");
+static const std::regex TOKEN_NAME_CHARACTERS("^[r]?[A-Z0-9._]{3,25}$");
+static const std::regex USERNAME_CHARACTERS("^[a-z0-9._]{3,25}.rpd$");
+static const std::regex PROTECTED_USERNAMES("^rapids.rpd$|^rpd.rpd$");
 
-bool IsTokenNameValid(const std::string& name)
+bool IsTokenTickerValid(const std::string& name)
 {
+    if (name == "RPDx")
+        return true;
+
     return std::regex_match(name, TOKEN_NAME_CHARACTERS)
         && !std::regex_match(name, PROTECTED_NAMES);
+}
+
+bool IsUsernameValid(const std::string& username)
+{
+    return std::regex_match(username, USERNAME_CHARACTERS)
+        && !std::regex_match(username, PROTECTED_USERNAMES);
 }
 
 bool IsTokenIPFSValid(const std::string& string)
@@ -72,7 +83,7 @@ std::string mastercore::strTransactionType(uint16_t txType)
         case TOKEN_TYPE_METADEX_CANCEL_PRICE: return "MetaDEx cancel-price";
         case TOKEN_TYPE_METADEX_CANCEL_PAIR: return "MetaDEx cancel-pair";
         case TOKEN_TYPE_METADEX_CANCEL_ECOSYSTEM: return "MetaDEx cancel-ecosystem";
-        case TOKEN_TYPE_ACCEPT_OFFER_BTC: return "DEx Accept Offer";
+        case TOKEN_TYPE_ACCEPT_OFFER_RPD: return "DEx Accept Offer";
         case TOKEN_TYPE_CREATE_PROPERTY_FIXED: return "Create Property - Fixed";
         case TOKEN_TYPE_CREATE_PROPERTY_VARIABLE: return "Create Property - Variable";
         case TOKEN_TYPE_PROMOTE_PROPERTY: return "Promote Property";
@@ -139,8 +150,8 @@ bool CMPTransaction::interpret_Transaction()
         case TOKEN_TYPE_TRADE_OFFER:
             return interpret_TradeOffer();
 
-        case TOKEN_TYPE_ACCEPT_OFFER_BTC:
-            return interpret_AcceptOfferBTC();
+        case TOKEN_TYPE_ACCEPT_OFFER_RPD:
+            return interpret_AcceptOfferRPD();
 
         case TOKEN_TYPE_METADEX_TRADE:
             return interpret_MetaDExTrade();
@@ -335,7 +346,7 @@ bool CMPTransaction::interpret_TradeOffer()
 }
 
 /** Tx 22 */
-bool CMPTransaction::interpret_AcceptOfferBTC()
+bool CMPTransaction::interpret_AcceptOfferRPD()
 {
     if (pkt_size < 16) {
         return false;
@@ -469,7 +480,7 @@ bool CMPTransaction::interpret_CreatePropertyFixed()
     SwapByteOrder16(prop_type);
     memcpy(&prev_prop_id, &pkt[7], 4);
     SwapByteOrder32(prev_prop_id);
-    for (int i = 0; i < 5; i++) {
+    for (int i = 0; i < 6; i++) {
         spstr.push_back(std::string(p));
         p += spstr.back().size() + 1;
     }
@@ -477,6 +488,7 @@ bool CMPTransaction::interpret_CreatePropertyFixed()
     memcpy(category, spstr[i].c_str(), std::min(spstr[i].length(), sizeof(category)-1)); i++;
     memcpy(subcategory, spstr[i].c_str(), std::min(spstr[i].length(), sizeof(subcategory)-1)); i++;
     memcpy(name, spstr[i].c_str(), std::min(spstr[i].length(), sizeof(name)-1)); i++;
+    memcpy(ticker, spstr[i].c_str(), std::min(spstr[i].length(), sizeof(ticker)-1)); i++;
     memcpy(url, spstr[i].c_str(), std::min(spstr[i].length(), sizeof(url)-1)); i++;
     memcpy(data, spstr[i].c_str(), std::min(spstr[i].length(), sizeof(data)-1)); i++;
     memcpy(&nValue, p, 8);
@@ -491,6 +503,7 @@ bool CMPTransaction::interpret_CreatePropertyFixed()
         PrintToLog("\t        category: %s\n", category);
         PrintToLog("\t     subcategory: %s\n", subcategory);
         PrintToLog("\t            name: %s\n", name);
+        PrintToLog("\t          ticker: %s\n", ticker);
         PrintToLog("\t             url: %s\n", url);
         PrintToLog("\t            data: %s\n", data);
         PrintToLog("\t           value: %s\n", FormatByType(nValue, prop_type));
@@ -517,7 +530,7 @@ bool CMPTransaction::interpret_CreatePropertyVariable()
     SwapByteOrder16(prop_type);
     memcpy(&prev_prop_id, &pkt[7], 4);
     SwapByteOrder32(prev_prop_id);
-    for (int i = 0; i < 5; i++) {
+    for (int i = 0; i < 6; i++) {
         spstr.push_back(std::string(p));
         p += spstr.back().size() + 1;
     }
@@ -525,6 +538,7 @@ bool CMPTransaction::interpret_CreatePropertyVariable()
     memcpy(category, spstr[i].c_str(), std::min(spstr[i].length(), sizeof(category)-1)); i++;
     memcpy(subcategory, spstr[i].c_str(), std::min(spstr[i].length(), sizeof(subcategory)-1)); i++;
     memcpy(name, spstr[i].c_str(), std::min(spstr[i].length(), sizeof(name)-1)); i++;
+    memcpy(ticker, spstr[i].c_str(), std::min(spstr[i].length(), sizeof(ticker)-1)); i++;
     memcpy(url, spstr[i].c_str(), std::min(spstr[i].length(), sizeof(url)-1)); i++;
     memcpy(data, spstr[i].c_str(), std::min(spstr[i].length(), sizeof(data)-1)); i++;
     memcpy(&property, p, 4);
@@ -547,6 +561,7 @@ bool CMPTransaction::interpret_CreatePropertyVariable()
         PrintToLog("\t        category: %s\n", category);
         PrintToLog("\t     subcategory: %s\n", subcategory);
         PrintToLog("\t            name: %s\n", name);
+        PrintToLog("\t          ticker: %s\n", ticker);
         PrintToLog("\t             url: %s\n", url);
         PrintToLog("\t            data: %s\n", data);
         PrintToLog("\tproperty desired: %d (%s)\n", property, strMPProperty(property));
@@ -593,7 +608,7 @@ bool CMPTransaction::interpret_CreatePropertyManaged()
     SwapByteOrder16(prop_type);
     memcpy(&prev_prop_id, &pkt[7], 4);
     SwapByteOrder32(prev_prop_id);
-    for (int i = 0; i < 5; i++) {
+    for (int i = 0; i < 6; i++) {
         spstr.push_back(std::string(p));
         p += spstr.back().size() + 1;
     }
@@ -601,6 +616,7 @@ bool CMPTransaction::interpret_CreatePropertyManaged()
     memcpy(category, spstr[i].c_str(), std::min(spstr[i].length(), sizeof(category)-1)); i++;
     memcpy(subcategory, spstr[i].c_str(), std::min(spstr[i].length(), sizeof(subcategory)-1)); i++;
     memcpy(name, spstr[i].c_str(), std::min(spstr[i].length(), sizeof(name)-1)); i++;
+    memcpy(ticker, spstr[i].c_str(), std::min(spstr[i].length(), sizeof(ticker)-1)); i++;
     memcpy(url, spstr[i].c_str(), std::min(spstr[i].length(), sizeof(url)-1)); i++;
     memcpy(data, spstr[i].c_str(), std::min(spstr[i].length(), sizeof(data)-1)); i++;
 
@@ -611,6 +627,7 @@ bool CMPTransaction::interpret_CreatePropertyManaged()
         PrintToLog("\t        category: %s\n", category);
         PrintToLog("\t     subcategory: %s\n", subcategory);
         PrintToLog("\t            name: %s\n", name);
+        PrintToLog("\t          ticker: %s\n", ticker);
         PrintToLog("\t             url: %s\n", url);
         PrintToLog("\t            data: %s\n", data);
     }
@@ -901,8 +918,8 @@ int CMPTransaction::interpretPacket()
         case TOKEN_TYPE_TRADE_OFFER:
             return logicMath_TradeOffer();
 
-        case TOKEN_TYPE_ACCEPT_OFFER_BTC:
-            return logicMath_AcceptOffer_BTC();
+        case TOKEN_TYPE_ACCEPT_OFFER_RPD:
+            return logicMath_AcceptOffer_RPD();
 
         case TOKEN_TYPE_METADEX_TRADE:
             return logicMath_MetaDExTrade();
@@ -1330,7 +1347,7 @@ int CMPTransaction::logicMath_TradeOffer()
 }
 
 /** Tx 22 */
-int CMPTransaction::logicMath_AcceptOffer_BTC()
+int CMPTransaction::logicMath_AcceptOffer_RPD()
 {
     if (!IsTransactionTypeAllowed(block, property, type, version)) {
         PrintToLog("%s(): rejected: type %d or version %d not permitted for property %d at block %d\n",
@@ -1601,23 +1618,33 @@ int CMPTransaction::logicMath_CreatePropertyFixed()
         return (PKT_ERROR_SP -37);
     }
 
-    if (pDbSpInfo->findSPByName(name) > 0) {
-        PrintToLog("%s(): rejected: token with name %s already exists\n", __func__, name);
+    if ('\0' == ticker[0]) {
+        PrintToLog("%s(): rejected: property ticker must not be empty\n", __func__);
+        return (PKT_ERROR_SP -51);
+    }
+
+    if (pDbSpInfo->findSPByTicker(ticker) > 0) {
+        PrintToLog("%s(): rejected: token with ticker %s already exists\n", __func__, ticker);
         return (PKT_ERROR_SP -71);
     }
 
-    if (!IsTokenNameValid(name))
+    bool isToken = IsTokenTickerValid(ticker);
+    bool isUsername = IsUsernameValid(ticker);
+
+    if (!isToken && !isUsername)
     {
-        PrintToLog("%s(): rejected: token name %s is invalid\n", __func__, name);
+        PrintToLog("%s(): rejected: token ticker %s is invalid\n", __func__, ticker);
         return (PKT_ERROR_SP -72);
     }
 
-    CAmount nMandatory = 1 * COIN;
-    if (nDonation < nMandatory) {
-        PrintToLog("%s(): rejected: token creation fee is missing\n", __func__);
-        return (PKT_ERROR_SP -73);
+    if (isUsername)
+    {
+        if (TOKEN_PROPERTY_TYPE_INDIVISIBLE != prop_type || nValue != 1)
+        {
+            PrintToLog("%s(): rejected: only 1 username token can be created\n", __func__);
+            return (PKT_ERROR_SP -23);
+        }
     }
-
     if (!IsTokenIPFSValid(data))
     {
         PrintToLog("%s(): rejected: token IPFS hash %s is invalid\n", __func__, name);
@@ -1635,6 +1662,7 @@ int CMPTransaction::logicMath_CreatePropertyFixed()
     newSP.category.assign(category);
     newSP.subcategory.assign(subcategory);
     newSP.name.assign(name);
+    newSP.ticker.assign(ticker);
     newSP.url.assign(url);
     newSP.data.assign(data);
     newSP.fixed = true;
@@ -1703,6 +1731,20 @@ int CMPTransaction::logicMath_CreatePropertyVariable()
         return (PKT_ERROR_SP -24);
     }
 
+
+    // Allow only RPDx as desired property
+    uint32_t RPDxPropertyId = pDbSpInfo->findSPByTicker("RPDx");
+    if (RPDxPropertyId == 0) {
+        PrintToLog("%s(): rejected: RPDx not issued yet\n", __func__);
+        return (PKT_ERROR_SP -25);
+    }
+
+    if (property != RPDxPropertyId) {
+        PrintToLog("%s(): rejected: desired token must be RPDx\n", __func__);
+        return (PKT_ERROR_SP -26);
+    }
+
+
     if (TOKEN_PROPERTY_TYPE_INDIVISIBLE != prop_type && TOKEN_PROPERTY_TYPE_DIVISIBLE != prop_type) {
         PrintToLog("%s(): rejected: invalid property type: %d\n", __func__, prop_type);
         return (PKT_ERROR_SP -36);
@@ -1711,6 +1753,11 @@ int CMPTransaction::logicMath_CreatePropertyVariable()
     if ('\0' == name[0]) {
         PrintToLog("%s(): rejected: property name must not be empty\n", __func__);
         return (PKT_ERROR_SP -37);
+    }
+
+    if ('\0' == ticker[0]) {
+        PrintToLog("%s(): rejected: property ticker must not be empty\n", __func__);
+        return (PKT_ERROR_SP -51);
     }
 
     if (!deadline || (int64_t) deadline < blockTime) {
@@ -1723,21 +1770,15 @@ int CMPTransaction::logicMath_CreatePropertyVariable()
         return (PKT_ERROR_SP -39);
     }
 
-    if (pDbSpInfo->findSPByName(name) > 0) {
-        PrintToLog("%s(): rejected: token with name %s already exists\n", __func__, name);
+    if (pDbSpInfo->findSPByTicker(ticker) > 0) {
+        PrintToLog("%s(): rejected: token with ticker %s already exists\n", __func__, ticker);
         return (PKT_ERROR_SP -71);
     }
 
-    if (!IsTokenNameValid(name))
+    if (!IsTokenTickerValid(ticker))
     {
-        PrintToLog("%s(): rejected: token name %s is invalid\n", __func__, name);
+        PrintToLog("%s(): rejected: token ticker %s is invalid\n", __func__, ticker);
         return (PKT_ERROR_SP -72);
-    }
-
-    CAmount nMandatory = 1 * COIN;
-    if (nDonation < nMandatory) {
-        PrintToLog("%s(): rejected: token creation fee is missing\n", __func__);
-        return (PKT_ERROR_SP -73);
     }
 
     if (!IsTokenIPFSValid(data))
@@ -1757,6 +1798,7 @@ int CMPTransaction::logicMath_CreatePropertyVariable()
     newSP.category.assign(category);
     newSP.subcategory.assign(subcategory);
     newSP.name.assign(name);
+    newSP.ticker.assign(ticker);
     newSP.url.assign(url);
     newSP.data.assign(data);
     newSP.fixed = false;
@@ -1883,21 +1925,20 @@ int CMPTransaction::logicMath_CreatePropertyManaged()
         return (PKT_ERROR_SP -37);
     }
 
-    if (pDbSpInfo->findSPByName(name) > 0) {
-        PrintToLog("%s(): rejected: token with name %s already exists\n", __func__, name);
+    if ('\0' == ticker[0]) {
+        PrintToLog("%s(): rejected: property ticker must not be empty\n", __func__);
+        return (PKT_ERROR_SP -51);
+    }
+
+    if (pDbSpInfo->findSPByTicker(ticker) > 0) {
+        PrintToLog("%s(): rejected: token with ticker %s already exists\n", __func__, ticker);
         return (PKT_ERROR_SP -71);
     }
 
-    if (!IsTokenNameValid(name))
+    if (!IsTokenTickerValid(ticker))
     {
-        PrintToLog("%s(): rejected: token name %s is invalid\n", __func__, name);
+        PrintToLog("%s(): rejected: token ticker %s is invalid\n", __func__, ticker);
         return (PKT_ERROR_SP -72);
-    }
-
-    CAmount nMandatory = 1 * COIN;
-    if (nDonation < nMandatory) {
-        PrintToLog("%s(): rejected: token creation fee is missing\n", __func__);
-        return (PKT_ERROR_SP -73);
     }
 
     if (!IsTokenIPFSValid(data))
@@ -1916,6 +1957,7 @@ int CMPTransaction::logicMath_CreatePropertyManaged()
     newSP.category.assign(category);
     newSP.subcategory.assign(subcategory);
     newSP.name.assign(name);
+    newSP.ticker.assign(ticker);
     newSP.url.assign(url);
     newSP.data.assign(data);
     newSP.fixed = false;

@@ -176,7 +176,7 @@ The following list includes relevant pull requests merged into this release:
 - #334 Update documentation for getseedblocks, getcurrentconsensushash, setautocommit
 - #335 Disable logging on Windows to speed up CI RPC tests
 - #336 Change the default maximum OP_RETURN size to 80 bytes
-- #341 Add token_getmetadexhash RPC call to hash state of MetaDEx
+- #341 Add gettokenmetadexhash RPC call to hash state of MetaDEx
 - #343 Remove pre-OP_RETURN legacy code
 - #344 Fix missing client notification for new activations
 - #349 Add positioninblock attribute to RPC output for transactions

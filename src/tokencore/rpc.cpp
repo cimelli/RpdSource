@@ -88,6 +88,7 @@ void PopulateFailure(int error)
 void PropertyToJSON(const CMPSPInfo::Entry& sProperty, UniValue& property_obj)
 {
     property_obj.pushKV("name", sProperty.name);
+    property_obj.pushKV("ticker", sProperty.ticker);
     property_obj.pushKV("category", sProperty.category);
     property_obj.pushKV("subcategory", sProperty.subcategory);
     property_obj.pushKV("data", sProperty.data);
@@ -104,10 +105,24 @@ void MetaDexObjectToJSON(const CMPMetaDEx& obj, UniValue& metadex_obj)
     metadex_obj.pushKV("txid", obj.getHash().GetHex());
     if (obj.getAction() == 4) metadex_obj.pushKV("ecosystem", isTestEcosystemProperty(obj.getProperty()) ? "test" : "main");
     metadex_obj.pushKV("propertyidforsale", (uint64_t) obj.getProperty());
+    metadex_obj.pushKV("propertynameforsale", getPropertyName(obj.getProperty()));
+
+    CMPSPInfo::Entry saleproperty;
+    pDbSpInfo->getSP(obj.getProperty(), saleproperty);
+    metadex_obj.pushKV("tokenforsalename", saleproperty.name);
+    metadex_obj.pushKV("tokenforsale", saleproperty.ticker);
+
     metadex_obj.pushKV("propertyidforsaleisdivisible", propertyIdForSaleIsDivisible);
     metadex_obj.pushKV("amountforsale", FormatMP(obj.getProperty(), obj.getAmountForSale()));
     metadex_obj.pushKV("amountremaining", FormatMP(obj.getProperty(), obj.getAmountRemaining()));
     metadex_obj.pushKV("propertyiddesired", (uint64_t) obj.getDesProperty());
+    metadex_obj.pushKV("propertynamedesired", getPropertyName(obj.getDesProperty()));
+
+    CMPSPInfo::Entry desiredproperty;
+    pDbSpInfo->getSP(obj.getDesProperty(), desiredproperty);
+    metadex_obj.pushKV("tokendesiredname", desiredproperty.name);
+    metadex_obj.pushKV("tokendesired", desiredproperty.ticker);
+
     metadex_obj.pushKV("propertyiddesiredisdivisible", propertyIdDesiredIsDivisible);
     metadex_obj.pushKV("amountdesired", FormatMP(obj.getDesProperty(), obj.getAmountDesired()));
     metadex_obj.pushKV("amounttofill", FormatMP(obj.getDesProperty(), obj.getAmountToFill()));
@@ -581,11 +596,11 @@ static UniValue gettokenbalance(const JSONRPCRequest& request)
 {
     if (request.fHelp || request.params.size() != 2)
         throw runtime_error(
-            "gettokenbalance \"address\" name\n"
+            "gettokenbalance \"address\" ticker\n"
             "\nReturns the token balance for a given address and token.\n"
             "\nArguments:\n"
             "1. address              (string, required) the address\n"
-            "2. name                 (string, required) the token name\n"
+            "2. ticker               (string, required) the token ticker\n"
             "\nResult:\n"
             "{\n"
             "  \"balance\" : \"n.nnnnnnnn\",   (string) the available balance of the address\n"
@@ -599,7 +614,7 @@ static UniValue gettokenbalance(const JSONRPCRequest& request)
 
     std::string address = ParseAddress(request.params[0]);
 
-    uint32_t propertyId = pDbSpInfo->findSPByName(request.params[1].get_str());
+    uint32_t propertyId = pDbSpInfo->findSPByTicker(request.params[1].get_str());
     if (!propertyId)
         throw JSONRPCError(RPC_INTERNAL_ERROR, "Token not found");
 
@@ -615,10 +630,10 @@ static UniValue getalltokenbalances(const JSONRPCRequest& request)
 {
     if (request.fHelp || request.params.size() != 1)
         throw runtime_error(
-            "getalltokenbalances propertyid\n"
-            "\nReturns a list of token balances for a given token identified by name.\n"
+            "getalltokenbalances ticker\n"
+            "\nReturns a list of token balances for a given token identified by ticker.\n"
             "\nArguments:\n"
-            "1. name           (string, required) the token name\n"
+            "1. ticker           (string, required) the token ticker\n"
             "\nResult:\n"
             "[                           (array of JSON objects)\n"
             "  {\n"
@@ -630,12 +645,11 @@ static UniValue getalltokenbalances(const JSONRPCRequest& request)
             "  ...\n"
             "]\n"
             "\nExamples:\n"
-            + HelpExampleCli("getalltokenbalances", "1")
-            + HelpExampleRpc("getalltokenbalances", "1")
+            + HelpExampleCli("getalltokenbalances", "TOKEN")
+            + HelpExampleRpc("getalltokenbalances", "TOKEN")
         );
 
-
-    uint32_t propertyId = pDbSpInfo->findSPByName(request.params[0].get_str());
+    uint32_t propertyId = pDbSpInfo->findSPByTicker(request.params[0].get_str());
     if (!propertyId)
         throw JSONRPCError(RPC_INTERNAL_ERROR, "Token not found");
 
@@ -720,6 +734,7 @@ static UniValue getalltokenbalancesforaddress(const JSONRPCRequest& request)
         UniValue balanceObj(UniValue::VOBJ);
         balanceObj.pushKV("propertyid", (uint64_t) propertyId);
         balanceObj.pushKV("name", property.name);
+        balanceObj.pushKV("ticker", property.ticker);
 
         bool nonEmptyBalance = BalanceToJSON(address, propertyId, balanceObj, property.isDivisible());
 
@@ -841,6 +856,7 @@ static UniValue getwallettokenbalances(const JSONRPCRequest& request)
         UniValue objBalance(UniValue::VOBJ);
         objBalance.pushKV("propertyid", (uint64_t) propertyId);
         objBalance.pushKV("name", property.name);
+        objBalance.pushKV("ticker", property.ticker);
 
         if (property.isDivisible()) {
             objBalance.pushKV("balance", FormatDivisibleMP(nAvailable));
@@ -854,6 +870,102 @@ static UniValue getwallettokenbalances(const JSONRPCRequest& request)
 
         response.push_back(objBalance);
     }
+#endif
+
+    return response;
+}
+
+static UniValue gettokenbalances(const JSONRPCRequest& request)
+{
+    if (request.fHelp || request.params.size() > 1)
+        throw runtime_error(
+            "gettokenbalances\n"
+            "\nReturns a list of the total token balances.\n"
+            "\nResult:\n"
+            "[                           (array of JSON objects)\n"
+            "  {\n"
+            "    \"propertyid\" : n,         (number) the property identifier\n"
+            "    \"name\" : \"name\",            (string) the name of the token\n"
+            "    \"balance\" : \"n.nnnnnnnn\",   (string) the total available balance for the token\n"
+            "    \"reserved\" : \"n.nnnnnnnn\"   (string) the total amount reserved by sell offers and accepts\n"
+            "    \"frozen\" : \"n.nnnnnnnn\"     (string) the total amount frozen by the issuer (applies to managed properties only)\n"
+            "  },\n"
+            "  ...\n"
+            "]\n"
+            "\nExamples:\n"
+            + HelpExampleCli("gettokenbalances", "")
+            + HelpExampleRpc("gettokenbalances", "")
+        );
+
+    UniValue response(UniValue::VARR);
+
+#ifdef ENABLE_WALLET
+    if (!pwalletMain) {
+        return response;
+    }
+
+    for (std::set<uint32_t>::iterator it = global_wallet_property_list.begin() ; it != global_wallet_property_list.end(); ++it) {
+        uint32_t propertyId = *it;
+
+        CMPSPInfo::Entry property;
+        if (!pDbSpInfo->getSP(propertyId, property)) {
+            continue; // token wasn't found in the DB
+        }
+
+        int64_t available = global_balance_money[propertyId];
+        int64_t reserved = global_balance_reserved[propertyId];
+        int64_t frozen = global_balance_frozen[propertyId];
+
+        UniValue objBalance(UniValue::VOBJ);
+        objBalance.pushKV("propertyid", (uint64_t) propertyId);
+        objBalance.pushKV("name", property.name);
+        objBalance.pushKV("ticker", property.ticker);
+
+        if (property.isDivisible()) {
+            objBalance.pushKV("balance", FormatDivisibleMP(available));
+            objBalance.pushKV("reserved", FormatDivisibleMP(reserved));
+            objBalance.pushKV("frozen", FormatDivisibleMP(frozen));
+        } else {
+            objBalance.pushKV("balance", FormatIndivisibleMP(available));
+            objBalance.pushKV("reserved", FormatIndivisibleMP(reserved));
+            objBalance.pushKV("frozen", FormatIndivisibleMP(frozen));
+        }
+
+        UniValue addresses(UniValue::VARR);
+
+        for (std::string address : global_token_addresses[propertyId]) {
+            UniValue objAddrBalance(UniValue::VOBJ);
+
+            objAddrBalance.pushKV("address", address);
+
+            uint64_t addr_balance = 0;
+            uint64_t addr_reserved = 0;
+            uint64_t addr_frozen = 0;
+
+            addr_balance += GetAvailableTokenBalance(address, propertyId);
+            addr_reserved += GetTokenBalance(address, propertyId, SELLOFFER_RESERVE);
+            addr_reserved += GetTokenBalance(address, propertyId, METADEX_RESERVE);
+            addr_reserved += GetTokenBalance(address, propertyId, ACCEPT_RESERVE);
+            addr_frozen += GetFrozenTokenBalance(address, propertyId);
+            
+            if (property.isDivisible()) {
+                objAddrBalance.pushKV("balance", FormatDivisibleMP(addr_balance));
+                objAddrBalance.pushKV("reserved", FormatDivisibleMP(addr_reserved));
+                objAddrBalance.pushKV("frozen", FormatDivisibleMP(addr_frozen));
+            } else {
+                objAddrBalance.pushKV("balance", FormatIndivisibleMP(addr_balance));
+                objAddrBalance.pushKV("reserved", FormatIndivisibleMP(addr_reserved));
+                objAddrBalance.pushKV("frozen", FormatIndivisibleMP(addr_frozen));
+            }
+
+            addresses.push_back(objAddrBalance);
+        }
+
+        objBalance.pushKV("addresses", addresses);
+
+        response.push_back(objBalance);
+    }
+
 #endif
 
     return response;
@@ -924,6 +1036,7 @@ static UniValue getwalletaddresstokenbalances(const JSONRPCRequest& request)
             UniValue objBalance(UniValue::VOBJ);
             objBalance.pushKV("propertyid", (uint64_t) propertyId);
             objBalance.pushKV("name", property.name);
+            objBalance.pushKV("ticker", property.ticker);
 
             bool nonEmptyBalance = BalanceToJSON(address, propertyId, objBalance, property.isDivisible());
 
@@ -948,10 +1061,10 @@ static UniValue gettoken(const JSONRPCRequest& request)
 {
     if (request.fHelp || request.params.size() != 1)
         throw runtime_error(
-            "gettoken name\n"
+            "gettoken ticker\n"
             "\nReturns details for about the tokens or smart property to lookup.\n"
             "\nArguments:\n"
-            "1. name           (string, required) the identifier of the tokens or property\n"
+            "1. ticker         (string, required) the ticker of the token\n"
             "\nResult:\n"
             "{\n"
             "  \"propertyid\" : n,                (number) the identifier\n"
@@ -972,7 +1085,7 @@ static UniValue gettoken(const JSONRPCRequest& request)
             + HelpExampleRpc("gettoken", "TOKEN")
         );
 
-    uint32_t propertyId = pDbSpInfo->findSPByName(request.params[0].get_str());
+    uint32_t propertyId = pDbSpInfo->findSPByTicker(request.params[0].get_str());
     if (!propertyId)
         throw JSONRPCError(RPC_INTERNAL_ERROR, "Token not found");
 
@@ -1061,14 +1174,14 @@ static UniValue listtokens(const JSONRPCRequest& request)
     return response;
 }
 
-static UniValue token_getcrowdsale(const JSONRPCRequest& request)
+static UniValue gettokencrowdsale(const JSONRPCRequest& request)
 {
     if (request.fHelp || request.params.size() < 1 || request.params.size() > 2)
         throw runtime_error(
-            "token_getcrowdsale propertyid ( verbose )\n"
+            "gettokencrowdsale ticker ( verbose )\n"
             "\nReturns information about a crowdsale.\n"
             "\nArguments:\n"
-            "1. propertyid           (number, required) the identifier of the crowdsale\n"
+            "1. ticker               (string, required) the token ticker of the crowdsale\n"
             "2. verbose              (boolean, optional) list crowdsale participants (default: false)\n"
             "\nResult:\n"
             "{\n"
@@ -1101,11 +1214,16 @@ static UniValue token_getcrowdsale(const JSONRPCRequest& request)
             "  ]\n"
             "}\n"
             "\nExamples:\n"
-            + HelpExampleCli("token_getcrowdsale", "3 true")
-            + HelpExampleRpc("token_getcrowdsale", "3, true")
+            + HelpExampleCli("gettokencrowdsale", "3 true")
+            + HelpExampleRpc("gettokencrowdsale", "3, true")
         );
 
-    uint32_t propertyId = ParsePropertyId(request.params[0]);
+    std::string ticker = ParseText(request.params[0]);
+
+    uint32_t propertyId = pDbSpInfo->findSPByTicker(ticker);
+    if (propertyId == 0)
+        throw JSONRPCError(RPC_INTERNAL_ERROR, "Token with this ticker doesn't exists");
+
     bool showVerbose = (request.params.size() > 1) ? request.params[1].get_bool() : false;
 
     RequireExistingProperty(propertyId);
@@ -1179,9 +1297,16 @@ static UniValue token_getcrowdsale(const JSONRPCRequest& request)
 
     response.pushKV("propertyid", (uint64_t) propertyId);
     response.pushKV("name", sp.name);
+    response.pushKV("ticker", sp.ticker);
     response.pushKV("active", active);
     response.pushKV("issuer", sp.issuer);
     response.pushKV("propertyiddesired", (uint64_t) sp.property_desired);
+
+    CMPSPInfo::Entry desiredproperty;
+    pDbSpInfo->getSP(sp.property_desired, desiredproperty);
+    response.pushKV("tokendesiredname", desiredproperty.name);
+    response.pushKV("tokendesired", desiredproperty.ticker);
+
     response.pushKV("tokensperunit", FormatMP(propertyId, sp.num_tokens));
     response.pushKV("earlybonus", sp.early_bird);
     response.pushKV("percenttoissuer", sp.percentage);
@@ -1209,11 +1334,11 @@ static UniValue token_getcrowdsale(const JSONRPCRequest& request)
     return response;
 }
 
-static UniValue token_getactivecrowdsales(const JSONRPCRequest& request)
+static UniValue gettokenactivecrowdsales(const JSONRPCRequest& request)
 {
     if (request.fHelp)
         throw runtime_error(
-            "token_getactivecrowdsales\n"
+            "gettokenactivecrowdsales\n"
             "\nLists currently active crowdsales.\n"
             "\nResult:\n"
             "[                                 (array of JSON objects)\n"
@@ -1231,8 +1356,8 @@ static UniValue token_getactivecrowdsales(const JSONRPCRequest& request)
             "  ...\n"
             "]\n"
             "\nExamples:\n"
-            + HelpExampleCli("token_getactivecrowdsales", "")
-            + HelpExampleRpc("token_getactivecrowdsales", "")
+            + HelpExampleCli("gettokenactivecrowdsales", "")
+            + HelpExampleRpc("gettokenactivecrowdsales", "")
         );
 
     UniValue response(UniValue::VARR);
@@ -1264,8 +1389,15 @@ static UniValue token_getactivecrowdsales(const JSONRPCRequest& request)
         UniValue responseObj(UniValue::VOBJ);
         responseObj.pushKV("propertyid", (uint64_t) propertyId);
         responseObj.pushKV("name", sp.name);
+        responseObj.pushKV("ticker", sp.ticker);
         responseObj.pushKV("issuer", sp.issuer);
         responseObj.pushKV("propertyiddesired", (uint64_t) sp.property_desired);
+
+        CMPSPInfo::Entry desiredproperty;
+        pDbSpInfo->getSP(sp.property_desired, desiredproperty);
+        responseObj.pushKV("tokendesiredname", desiredproperty.name);
+        responseObj.pushKV("tokendesired", desiredproperty.ticker);
+
         responseObj.pushKV("tokensperunit", FormatMP(propertyId, sp.num_tokens));
         responseObj.pushKV("earlybonus", sp.early_bird);
         responseObj.pushKV("percenttoissuer", sp.percentage);
@@ -1277,14 +1409,14 @@ static UniValue token_getactivecrowdsales(const JSONRPCRequest& request)
     return response;
 }
 
-static UniValue token_getgrants(const JSONRPCRequest& request)
+static UniValue gettokengrants(const JSONRPCRequest& request)
 {
     if (request.fHelp || request.params.size() != 1)
         throw runtime_error(
-            "token_getgrants propertyid\n"
+            "gettokengrants ticker\n"
             "\nReturns information about granted and revoked units of managed tokens.\n"
             "\nArguments:\n"
-            "1. propertyid           (number, required) the identifier of the managed tokens to lookup\n"
+            "1. ticker            (string, required) the ticker of managed token to lookup\n"
             "\nResult:\n"
             "{\n"
             "  \"propertyid\" : n,               (number) the identifier of the managed tokens\n"
@@ -1305,11 +1437,15 @@ static UniValue token_getgrants(const JSONRPCRequest& request)
             "  ]\n"
             "}\n"
             "\nExamples:\n"
-            + HelpExampleCli("token_getgrants", "31")
-            + HelpExampleRpc("token_getgrants", "31")
+            + HelpExampleCli("gettokengrants", "TOKEN")
+            + HelpExampleRpc("gettokengrants", "TOKEN")
         );
 
-    uint32_t propertyId = ParsePropertyId(request.params[0]);
+    std::string ticker = ParseText(request.params[0]);
+
+    uint32_t propertyId = pDbSpInfo->findSPByTicker(ticker);
+    if (propertyId == 0)
+        throw JSONRPCError(RPC_INTERNAL_ERROR, "Token with this ticker doesn't exists");
 
     RequireExistingProperty(propertyId);
     RequireManagedProperty(propertyId);
@@ -1351,6 +1487,7 @@ static UniValue token_getgrants(const JSONRPCRequest& request)
 
     response.pushKV("propertyid", (uint64_t) propertyId);
     response.pushKV("name", sp.name);
+    response.pushKV("ticker", sp.ticker);
     response.pushKV("issuer", sp.issuer);
     response.pushKV("creationtxid", creationHash.GetHex());
     response.pushKV("totaltokens", FormatMP(propertyId, totalTokens));
@@ -1359,15 +1496,15 @@ static UniValue token_getgrants(const JSONRPCRequest& request)
     return response;
 }
 
-static UniValue token_getorderbook(const JSONRPCRequest& request)
+static UniValue gettokenorderbook(const JSONRPCRequest& request)
 {
     if (request.fHelp || request.params.size() < 1 || request.params.size() > 2)
         throw runtime_error(
-            "token_getorderbook propertyid ( propertyid )\n"
+            "gettokenorderbook ticker ( ticker )\n"
             "\nList active offers on the distributed token exchange.\n"
             "\nArguments:\n"
-            "1. propertyid           (number, required) filter orders by property identifier for sale\n"
-            "2. propertyid           (number, optional) filter orders by property identifier desired\n"
+            "1. ticker           (string, required) filter orders by token ticker for sale\n"
+            "2. ticker           (string, optional) filter orders by token ticker desired\n"
             "\nResult:\n"
             "[                                              (array of JSON objects)\n"
             "  {\n"
@@ -1389,18 +1526,27 @@ static UniValue token_getorderbook(const JSONRPCRequest& request)
             "  ...\n"
             "]\n"
             "\nExamples:\n"
-            + HelpExampleCli("token_getorderbook", "2")
-            + HelpExampleRpc("token_getorderbook", "2")
+            + HelpExampleCli("gettokenorderbook", "TOKEN")
+            + HelpExampleRpc("gettokenorderbook", "TOKEN")
         );
 
     bool filterDesired = (request.params.size() > 1);
-    uint32_t propertyIdForSale = ParsePropertyId(request.params[0]);
+    std::string tickerForSale = ParseText(request.params[0]);
+
+    uint32_t propertyIdForSale = pDbSpInfo->findSPByTicker(tickerForSale);
+    if (propertyIdForSale == 0)
+        throw JSONRPCError(RPC_INTERNAL_ERROR, "Token with this ticker doesn't exists");
+
     uint32_t propertyIdDesired = 0;
 
     RequireExistingProperty(propertyIdForSale);
 
     if (filterDesired) {
-        propertyIdDesired = ParsePropertyId(request.params[1]);
+        std::string tickerDesired = ParseText(request.params[1]);
+
+        propertyIdDesired = pDbSpInfo->findSPByTicker(tickerDesired);
+        if (propertyIdDesired == 0)
+            throw JSONRPCError(RPC_INTERNAL_ERROR, "Token with this ticker doesn't exists");
 
         RequireExistingProperty(propertyIdDesired);
         RequireSameEcosystem(propertyIdForSale, propertyIdDesired);
@@ -1428,16 +1574,16 @@ static UniValue token_getorderbook(const JSONRPCRequest& request)
     return response;
 }
 
-static UniValue token_gettradehistoryforaddress(const JSONRPCRequest& request)
+static UniValue gettokentradehistoryforaddress(const JSONRPCRequest& request)
 {
     if (request.fHelp || request.params.size() < 1 || request.params.size() > 3)
         throw runtime_error(
-            "token_gettradehistoryforaddress \"address\" ( count propertyid )\n"
+            "gettokentradehistoryforaddress \"address\" ( count ticker )\n"
             "\nRetrieves the history of orders on the distributed exchange for the supplied address.\n"
             "\nArguments:\n"
             "1. address              (string, required) address to retrieve history for\n"
             "2. count                (number, optional) number of orders to retrieve (default: 10)\n"
-            "3. propertyid           (number, optional) filter by property identifier transacted (default: no filter)\n"
+            "3. ticker               (string, optional) filter by token transacted (default: no filter)\n"
             "\nResult:\n"
             "[                                              (array of JSON objects)\n"
             "  {\n"
@@ -1476,8 +1622,8 @@ static UniValue token_gettradehistoryforaddress(const JSONRPCRequest& request)
             "\nNote:\n"
             "The documentation only covers the output for a trade, but there are also cancel transactions with different properties.\n"
             "\nExamples:\n"
-            + HelpExampleCli("token_gettradehistoryforaddress", "\"1MCHESTptvd2LnNp7wmr2sGTpRomteAkq8\"")
-            + HelpExampleRpc("token_gettradehistoryforaddress", "\"1MCHESTptvd2LnNp7wmr2sGTpRomteAkq8\"")
+            + HelpExampleCli("gettokentradehistoryforaddress", "\"1MCHESTptvd2LnNp7wmr2sGTpRomteAkq8\"")
+            + HelpExampleRpc("gettokentradehistoryforaddress", "\"1MCHESTptvd2LnNp7wmr2sGTpRomteAkq8\"")
         );
 
     std::string address = ParseAddress(request.params[0]);
@@ -1485,7 +1631,12 @@ static UniValue token_gettradehistoryforaddress(const JSONRPCRequest& request)
     uint32_t propertyId = 0;
 
     if (request.params.size() > 2) {
-        propertyId = ParsePropertyId(request.params[2]);
+        std::string ticker = ParseText(request.params[2]);
+
+        propertyId = pDbSpInfo->findSPByTicker(ticker);
+        if (propertyId == 0)
+            throw JSONRPCError(RPC_INTERNAL_ERROR, "Token with this ticker doesn't exists");
+
         RequireExistingProperty(propertyId);
     }
 
@@ -1512,15 +1663,15 @@ static UniValue token_gettradehistoryforaddress(const JSONRPCRequest& request)
     return response;
 }
 
-static UniValue token_gettradehistoryforpair(const JSONRPCRequest& request)
+static UniValue gettokentradehistoryforpair(const JSONRPCRequest& request)
 {
     if (request.fHelp || request.params.size() < 2 || request.params.size() > 3)
         throw runtime_error(
-            "token_gettradehistoryforpair propertyid propertyid ( count )\n"
+            "gettokentradehistoryforpair ticker ticker ( count )\n"
             "\nRetrieves the history of trades on the distributed token exchange for the specified market.\n"
             "\nArguments:\n"
-            "1. propertyid           (number, required) the first side of the traded pair\n"
-            "2. propertyid           (number, required) the second side of the traded pair\n"
+            "1. ticker               (string, required) the first side of the traded pair\n"
+            "2. ticker               (string, required) the second side of the traded pair\n"
             "3. count                (number, optional) number of trades to retrieve (default: 10)\n"
             "\nResult:\n"
             "[                                      (array of JSON objects)\n"
@@ -1538,13 +1689,21 @@ static UniValue token_gettradehistoryforpair(const JSONRPCRequest& request)
             "  ...\n"
             "]\n"
             "\nExamples:\n"
-            + HelpExampleCli("token_gettradehistoryforpair", "1 12 500")
-            + HelpExampleRpc("token_gettradehistoryforpair", "1, 12, 500")
+            + HelpExampleCli("gettokentradehistoryforpair", "TOKEN DESIRED 500")
+            + HelpExampleRpc("gettokentradehistoryforpair", "TOKEN, DESIRED, 500")
         );
 
     // obtain property identifiers for pair & check valid parameters
-    uint32_t propertyIdSideA = ParsePropertyId(request.params[0]);
-    uint32_t propertyIdSideB = ParsePropertyId(request.params[1]);
+    std::string tokenTickerSideA = ParseText(request.params[0]);
+    uint32_t propertyIdSideA = pDbSpInfo->findSPByTicker(tokenTickerSideA);
+    if (propertyIdSideA == 0)
+        throw JSONRPCError(RPC_INTERNAL_ERROR, "Token with this ticker doesn't exists");
+
+    std::string tokenTickerSideB = ParseText(request.params[1]);
+    uint32_t propertyIdSideB = pDbSpInfo->findSPByTicker(tokenTickerSideB);
+    if (propertyIdSideB == 0)
+        throw JSONRPCError(RPC_INTERNAL_ERROR, "Token with this ticker doesn't exists");
+
     uint64_t count = (request.params.size() > 2) ? request.params[2].get_int64() : 10;
 
     RequireExistingProperty(propertyIdSideA);
@@ -1559,11 +1718,11 @@ static UniValue token_gettradehistoryforpair(const JSONRPCRequest& request)
     return response;
 }
 
-static UniValue token_getactivedexsells(const JSONRPCRequest& request)
+static UniValue gettokenactivedexsells(const JSONRPCRequest& request)
 {
     if (request.fHelp || request.params.size() > 1)
         throw runtime_error(
-            "token_getactivedexsells ( address )\n"
+            "gettokenactivedexsells ( address )\n"
             "\nReturns currently active offers on the distributed exchange.\n"
             "\nArguments:\n"
             "1. address              (string, optional) address filter (default: include any)\n"
@@ -1574,8 +1733,8 @@ static UniValue token_getactivedexsells(const JSONRPCRequest& request)
             "    \"propertyid\" : n,                   (number) the identifier of the tokens for sale\n"
             "    \"seller\" : \"address\",               (string) the Bitcoin address of the seller\n"
             "    \"amountavailable\" : \"n.nnnnnnnn\",   (string) the number of tokens still listed for sale and currently available\n"
-            "    \"bitcoindesired\" : \"n.nnnnnnnn\",    (string) the number of bitcoins desired in exchange\n"
-            "    \"unitprice\" : \"n.nnnnnnnn\" ,        (string) the unit price (BTC/token)\n"
+            "    \"rapidsdesired\" : \"n.nnnnnnnn\",    (string) the number of bitcoins desired in exchange\n"
+            "    \"unitprice\" : \"n.nnnnnnnn\" ,        (string) the unit price (RPD/token)\n"
             "    \"timelimit\" : nn,                   (number) the time limit in blocks a buyer has to pay following a successful accept\n"
             "    \"minimumfee\" : \"n.nnnnnnnn\",        (string) the minimum mining fee a buyer has to pay to accept this offer\n"
             "    \"amountaccepted\" : \"n.nnnnnnnn\",    (string) the number of tokens currently reserved for pending \"accept\" orders\n"
@@ -1593,8 +1752,8 @@ static UniValue token_getactivedexsells(const JSONRPCRequest& request)
             "  ...\n"
             "]\n"
             "\nExamples:\n"
-            + HelpExampleCli("token_getactivedexsells", "")
-            + HelpExampleRpc("token_getactivedexsells", "")
+            + HelpExampleCli("gettokenactivedexsells", "")
+            + HelpExampleRpc("gettokenactivedexsells", "")
         );
 
     std::string addressFilter;
@@ -1622,7 +1781,7 @@ static UniValue token_getactivedexsells(const JSONRPCRequest& request)
         int64_t minFee = selloffer.getMinFee();
         uint8_t timeLimit = selloffer.getBlockTimeLimit();
         int64_t sellOfferAmount = selloffer.getOfferAmountOriginal(); //badly named - "Original" implies off the wire, but is amended amount
-        int64_t sellBitcoinDesired = selloffer.getBTCDesiredOriginal(); //badly named - "Original" implies off the wire, but is amended amount
+        int64_t sellRapidsDesired = selloffer.getRPDDesiredOriginal(); //badly named - "Original" implies off the wire, but is amended amount
         int64_t amountAvailable = GetTokenBalance(seller, propertyId, SELLOFFER_RESERVE);
         int64_t amountAccepted = GetTokenBalance(seller, propertyId, ACCEPT_RESERVE);
 
@@ -1630,20 +1789,25 @@ static UniValue token_getactivedexsells(const JSONRPCRequest& request)
         // TODO: no math, and especially no rounding here (!)
         // TODO: no math, and especially no rounding here (!)
 
+        CMPSPInfo::Entry property;
+        pDbSpInfo->getSP(propertyId, property);
+
         // calculate unit price and updated amount of bitcoin desired
         double unitPriceFloat = 0.0;
-        if ((sellOfferAmount > 0) && (sellBitcoinDesired > 0)) {
-            unitPriceFloat = (double) sellBitcoinDesired / (double) sellOfferAmount; // divide by zero protection
+        if ((sellOfferAmount > 0) && (sellRapidsDesired > 0)) {
+            unitPriceFloat = (double) sellRapidsDesired / (double) sellOfferAmount; // divide by zero protection
         }
         int64_t unitPrice = rounduint64(unitPriceFloat * COIN);
-        int64_t bitcoinDesired = calculateDesiredBTC(sellOfferAmount, sellBitcoinDesired, amountAvailable);
+        int64_t bitcoinDesired = calculateDesiredRPD(sellOfferAmount, sellRapidsDesired, amountAvailable);
 
         UniValue responseObj(UniValue::VOBJ);
         responseObj.pushKV("txid", txid);
         responseObj.pushKV("propertyid", (uint64_t) propertyId);
+        responseObj.pushKV("name", property.name);
+        responseObj.pushKV("ticker", property.ticker);
         responseObj.pushKV("seller", seller);
         responseObj.pushKV("amountavailable", FormatDivisibleMP(amountAvailable));
-        responseObj.pushKV("bitcoindesired", FormatDivisibleMP(bitcoinDesired));
+        responseObj.pushKV("rapidsdesired", FormatDivisibleMP(bitcoinDesired));
         responseObj.pushKV("unitprice", FormatDivisibleMP(unitPrice));
         responseObj.pushKV("timelimit", timeLimit);
         responseObj.pushKV("minimumfee", FormatDivisibleMP(minFee));
@@ -1664,12 +1828,12 @@ static UniValue token_getactivedexsells(const JSONRPCRequest& request)
                 int blocksLeftToPay = (blockOfAccept + selloffer.getBlockTimeLimit()) - curBlock;
                 int64_t amountAccepted = accept.getAcceptAmountRemaining();
                 // TODO: don't recalculate!
-                int64_t amountToPayInBTC = calculateDesiredBTC(accept.getOfferAmountOriginal(), accept.getBTCDesiredOriginal(), amountAccepted);
+                int64_t amountToPayInRPD = calculateDesiredRPD(accept.getOfferAmountOriginal(), accept.getRPDDesiredOriginal(), amountAccepted);
                 matchedAccept.pushKV("buyer", buyer);
                 matchedAccept.pushKV("block", blockOfAccept);
                 matchedAccept.pushKV("blocksleft", blocksLeftToPay);
                 matchedAccept.pushKV("amount", FormatDivisibleMP(amountAccepted));
-                matchedAccept.pushKV("amounttopay", FormatDivisibleMP(amountToPayInBTC));
+                matchedAccept.pushKV("amounttopay", FormatDivisibleMP(amountToPayInRPD));
                 acceptsMatched.push_back(matchedAccept);
             }
         }
@@ -2063,11 +2227,11 @@ static UniValue token_getsto(const JSONRPCRequest& request)
     return txobj;
 }
 
-static UniValue token_gettrade(const JSONRPCRequest& request)
+static UniValue gettokentrade(const JSONRPCRequest& request)
 {
     if (request.fHelp || request.params.size() != 1)
         throw runtime_error(
-            "token_gettrade \"txid\"\n"
+            "gettokentrade \"txid\"\n"
             "\nGet detailed information and trade matches for orders on the distributed token exchange.\n"
             "\nArguments:\n"
             "1. txid                 (string, required) the hash of the order to lookup\n"
@@ -2106,8 +2270,8 @@ static UniValue token_gettrade(const JSONRPCRequest& request)
             "\nNote:\n"
             "The documentation only covers the output for a trade, but there are also cancel transactions with different properties.\n"
             "\nExamples:\n"
-            + HelpExampleCli("token_gettrade", "\"1075db55d416d3ca199f55b6084e2115b9345e16c5cf302fc80e9d5fbf5d48d\"")
-            + HelpExampleRpc("token_gettrade", "\"1075db55d416d3ca199f55b6084e2115b9345e16c5cf302fc80e9d5fbf5d48d\"")
+            + HelpExampleCli("gettokentrade", "\"1075db55d416d3ca199f55b6084e2115b9345e16c5cf302fc80e9d5fbf5d48d\"")
+            + HelpExampleRpc("gettokentrade", "\"1075db55d416d3ca199f55b6084e2115b9345e16c5cf302fc80e9d5fbf5d48d\"")
         );
 
     uint256 hash = ParseHashV(request.params[0], "txid");
@@ -2154,14 +2318,14 @@ static UniValue gettokenconsensushash(const JSONRPCRequest& request)
     return response;
 }
 
-static UniValue token_getmetadexhash(const JSONRPCRequest& request)
+static UniValue gettokenmetadexhash(const JSONRPCRequest& request)
 {
     if (request.fHelp || request.params.size() > 1)
         throw runtime_error(
-            "token_getmetadexhash propertyId\n"
+            "gettokenmetadexhash ticker\n"
             "\nReturns a hash of the current state of the MetaDEx (default) or orderbook.\n"
             "\nArguments:\n"
-            "1. propertyid                  (number, optional) hash orderbook (only trades selling propertyid)\n"
+            "1. ticker                       (string, optional) hash orderbook (only trades selling token with ticker)\n"
             "\nResult:\n"
             "{\n"
             "  \"block\" : nnnnnn,          (number) the index of the block this hash applies to\n"
@@ -2171,15 +2335,20 @@ static UniValue token_getmetadexhash(const JSONRPCRequest& request)
             "}\n"
 
             "\nExamples:\n"
-            + HelpExampleCli("token_getmetadexhash", "3")
-            + HelpExampleRpc("token_getmetadexhash", "3")
+            + HelpExampleCli("gettokenmetadexhash", "TOKEN")
+            + HelpExampleRpc("gettokenmetadexhash", "TOKEN")
         );
 
     LOCK(cs_main);
 
     uint32_t propertyId = 0;
     if (request.params.size() > 0) {
-        propertyId = ParsePropertyId(request.params[0]);
+        std::string ticker = ParseText(request.params[0]);
+
+        propertyId = pDbSpInfo->findSPByTicker(ticker);
+        if (propertyId == 0)
+            throw JSONRPCError(RPC_INTERNAL_ERROR, "Token with this ticker doesn't exists");
+
         RequireExistingProperty(propertyId);
     }
 
@@ -2202,10 +2371,10 @@ static UniValue gettokenbalanceshash(const JSONRPCRequest& request)
 {
     if (request.fHelp || request.params.size() != 1)
         throw runtime_error(
-            "gettokenbalanceshash name\n"
+            "gettokenbalanceshash ticker\n"
             "\nReturns a hash of the balances for the property.\n"
             "\nArguments:\n"
-            "1. name                  (string, required) the name to hash balances for\n"
+            "1. ticker                  (string, required) the ticker to hash balances for\n"
             "\nResult:\n"
             "{\n"
             "  \"block\" : nnnnnn,          (number) the index of the block this hash applies to\n"
@@ -2215,13 +2384,13 @@ static UniValue gettokenbalanceshash(const JSONRPCRequest& request)
             "}\n"
 
             "\nExamples:\n"
-            + HelpExampleCli("gettokenbalanceshash", "31")
-            + HelpExampleRpc("gettokenbalanceshash", "31")
+            + HelpExampleCli("gettokenbalanceshash", "TOKEN")
+            + HelpExampleRpc("gettokenbalanceshash", "TOKEN")
         );
 
     LOCK(cs_main);
 
-    uint32_t propertyId = pDbSpInfo->findSPByName(request.params[0].get_str());
+    uint32_t propertyId = pDbSpInfo->findSPByTicker(request.params[0].get_str());
     if (!propertyId)
         throw JSONRPCError(RPC_INTERNAL_ERROR, "Token not found");
 
@@ -2251,23 +2420,23 @@ static const CRPCCommand commands[] =
     { "tokens (data retrieval)", "gettokentransaction",             &gettokentransaction,              false },
     { "tokens (data retrieval)", "gettoken",                        &gettoken,                         false },
     { "tokens (data retrieval)", "listtokens",                      &listtokens,                       false },
-    // { "tokens (data retrieval)", "token_getcrowdsale",              &token_getcrowdsale,               false },
-    // { "tokens (data retrieval)", "token_getgrants",                 &token_getgrants,                  false },
-    // { "tokens (data retrieval)", "token_getactivedexsells",         &token_getactivedexsells,          false },
-    // { "tokens (data retrieval)", "token_getactivecrowdsales",       &token_getactivecrowdsales,        false },
-    // { "tokens (data retrieval)", "token_getorderbook",              &token_getorderbook,               false },
-    // { "tokens (data retrieval)", "token_gettrade",                  &token_gettrade,                   false },
+    { "tokens (data retrieval)", "gettokencrowdsale",               &gettokencrowdsale,                false },
+    { "tokens (data retrieval)", "gettokengrants",                  &gettokengrants,                   false },
+    // { "tokens (data retrieval)", "gettokenactivedexsells",          &gettokenactivedexsells,           false },
+    { "tokens (data retrieval)", "gettokenactivecrowdsales",        &gettokenactivecrowdsales,         false },
+    { "tokens (data retrieval)", "gettokenorderbook",               &gettokenorderbook,                false },
+    { "tokens (data retrieval)", "gettokentrade",                   &gettokentrade,                    false },
     // { "tokens (data retrieval)", "token_getsto",                    &token_getsto,                     false },
     { "tokens (data retrieval)", "listblocktokentransactions",      &listblocktokentransactions,       false },
     { "tokens (data retrieval)", "listblockstokentransactions",     &listblockstokentransactions,      false },
     { "tokens (data retrieval)", "listpendingtokentransactions",    &listpendingtokentransactions,     false },
     { "tokens (data retrieval)", "getalltokenbalancesforaddress",   &getalltokenbalancesforaddress,    false },
-    // { "tokens (data retrieval)", "token_gettradehistoryforaddress", &token_gettradehistoryforaddress,  false },
-    // { "tokens (data retrieval)", "token_gettradehistoryforpair",    &token_gettradehistoryforpair,     false },
+    { "tokens (data retrieval)", "gettokentradehistoryforaddress",  &gettokentradehistoryforaddress,   false },
+    { "tokens (data retrieval)", "gettokentradehistoryforpair",     &gettokentradehistoryforpair,      false },
     { "tokens (data retrieval)", "gettokenconsensushash",           &gettokenconsensushash,            false },
     { "tokens (data retrieval)", "gettokenpayload",                 &gettokenpayload,                  false },
     { "tokens (data retrieval)", "gettokenseedblocks",              &gettokenseedblocks,               false },
-    // { "tokens (data retrieval)", "token_getmetadexhash",            &token_getmetadexhash,             false },
+    { "tokens (data retrieval)", "gettokenmetadexhash",             &gettokenmetadexhash,              false },
     // { "tokens (data retrieval)", "token_getfeecache",               &token_getfeecache,                false },
     // { "tokens (data retrieval)", "token_getfeetrigger",             &token_getfeetrigger,              false },
     // { "tokens (data retrieval)", "token_getfeedistribution",        &token_getfeedistribution,         false },
@@ -2277,8 +2446,9 @@ static const CRPCCommand commands[] =
     { "tokens (data retrieval)", "listtokentransactions",           &listtokentransactions,            false },
     // { "tokens (data retrieval)", "token_getfeeshare",               &token_getfeeshare,                false },
     // { "tokens (configuration)",  "token_setautocommit",             &token_setautocommit,              true  },
-    { "tokens (data retrieval)", "getwallettokenbalances",          &getwallettokenbalances,           false },
-    { "tokens (data retrieval)", "getwalletaddresstokenbalances",   &getwalletaddresstokenbalances,    false },
+    // { "tokens (data retrieval)", "getwallettokenbalances",          &getwallettokenbalances,           false },
+    // { "tokens (data retrieval)", "getwalletaddresstokenbalances",   &getwalletaddresstokenbalances,    false },
+    { "tokens (data retrieval)", "gettokenbalances",                &gettokenbalances,                 false },
 #endif
 };
 

@@ -269,6 +269,12 @@ inline std::string error_str(int ec) {
       case PKT_ERROR_SP -24:
           ec_str = "Desired property does not exist";
           break;
+      case PKT_ERROR_SP -25:
+          ec_str = "RPDx not issued yet";
+          break;
+      case PKT_ERROR_SP -26:
+          ec_str = "Desired token must be RPDx";
+          break;
       case PKT_ERROR_SP -36:
           ec_str = "Invalid property type";
           break;
@@ -298,6 +304,10 @@ inline std::string error_str(int ec) {
           break;
       case PKT_ERROR_SP -50:
           ec_str = "Tokens to issue and desired property are not in the same ecosystem";
+          break;
+
+      case PKT_ERROR_SP -51:
+          ec_str = "Property ticker is empty";
           break;
 
       case PKT_ERROR_SP -71:

@@ -156,8 +156,40 @@ std::unordered_map<std::string, CMPTally> mastercore::mp_tally_map;
 std::map<uint32_t, int64_t> global_balance_money;
 //! Reserved balances of wallet propertiess
 std::map<uint32_t, int64_t> global_balance_reserved;
+//! Frozen balances of wallet propertiess
+std::map<uint32_t, int64_t> global_balance_frozen;
+
+std::map<uint32_t, std::list<std::string>> global_token_addresses;
+
 //! Vector containing a list of properties relative to the wallet
 std::set<uint32_t> global_wallet_property_list;
+
+std::string GetUsernameAddress(std::string username) {
+    uint32_t propertyId = pDbSpInfo->findSPByTicker(username);
+    std::string address = "";
+
+    if (IsUsernameValid(username) && propertyId) {
+        for (std::unordered_map<std::string, CMPTally>::iterator it = mp_tally_map.begin(); it != mp_tally_map.end(); ++it) {
+            uint32_t id = 0;
+            bool includeAddress = false;
+            address = it->first;
+            (it->second).init();
+            while (0 != (id = (it->second).next())) {
+                if (id == propertyId) {
+                    includeAddress = true;
+                    break;
+                }
+            }
+            if (!includeAddress) {
+                continue; // ignore this address, has never transacted in this propertyId
+            }
+
+            break;
+        }
+    }
+
+    return address;
+}
 
 std::string mastercore::strMPProperty(uint32_t propertyId)
 {
@@ -168,7 +200,7 @@ std::string mastercore::strMPProperty(uint32_t propertyId)
         str = strprintf("Test token: %d : 0x%08X", 0x7FFFFFFF & propertyId, propertyId);
     } else {
         switch (propertyId) {
-            case TOKEN_PROPERTY_BTC: str = "BTC";
+            case TOKEN_PROPERTY_RPD: str = "RPD";
                 break;
             case TOKEN_PROPERTY_MSC: str = "OMN";
                 break;
@@ -321,7 +353,7 @@ bool mastercore::isTestEcosystemProperty(uint32_t propertyId)
 
 bool mastercore::isMainEcosystemProperty(uint32_t propertyId)
 {
-    if ((TOKEN_PROPERTY_BTC != propertyId) && !isTestEcosystemProperty(propertyId)) return true;
+    if ((TOKEN_PROPERTY_RPD != propertyId) && !isTestEcosystemProperty(propertyId)) return true;
 
     return false;
 }
@@ -604,9 +636,9 @@ void CheckWalletUpdate(bool forceUpdate)
 
     // because the wallet balance cache is *only* used by the UI, it's not needed,
     // when the daemon is running without UI.
-    if (!fQtMode) {
-        return;
-    }
+    // if (!fQtMode) {
+    //     return;
+    // }
 
     if (!WalletCacheUpdate()) {
         // no balance changes were detected that affect wallet addresses, signal a generic change to overall Token state
@@ -615,12 +647,15 @@ void CheckWalletUpdate(bool forceUpdate)
             return;
         }
     }
+
 #ifdef ENABLE_WALLET
     LOCK(cs_tally);
 
     // balance changes were found in the wallet, update the global totals and signal a Token balance change
     global_balance_money.clear();
     global_balance_reserved.clear();
+    global_balance_frozen.clear();
+    global_token_addresses.clear();
 
     // populate global balance totals and wallet property list - note global balances do not include additional balances from watch-only addresses
     for (std::unordered_map<std::string, CMPTally>::iterator my_it = mp_tally_map.begin(); my_it != mp_tally_map.end(); ++my_it) {
@@ -641,6 +676,9 @@ void CheckWalletUpdate(bool forceUpdate)
             global_balance_reserved[propertyId] += GetTokenBalance(address, propertyId, SELLOFFER_RESERVE);
             global_balance_reserved[propertyId] += GetTokenBalance(address, propertyId, METADEX_RESERVE);
             global_balance_reserved[propertyId] += GetTokenBalance(address, propertyId, ACCEPT_RESERVE);
+            global_balance_frozen[propertyId] += GetFrozenTokenBalance(address, propertyId);
+
+            global_token_addresses[propertyId].push_back(address);
         }
     }
     // signal an Token balance change
@@ -1055,9 +1093,9 @@ static int parseTransaction(bool bRPConly, const CTransaction& wtx, int nBlock, 
                     dataAddressSeq = seq; // record data address seq num for reference matching
                     dataAddressValue = value_data[k]; // record data address amount for reference matching
                     if (msc_debug_parser_data) PrintToLog("Data Address located - data[%d]:%s: %s (%s)\n", k, script_data[k], address_data[k], FormatDivisibleMP(value_data[k]));
-                } else { // invalidate - Class A cannot be more than one data packet - possible collision, treat as default (BTC payment)
+                } else { // invalidate - Class A cannot be more than one data packet - possible collision, treat as default (RPD payment)
                     strDataAddress.clear(); //empty strScriptData to block further parsing
-                    if (msc_debug_parser_data) PrintToLog("Multiple Data Addresses found (collision?) Class A invalidated, defaulting to BTC payment\n");
+                    if (msc_debug_parser_data) PrintToLog("Multiple Data Addresses found (collision?) Class A invalidated, defaulting to RPD payment\n");
                     break;
                 }
             }
@@ -1096,7 +1134,7 @@ static int parseTransaction(bool bRPConly, const CTransaction& wtx, int nBlock, 
                                     if (msc_debug_parser_data) PrintToLog("Reference Address located via matching amounts - data[%d]:%s: %s (%s)\n", k, script_data[k], address_data[k], FormatDivisibleMP(value_data[k]));
                                 } else {
                                     strRefAddress.clear();
-                                    if (msc_debug_parser_data) PrintToLog("Reference Address collision, multiple potential candidates. Class A invalidated, defaulting to BTC payment\n");
+                                    if (msc_debug_parser_data) PrintToLog("Reference Address collision, multiple potential candidates. Class A invalidated, defaulting to RPD payment\n");
                                     break;
                                 }
                             }
@@ -1109,7 +1147,7 @@ static int parseTransaction(bool bRPConly, const CTransaction& wtx, int nBlock, 
             strReference = strRefAddress; // populate expected var strReference with chosen address (if not empty)
         }
         if (strRefAddress.empty()) {
-            strDataAddress.clear(); // last validation step, if strRefAddress is empty, blank strDataAddress so we default to BTC payment
+            strDataAddress.clear(); // last validation step, if strRefAddress is empty, blank strDataAddress so we default to RPD payment
         }
         if (!strDataAddress.empty()) { // valid Class A packet almost ready
             if (msc_debug_parser_data) PrintToLog("valid Class A:from=%s:to=%s:data=%s\n", strSender, strReference, strScriptData);
@@ -1118,7 +1156,7 @@ static int parseTransaction(bool bRPConly, const CTransaction& wtx, int nBlock, 
         } else {
             if ((!bRPConly || msc_debug_parser_readonly) && msc_debug_parser_dex) {
                 PrintToLog("!! sender: %s , receiver: %s\n", strSender, strReference);
-                PrintToLog("!! this may be the BTC payment for an offer !!\n");
+                PrintToLog("!! this may be the RPD payment for an offer !!\n");
             }
         }
     }
@@ -1893,7 +1931,7 @@ int mastercore_handler_block_end(int nBlockNow, CBlockIndex const * pBlockIndex,
     // for every new received block must do:
     // 1) remove expired entries from the accept list (per spec accept entries are
     //    valid until their blocklimit expiration; because the customer can keep
-    //    paying BTC for the offer in several installments)
+    //    paying RPD for the offer in several installments)
     // 2) update the amount in the Exodus address
     int64_t devmsc = 0;
     unsigned int how_many_erased = eraseExpiredAccepts(nBlockNow);

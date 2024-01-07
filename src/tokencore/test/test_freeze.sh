@@ -10,13 +10,13 @@ printf "   * Starting a fresh regtest daemon\n"
 rm -r ~/.bitcoin/regtest
 $SRCDIR/tokencored --regtest --server --daemon --tokenactivationallowsender=any --tokendebug=verbose >$NUL
 sleep 10
-printf "   * Preparing some mature testnet BTC\n"
+printf "   * Preparing some mature testnet RPD\n"
 $SRCDIR/tokencore-cli --regtest generate 105 >$NUL
 printf "   * Obtaining addresses to work with\n"
 ADDR=$($SRCDIR/tokencore-cli --regtest getnewaddress TOKENAccount)
 FADDR=$($SRCDIR/tokencore-cli --regtest getnewaddress)
 printf "   * Master address is %s\n" $ADDR
-printf "   * Funding the addresses with some testnet BTC for fees\n"
+printf "   * Funding the addresses with some testnet RPD for fees\n"
 JSON="{\""$ADDR"\":5,\""$FADDR"\":4}"
 $SRCDIR/tokencore-cli --regtest sendmany "" $JSON >$NUL
 $SRCDIR/tokencore-cli --regtest sendtoaddress $ADDR 6 >$NUL
@@ -27,7 +27,7 @@ $SRCDIR/tokencore-cli --regtest generate 1 >$NUL
 printf "   * Creating a test (managed) property and granting 1000 tokens to the test address\n"
 $SRCDIR/tokencore-cli --regtest token_sendissuancemanaged $ADDR 1 1 0 "TestCat" "TestSubCat" "TestProperty" "TestURL" "TestData" >$NUL
 $SRCDIR/tokencore-cli --regtest generate 1 >$NUL
-$SRCDIR/tokencore-cli --regtest token_sendgrant $ADDR $FADDR 3 1000 >$NUL
+$SRCDIR/tokencore-cli --regtest sendtokengrant $ADDR $FADDR 3 1000 >$NUL
 $SRCDIR/tokencore-cli --regtest generate 1 >$NUL
 printf "\nRunning the test scenario...\n"
 printf "   * Sending a 'freeze' tranasction for the test address prior to enabling freezing\n"
@@ -54,7 +54,7 @@ if [ $RESULT == "false," ]
     FAIL=$((FAIL+1))
 fi
 printf "   * Sending a 'enable freezing' transaction to ENABLE freezing\n"
-TXID=$($SRCDIR/tokencore-cli --regtest token_sendenablefreezing $ADDR 3)
+TXID=$($SRCDIR/tokencore-cli --regtest sendtokenenablefreezing $ADDR 3)
 $SRCDIR/tokencore-cli --regtest generate 1 >$NUL
 printf "        - Checking the 'enable freezing' transaction was VALID... "
 RESULT=$($SRCDIR/tokencore-cli --regtest token_gettransaction $TXID | grep "valid" | grep -v "invalid" | cut -c12-)
@@ -162,7 +162,7 @@ if [ $RESULT == "true," ]
     FAIL=$((FAIL+1))
 fi
 printf "   * Sending a 'disable freezing' transaction to DISABLE freezing\n"
-TXID=$($SRCDIR/tokencore-cli --regtest token_senddisablefreezing $ADDR 3)
+TXID=$($SRCDIR/tokencore-cli --regtest sendtokendisablefreezing $ADDR 3)
 $SRCDIR/tokencore-cli --regtest generate 1 >$NUL
 printf "        - Checking the 'disable freezing' transaction was VALID... "
 RESULT=$($SRCDIR/tokencore-cli --regtest token_gettransaction $TXID | grep "valid" | grep -v "invalid" | cut -c12-)
@@ -247,7 +247,7 @@ if [ $FEATUREID == "14" ]
     FAIL=$((FAIL+1))
 fi
 printf "   * Sending a 'enable freezing' transaction to ENABLE freezing\n"
-TXID=$($SRCDIR/tokencore-cli --regtest token_sendenablefreezing $ADDR 3)
+TXID=$($SRCDIR/tokencore-cli --regtest sendtokenenablefreezing $ADDR 3)
 $SRCDIR/tokencore-cli --regtest generate 1 >$NUL
 printf "        - Checking the 'enable freezing' transaction was VALID... "
 RESULT=$($SRCDIR/tokencore-cli --regtest token_gettransaction $TXID | grep "valid" | grep -v "invalid" | cut -c12-)
@@ -465,7 +465,7 @@ if [ $RESULT == "true," ]
     FAIL=$((FAIL+1))
 fi
 printf "   * Sending a 'disable freezing' transaction to DISABLE freezing\n"
-TXID=$($SRCDIR/tokencore-cli --regtest token_senddisablefreezing $ADDR 3)
+TXID=$($SRCDIR/tokencore-cli --regtest sendtokendisablefreezing $ADDR 3)
 $SRCDIR/tokencore-cli --regtest generate 1 >$NUL
 printf "        - Checking the 'disable freezing' transaction was VALID... "
 RESULT=$($SRCDIR/tokencore-cli --regtest token_gettransaction $TXID | grep "valid" | grep -v "invalid" | cut -c12-)
@@ -525,7 +525,7 @@ if [ $RESULT == "true," ]
     FAIL=$((FAIL+1))
 fi
 printf "   * Sending a 'disable freezing' transaction to DISABLE freezing\n"
-TXID=$($SRCDIR/tokencore-cli --regtest token_senddisablefreezing $ADDR 3)
+TXID=$($SRCDIR/tokencore-cli --regtest sendtokendisablefreezing $ADDR 3)
 $SRCDIR/tokencore-cli --regtest generate 1 >$NUL
 printf "        - Checking the 'disable freezing' transaction was VALID... "
 RESULT=$($SRCDIR/tokencore-cli --regtest token_gettransaction $TXID | grep "valid" | grep -v "invalid" | cut -c12-)
@@ -549,7 +549,7 @@ if [ $RESULT == "false," ]
 fi
 $SRCDIR/tokencore-cli --regtest generate 3 >$NUL
 printf "   * Sending a 'enable freezing' transaction to ENABLE freezing\n"
-TXID=$($SRCDIR/tokencore-cli --regtest token_sendenablefreezing $ADDR 3)
+TXID=$($SRCDIR/tokencore-cli --regtest sendtokenenablefreezing $ADDR 3)
 $SRCDIR/tokencore-cli --regtest generate 1 >$NUL
 printf "        - Checking the 'enable freezing' transaction was VALID...  "
 RESULT=$($SRCDIR/tokencore-cli --regtest token_gettransaction $TXID | grep "valid" | grep -v "invalid" | cut -c12-)

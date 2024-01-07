@@ -35,11 +35,11 @@ using std::runtime_error;
 using namespace mastercore;
 
 
-static UniValue token_funded_send(const JSONRPCRequest& request)
+static UniValue sendtokenfunded(const JSONRPCRequest& request)
 {
     if (request.fHelp || request.params.size() != 5)
         throw runtime_error(
-            "token_funded_send \"fromaddress\" \"toaddress\" propertyid \"amount\" \"feeaddress\"\n"
+            "sendtokenfunded \"fromaddress\" \"toaddress\" ticker \"amount\" \"feeaddress\"\n"
 
             "\nCreates and sends a funded simple send transaction.\n"
 
@@ -48,7 +48,7 @@ static UniValue token_funded_send(const JSONRPCRequest& request)
             "\nArguments:\n"
             "1. fromaddress          (string, required) the address to send the tokens from\n"
             "2. toaddress            (string, required) the address of the receiver\n"
-            "3. propertyid           (number, required) the identifier of the tokens to send\n"
+            "3. ticker               (string, required) the ticker of token to send\n"
             "4. amount               (string, required) the amount to send\n"
             "5. feeaddress           (string, required) the address that is used for change and to pay for fees, if needed\n"
 
@@ -56,14 +56,19 @@ static UniValue token_funded_send(const JSONRPCRequest& request)
             "\"hash\"                  (string) the hex-encoded transaction hash\n"
 
             "\nExamples:\n"
-            + HelpExampleCli("token_funded_send", "\"1DFa5bT6KMEr6ta29QJouainsjaNBsJQhH\" \"15cWrfuvMxyxGst2FisrQcvcpF48x6sXoH\" 1 \"100.0\" \"15Jhzz4omEXEyFKbdcccJwuVPea5LqsKM1\"")
-            + HelpExampleRpc("token_funded_send", "\"1DFa5bT6KMEr6ta29QJouainsjaNBsJQhH\", \"15cWrfuvMxyxGst2FisrQcvcpF48x6sXoH\", 1, \"100.0\", \"15Jhzz4omEXEyFKbdcccJwuVPea5LqsKM1\"")
+            + HelpExampleCli("sendtokenfunded", "\"1DFa5bT6KMEr6ta29QJouainsjaNBsJQhH\" \"15cWrfuvMxyxGst2FisrQcvcpF48x6sXoH\" TOKEN \"100.0\" \"15Jhzz4omEXEyFKbdcccJwuVPea5LqsKM1\"")
+            + HelpExampleRpc("sendtokenfunded", "\"1DFa5bT6KMEr6ta29QJouainsjaNBsJQhH\", \"15cWrfuvMxyxGst2FisrQcvcpF48x6sXoH\", TOKEN, \"100.0\", \"15Jhzz4omEXEyFKbdcccJwuVPea5LqsKM1\"")
         );
 
     // obtain parameters & info
     std::string fromAddress = ParseAddress(request.params[0]);
     std::string toAddress = ParseAddress(request.params[1]);
-    uint32_t propertyId = ParsePropertyId(request.params[2]);
+    std::string ticker = ParseText(request.params[2]);
+
+    uint32_t propertyId = pDbSpInfo->findSPByTicker(ticker);
+    if (propertyId == 0)
+        throw JSONRPCError(RPC_INTERNAL_ERROR, "Token with this ticker doesn't exists");
+
     int64_t amount = ParseAmount(request.params[3], isPropertyDivisible(propertyId));
     std::string feeAddress = ParseAddress(request.params[4]);
 
@@ -84,11 +89,11 @@ static UniValue token_funded_send(const JSONRPCRequest& request)
     return retTxid.ToString();
 }
 
-static UniValue token_funded_sendall(const JSONRPCRequest& request)
+static UniValue sendtokenfundedall(const JSONRPCRequest& request)
 {
     if (request.fHelp || request.params.size() != 4)
         throw runtime_error(
-            "token_funded_sendall \"fromaddress\" \"toaddress\" ecosystem \"feeaddress\"\n"
+            "sendtokenfundedall \"fromaddress\" \"toaddress\" ecosystem \"feeaddress\"\n"
 
             "\nCreates and sends a transaction that transfers all available tokens in the given ecosystem to the recipient.\n"
 
@@ -104,8 +109,8 @@ static UniValue token_funded_sendall(const JSONRPCRequest& request)
             "\"hash\"                  (string) the hex-encoded transaction hash\n"
 
             "\nExamples:\n"
-            + HelpExampleCli("token_funded_sendall", "\"1DFa5bT6KMEr6ta29QJouainsjaNBsJQhH\" \"15cWrfuvMxyxGst2FisrQcvcpF48x6sXoH\" 1 \"15Jhzz4omEXEyFKbdcccJwuVPea5LqsKM1\"")
-            + HelpExampleRpc("token_funded_sendall", "\"1DFa5bT6KMEr6ta29QJouainsjaNBsJQhH\", \"15cWrfuvMxyxGst2FisrQcvcpF48x6sXoH\", 1, \"15Jhzz4omEXEyFKbdcccJwuVPea5LqsKM1\"")
+            + HelpExampleCli("sendtokenfundedall", "\"1DFa5bT6KMEr6ta29QJouainsjaNBsJQhH\" \"15cWrfuvMxyxGst2FisrQcvcpF48x6sXoH\" 1 \"15Jhzz4omEXEyFKbdcccJwuVPea5LqsKM1\"")
+            + HelpExampleRpc("sendtokenfundedall", "\"1DFa5bT6KMEr6ta29QJouainsjaNBsJQhH\", \"15cWrfuvMxyxGst2FisrQcvcpF48x6sXoH\", 1, \"15Jhzz4omEXEyFKbdcccJwuVPea5LqsKM1\"")
         );
 
     // obtain parameters & info
@@ -173,14 +178,14 @@ static UniValue sendtoken(const JSONRPCRequest& request)
 {
     if (request.fHelp || request.params.size() < 4 || request.params.size() > 6)
         throw runtime_error(
-            "sendtoken \"fromaddress\" \"toaddress\" name \"amount\" ( \"redeemaddress\" \"referenceamount\" )\n"
+            "sendtoken \"fromaddress\" \"toaddress\" ticker \"amount\" ( \"redeemaddress\" \"referenceamount\" )\n"
 
             "\nCreate and broadcast a simple send transaction.\n"
 
             "\nArguments:\n"
             "1. fromaddress          (string, required) the address to send from\n"
             "2. toaddress            (string, required) the address of the receiver\n"
-            "3. name                 (string, required) the name of the token to send\n"
+            "3. ticker               (string, required) the ticker of the token to send\n"
             "4. amount               (string, required) the amount to send\n"
             "5. redeemaddress        (string, optional) an address that can spend the transaction dust (sender by default)\n"
             "6. referenceamount      (string, optional) a bitcoin amount that is sent to the receiver (minimal by default)\n"
@@ -196,11 +201,11 @@ static UniValue sendtoken(const JSONRPCRequest& request)
     // obtain parameters & info
     std::string fromAddress = ParseAddress(request.params[0]);
     std::string toAddress = ParseAddress(request.params[1]);
-    std::string name = ParseText(request.params[2]);
+    std::string ticker = ParseText(request.params[2]);
 
-    uint32_t propertyId = pDbSpInfo->findSPByName(name);
+    uint32_t propertyId = pDbSpInfo->findSPByTicker(ticker);
     if (propertyId == 0)
-        throw JSONRPCError(RPC_INTERNAL_ERROR, "Token with this name doesn't exists");
+        throw JSONRPCError(RPC_INTERNAL_ERROR, "Token with this ticker doesn't exists");
 
     int64_t amount = ParseAmount(request.params[3], isPropertyDivisible(propertyId));
     std::string redeemAddress = (request.params.size() > 4 && !ParseText(request.params[4]).empty()) ? ParseAddress(request.params[4]): "";
@@ -286,20 +291,20 @@ static UniValue sendalltokens(const JSONRPCRequest& request)
     }
 }
 
-static UniValue token_senddexsell(const JSONRPCRequest& request)
+static UniValue sendtokendexsell(const JSONRPCRequest& request)
 {
     if (request.fHelp || request.params.size() != 7)
         throw runtime_error(
-            "token_senddexsell \"fromaddress\" propertyidforsale \"amountforsale\" \"amountdesired\" paymentwindow minacceptfee action\n"
+            "sendtokendexsell \"fromaddress\" tokenforsale \"amountforsale\" \"amountdesired\" paymentwindow minacceptfee action\n"
 
-            "\nPlace, update or cancel a sell offer on the traditional distributed TOKEN/BTC exchange.\n"
+            "\nPlace, update or cancel a sell offer on the traditional distributed TOKEN/RPD exchange.\n"
 
             "\nArguments:\n"
 
             "1. fromaddress          (string, required) the address to send from\n"
-            "2. propertyidforsale    (number, required) the identifier of the tokens to list for sale (must be 1 for OMN or 2 for TOMN)\n"
+            "2. tokenforsale         (string, required) the ticker of token to list for sale\n"
             "3. amountforsale        (string, required) the amount of tokens to list for sale\n"
-            "4. amountdesired        (string, required) the amount of bitcoins desired\n"
+            "4. amountdesired        (string, required) the amount of Rapids desired\n"
             "5. paymentwindow        (number, required) a time limit in blocks a buyer has to pay following a successful accepting order\n"
             "6. minacceptfee         (string, required) a minimum mining fee a buyer has to pay to accept the offer\n"
             "7. action               (number, required) the action to take (1 for new offers, 2 to update\", 3 to cancel)\n"
@@ -308,23 +313,27 @@ static UniValue token_senddexsell(const JSONRPCRequest& request)
             "\"hash\"                  (string) the hex-encoded transaction hash\n"
 
             "\nExamples:\n"
-            + HelpExampleCli("token_senddexsell", "\"37FaKponF7zqoMLUjEiko25pDiuVH5YLEa\" 1 \"1.5\" \"0.75\" 25 \"0.0005\" 1")
-            + HelpExampleRpc("token_senddexsell", "\"37FaKponF7zqoMLUjEiko25pDiuVH5YLEa\", 1, \"1.5\", \"0.75\", 25, \"0.0005\", 1")
+            + HelpExampleCli("tokenforsale", "\"37FaKponF7zqoMLUjEiko25pDiuVH5YLEa\" TOKEN \"1.5\" \"0.75\" 25 \"0.0005\" 1")
+            + HelpExampleRpc("tokenforsale", "\"37FaKponF7zqoMLUjEiko25pDiuVH5YLEa\", TOKEN, \"1.5\", \"0.75\", 25, \"0.0005\", 1")
         );
 
     // obtain parameters & info
     std::string fromAddress = ParseAddress(request.params[0]);
-    uint32_t propertyIdForSale = ParsePropertyId(request.params[1]);
+    std::string tokenForSale = ParseText(request.params[1]);
     int64_t amountForSale = 0; // depending on action
     int64_t amountDesired = 0; // depending on action
     uint8_t paymentWindow = 0; // depending on action
     int64_t minAcceptFee = 0;  // depending on action
     uint8_t action = ParseDExAction(request.params[6]);
 
+    uint32_t propertyIdForSale = pDbSpInfo->findSPByTicker(tokenForSale);
+    if (propertyIdForSale == 0)
+        throw JSONRPCError(RPC_INTERNAL_ERROR, "Token with this ticker doesn't exists");
+
     // perform conversions
     if (action <= CMPTransaction::UPDATE) { // actions 3 permit zero values, skip check
-        amountForSale = ParseAmount(request.params[2], true); // TMSC/MSC is divisible
-        amountDesired = ParseAmount(request.params[3], true); // BTC is divisible
+        amountForSale = ParseAmount(request.params[2], isPropertyDivisible(propertyIdForSale));
+        amountDesired = ParseAmount(request.params[3], true); // RPD is divisible
         paymentWindow = ParseDExPaymentWindow(request.params[4]);
         minAcceptFee = ParseDExFee(request.params[5]);
     }
@@ -375,18 +384,18 @@ static UniValue token_senddexsell(const JSONRPCRequest& request)
     }
 }
 
-static UniValue token_senddexaccept(const JSONRPCRequest& request)
+static UniValue sendtokendexaccept(const JSONRPCRequest& request)
 {
     if (request.fHelp || request.params.size() < 4 || request.params.size() > 5)
         throw runtime_error(
-            "token_senddexaccept \"fromaddress\" \"toaddress\" propertyid \"amount\" ( override )\n"
+            "sendtokendexaccept \"fromaddress\" \"toaddress\" ticker \"amount\" ( override )\n"
 
             "\nCreate and broadcast an accept offer for the specified token and amount.\n"
 
             "\nArguments:\n"
             "1. fromaddress          (string, required) the address to send from\n"
             "2. toaddress            (string, required) the address of the seller\n"
-            "3. propertyid           (number, required) the identifier of the token to purchase\n"
+            "3. ticker               (string, required) the ticker of token to purchase\n"
             "4. amount               (string, required) the amount to accept\n"
             "5. override             (boolean, optional) override minimum accept fee and payment window checks (use with caution!)\n"
 
@@ -394,19 +403,23 @@ static UniValue token_senddexaccept(const JSONRPCRequest& request)
             "\"hash\"                  (string) the hex-encoded transaction hash\n"
 
             "\nExamples:\n"
-            + HelpExampleCli("token_senddexaccept", "\"35URq1NN3xL6GeRKUP6vzaQVcxoJiiJKd8\" \"37FaKponF7zqoMLUjEiko25pDiuVH5YLEa\" 1 \"15.0\"")
-            + HelpExampleRpc("token_senddexaccept", "\"35URq1NN3xL6GeRKUP6vzaQVcxoJiiJKd8\", \"37FaKponF7zqoMLUjEiko25pDiuVH5YLEa\", 1, \"15.0\"")
+            + HelpExampleCli("sendtokendexaccept", "\"35URq1NN3xL6GeRKUP6vzaQVcxoJiiJKd8\" \"37FaKponF7zqoMLUjEiko25pDiuVH5YLEa\" TOKEN \"15.0\"")
+            + HelpExampleRpc("sendtokendexaccept", "\"35URq1NN3xL6GeRKUP6vzaQVcxoJiiJKd8\", \"37FaKponF7zqoMLUjEiko25pDiuVH5YLEa\", TOKEN, \"15.0\"")
         );
 
     // obtain parameters & info
     std::string fromAddress = ParseAddress(request.params[0]);
     std::string toAddress = ParseAddress(request.params[1]);
-    uint32_t propertyId = ParsePropertyId(request.params[2]);
-    int64_t amount = ParseAmount(request.params[3], true); // MSC/TMSC is divisible
+    std::string ticker = ParseText(request.params[2]);
+
+    uint32_t propertyId = pDbSpInfo->findSPByTicker(ticker);
+    if (propertyId == 0)
+        throw JSONRPCError(RPC_INTERNAL_ERROR, "Token with this ticker doesn't exists");
+
+    int64_t amount = ParseAmount(request.params[3], isPropertyDivisible(propertyId));
     bool override = (request.params.size() > 4) ? request.params[4].get_bool(): false;
 
     // perform checks
-    RequirePrimaryToken(propertyId);
     RequireMatchingDExOffer(toAddress, propertyId);
 
     if (!override) { // reject unsafe accepts - note client maximum tx fee will always be respected regardless of override here
@@ -457,11 +470,11 @@ static UniValue token_senddexaccept(const JSONRPCRequest& request)
     }
 }
 
-static UniValue token_sendissuancecrowdsale(const JSONRPCRequest& request)
+static UniValue sendtokenissuancecrowdsale(const JSONRPCRequest& request)
 {
     if (request.fHelp || request.params.size() != 14)
         throw runtime_error(
-            "token_sendissuancecrowdsale \"fromaddress\" ecosystem type previousid \"category\" \"subcategory\" \"name\" \"url\" \"data\" propertyiddesired tokensperunit deadline ( earlybonus issuerpercentage )\n"
+            "sendtokenissuancecrowdsale \"fromaddress\" ecosystem type previousid \"category\" \"subcategory\" \"name\" \"url\" \"data\" tokensperunit deadline ( earlybonus issuerpercentage )\n"
 
             "Create new tokens as crowdsale."
 
@@ -473,9 +486,9 @@ static UniValue token_sendissuancecrowdsale(const JSONRPCRequest& request)
             "5. category             (string, required) a category for the new tokens (can be \"\")\n"
             "6. subcategory          (string, required) a subcategory for the new tokens  (can be \"\")\n"
             "7. name                 (string, required) the name of the new tokens to create\n"
-            "8. url                  (string, required) an URL for further information about the new tokens (can be \"\")\n"
-            "9. ipfs                 (string, required) IPFS string for the new tokens (can be \"\")\n"
-            "10. propertyiddesired   (number, required) the identifier of a token eligible to participate in the crowdsale\n"
+            "8. ticker               (string, required) the ticker of the new tokens to create\n"
+            "9. url                  (string, required) an URL for further information about the new tokens (can be \"\")\n"
+            "10. ipfs                 (string, required) IPFS string for the new tokens (can be \"\")\n"
             "11. tokensperunit       (string, required) the amount of tokens granted per unit invested in the crowdsale\n"
             "12. deadline            (number, required) the deadline of the crowdsale as Unix timestamp\n"
             "13. earlybonus          (number, required) an early bird bonus for participants in percent per week\n"
@@ -485,8 +498,8 @@ static UniValue token_sendissuancecrowdsale(const JSONRPCRequest& request)
             "\"hash\"                  (string) the hex-encoded transaction hash\n"
 
             "\nExamples:\n"
-            + HelpExampleCli("token_sendissuancecrowdsale", "\"3JYd75REX3HXn1vAU83YuGfmiPXW7BpYXo\" 2 1 0 \"Companies\" \"Bitcoin Mining\" \"Quantum Miner\" \"\" \"\" 2 \"100\" 1483228800 30 2")
-            + HelpExampleRpc("token_sendissuancecrowdsale", "\"3JYd75REX3HXn1vAU83YuGfmiPXW7BpYXo\", 2, 1, 0, \"Companies\", \"Bitcoin Mining\", \"Quantum Miner\", \"\", \"\", 2, \"100\", 1483228800, 30, 2")
+            + HelpExampleCli("sendtokenissuancecrowdsale", "\"3JYd75REX3HXn1vAU83YuGfmiPXW7BpYXo\" 2 1 0 \"Companies\" \"Bitcoin Mining\" \"Quantum Miner\" \"TICKER\" \"\" \"\" \"100\" 1483228800 30 2")
+            + HelpExampleRpc("sendtokenissuancecrowdsale", "\"3JYd75REX3HXn1vAU83YuGfmiPXW7BpYXo\", 2, 1, 0, \"Companies\", \"Bitcoin Mining\", \"Quantum Miner\", \"TICKER\", \"\", \"\", \"100\", 1483228800, 30, 2")
         );
 
     // obtain parameters & info
@@ -497,9 +510,9 @@ static UniValue token_sendissuancecrowdsale(const JSONRPCRequest& request)
     std::string category = ParseText(request.params[4]);
     std::string subcategory = ParseText(request.params[5]);
     std::string name = ParseText(request.params[6]);
-    std::string url = ParseText(request.params[7]);
-    std::string data = ParseText(request.params[8]);
-    uint32_t propertyIdDesired = ParsePropertyId(request.params[9]);
+    std::string ticker = ParseText(request.params[7]);
+    std::string url = ParseText(request.params[8]);
+    std::string data = ParseText(request.params[9]);
     int64_t numTokens = ParseAmount(request.params[10], type);
     int64_t deadline = ParseDeadline(request.params[11]);
     uint8_t earlyBonus = ParseEarlyBirdBonus(request.params[12]);
@@ -507,11 +520,22 @@ static UniValue token_sendissuancecrowdsale(const JSONRPCRequest& request)
 
     // perform checks
     RequirePropertyName(name);
+    RequirePropertyName(ticker);
+
+    uint32_t propertyId = pDbSpInfo->findSPByTicker(ticker);
+    if (propertyId > 0)
+        throw JSONRPCError(RPC_INTERNAL_ERROR, "Token with this ticker doesn't exists");
+
+    std::string desiredName = "RPDx";
+    uint32_t propertyIdDesired = pDbSpInfo->findSPByTicker(desiredName);
+    if (propertyIdDesired == 0)
+        throw JSONRPCError(RPC_INTERNAL_ERROR, "Token with this ticker doesn't exists");
+
     RequireExistingProperty(propertyIdDesired);
     RequireSameEcosystem(ecosystem, propertyIdDesired);
 
     // create a payload for the transaction
-    std::vector<unsigned char> payload = CreatePayload_IssuanceVariable(ecosystem, type, previousId, category, subcategory, name, url, data, propertyIdDesired, numTokens, deadline, earlyBonus, issuerPercentage);
+    std::vector<unsigned char> payload = CreatePayload_IssuanceVariable(ecosystem, type, previousId, category, subcategory, name, ticker, url, data, propertyIdDesired, numTokens, deadline, earlyBonus, issuerPercentage);
 
     // request the wallet build the transaction (and if needed commit it)
     uint256 txid;
@@ -532,9 +556,9 @@ static UniValue token_sendissuancecrowdsale(const JSONRPCRequest& request)
 
 static UniValue sendtokenissuancefixed(const JSONRPCRequest& request)
 {
-    if (request.fHelp || request.params.size() != 10)
+    if (request.fHelp || request.params.size() != 11)
         throw runtime_error(
-            "sendtokenissuancefixed \"fromaddress\" ecosystem type previousid \"category\" \"subcategory\" \"name\" \"url\" \"data\" \"amount\"\n"
+            "sendtokenissuancefixed \"fromaddress\" ecosystem type previousid \"category\" \"subcategory\" \"name\" \"ticker\" \"url\" \"data\" \"amount\"\n"
 
             "\nCreate new tokens with fixed supply.\n"
 
@@ -546,16 +570,17 @@ static UniValue sendtokenissuancefixed(const JSONRPCRequest& request)
             "5. category             (string, required) a category for the new tokens (can be \"\")\n"
             "6. subcategory          (string, required) a subcategory for the new tokens  (can be \"\")\n"
             "7. name                 (string, required) the name of the new tokens to create\n"
-            "8. url                  (string, required) an URL for further information about the new tokens (can be \"\")\n"
-            "9. ipfs                 (string, required) IPFS string for the new tokens (can be \"\")\n"
-            "10. amount              (string, required) the number of tokens to create\n"
+            "8. ticker               (string, required) the ticker of the new tokens to create\n"
+            "9. url                  (string, required) an URL for further information about the new tokens (can be \"\")\n"
+            "10. ipfs                (string, required) IPFS string for the new tokens (can be \"\")\n"
+            "11. amount              (string, required) the number of tokens to create\n"
 
             "\nResult:\n"
             "\"hash\"                  (string) the hex-encoded transaction hash\n"
 
             "\nExamples:\n"
-            + HelpExampleCli("sendtokenissuancefixed", "\"3Ck2kEGLJtZw9ENj2tameMCtS3HB7uRar3\" 2 1 0 \"Companies\" \"Bitcoin Mining\" \"Quantum Miner\" \"\" \"\" \"1000000\"")
-            + HelpExampleRpc("sendtokenissuancefixed", "\"3Ck2kEGLJtZw9ENj2tameMCtS3HB7uRar3\", 2, 1, 0, \"Companies\", \"Bitcoin Mining\", \"Quantum Miner\", \"\", \"\", \"1000000\"")
+            + HelpExampleCli("sendtokenissuancefixed", "\"3Ck2kEGLJtZw9ENj2tameMCtS3HB7uRar3\" 2 1 0 \"Companies\" \"Bitcoin Mining\" \"Quantum Miner\" \"TICKER\" \"\" \"\" \"1000000\"")
+            + HelpExampleRpc("sendtokenissuancefixed", "\"3Ck2kEGLJtZw9ENj2tameMCtS3HB7uRar3\", 2, 1, 0, \"Companies\", \"Bitcoin Mining\", \"Quantum Miner\", \"TICKER\", \"\", \"\", \"1000000\"")
         );
 
     // obtain parameters & info
@@ -566,25 +591,27 @@ static UniValue sendtokenissuancefixed(const JSONRPCRequest& request)
     std::string category = ParseText(request.params[4]);
     std::string subcategory = ParseText(request.params[5]);
     std::string name = ParseText(request.params[6]);
-    std::string url = ParseText(request.params[7]);
-    std::string data = ParseText(request.params[8]);
-    int64_t amount = ParseAmount(request.params[9], type);
+    std::string ticker = ParseText(request.params[7]);
+    std::string url = ParseText(request.params[8]);
+    std::string data = ParseText(request.params[9]);
+    int64_t amount = ParseAmount(request.params[10], type);
 
     // perform checks
     RequirePropertyName(name);
+    RequirePropertyName(ticker);
 
-    uint32_t propertyId = pDbSpInfo->findSPByName(name);
+    uint32_t propertyId = pDbSpInfo->findSPByTicker(ticker);
     if (propertyId > 0)
-        throw JSONRPCError(RPC_INTERNAL_ERROR, "Token with this name already exists");
+        throw JSONRPCError(RPC_INTERNAL_ERROR, "Token with this ticker doesn't exists");
 
-    if (!IsTokenNameValid(name))
-        throw JSONRPCError(RPC_INTERNAL_ERROR, "Token name is invalid");
+    if (!IsTokenTickerValid(ticker) && !IsUsernameValid(ticker))
+        throw JSONRPCError(RPC_INTERNAL_ERROR, "Token ticker is invalid");
 
     if (!IsTokenIPFSValid(data))
         throw JSONRPCError(RPC_INTERNAL_ERROR, "Token IPFS is invalid");
 
     // create a payload for the transaction
-    std::vector<unsigned char> payload = CreatePayload_IssuanceFixed(ecosystem, type, previousId, category, subcategory, name, url, data, amount);
+    std::vector<unsigned char> payload = CreatePayload_IssuanceFixed(ecosystem, type, previousId, category, subcategory, name, ticker, url, data, amount);
 
     // request the wallet build the transaction (and if needed commit it)
     uint256 txid;
@@ -605,9 +632,9 @@ static UniValue sendtokenissuancefixed(const JSONRPCRequest& request)
 
 static UniValue sendtokenissuancemanaged(const JSONRPCRequest& request)
 {
-    if (request.fHelp || request.params.size() != 9)
+    if (request.fHelp || request.params.size() != 10)
         throw runtime_error(
-            "sendtokenissuancemanaged \"fromaddress\" ecosystem type previousid \"category\" \"subcategory\" \"name\" \"url\" \"data\"\n"
+            "sendtokenissuancemanaged \"fromaddress\" ecosystem type previousid \"category\" \"subcategory\" \"name\" \"ticker\" \"url\" \"data\"\n"
 
             "\nCreate new tokens with manageable supply.\n"
 
@@ -619,6 +646,7 @@ static UniValue sendtokenissuancemanaged(const JSONRPCRequest& request)
             "5. category             (string, required) a category for the new tokens (can be \"\")\n"
             "6. subcategory          (string, required) a subcategory for the new tokens  (can be \"\")\n"
             "7. name                 (string, required) the name of the new tokens to create\n"
+            "8. ticker               (string, required) the ticker of the new tokens to create\n"
             "8. url                  (string, required) an URL for further information about the new tokens (can be \"\")\n"
             "9. ipfs                 (string, required) IPFS string for the new tokens (can be \"\")\n"
 
@@ -626,8 +654,8 @@ static UniValue sendtokenissuancemanaged(const JSONRPCRequest& request)
             "\"hash\"                  (string) the hex-encoded transaction hash\n"
 
             "\nExamples:\n"
-            + HelpExampleCli("sendtokenissuancemanaged", "\"RpAVz7YHGFjVrr29iiSmezkvd3SzBbuK7p\" 2 1 0 \"Companies\" \"Bitcoin Mining\" \"Quantum Miner\" \"\" \"\"")
-            + HelpExampleRpc("sendtokenissuancemanaged", "\"RpAVz7YHGFjVrr29iiSmezkvd3SzBbuK7p\", 2, 1, 0, \"Companies\", \"Bitcoin Mining\", \"Quantum Miner\", \"\", \"\"")
+            + HelpExampleCli("sendtokenissuancemanaged", "\"RpAVz7YHGFjVrr29iiSmezkvd3SzBbuK7p\" 2 1 0 \"Companies\" \"Bitcoin Mining\" \"Quantum Miner\" \"TICKER\" \"\" \"\"")
+            + HelpExampleRpc("sendtokenissuancemanaged", "\"RpAVz7YHGFjVrr29iiSmezkvd3SzBbuK7p\", 2, 1, 0, \"Companies\", \"Bitcoin Mining\", \"Quantum Miner\", \"TICKER\", \"\", \"\"")
         );
 
     // obtain parameters & info
@@ -638,24 +666,26 @@ static UniValue sendtokenissuancemanaged(const JSONRPCRequest& request)
     std::string category = ParseText(request.params[4]);
     std::string subcategory = ParseText(request.params[5]);
     std::string name = ParseText(request.params[6]);
-    std::string url = ParseText(request.params[7]);
-    std::string data = ParseText(request.params[8]);
+    std::string ticker = ParseText(request.params[7]);
+    std::string url = ParseText(request.params[8]);
+    std::string data = ParseText(request.params[9]);
 
     // perform checks
     RequirePropertyName(name);
+    RequirePropertyName(ticker);
 
-    uint32_t propertyId = pDbSpInfo->findSPByName(name);
+    uint32_t propertyId = pDbSpInfo->findSPByTicker(ticker);
     if (propertyId > 0)
-        throw JSONRPCError(RPC_INTERNAL_ERROR, "Token with this name already exists");
+        throw JSONRPCError(RPC_INTERNAL_ERROR, "Token with this ticker doesn't exists");
 
-    if (!IsTokenNameValid(name))
-        throw JSONRPCError(RPC_INTERNAL_ERROR, "Token name is invalid");
+    if (!IsTokenTickerValid(ticker))
+        throw JSONRPCError(RPC_INTERNAL_ERROR, "Token ticker is invalid");
 
     if (!IsTokenIPFSValid(data))
         throw JSONRPCError(RPC_INTERNAL_ERROR, "Token IPFS is invalid");
 
     // create a payload for the transaction
-    std::vector<unsigned char> payload = CreatePayload_IssuanceManaged(ecosystem, type, previousId, category, subcategory, name, url, data);
+    std::vector<unsigned char> payload = CreatePayload_IssuanceManaged(ecosystem, type, previousId, category, subcategory, name, ticker, url, data);
 
     // request the wallet build the transaction (and if needed commit it)
     uint256 txid;
@@ -728,18 +758,18 @@ static UniValue token_sendsto(const JSONRPCRequest& request)
     }
 }
 
-static UniValue token_sendgrant(const JSONRPCRequest& request)
+static UniValue sendtokengrant(const JSONRPCRequest& request)
 {
     if (request.fHelp || request.params.size() < 4 || request.params.size() > 5)
         throw runtime_error(
-            "sendtokengrant \"fromaddress\" \"toaddress\" name \"amount\" ( \"memo\" )\n"
+            "sendtokengrant \"fromaddress\" \"toaddress\" ticker \"amount\" ( \"memo\" )\n"
 
             "\nIssue or grant new units of managed tokens.\n"
 
             "\nArguments:\n"
             "1. fromaddress          (string, required) the address to send from\n"
             "2. toaddress            (string, required) the receiver of the tokens (sender by default, can be \"\")\n"
-            "3. name                 (string, required) the name of the token to grant\n"
+            "3. ticker               (string, required) the ticker of the token to grant\n"
             "4. amount               (string, required) the amount of tokens to create\n"
             "5. memo                 (string, optional) a text note attached to this transaction (none by default)\n"
 
@@ -747,18 +777,18 @@ static UniValue token_sendgrant(const JSONRPCRequest& request)
             "\"hash\"                  (string) the hex-encoded transaction hash\n"
 
             "\nExamples:\n"
-            + HelpExampleCli("token_sendgrant", "\"3HsJvhr9qzgRe3ss97b1QHs38rmaLExLcH\" \"\" TOKEN \"7000\"")
-            + HelpExampleRpc("token_sendgrant", "\"3HsJvhr9qzgRe3ss97b1QHs38rmaLExLcH\", \"\", TOKEN, \"7000\"")
+            + HelpExampleCli("sendtokengrant", "\"3HsJvhr9qzgRe3ss97b1QHs38rmaLExLcH\" \"\" TOKEN \"7000\"")
+            + HelpExampleRpc("sendtokengrant", "\"3HsJvhr9qzgRe3ss97b1QHs38rmaLExLcH\", \"\", TOKEN, \"7000\"")
         );
 
     // obtain parameters & info
     std::string fromAddress = ParseAddress(request.params[0]);
     std::string toAddress = !ParseText(request.params[1]).empty() ? ParseAddress(request.params[1]): "";
-    std::string name = ParseText(request.params[2]);
+    std::string ticker = ParseText(request.params[2]);
 
-    uint32_t propertyId = pDbSpInfo->findSPByName(name);
+    uint32_t propertyId = pDbSpInfo->findSPByTicker(ticker);
     if (propertyId == 0)
-        throw JSONRPCError(RPC_INTERNAL_ERROR, "Token with this name doesn't exists");
+        throw JSONRPCError(RPC_INTERNAL_ERROR, "Token with this ticker doesn't exists");
 
     int64_t amount = ParseAmount(request.params[3], isPropertyDivisible(propertyId));
     std::string memo = (request.params.size() > 4) ? ParseText(request.params[4]): "";
@@ -792,13 +822,13 @@ static UniValue sendtokenrevoke(const JSONRPCRequest& request)
 {
     if (request.fHelp || request.params.size() < 3 || request.params.size() > 4)
         throw runtime_error(
-            "sendtokenrevoke \"fromaddress\" name \"amount\" ( \"memo\" )\n"
+            "sendtokenrevoke \"fromaddress\" ticker \"amount\" ( \"memo\" )\n"
 
             "\nRevoke units of managed tokens.\n"
 
             "\nArguments:\n"
             "1. fromaddress          (string, required) the address to revoke the tokens from\n"
-            "2. name                 (string, required) the name of the token to revoke\n"
+            "2. ticker               (string, required) the ticker of the token to revoke\n"
             "3. amount               (string, required) the amount of tokens to revoke\n"
             "4. memo                 (string, optional) a text note attached to this transaction (none by default)\n"
 
@@ -812,11 +842,11 @@ static UniValue sendtokenrevoke(const JSONRPCRequest& request)
 
     // obtain parameters & info
     std::string fromAddress = ParseAddress(request.params[0]);
-    std::string name = ParseText(request.params[1]);
+    std::string ticker = ParseText(request.params[1]);
 
-    uint32_t propertyId = pDbSpInfo->findSPByName(name);
+    uint32_t propertyId = pDbSpInfo->findSPByTicker(ticker);
     if (propertyId == 0)
-        throw JSONRPCError(RPC_INTERNAL_ERROR, "Token with this name doesn't exists");
+        throw JSONRPCError(RPC_INTERNAL_ERROR, "Token with this ticker doesn't exists");
 
     int64_t amount = ParseAmount(request.params[2], isPropertyDivisible(propertyId));
     std::string memo = (request.params.size() > 3) ? ParseText(request.params[3]): "";
@@ -847,29 +877,33 @@ static UniValue sendtokenrevoke(const JSONRPCRequest& request)
     }
 }
 
-static UniValue token_sendclosecrowdsale(const JSONRPCRequest& request)
+static UniValue sendtokenclosecrowdsale(const JSONRPCRequest& request)
 {
     if (request.fHelp || request.params.size() != 2)
         throw runtime_error(
-            "token_sendclosecrowdsale \"fromaddress\" propertyid\n"
+            "sendtokenclosecrowdsale \"fromaddress\" ticker\n"
 
             "\nManually close a crowdsale.\n"
 
             "\nArguments:\n"
             "1. fromaddress          (string, required) the address associated with the crowdsale to close\n"
-            "2. propertyid           (number, required) the identifier of the crowdsale to close\n"
+            "2. ticker               (string, required) the token ticker of crowdsale to close\n"
 
             "\nResult:\n"
             "\"hash\"                  (string) the hex-encoded transaction hash\n"
 
             "\nExamples:\n"
-            + HelpExampleCli("token_sendclosecrowdsale", "\"3JYd75REX3HXn1vAU83YuGfmiPXW7BpYXo\" 70")
-            + HelpExampleRpc("token_sendclosecrowdsale", "\"3JYd75REX3HXn1vAU83YuGfmiPXW7BpYXo\", 70")
+            + HelpExampleCli("sendtokenclosecrowdsale", "\"3JYd75REX3HXn1vAU83YuGfmiPXW7BpYXo\" 70")
+            + HelpExampleRpc("sendtokenclosecrowdsale", "\"3JYd75REX3HXn1vAU83YuGfmiPXW7BpYXo\", 70")
         );
 
     // obtain parameters & info
     std::string fromAddress = ParseAddress(request.params[0]);
-    uint32_t propertyId = ParsePropertyId(request.params[1]);
+    std::string ticker = ParseText(request.params[1]);
+
+    uint32_t propertyId = pDbSpInfo->findSPByTicker(ticker);
+    if (propertyId == 0)
+        throw JSONRPCError(RPC_INTERNAL_ERROR, "Token with this ticker doesn't exists");
 
     // perform checks
     RequireExistingProperty(propertyId);
@@ -897,34 +931,44 @@ static UniValue token_sendclosecrowdsale(const JSONRPCRequest& request)
     }
 }
 
-static UniValue token_sendtrade(const JSONRPCRequest& request)
+static UniValue sendtokentrade(const JSONRPCRequest& request)
 {
     if (request.fHelp || request.params.size() != 5)
         throw runtime_error(
-            "token_sendtrade \"fromaddress\" propertyidforsale \"amountforsale\" propertiddesired \"amountdesired\"\n"
+            "sendtokentrade \"fromaddress\" tokenforsale \"amountforsale\" tokendesired \"amountdesired\"\n"
 
             "\nPlace a trade offer on the distributed token exchange.\n"
 
             "\nArguments:\n"
             "1. fromaddress          (string, required) the address to trade with\n"
-            "2. propertyidforsale    (number, required) the identifier of the tokens to list for sale\n"
+            "2. tokenforsale         (string, required) the ticker of the tokens to list for sale\n"
             "3. amountforsale        (string, required) the amount of tokens to list for sale\n"
-            "4. propertiddesired     (number, required) the identifier of the tokens desired in exchange\n"
+            "4. tokendesired         (string, required) the ticker of the tokens desired in exchange\n"
             "5. amountdesired        (string, required) the amount of tokens desired in exchange\n"
 
             "\nResult:\n"
             "\"hash\"                  (string) the hex-encoded transaction hash\n"
 
             "\nExamples:\n"
-            + HelpExampleCli("token_sendtrade", "\"3BydPiSLPP3DR5cf726hDQ89fpqWLxPKLR\" 31 \"250.0\" 1 \"10.0\"")
-            + HelpExampleRpc("token_sendtrade", "\"3BydPiSLPP3DR5cf726hDQ89fpqWLxPKLR\", 31, \"250.0\", 1, \"10.0\"")
+            + HelpExampleCli("sendtokentrade", "\"3BydPiSLPP3DR5cf726hDQ89fpqWLxPKLR\" TOKEN \"250.0\" DESIRED \"10.0\"")
+            + HelpExampleRpc("sendtokentrade", "\"3BydPiSLPP3DR5cf726hDQ89fpqWLxPKLR\", TOKEN, \"250.0\", DESIRED, \"10.0\"")
         );
 
     // obtain parameters & info
     std::string fromAddress = ParseAddress(request.params[0]);
-    uint32_t propertyIdForSale = ParsePropertyId(request.params[1]);
+    std::string tokenForSale = ParseText(request.params[1]);
+
+    uint32_t propertyIdForSale = pDbSpInfo->findSPByTicker(tokenForSale);
+    if (propertyIdForSale == 0)
+        throw JSONRPCError(RPC_INTERNAL_ERROR, "Token with this ticker doesn't exists");
+
     int64_t amountForSale = ParseAmount(request.params[2], isPropertyDivisible(propertyIdForSale));
-    uint32_t propertyIdDesired = ParsePropertyId(request.params[3]);
+    std::string tokenDesired = ParseText(request.params[3]);
+
+    uint32_t propertyIdDesired = pDbSpInfo->findSPByTicker(tokenDesired);
+    if (propertyIdDesired == 0)
+        throw JSONRPCError(RPC_INTERNAL_ERROR, "Token with this ticker doesn't exists");
+
     int64_t amountDesired = ParseAmount(request.params[4], isPropertyDivisible(propertyIdDesired));
 
     // perform checks
@@ -955,34 +999,44 @@ static UniValue token_sendtrade(const JSONRPCRequest& request)
     }
 }
 
-static UniValue token_sendcanceltradesbyprice(const JSONRPCRequest& request)
+static UniValue sendtokencanceltradesbyprice(const JSONRPCRequest& request)
 {
     if (request.fHelp || request.params.size() != 5)
         throw runtime_error(
-            "token_sendcanceltradesbyprice \"fromaddress\" propertyidforsale \"amountforsale\" propertiddesired \"amountdesired\"\n"
+            "sendtokencanceltradesbyprice \"fromaddress\" tokenforsale \"amountforsale\" tokenesired \"amountdesired\"\n"
 
             "\nCancel offers on the distributed token exchange with the specified price.\n"
 
             "\nArguments:\n"
             "1. fromaddress          (string, required) the address to trade with\n"
-            "2. propertyidforsale    (number, required) the identifier of the tokens listed for sale\n"
+            "2. tokenforsale         (string, required) the ticker of the token listed for sale\n"
             "3. amountforsale        (string, required) the amount of tokens to listed for sale\n"
-            "4. propertiddesired     (number, required) the identifier of the tokens desired in exchange\n"
+            "4. tokendesired         (string, required) the ticker of the token desired in exchange\n"
             "5. amountdesired        (string, required) the amount of tokens desired in exchange\n"
 
             "\nResult:\n"
             "\"hash\"                  (string) the hex-encoded transaction hash\n"
 
             "\nExamples:\n"
-            + HelpExampleCli("token_sendcanceltradesbyprice", "\"3BydPiSLPP3DR5cf726hDQ89fpqWLxPKLR\" 31 \"100.0\" 1 \"5.0\"")
-            + HelpExampleRpc("token_sendcanceltradesbyprice", "\"3BydPiSLPP3DR5cf726hDQ89fpqWLxPKLR\", 31, \"100.0\", 1, \"5.0\"")
+            + HelpExampleCli("sendtokencanceltradesbyprice", "\"3BydPiSLPP3DR5cf726hDQ89fpqWLxPKLR\" TOKEN \"100.0\" DESIRED \"5.0\"")
+            + HelpExampleRpc("sendtokencanceltradesbyprice", "\"3BydPiSLPP3DR5cf726hDQ89fpqWLxPKLR\", TOKEN, \"100.0\", DESIRED, \"5.0\"")
         );
 
     // obtain parameters & info
     std::string fromAddress = ParseAddress(request.params[0]);
-    uint32_t propertyIdForSale = ParsePropertyId(request.params[1]);
+    std::string tokenForSale = ParseText(request.params[1]);
+
+    uint32_t propertyIdForSale = pDbSpInfo->findSPByTicker(tokenForSale);
+    if (propertyIdForSale == 0)
+        throw JSONRPCError(RPC_INTERNAL_ERROR, "Token with this ticker doesn't exists");
+
     int64_t amountForSale = ParseAmount(request.params[2], isPropertyDivisible(propertyIdForSale));
-    uint32_t propertyIdDesired = ParsePropertyId(request.params[3]);
+    std::string tokenDesired = ParseText(request.params[3]);
+
+    uint32_t propertyIdDesired = pDbSpInfo->findSPByTicker(tokenDesired);
+    if (propertyIdDesired == 0)
+        throw JSONRPCError(RPC_INTERNAL_ERROR, "Token with this ticker doesn't exists");
+
     int64_t amountDesired = ParseAmount(request.params[4], isPropertyDivisible(propertyIdDesired));
 
     // perform checks
@@ -1013,31 +1067,39 @@ static UniValue token_sendcanceltradesbyprice(const JSONRPCRequest& request)
     }
 }
 
-static UniValue token_sendcanceltradesbypair(const JSONRPCRequest& request)
+static UniValue sendtokencanceltradesbypair(const JSONRPCRequest& request)
 {
     if (request.fHelp || request.params.size() != 3)
         throw runtime_error(
-            "token_sendcanceltradesbypair \"fromaddress\" propertyidforsale propertiddesired\n"
+            "sendtokencanceltradesbypair \"fromaddress\" tokenforsale tokendesired\n"
 
             "\nCancel all offers on the distributed token exchange with the given currency pair.\n"
 
             "\nArguments:\n"
             "1. fromaddress          (string, required) the address to trade with\n"
-            "2. propertyidforsale    (number, required) the identifier of the tokens listed for sale\n"
-            "3. propertiddesired     (number, required) the identifier of the tokens desired in exchange\n"
+            "2. tokenforsale         (string, required) the identifier of the tokens listed for sale\n"
+            "3. tokendesired         (string, required) the identifier of the tokens desired in exchange\n"
 
             "\nResult:\n"
             "\"hash\"                  (string) the hex-encoded transaction hash\n"
 
             "\nExamples:\n"
-            + HelpExampleCli("token_sendcanceltradesbypair", "\"3BydPiSLPP3DR5cf726hDQ89fpqWLxPKLR\" 1 31")
-            + HelpExampleRpc("token_sendcanceltradesbypair", "\"3BydPiSLPP3DR5cf726hDQ89fpqWLxPKLR\", 1, 31")
+            + HelpExampleCli("sendtokencanceltradesbypair", "\"3BydPiSLPP3DR5cf726hDQ89fpqWLxPKLR\" TOKEN DESIRED")
+            + HelpExampleRpc("sendtokencanceltradesbypair", "\"3BydPiSLPP3DR5cf726hDQ89fpqWLxPKLR\", TOKEN, DESIRED")
         );
 
     // obtain parameters & info
     std::string fromAddress = ParseAddress(request.params[0]);
-    uint32_t propertyIdForSale = ParsePropertyId(request.params[1]);
-    uint32_t propertyIdDesired = ParsePropertyId(request.params[2]);
+    std::string tokenForSale = ParseText(request.params[1]);
+
+    uint32_t propertyIdForSale = pDbSpInfo->findSPByTicker(tokenForSale);
+    if (propertyIdForSale == 0)
+        throw JSONRPCError(RPC_INTERNAL_ERROR, "Token with this ticker doesn't exists");
+
+    std::string tokenDesired = ParseText(request.params[2]);
+    uint32_t propertyIdDesired = pDbSpInfo->findSPByTicker(tokenDesired);
+        if (propertyIdDesired == 0)
+            throw JSONRPCError(RPC_INTERNAL_ERROR, "Token with this ticker doesn't exists");
 
     // perform checks
     RequireExistingProperty(propertyIdForSale);
@@ -1067,11 +1129,11 @@ static UniValue token_sendcanceltradesbypair(const JSONRPCRequest& request)
     }
 }
 
-static UniValue token_sendcancelalltrades(const JSONRPCRequest& request)
+static UniValue sendtokencancelalltrades(const JSONRPCRequest& request)
 {
     if (request.fHelp || request.params.size() != 2)
         throw runtime_error(
-            "token_sendcancelalltrades \"fromaddress\" ecosystem\n"
+            "sendtokencancelalltrades \"fromaddress\" ecosystem\n"
 
             "\nCancel all offers on the distributed token exchange.\n"
 
@@ -1083,8 +1145,8 @@ static UniValue token_sendcancelalltrades(const JSONRPCRequest& request)
             "\"hash\"                  (string) the hex-encoded transaction hash\n"
 
             "\nExamples:\n"
-            + HelpExampleCli("token_sendcancelalltrades", "\"3BydPiSLPP3DR5cf726hDQ89fpqWLxPKLR\" 1")
-            + HelpExampleRpc("token_sendcancelalltrades", "\"3BydPiSLPP3DR5cf726hDQ89fpqWLxPKLR\", 1")
+            + HelpExampleCli("sendtokencancelalltrades", "\"3BydPiSLPP3DR5cf726hDQ89fpqWLxPKLR\" 1")
+            + HelpExampleRpc("sendtokencancelalltrades", "\"3BydPiSLPP3DR5cf726hDQ89fpqWLxPKLR\", 1")
         );
 
     // obtain parameters & info
@@ -1115,31 +1177,35 @@ static UniValue token_sendcancelalltrades(const JSONRPCRequest& request)
     }
 }
 
-static UniValue token_sendchangeissuer(const JSONRPCRequest& request)
+static UniValue sendtokenchangeissuer(const JSONRPCRequest& request)
 {
     if (request.fHelp || request.params.size() != 3)
         throw runtime_error(
-            "token_sendchangeissuer \"fromaddress\" \"toaddress\" propertyid\n"
+            "sendtokenchangeissuer \"fromaddress\" \"toaddress\" ticker\n"
 
             "\nChange the issuer on record of the given tokens.\n"
 
             "\nArguments:\n"
             "1. fromaddress          (string, required) the address associated with the tokens\n"
             "2. toaddress            (string, required) the address to transfer administrative control to\n"
-            "3. propertyid           (number, required) the identifier of the tokens\n"
+            "3. ticker               (string, required) the ticker of token\n"
 
             "\nResult:\n"
             "\"hash\"                  (string) the hex-encoded transaction hash\n"
 
             "\nExamples:\n"
-            + HelpExampleCli("token_sendchangeissuer", "\"1ARjWDkZ7kT9fwjPrjcQyvbXDkEySzKHwu\" \"3HTHRxu3aSDV4deakjC7VmsiUp7c6dfbvs\" 3")
-            + HelpExampleRpc("token_sendchangeissuer", "\"1ARjWDkZ7kT9fwjPrjcQyvbXDkEySzKHwu\", \"3HTHRxu3aSDV4deakjC7VmsiUp7c6dfbvs\", 3")
+            + HelpExampleCli("sendtokenchangeissuer", "\"1ARjWDkZ7kT9fwjPrjcQyvbXDkEySzKHwu\" \"3HTHRxu3aSDV4deakjC7VmsiUp7c6dfbvs\" TOKEN")
+            + HelpExampleRpc("sendtokenchangeissuer", "\"1ARjWDkZ7kT9fwjPrjcQyvbXDkEySzKHwu\", \"3HTHRxu3aSDV4deakjC7VmsiUp7c6dfbvs\", TOKEN")
         );
 
     // obtain parameters & info
     std::string fromAddress = ParseAddress(request.params[0]);
     std::string toAddress = ParseAddress(request.params[1]);
-    uint32_t propertyId = ParsePropertyId(request.params[2]);
+    std::string ticker = ParseText(request.params[2]);
+
+    uint32_t propertyId = pDbSpInfo->findSPByTicker(ticker);
+    if (propertyId == 0)
+        throw JSONRPCError(RPC_INTERNAL_ERROR, "Token with this ticker doesn't exists");
 
     // perform checks
     RequireExistingProperty(propertyId);
@@ -1165,29 +1231,33 @@ static UniValue token_sendchangeissuer(const JSONRPCRequest& request)
     }
 }
 
-static UniValue token_sendenablefreezing(const JSONRPCRequest& request)
+static UniValue sendtokenenablefreezing(const JSONRPCRequest& request)
 {
     if (request.fHelp || request.params.size() != 2)
         throw runtime_error(
-            "token_sendenablefreezing \"fromaddress\" propertyid\n"
+            "sendtokenenablefreezing \"fromaddress\" ticker\n"
 
             "\nEnables address freezing for a centrally managed property.\n"
 
             "\nArguments:\n"
             "1. fromaddress          (string,  required) the issuer of the tokens\n"
-            "2. propertyid           (number,  required) the identifier of the tokens\n"
+            "2. ticker               (string,  required) the ticker of token\n"
 
             "\nResult:\n"
             "\"hash\"                  (string) the hex-encoded transaction hash\n"
 
             "\nExamples:\n"
-            + HelpExampleCli("token_sendenablefreezing", "\"3HTHRxu3aSDV4deakjC7VmsiUp7c6dfbvs\" 3")
-            + HelpExampleRpc("token_sendenablefreezing", "\"3HTHRxu3aSDV4deakjC7VmsiUp7c6dfbvs\", 3")
+            + HelpExampleCli("sendtokenenablefreezing", "\"3HTHRxu3aSDV4deakjC7VmsiUp7c6dfbvs\" TOKEN")
+            + HelpExampleRpc("sendtokenenablefreezing", "\"3HTHRxu3aSDV4deakjC7VmsiUp7c6dfbvs\", TOKEN")
         );
 
     // obtain parameters & info
     std::string fromAddress = ParseAddress(request.params[0]);
-    uint32_t propertyId = ParsePropertyId(request.params[1]);
+    std::string ticker = ParseText(request.params[1]);
+
+    uint32_t propertyId = pDbSpInfo->findSPByTicker(ticker);
+    if (propertyId == 0)
+        throw JSONRPCError(RPC_INTERNAL_ERROR, "Token with this ticker doesn't exists");
 
     // perform checks
     RequireExistingProperty(propertyId);
@@ -1214,30 +1284,34 @@ static UniValue token_sendenablefreezing(const JSONRPCRequest& request)
     }
 }
 
-static UniValue token_senddisablefreezing(const JSONRPCRequest& request)
+static UniValue sendtokendisablefreezing(const JSONRPCRequest& request)
 {
     if (request.fHelp || request.params.size() != 2)
         throw runtime_error(
-            "token_senddisablefreezing \"fromaddress\" propertyid\n"
+            "sendtokendisablefreezing \"fromaddress\" ticker\n"
 
             "\nDisables address freezing for a centrally managed property.\n"
             "\nIMPORTANT NOTE:  Disabling freezing for a property will UNFREEZE all frozen addresses for that property!"
 
             "\nArguments:\n"
             "1. fromaddress          (string,  required) the issuer of the tokens\n"
-            "2. propertyid           (number,  required) the identifier of the tokens\n"
+            "2. ticker               (string,  required) the ticker of token\n"
 
             "\nResult:\n"
             "\"hash\"                  (string) the hex-encoded transaction hash\n"
 
             "\nExamples:\n"
-            + HelpExampleCli("token_senddisablefreezing", "\"3HTHRxu3aSDV4deakjC7VmsiUp7c6dfbvs\" 3")
-            + HelpExampleRpc("token_senddisablefreezing", "\"3HTHRxu3aSDV4deakjC7VmsiUp7c6dfbvs\", 3")
+            + HelpExampleCli("sendtokendisablefreezing", "\"3HTHRxu3aSDV4deakjC7VmsiUp7c6dfbvs\" TOKEN")
+            + HelpExampleRpc("sendtokendisablefreezing", "\"3HTHRxu3aSDV4deakjC7VmsiUp7c6dfbvs\", TOKEN")
         );
 
     // obtain parameters & info
     std::string fromAddress = ParseAddress(request.params[0]);
-    uint32_t propertyId = ParsePropertyId(request.params[1]);
+    std::string ticker = ParseText(request.params[1]);
+
+    uint32_t propertyId = pDbSpInfo->findSPByTicker(ticker);
+    if (propertyId == 0)
+        throw JSONRPCError(RPC_INTERNAL_ERROR, "Token with this ticker doesn't exists");
 
     // perform checks
     RequireExistingProperty(propertyId);
@@ -1268,25 +1342,30 @@ static UniValue sendtokenfreeze(const JSONRPCRequest& request)
 {
     if (request.fHelp || request.params.size() != 4)
         throw runtime_error(
-            "sendtokenfreeze \"fromaddress\" \"toaddress\" propertyid amount \n"
+            "sendtokenfreeze \"fromaddress\" \"toaddress\" ticker amount \n"
             "\nFreeze an address for a centrally managed token.\n"
             "\nNote: Only the issuer may freeze tokens, and only if the token is of the managed type with the freezing option enabled.\n"
             "\nArguments:\n"
             "1. fromaddress          (string, required) the address to send from (must be the issuer of the property)\n"
             "2. toaddress            (string, required) the address to freeze tokens for\n"
-            "3. propertyid           (number, required) the property to freeze tokens for (must be managed type and have freezing option enabled)\n"
+            "3. ticker               (string, required) the ticker of token to freeze for (must be managed type and have freezing option enabled)\n"
             "4. amount               (number, required) the amount of tokens to freeze (note: this is unused - once frozen an address cannot send any transactions for the property)\n"
             "\nResult:\n"
             "\"hash\"                  (string) the hex-encoded transaction hash\n"
             "\nExamples:\n"
-            + HelpExampleCli("sendtokenfreeze", "\"1EXoDusjGwvnjZUyKkxZ4UHEf77z6A5S4P\" \"3HTHRxu3aSDV4deakjC7VmsiUp7c6dfbvs\" 1 0")
-            + HelpExampleRpc("sendtokenfreeze", "\"1EXoDusjGwvnjZUyKkxZ4UHEf77z6A5S4P\", \"3HTHRxu3aSDV4deakjC7VmsiUp7c6dfbvs\", 1, 0")
+            + HelpExampleCli("sendtokenfreeze", "\"1EXoDusjGwvnjZUyKkxZ4UHEf77z6A5S4P\" \"3HTHRxu3aSDV4deakjC7VmsiUp7c6dfbvs\" TOKEN 0")
+            + HelpExampleRpc("sendtokenfreeze", "\"1EXoDusjGwvnjZUyKkxZ4UHEf77z6A5S4P\", \"3HTHRxu3aSDV4deakjC7VmsiUp7c6dfbvs\", TOKEN, 0")
         );
 
     // obtain parameters & info
     std::string fromAddress = ParseAddress(request.params[0]);
     std::string refAddress = ParseAddress(request.params[1]);
-    uint32_t propertyId = ParsePropertyId(request.params[2]);
+    std::string ticker = ParseText(request.params[2]);
+
+    uint32_t propertyId = pDbSpInfo->findSPByTicker(ticker);
+    if (propertyId == 0)
+        throw JSONRPCError(RPC_INTERNAL_ERROR, "Token with this ticker doesn't exists");
+
     int64_t amount = ParseAmount(request.params[3], isPropertyDivisible(propertyId));
 
     // perform checks
@@ -1319,25 +1398,30 @@ static UniValue sendtokenunfreeze(const JSONRPCRequest& request)
 {
     if (request.fHelp || request.params.size() != 4)
         throw runtime_error(
-            "sendtokenunfreeze \"fromaddress\" \"toaddress\" propertyid amount \n"
+            "sendtokenunfreeze \"fromaddress\" \"toaddress\" ticker amount \n"
             "\nUnfreezes an address for a centrally managed token.\n"
             "\nNote: Only the issuer may unfreeze tokens.\n"
             "\nArguments:\n"
             "1. fromaddress          (string, required) the address to send from (must be the issuer of the property)\n"
             "2. toaddress            (string, required) the address to unfreeze tokens for\n"
-            "3. propertyid           (number, required) the property to unfreeze tokens for (must be managed type and have freezing option enabled)\n"
+            "3. ticker               (string, required) the name of token to unfreeze for (must be managed type and have freezing option enabled)\n"
             "4. amount               (number, required) the amount of tokens to unfreeze (note: this is unused - once frozen an address cannot send any transactions for the property)\n"
             "\nResult:\n"
             "\"hash\"                  (string) the hex-encoded transaction hash\n"
             "\nExamples:\n"
-            + HelpExampleCli("sendtokenunfreeze", "\"1EXoDusjGwvnjZUyKkxZ4UHEf77z6A5S4P\" \"3HTHRxu3aSDV4deakjC7VmsiUp7c6dfbvs\" 1 0")
-            + HelpExampleRpc("sendtokenunfreeze", "\"1EXoDusjGwvnjZUyKkxZ4UHEf77z6A5S4P\", \"3HTHRxu3aSDV4deakjC7VmsiUp7c6dfbvs\", 1, 0")
+            + HelpExampleCli("sendtokenunfreeze", "\"1EXoDusjGwvnjZUyKkxZ4UHEf77z6A5S4P\" \"3HTHRxu3aSDV4deakjC7VmsiUp7c6dfbvs\" TOKEN 0")
+            + HelpExampleRpc("sendtokenunfreeze", "\"1EXoDusjGwvnjZUyKkxZ4UHEf77z6A5S4P\", \"3HTHRxu3aSDV4deakjC7VmsiUp7c6dfbvs\", TOKEN, 0")
         );
 
     // obtain parameters & info
     std::string fromAddress = ParseAddress(request.params[0]);
     std::string refAddress = ParseAddress(request.params[1]);
-    uint32_t propertyId = ParsePropertyId(request.params[2]);
+    std::string ticker = ParseText(request.params[2]);
+
+    uint32_t propertyId = pDbSpInfo->findSPByTicker(ticker);
+    if (propertyId == 0)
+        throw JSONRPCError(RPC_INTERNAL_ERROR, "Token with this ticker doesn't exists");
+
     int64_t amount = ParseAmount(request.params[3], isPropertyDivisible(propertyId));
 
     // perform checks
@@ -1529,7 +1613,7 @@ static UniValue trade_MP(const JSONRPCRequest& request)
             values.push_back(request.params[2]); // amountForSale
             values.push_back(request.params[3]); // propertyIdDesired
             values.push_back(request.params[4]); // amountDesired
-            return token_sendtrade(request);
+            return sendtokentrade(request);
         }
         case CMPTransaction::CANCEL_AT_PRICE:
         {
@@ -1538,14 +1622,14 @@ static UniValue trade_MP(const JSONRPCRequest& request)
             values.push_back(request.params[2]); // amountForSale
             values.push_back(request.params[3]); // propertyIdDesired
             values.push_back(request.params[4]); // amountDesired
-            return token_sendcanceltradesbyprice(request);
+            return sendtokencanceltradesbyprice(request);
         }
         case CMPTransaction::CANCEL_ALL_FOR_PAIR:
         {
             values.push_back(request.params[0]); // fromAddress
             values.push_back(request.params[1]); // propertyIdForSale
             values.push_back(request.params[3]); // propertyIdDesired
-            return token_sendcanceltradesbypair(request);
+            return sendtokencanceltradesbypair(request);
         }
         case CMPTransaction::CANCEL_EVERYTHING:
         {
@@ -1560,7 +1644,7 @@ static UniValue trade_MP(const JSONRPCRequest& request)
             }
             values.push_back(request.params[0]); // fromAddress
             values.push_back(ecosystem);
-            return token_sendcancelalltrades(request);
+            return sendtokencancelalltrades(request);
         }
     }
 
@@ -1573,30 +1657,30 @@ static const CRPCCommand commands[] =
 #ifdef ENABLE_WALLET
     // { "tokens (transaction creation)", "token_sendrawtx",               &token_sendrawtx,               false },
     { "tokens (transaction creation)", "sendtoken",                    &sendtoken,                    false },
-    // { "tokens (transaction creation)", "token_senddexsell",             &token_senddexsell,             false },
-    // { "tokens (transaction creation)", "token_senddexaccept",           &token_senddexaccept,           false },
-    // { "tokens (transaction creation)", "token_sendissuancecrowdsale",   &token_sendissuancecrowdsale,   false },
+    // { "tokens (transaction creation)", "sendtokendexsell",             &sendtokendexsell,             false },
+    // { "tokens (transaction creation)", "sendtokendexaccept",           &sendtokendexaccept,           false },
+    { "tokens (transaction creation)", "sendtokenissuancecrowdsale",   &sendtokenissuancecrowdsale,   false },
     { "tokens (transaction creation)", "sendtokenissuancefixed",       &sendtokenissuancefixed,       false },
     { "tokens (transaction creation)", "sendtokenissuancemanaged",     &sendtokenissuancemanaged,     false },
-    // { "tokens (transaction creation)", "token_sendtrade",               &token_sendtrade,               false },
-    // { "tokens (transaction creation)", "token_sendcanceltradesbyprice", &token_sendcanceltradesbyprice, false },
-    // { "tokens (transaction creation)", "token_sendcanceltradesbypair",  &token_sendcanceltradesbypair,  false },
-    // { "tokens (transaction creation)", "token_sendcancelalltrades",     &token_sendcancelalltrades,     false },
+    { "tokens (transaction creation)", "sendtokentrade",               &sendtokentrade,               false },
+    { "tokens (transaction creation)", "sendtokencanceltradesbyprice", &sendtokencanceltradesbyprice, false },
+    { "tokens (transaction creation)", "sendtokencanceltradesbypair",  &sendtokencanceltradesbypair,  false },
+    { "tokens (transaction creation)", "sendtokencancelalltrades",     &sendtokencancelalltrades,     false },
     // { "tokens (transaction creation)", "token_sendsto",                 &token_sendsto,                 false },
-    // { "tokens (transaction creation)", "token_sendgrant",               &token_sendgrant,               false },
-    // { "tokens (transaction creation)", "token_sendrevoke",              &token_sendrevoke,              false },
-    // { "tokens (transaction creation)", "token_sendclosecrowdsale",      &token_sendclosecrowdsale,      false },
-    // { "tokens (transaction creation)", "token_sendchangeissuer",        &token_sendchangeissuer,        false },
-    { "tokens (transaction creation)", "sendalltokens",                 &sendalltokens,               false },
-    // { "tokens (transaction creation)", "token_sendenablefreezing",      &token_sendenablefreezing,      false },
-    // { "tokens (transaction creation)", "token_senddisablefreezing",     &token_senddisablefreezing,     false },
-    { "tokens (transaction creation)", "sendtokenfreeze",               &sendtokenfreeze,             false },
-    { "tokens (transaction creation)", "sendtokenunfreeze",             &sendtokenunfreeze,           false },
+    { "tokens (transaction creation)", "sendtokengrant",               &sendtokengrant,               false },
+    { "tokens (transaction creation)", "sendtokenrevoke",              &sendtokenrevoke,              false },
+    { "tokens (transaction creation)", "sendtokenclosecrowdsale",      &sendtokenclosecrowdsale,      false },
+    { "tokens (transaction creation)", "sendtokenchangeissuer",        &sendtokenchangeissuer,        false },
+    { "tokens (transaction creation)", "sendalltokens",                &sendalltokens,                false },
+    { "tokens (transaction creation)", "sendtokenenablefreezing",      &sendtokenenablefreezing,      false },
+    { "tokens (transaction creation)", "sendtokendisablefreezing",     &sendtokendisablefreezing,     false },
+    { "tokens (transaction creation)", "sendtokenfreeze",              &sendtokenfreeze,              false },
+    { "tokens (transaction creation)", "sendtokenunfreeze",            &sendtokenunfreeze,            false },
     // { "hidden",                            "token_senddeactivation",        &token_senddeactivation,        true  },
     // { "hidden",                            "token_sendactivation",          &token_sendactivation,          false },
     // { "hidden",                            "token_sendalert",               &token_sendalert,               true  },
-    // { "tokens (transaction creation)", "token_funded_send",             &token_funded_send,             false },
-    // { "tokens (transaction creation)", "token_funded_sendall",          &token_funded_sendall,          false },
+    { "tokens (transaction creation)", "sendtokenfunded",             &sendtokenfunded,             false },
+    { "tokens (transaction creation)", "sendtokenfundedall",          &sendtokenfundedall,          false },
 #endif
 };
 

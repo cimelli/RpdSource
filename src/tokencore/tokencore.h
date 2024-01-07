@@ -57,7 +57,7 @@ enum TransactionType {
   TOKEN_TYPE_RATELIMITED_MARK           = 12,
   TOKEN_TYPE_AUTOMATIC_DISPENSARY       = 15,
   TOKEN_TYPE_TRADE_OFFER                = 20,
-  TOKEN_TYPE_ACCEPT_OFFER_BTC           = 22,
+  TOKEN_TYPE_ACCEPT_OFFER_RPD           = 22,
   TOKEN_TYPE_METADEX_TRADE              = 25,
   TOKEN_TYPE_METADEX_CANCEL_PRICE       = 26,
   TOKEN_TYPE_METADEX_CANCEL_PAIR        = 27,
@@ -106,7 +106,7 @@ enum TransactionType {
 #define PKT_ERROR_TOKENS      (-82000)
 #define PKT_ERROR_SEND_ALL    (-83000)
 
-#define TOKEN_PROPERTY_BTC   0
+#define TOKEN_PROPERTY_RPD   0
 #define TOKEN_PROPERTY_MSC   1
 #define TOKEN_PROPERTY_TMSC  2
 
@@ -135,6 +135,11 @@ extern RecursiveMutex cs_tally;
 extern std::map<uint32_t, int64_t> global_balance_money;
 //! Reserved balances of wallet propertiess
 extern std::map<uint32_t, int64_t> global_balance_reserved;
+//! Frozen balances of wallet propertiess
+extern std::map<uint32_t, int64_t> global_balance_frozen;
+
+extern std::map<uint32_t, std::list<std::string>> global_token_addresses;
+
 //! Vector containing a list of properties relative to the wallet
 extern std::set<uint32_t> global_wallet_property_list;
 
@@ -220,5 +225,7 @@ void ClearFreezeState();
 void PrintFreezeState();
 
 }
+
+std::string GetUsernameAddress(std::string username);
 
 #endif // TOKENCORE_TOKENCORE_H

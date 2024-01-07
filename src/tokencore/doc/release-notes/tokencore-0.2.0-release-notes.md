@@ -95,7 +95,7 @@ It is also worth noting that the fee estimation algorithms were updated, and thu
 API changes
 -----------
 
-The behavior of the RPC [token_gettradehistoryforaddress](https://github.com/TokenLayer/tokencore/blob/master/src/tokencore/doc/rpc-api.md#token_gettradehistoryforaddress) was amended to return newest transactions first instead of oldest.
+The behavior of the RPC [gettokentradehistoryforaddress](https://github.com/TokenLayer/tokencore/blob/master/src/tokencore/doc/rpc-api.md#gettokentradehistoryforaddress) was amended to return newest transactions first instead of oldest.
 
 New project versioning scheme
 -----------------------------
@@ -207,7 +207,7 @@ Various smaller improvements were added Token Core 0.2.0, such as:
 - Fix two Token Core related build warnings
 - Automatically remove stale pending transactions
 - Relax data type checks of token_createrawtx_change
-- Fix possible lock contention in token_getactivedexsells
+- Fix possible lock contention in gettokenactivedexsells
 - Remove managed property check in Change Issuer RPC
 - Hardcode activations up to block 438500
 - Fix a number of bugs in the QT UI
@@ -233,10 +233,10 @@ The following list includes relevant pull requests merged into this release:
 - #458 Add checkpoint for block 450,000
 - #457 Add seed blocks for 440,000 to 450,000
 - #456 Provide easy access to specific consensus hashes when parsing
-- #460 Show newest transactions for token_gettradehistoryforaddress
+- #460 Show newest transactions for gettokentradehistoryforaddress
 - #463 Automatically remove stale pending transactions
 - #464 Relax data type checks of token_createrawtx_change
-- #465 Fix possible lock contention in token_getactivedexsells
+- #465 Fix possible lock contention in gettokenactivedexsells
 - #466 Add consensus hash for block 460,000
 - #467 Add seed blocks for 450,000 to 460,000
 - #468 Remove managed property check in Change Issuer RPC

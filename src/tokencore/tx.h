@@ -48,13 +48,13 @@ private:
     unsigned int type;
     unsigned short version; // = MP_TX_PKT_V0;
 
-    // SimpleSend, SendToOwners, TradeOffer, MetaDEx, AcceptOfferBTC,
+    // SimpleSend, SendToOwners, TradeOffer, MetaDEx, AcceptOfferRPD,
     // CreatePropertyFixed, CreatePropertyVariable, GrantTokens, RevokeTokens
     uint64_t nValue;
     uint64_t nNewValue;
     CAmount nDonation;
 
-    // SimpleSend, SendToOwners, TradeOffer, MetaDEx, AcceptOfferBTC,
+    // SimpleSend, SendToOwners, TradeOffer, MetaDEx, AcceptOfferRPD,
     // CreatePropertyFixed, CreatePropertyVariable, CloseCrowdsale,
     // CreatePropertyMananged, GrantTokens, RevokeTokens, ChangeIssuer
     unsigned int property;
@@ -71,6 +71,7 @@ private:
     char category[SP_STRING_FIELD_LEN];
     char subcategory[SP_STRING_FIELD_LEN];
     char name[SP_STRING_FIELD_LEN];
+    char ticker[SP_STRING_FIELD_LEN];
     char url[SP_STRING_FIELD_LEN];
     char data[SP_STRING_FIELD_LEN];
     uint64_t deadline;
@@ -116,7 +117,7 @@ private:
     bool interpret_MetaDExCancelPrice();
     bool interpret_MetaDExCancelPair();
     bool interpret_MetaDExCancelEcosystem();
-    bool interpret_AcceptOfferBTC();
+    bool interpret_AcceptOfferRPD();
     bool interpret_CreatePropertyFixed();
     bool interpret_CreatePropertyVariable();
     bool interpret_CloseCrowdsale();
@@ -139,7 +140,7 @@ private:
     int logicMath_SendToOwners();
     int logicMath_SendAll();
     int logicMath_TradeOffer();
-    int logicMath_AcceptOffer_BTC();
+    int logicMath_AcceptOffer_RPD();
     int logicMath_MetaDExTrade();
     int logicMath_MetaDExCancelPrice();
     int logicMath_MetaDExCancelPair();
@@ -313,7 +314,8 @@ public:
     }
 };
 
-bool IsTokenNameValid(const std::string& name);
+bool IsTokenTickerValid(const std::string& name);
+bool IsUsernameValid(const std::string& username);
 bool IsTokenIPFSValid(const std::string& string);
 
 #endif // TOKENCORE_TX_H

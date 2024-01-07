@@ -14,28 +14,28 @@ All available commands can be listed with `"help"`, and information about a spec
 
 - [Transaction creation](#transaction-creation)
   - [token_send](#token_send)
-  - [token_senddexsell](#token_senddexsell)
-  - [token_senddexaccept](#token_senddexaccept)
-  - [token_sendissuancecrowdsale](#token_sendissuancecrowdsale)
+  - [sendtokendexsell](#sendtokendexsell)
+  - [sendtokendexaccept](#sendtokendexaccept)
+  - [sendtokenissuancecrowdsale](#sendtokenissuancecrowdsale)
   - [token_sendissuancefixed](#token_sendissuancefixed)
   - [token_sendissuancemanaged](#token_sendissuancemanaged)
   - [token_sendsto](#token_sendsto)
-  - [token_sendgrant](#token_sendgrant)
+  - [sendtokengrant](#sendtokengrant)
   - [token_sendrevoke](#token_sendrevoke)
-  - [token_sendclosecrowdsale](#token_sendclosecrowdsale)
-  - [token_sendtrade](#token_sendtrade)
-  - [token_sendcanceltradesbyprice](#token_sendcanceltradesbyprice)
-  - [token_sendcanceltradesbypair](#token_sendcanceltradesbypair)
-  - [token_sendcancelalltrades](#token_sendcancelalltrades)
-  - [token_sendchangeissuer](#token_sendchangeissuer)
+  - [sendtokenclosecrowdsale](#sendtokenclosecrowdsale)
+  - [sendtokentrade](#sendtokentrade)
+  - [sendtokencanceltradesbyprice](#sendtokencanceltradesbyprice)
+  - [sendtokencanceltradesbypair](#sendtokencanceltradesbypair)
+  - [sendtokencancelalltrades](#sendtokencancelalltrades)
+  - [sendtokenchangeissuer](#sendtokenchangeissuer)
   - [token_sendall](#token_sendall)
-  - [token_sendenablefreezing](#token_sendenablefreezing)
-  - [token_senddisablefreezing](#token_senddisablefreezing)
+  - [sendtokenenablefreezing](#sendtokenenablefreezing)
+  - [sendtokendisablefreezing](#sendtokendisablefreezing)
   - [token_sendfreeze](#token_sendfreeze)
   - [token_sendunfreeze](#token_sendunfreeze)
-  - [token_sendrawtx](#token_sendrawtx)
-  - [token_funded_send](#token_funded_send)
-  - [token_funded_sendall](#token_funded_sendall)
+  - [sendtokenrawtx](#sendtokenrawtx)
+  - [sendtokenfunded](#sendtokenfunded)
+  - [sendtokenfundedall](#sendtokenfundedall)
 - [Data retrieval](#data-retrieval)
   - [token_getinfo](#token_getinfo)
   - [token_getbalance](#token_getbalance)
@@ -48,17 +48,17 @@ All available commands can be listed with `"help"`, and information about a spec
   - [token_listblocktransactions](#token_listblocktransactions)
   - [token_listblockstransactions](#token_listblockstransactions)
   - [token_listpendingtransactions](#token_listpendingtransactions)
-  - [token_getactivedexsells](#token_getactivedexsells)
+  - [gettokenactivedexsells](#gettokenactivedexsells)
   - [token_listproperties](#token_listproperties)
   - [token_getproperty](#token_getproperty)
-  - [token_getactivecrowdsales](#token_getactivecrowdsales)
-  - [token_getcrowdsale](#token_getcrowdsale)
-  - [token_getgrants](#token_getgrants)
+  - [gettokenactivecrowdsales](#gettokenactivecrowdsales)
+  - [gettokencrowdsale](#gettokencrowdsale)
+  - [gettokengrants](#gettokengrants)
   - [token_getsto](#token_getsto)
-  - [token_gettrade](#token_gettrade)
-  - [token_getorderbook](#token_getorderbook)
-  - [token_gettradehistoryforpair](#token_gettradehistoryforpair)
-  - [token_gettradehistoryforaddress](#token_gettradehistoryforaddress)
+  - [gettokentrade](#gettokentrade)
+  - [gettokenorderbook](#gettokenorderbook)
+  - [gettokentradehistoryforpair](#gettokentradehistoryforpair)
+  - [gettokentradehistoryforaddress](#gettokentradehistoryforaddress)
   - [token_getactivations](#token_getactivations)
   - [token_getpayload](#token_getpayload)
   - [token_getseedblocks](#token_getseedblocks)
@@ -136,9 +136,9 @@ $ tokencore-cli "token_send" "3M9qvHKtgARhqcMtM5cRT9VaiDJ5PSfQGY" "37FaKponF7zqo
 
 ---
 
-### token_senddexsell
+### sendtokendexsell
 
-Place, update or cancel a sell offer on the traditional distributed TOKEN/BTC exchange.
+Place, update or cancel a sell offer on the traditional distributed TOKEN/RPD exchange.
 
 **Arguments:**
 
@@ -160,12 +160,12 @@ Place, update or cancel a sell offer on the traditional distributed TOKEN/BTC ex
 **Example:**
 
 ```bash
-$ tokencore-cli "token_senddexsell" "37FaKponF7zqoMLUjEiko25pDiuVH5YLEa" 1 "1.5" "0.75" 25 "0.0005" 1
+$ tokencore-cli "sendtokendexsell" "37FaKponF7zqoMLUjEiko25pDiuVH5YLEa" 1 "1.5" "0.75" 25 "0.0005" 1
 ```
 
 ---
 
-### token_senddexaccept
+### sendtokendexaccept
 
 Create and broadcast an accept offer for the specified token and amount.
 
@@ -187,13 +187,13 @@ Create and broadcast an accept offer for the specified token and amount.
 **Example:**
 
 ```bash
-$ tokencore-cli "token_senddexaccept" \
+$ tokencore-cli "sendtokendexaccept" \
     "35URq1NN3xL6GeRKUP6vzaQVcxoJiiJKd8" "37FaKponF7zqoMLUjEiko25pDiuVH5YLEa" 1 "15.0"
 ```
 
 ---
 
-### token_sendissuancecrowdsale
+### sendtokenissuancecrowdsale
 
 Create new tokens as crowdsale.
 
@@ -224,7 +224,7 @@ Create new tokens as crowdsale.
 **Example:**
 
 ```bash
-$ tokencore-cli "token_sendissuancecrowdsale" \
+$ tokencore-cli "sendtokenissuancecrowdsale" \
     "3JYd75REX3HXn1vAU83YuGfmiPXW7BpYXo" 2 1 0 "Companies" "Bitcoin Mining" \
     "Quantum Miner" "" "" 2 "100" 1483228800 30 2
 ```
@@ -325,7 +325,7 @@ $ tokencore-cli "token_sendsto" \
 
 ---
 
-### token_sendgrant
+### sendtokengrant
 
 Issue or grant new units of managed tokens.
 
@@ -347,7 +347,7 @@ Issue or grant new units of managed tokens.
 **Example:**
 
 ```bash
-$ tokencore-cli "token_sendgrant" "3HsJvhr9qzgRe3ss97b1QHs38rmaLExLcH" "" 51 "7000"
+$ tokencore-cli "sendtokengrant" "3HsJvhr9qzgRe3ss97b1QHs38rmaLExLcH" "" 51 "7000"
 ```
 
 ---
@@ -378,7 +378,7 @@ $ tokencore-cli "sendtokenrevoke" "RpAVz7YHGFjVrr29iiSmezkvd3SzBbuK7p" "" 51 "10
 
 ---
 
-### token_sendclosecrowdsale
+### sendtokenclosecrowdsale
 
 Manually close a crowdsale.
 
@@ -397,12 +397,12 @@ Manually close a crowdsale.
 **Example:**
 
 ```bash
-$ tokencore-cli "token_sendclosecrowdsale" "3JYd75REX3HXn1vAU83YuGfmiPXW7BpYXo" 70
+$ tokencore-cli "sendtokenclosecrowdsale" "3JYd75REX3HXn1vAU83YuGfmiPXW7BpYXo" 70
 ```
 
 ---
 
-### token_sendtrade
+### sendtokentrade
 
 Place a trade offer on the distributed token exchange.
 
@@ -424,12 +424,12 @@ Place a trade offer on the distributed token exchange.
 **Example:**
 
 ```bash
-$ tokencore-cli "token_sendtrade" "3BydPiSLPP3DR5cf726hDQ89fpqWLxPKLR" 31 "250.0" 1 "10.0"
+$ tokencore-cli "sendtokentrade" "3BydPiSLPP3DR5cf726hDQ89fpqWLxPKLR" 31 "250.0" 1 "10.0"
 ```
 
 ---
 
-### token_sendcanceltradesbyprice
+### sendtokencanceltradesbyprice
 
 Cancel offers on the distributed token exchange with the specified price.
 
@@ -451,12 +451,12 @@ Cancel offers on the distributed token exchange with the specified price.
 **Example:**
 
 ```bash
-$ tokencore-cli "token_sendcanceltradesbyprice" "3BydPiSLPP3DR5cf726hDQ89fpqWLxPKLR" 31 "100.0" 1 "5.0"
+$ tokencore-cli "sendtokencanceltradesbyprice" "3BydPiSLPP3DR5cf726hDQ89fpqWLxPKLR" 31 "100.0" 1 "5.0"
 ```
 
 ---
 
-### token_sendcanceltradesbypair
+### sendtokencanceltradesbypair
 
 Cancel all offers on the distributed token exchange with the given currency pair.
 
@@ -476,12 +476,12 @@ Cancel all offers on the distributed token exchange with the given currency pair
 **Example:**
 
 ```bash
-$ tokencore-cli "token_sendcanceltradesbypair" "3BydPiSLPP3DR5cf726hDQ89fpqWLxPKLR" 1 31
+$ tokencore-cli "sendtokencanceltradesbypair" "3BydPiSLPP3DR5cf726hDQ89fpqWLxPKLR" 1 31
 ```
 
 ---
 
-### token_sendcancelalltrades
+### sendtokencancelalltrades
 
 Cancel all offers on the distributed token exchange.
 
@@ -500,12 +500,12 @@ Cancel all offers on the distributed token exchange.
 **Example:**
 
 ```bash
-$ tokencore-cli "token_sendcancelalltrades" "3BydPiSLPP3DR5cf726hDQ89fpqWLxPKLR" 1
+$ tokencore-cli "sendtokencancelalltrades" "3BydPiSLPP3DR5cf726hDQ89fpqWLxPKLR" 1
 ```
 
 ---
 
-### token_sendchangeissuer
+### sendtokenchangeissuer
 
 Change the issuer on record of the given tokens.
 
@@ -525,7 +525,7 @@ Change the issuer on record of the given tokens.
 **Example:**
 
 ```bash
-$ tokencore-cli "token_sendchangeissuer" \
+$ tokencore-cli "sendtokenchangeissuer" \
     "1ARjWDkZ7kT9fwjPrjcQyvbXDkEySzKHwu" "3HTHRxu3aSDV4deakjC7VmsiUp7c6dfbvs" 3
 ```
 
@@ -558,7 +558,7 @@ $ tokencore-cli "token_sendall" "3M9qvHKtgARhqcMtM5cRT9VaiDJ5PSfQGY" "37FaKponF7
 
 ---
 
-### token_sendenablefreezing
+### sendtokenenablefreezing
 
 Enables address freezing for a centrally managed property.
 
@@ -577,12 +577,12 @@ Enables address freezing for a centrally managed property.
 **Example:**
 
 ```bash
-$ tokencore-cli "token_sendenablefreezing" "3M9qvHKtgARhqcMtM5cRT9VaiDJ5PSfQGY" 2
+$ tokencore-cli "sendtokenenablefreezing" "3M9qvHKtgARhqcMtM5cRT9VaiDJ5PSfQGY" 2
 ```
 
 ---
 
-### token_senddisablefreezing
+### sendtokendisablefreezing
 
 Disables address freezing for a centrally managed property.
 
@@ -603,7 +603,7 @@ IMPORTANT NOTE:  Disabling freezing for a property will UNFREEZE all frozen addr
 **Example:**
 
 ```bash
-$ tokencore-cli "token_senddisablefreezing" "3M9qvHKtgARhqcMtM5cRT9VaiDJ5PSfQGY" 2
+$ tokencore-cli "sendtokendisablefreezing" "3M9qvHKtgARhqcMtM5cRT9VaiDJ5PSfQGY" 2
 ```
 
 ---
@@ -693,7 +693,7 @@ $ tokencore-cli "token_sendrawtx" \
 
 ---
 
-### token_funded_send
+### sendtokenfunded
 
 Creates and sends a funded simple send transaction.
 
@@ -717,14 +717,14 @@ All bitcoins from the sender are consumed and if there are bitcoins missing, the
 **Example:**
 
 ```bash
-$ tokencore-cli "token_funded_send" "1DFa5bT6KMEr6ta29QJouainsjaNBsJQhH" \
+$ tokencore-cli "sendtokenfunded" "1DFa5bT6KMEr6ta29QJouainsjaNBsJQhH" \
     "15cWrfuvMxyxGst2FisrQcvcpF48x6sXoH" 1 "100.0" \
     "15Jhzz4omEXEyFKbdcccJwuVPea5LqsKM1"
 ```
 
 ---
 
-### token_funded_sendall
+### sendtokenfundedall
 
 Creates and sends a transaction that transfers all available tokens in the given ecosystem to the recipient.
 
@@ -747,7 +747,7 @@ All bitcoins from the sender are consumed and if there are bitcoins missing, the
 **Example:**
 
 ```bash
-$ tokencore-cli "token_funded_sendall" "1DFa5bT6KMEr6ta29QJouainsjaNBsJQhH" \
+$ tokencore-cli "sendtokenfundedall" "1DFa5bT6KMEr6ta29QJouainsjaNBsJQhH" \
     "15cWrfuvMxyxGst2FisrQcvcpF48x6sXoH" 1 "15Jhzz4omEXEyFKbdcccJwuVPea5LqsKM1"
 ```
 
@@ -1135,7 +1135,7 @@ $ tokencore-cli "token_listpendingtransactions"
 
 ---
 
-### token_getactivedexsells
+### gettokenactivedexsells
 
 Returns currently active offers on the distributed exchange.
 
@@ -1154,7 +1154,7 @@ Returns currently active offers on the distributed exchange.
     "seller" : "address",              // (string) the Bitcoin address of the seller
     "amountavailable" : "n.nnnnnnnn",  // (string) the number of tokens still listed for sale and currently available
     "bitcoindesired" : "n.nnnnnnnn",   // (string) the number of bitcoins desired in exchange
-    "unitprice" : "n.nnnnnnnn" ,       // (string) the unit price (BTC/token)
+    "unitprice" : "n.nnnnnnnn" ,       // (string) the unit price (RPD/token)
     "timelimit" : nn,                  // (number) the time limit in blocks a buyer has to pay following a successful accept
     "minimumfee" : "n.nnnnnnnn",       // (string) the minimum mining fee a buyer has to pay to accept this offer
     "amountaccepted" : "n.nnnnnnnn",   // (string) the number of tokens currently reserved for pending "accept" orders
@@ -1176,7 +1176,7 @@ Returns currently active offers on the distributed exchange.
 **Example:**
 
 ```bash
-$ tokencore-cli "token_getactivedexsells"
+$ tokencore-cli "gettokenactivedexsells"
 ```
 
 ---
@@ -1250,7 +1250,7 @@ $ tokencore-cli "token_getproperty" 3
 
 ---
 
-### token_getactivecrowdsales
+### gettokenactivecrowdsales
 
 Lists currently active crowdsales.
 
@@ -1279,12 +1279,12 @@ Lists currently active crowdsales.
 **Example:**
 
 ```bash
-$ tokencore-cli "token_getactivecrowdsales"
+$ tokencore-cli "gettokenactivecrowdsales"
 ```
 
 ---
 
-### token_getcrowdsale
+### gettokencrowdsale
 
 Returns information about a crowdsale.
 
@@ -1331,12 +1331,12 @@ Returns information about a crowdsale.
 **Example:**
 
 ```bash
-$ tokencore-cli "token_getcrowdsale" 3 true
+$ tokencore-cli "gettokencrowdsale" 3 true
 ```
 
 ---
 
-### token_getgrants
+### gettokengrants
 
 Returns information about granted and revoked units of managed tokens.
 
@@ -1375,7 +1375,7 @@ Returns information about granted and revoked units of managed tokens.
 **Example:**
 
 ```bash
-$ tokencore-cli "token_getgrants" 31
+$ tokencore-cli "gettokengrants" 31
 ```
 
 ---
@@ -1427,7 +1427,7 @@ $ tokencore-cli "token_getsto" "1075db55d416d3ca199f55b6084e2115b9345e16c5cf302f
 
 ---
 
-### token_gettrade
+### gettokentrade
 
 Get detailed information and trade matches for orders on the distributed token exchange.
 
@@ -1476,12 +1476,12 @@ Get detailed information and trade matches for orders on the distributed token e
 **Example:**
 
 ```bash
-$ tokencore-cli "token_gettrade" "1075db55d416d3ca199f55b6084e2115b9345e16c5cf302fc80e9d5fbf5d48d"
+$ tokencore-cli "gettokentrade" "1075db55d416d3ca199f55b6084e2115b9345e16c5cf302fc80e9d5fbf5d48d"
 ```
 
 ---
 
-### token_getorderbook
+### gettokenorderbook
 
 List active offers on the distributed token exchange.
 
@@ -1518,12 +1518,12 @@ List active offers on the distributed token exchange.
 **Example:**
 
 ```bash
-$ tokencore-cli "token_getorderbook" 2
+$ tokencore-cli "gettokenorderbook" 2
 ```
 
 ---
 
-### token_gettradehistoryforpair
+### gettokentradehistoryforpair
 
 Retrieves the history of trades on the distributed token exchange for the specified market.
 
@@ -1556,12 +1556,12 @@ Retrieves the history of trades on the distributed token exchange for the specif
 **Example:**
 
 ```bash
-$ tokencore-cli "token_gettradehistoryforpair" 1 12 500
+$ tokencore-cli "gettokentradehistoryforpair" 1 12 500
 ```
 
 ---
 
-### token_gettradehistoryforaddress
+### gettokentradehistoryforaddress
 
 Retrieves the history of orders on the distributed exchange for the supplied address.
 
@@ -1615,7 +1615,7 @@ Retrieves the history of orders on the distributed exchange for the supplied add
 **Example:**
 
 ```bash
-$ tokencore-cli "token_gettradehistoryforaddress" "1MCHESTptvd2LnNp7wmr2sGTpRomteAkq8"
+$ tokencore-cli "gettokentradehistoryforaddress" "1MCHESTptvd2LnNp7wmr2sGTpRomteAkq8"
 ```
 
 ---
@@ -2031,7 +2031,7 @@ $ tokencore-cli "token_createpayload_sendall" 2
 
 ### token_createpayload_dexsell
 
-Create a payload to place, update or cancel a sell offer on the traditional distributed TOKEN/BTC exchange.
+Create a payload to place, update or cancel a sell offer on the traditional distributed TOKEN/RPD exchange.
 
 **Arguments:**
 
@@ -2731,10 +2731,10 @@ The following calls are replaced in Token Core 0.0.10, and queries with the old 
 - `gettransaction_MP` by `token_gettransaction`
 - `listtransactions_MP` by `token_listtransactions`
 - `listblocktransactions_MP` by `token_listblocktransactions`
-- `getactivedexsells_MP` by `token_getactivedexsells`
+- `getactivedexsells_MP` by `gettokenactivedexsells`
 - `listproperties_MP` by `token_listproperties`
 - `getproperty_MP` by `token_getproperty`
-- `getactivecrowdsales_MP` by `token_getactivecrowdsales`
-- `getcrowdsale_MP` by `token_getcrowdsale`
-- `getgrants_MP` by `token_getgrants`
+- `getactivecrowdsales_MP` by `gettokenactivecrowdsales`
+- `getcrowdsale_MP` by `gettokencrowdsale`
+- `getgrants_MP` by `gettokengrants`
 - `getsto_MP` by `token_getsto` or `token_gettransaction`
