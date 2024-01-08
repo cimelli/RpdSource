@@ -35,9 +35,9 @@ void TxRow::setConfirmStatus(bool isConfirm)
 void TxRow::updateStatus(bool isLightTheme, bool isHover, bool isSelected)
 {
     if (isLightTheme)
-        ui->lblDivisory->setStyleSheet("background-color:#bababa");
+        ui->lblDivisory->setStyleSheet("background-color:#3c3c3b");
     else
-        ui->lblDivisory->setStyleSheet("background-color:#40ffffff");
+        ui->lblDivisory->setStyleSheet("background-color:#50ff5533");
 }
 
 void TxRow::setDate(QDateTime date)
@@ -119,9 +119,9 @@ void TxRow::setType(bool isLightTheme, int type, bool isConfirmed)
             break;
     }
 
-    if (!isLightTheme && !sameIcon){
-        path += "-dark";
-    }
+    //if (!isLightTheme && !sameIcon){
+        // path += "-dark";
+    //}
 
     if (!isConfirmed){
         css = "text-list-amount-unconfirmed";

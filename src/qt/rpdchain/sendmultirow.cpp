@@ -42,11 +42,14 @@ SendMultiRow::SendMultiRow(PWidget *parent) :
     iconNumber->raise();
 
     setCssProperty(iconNumber, "ic-multi-number");
-    iconNumber->setText("1");
-    iconNumber->setVisible(false);
     QSize size = QSize(24, 24);
     iconNumber->setMinimumSize(size);
     iconNumber->setMaximumSize(size);
+    iconNumber->setText("1");
+    iconNumber->setVisible(false);
+
+    // Add the QLabel to the QStackedWidget
+    ui->stackedAddress->addWidget(iconNumber);
 
     int posIconX = 0;
     int posIconY = 14;

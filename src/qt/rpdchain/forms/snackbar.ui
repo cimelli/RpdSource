@@ -69,9 +69,7 @@
       <item alignment="Qt::AlignHCenter|Qt::AlignVCenter">
        <widget class="QLabel" name="label">
         <property name="styleSheet">
-         <string notr="true">padding-left:45px;
-font-size: 15px;
-color:white;</string>
+            <string notr="true">padding-left:45px; font-size: 20px; color:#3c3c3b;</string>
         </property>
         <property name="text">
          <string>Contact Stored</string>

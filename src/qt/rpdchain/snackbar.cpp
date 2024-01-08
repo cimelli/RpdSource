@@ -26,7 +26,7 @@ SnackBar::SnackBar(RPDCHAINGUI* _window, QWidget *parent) :
         connect(window, &RPDCHAINGUI::windowResizeEvent, this, &SnackBar::windowResizeEvent);
     else {
         ui->horizontalLayout->setContentsMargins(0,0,0,0);
-        ui->label->setStyleSheet("font-size: 15px; color:white;");
+        ui->label->setStyleSheet("font-size: 20px; color: #3c3c3b;");
     }
 }
 

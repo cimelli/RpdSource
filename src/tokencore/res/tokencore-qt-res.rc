@@ -1,9 +1,9 @@
 #include <windows.h>                // needed for VERSIONINFO
 #include "../version.h"             // Token Core version information
-#include "../../clientversion.h"    // Bitcoin Core version information
+#include "../../clientversion.h"    // RPDCHAIN Core version information
 
-IDI_ICON1 ICON DISCARDABLE "../../qt/res/icons/bitcoin.ico"
-IDI_ICON2 ICON DISCARDABLE "../../qt/res/icons/bitcoin_testnet.ico"
+IDI_ICON1 ICON DISCARDABLE "../../qt/res/icons/rpdchain.ico"
+IDI_ICON2 ICON DISCARDABLE "../../qt/res/icons/rpdchain_testnet.ico"
 
 #define VER_PRODUCTVERSION     TOKENCORE_VERSION_MAJOR,TOKENCORE_VERSION_MINOR,TOKENCORE_VERSION_PATCH
 #define VER_PRODUCTVERSION_STR STRINGIZE(TOKENCORE_VERSION_MAJOR) "." STRINGIZE(TOKENCORE_VERSION_MINOR) "." STRINGIZE(TOKENCORE_VERSION_PATCH)
@@ -20,8 +20,8 @@ BEGIN
     BEGIN
         BLOCK "040904E4" // U.S. English - multilingual (hex)
         BEGIN
-            VALUE "CompanyName",        "Token Foundation"
-            VALUE "FileDescription",    "Token Core (OSS GUI client for Bitcoin and the Token Layer)"
+            VALUE "CompanyName",        "RPD Foundation"
+            VALUE "FileDescription",    "Token Core (OSS GUI client for RPDCHAIN and the Token Layer)"
             VALUE "FileVersion",        VER_FILEVERSION_STR
             VALUE "InternalName",       "tokencore-qt"
             VALUE "LegalCopyright",     COPYRIGHT_STR

@@ -114,11 +114,11 @@ QPixmap encodeToQr(QString str, QString& errorStr, QColor qrColor)
                 return QPixmap();
             }
             QImage myImage = QImage(code->width + 8, code->width + 8, QImage::Format_RGB32);
-            myImage.fill(0xffffff);
+            myImage.fill(0xd1d5db);
             unsigned char* p = code->data;
             for (int y = 0; y < code->width; y++) {
                 for (int x = 0; x < code->width; x++) {
-                    myImage.setPixel(x + 4, y + 4, ((*p & 1) ? qrColor.rgb() : 0xffffff));
+                    myImage.setPixel(x + 4, y + 4, ((*p & 1) ? qrColor.rgb() : 0xd1d5db));
                     p++;
                 }
             }
@@ -214,19 +214,19 @@ QColor getRowColor(bool isLightTheme, bool isHovered, bool isSelected)
 {
     if (isLightTheme) {
         if (isSelected) {
-            return QColor("#25b088ff");
+            return QColor("#3c3c3b");
         } else if (isHovered) {
-            return QColor("#25bababa");
+            return QColor("#50ff5533");
         } else {
-            return QColor("#ffffff");
+            return QColor("#3c3c3b");
         }
     } else {
         if (isSelected) {
-            return QColor("#25b088ff");
+            return QColor("#3c3c3b");
         } else if (isHovered) {
-            return QColor("#25bababa");
+            return QColor("#50ff5533");
         } else {
-            return QColor("#0f0b16");
+            return QColor("#3c3c3b");
         }
     }
 }
