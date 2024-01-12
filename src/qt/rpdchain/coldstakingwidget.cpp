@@ -102,7 +102,7 @@ ColdStakingWidget::ColdStakingWidget(RPDCHAINGUI* parent) :
     spacerDiv = new QSpacerItem(40, 20, QSizePolicy::Maximum, QSizePolicy::Expanding);
 
     setCssProperty(ui->labelSubtitleDescription, "text-title");
-    btnOwnerContact = ui->lineEditOwnerAddress->addAction(QIcon("://ic-contact-arrow-down"), QLineEdit::TrailingPosition);
+    btnOwnerContact = ui->lineEditOwnerAddress->addAction(QIcon("://ic-arrow-drop-down"), QLineEdit::TrailingPosition);
     setCssProperty(ui->lineEditOwnerAddress, "edit-primary-multi-book");
     ui->lineEditOwnerAddress->setAttribute(Qt::WA_MacShowFocusRect, 0);
     setShadow(ui->lineEditOwnerAddress);
