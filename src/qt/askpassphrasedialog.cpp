@@ -36,7 +36,7 @@ AskPassphraseDialog::AskPassphraseDialog(Mode mode, QWidget* parent, WalletModel
     ui->left->setProperty("cssClass", "container-dialog");
 
     ui->labelTitle->setText("Change passphrase");
-    ui->labelTitle->setProperty("cssClass", "text-title-screen");
+    ui->labelTitle->setProperty("cssClass", "text-title-dialog");
 
     ui->warningLabel->setProperty("cssClass", "text-subtitle");
 

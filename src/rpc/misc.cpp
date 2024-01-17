@@ -77,8 +77,7 @@ UniValue getinfo(const JSONRPCRequest& request)
             "  \"version\": xxxxx,             (numeric) the server version\n"
             "  \"protocolversion\": xxxxx,     (numeric) the protocol version\n"
             "  \"walletversion\": xxxxx,       (numeric) the wallet version\n"
-            "  \"balance\": xxxxxxx,           (numeric) the total rpdchain balance of the wallet (excluding zerocoins)\n"
-            "  \"zerocoinbalance\": xxxxxxx,   (numeric) the total zerocoin balance of the wallet\n"
+            "  \"balance\": xxxxxxx,           (numeric) the total RPD balance of the wallet\n"
             "  \"staking status\": true|false, (boolean) if the wallet is staking or not\n"
             "  \"blocks\": xxxxxx,             (numeric) the current number of blocks processed in the server\n"
             "  \"timeoffset\": xxxxx,          (numeric) the time offset\n"
@@ -87,18 +86,6 @@ UniValue getinfo(const JSONRPCRequest& request)
             "  \"difficulty\": xxxxxx,         (numeric) the current difficulty\n"
             "  \"testnet\": true|false,        (boolean) if the server is using testnet or not\n"
             "  \"moneysupply\" : \"supply\"    (numeric) The money supply when this block was added to the blockchain\n"
-            "  \"zRPDsupply\" :\n"
-            "  {\n"
-            "     \"1\" : n,            (numeric) supply of 1 zRPD denomination\n"
-            "     \"5\" : n,            (numeric) supply of 5 zRPD denomination\n"
-            "     \"10\" : n,           (numeric) supply of 10 zRPD denomination\n"
-            "     \"50\" : n,           (numeric) supply of 50 zRPD denomination\n"
-            "     \"100\" : n,          (numeric) supply of 100 zRPD denomination\n"
-            "     \"500\" : n,          (numeric) supply of 500 zRPD denomination\n"
-            "     \"1000\" : n,         (numeric) supply of 1000 zRPD denomination\n"
-            "     \"5000\" : n,         (numeric) supply of 5000 zRPD denomination\n"
-            "     \"total\" : n,        (numeric) The total supply of all zRPD denominations\n"
-            "  }\n"
             "  \"keypoololdest\": xxxxxx,      (numeric) the timestamp (seconds since GMT epoch) of the oldest pre-generated key in the key pool\n"
             "  \"keypoolsize\": xxxx,          (numeric) how many new keys are pre-generated\n"
             "  \"unlocked_until\": ttt,        (numeric) the timestamp in seconds since epoch (midnight Jan 1 1970 GMT) that the wallet is unlocked for transfers, or 0 if the wallet is locked\n"
@@ -145,7 +132,6 @@ UniValue getinfo(const JSONRPCRequest& request)
     if (pwalletMain) {
         obj.push_back(Pair("walletversion", pwalletMain->GetVersion()));
         obj.push_back(Pair("balance", ValueFromAmount(pwalletMain->GetAvailableBalance())));
-        obj.push_back(Pair("zerocoinbalance", ValueFromAmount(pwalletMain->GetZerocoinBalance(true))));
         obj.push_back(Pair("staking status", (pwalletMain->pStakerStatus->IsActive() ?
                                                 "Staking Active" :
                                                 "Staking Not Active")));
@@ -173,8 +159,6 @@ UniValue getinfo(const JSONRPCRequest& request)
         else
             zrpdObj.push_back(Pair(std::to_string(denom), ValueFromAmount(mapZerocoinSupply.at(denom) * (denom*COIN))));
     }
-    zrpdObj.push_back(Pair("total", ValueFromAmount(GetZerocoinSupply())));
-    obj.push_back(Pair("zRPDsupply", zrpdObj));
 
 #ifdef ENABLE_WALLET
     if (pwalletMain) {

@@ -68,7 +68,7 @@ void TrafficGraphWidget::paintEvent(QPaintEvent*)
 
     if (fMax <= 0.0f) return;
 
-    QColor axisCol(Qt::gray);
+    QColor axisCol = (qRgb(209, 213, 219));
     int h = height() - YMARGIN * 2;
     painter.setPen(axisCol);
     painter.drawLine(XMARGIN, YMARGIN + h, width() - XMARGIN, YMARGIN + h);
@@ -89,7 +89,7 @@ void TrafficGraphWidget::paintEvent(QPaintEvent*)
     }
     // if we drew 3 or fewer lines, break them up at the next lower order of magnitude
     if (fMax / val <= 3.0f) {
-        axisCol = axisCol.darker();
+        axisCol = (qRgb(209, 213, 219));
         val = pow(10.0f, base - 1);
         painter.setPen(axisCol);
         painter.drawText(XMARGIN, YMARGIN + h - h * val / fMax - yMarginText, QString("%1 %2").arg(val).arg(units));

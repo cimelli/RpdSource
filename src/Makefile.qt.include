@@ -418,9 +418,7 @@ RES_ICONS = \
   qt/rpdchain/res/img/ic-transaction-stake-hot-inactive.svg \
   qt/rpdchain/res/img/ic-transaction-cs-contract.svg \
   qt/rpdchain/res/img/ic-transaction-cs-contract-inactive.svg \
-  qt/rpdchain/res/img/ic-check-box-indeterminate.svg \
-  qt/rpdchain/res/img/ani-loading.gif
-
+  qt/rpdchain/res/img/ic-check-box-indeterminate.svg
 
 
 BITCOIN_QT_BASE_CPP = \

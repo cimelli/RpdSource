@@ -531,7 +531,7 @@ std::string HelpMessage(HelpMessageMode mode)
     }
     strUsage += HelpMessageOpt("-shrinkdebugfile", _("Shrink debug.log file on client startup (default: 1 when no -debug)"));
     strUsage += HelpMessageOpt("-testnet", _("Use the test network"));
-    strUsage += HelpMessageOpt("-litemode=<n>", strprintf(_("Disable all RPDCHAIN specific functionality (Masternodes, Zerocoin, SwiftX, Budgeting) (0-1, default: %u)"), 0));
+    strUsage += HelpMessageOpt("-litemode=<n>", strprintf(_("Disable all RPDCHAIN specific functionality (Masternodes, SwiftX, Budgeting) (0-1, default: %u)"), 0));
 
     strUsage += HelpMessageGroup(_("Masternode options:"));
     strUsage += HelpMessageOpt("-masternode=<n>", strprintf(_("Enable the client to act as a masternode (0-1, default: %u)"), DEFAULT_MASTERNODE));
@@ -541,8 +541,8 @@ std::string HelpMessage(HelpMessageMode mode)
     strUsage += HelpMessageOpt("-masternodeaddr=<n>", strprintf(_("Set external address:port to get to this masternode (example: %s)"), "128.127.106.235:1591"));
     strUsage += HelpMessageOpt("-budgetvotemode=<mode>", _("Change automatic finalized budget voting behavior. mode=auto: Vote for only exact finalized budget match to my generated budget. (string, default: auto)"));
 
-    strUsage += HelpMessageGroup(_("Zerocoin options:"));
-    strUsage += HelpMessageOpt("-reindexzerocoin=<n>", strprintf(_("Delete all zerocoin spends and mints that have been recorded to the blockchain database and reindex them (0-1, default: %u)"), 0));
+    //strUsage += HelpMessageGroup(_("Zerocoin options:"));
+    //strUsage += HelpMessageOpt("-reindexzerocoin=<n>", strprintf(_("Delete all zerocoin spends and mints that have been recorded to the blockchain database and reindex them (0-1, default: %u)"), 0));
 
     strUsage += HelpMessageGroup(_("SwiftX options:"));
     strUsage += HelpMessageOpt("-enableswifttx=<n>", strprintf(_("Enable SwiftX, show confirmations for locked transactions (bool, default: %s)"), "true"));
@@ -1310,7 +1310,7 @@ bool AppInit2()
             fs::path sporksDir = GetDataDir() / "sporks";
             fs::path zerocoinDir = GetDataDir() / "zerocoin";
 
-            LogPrintf("Deleting blockchain folders blocks, chainstate, sporks and zerocoin\n");
+            LogPrintf("Deleting blockchain folders blocks, chainstate and sporks\n");
             // We delete in 4 individual steps in case one of the folder is missing already
             try {
                 if (fs::exists(blocksDir)){
@@ -1610,7 +1610,7 @@ bool AppInit2()
                                 !zerocoinDB->ReadZCSupply(mapZerocoinSupply)) {
                             // try first reading legacy block index from DB
                             if (pblocktree->ReadLegacyBlockIndex(tipHash, bi) && !bi.mapZerocoinSupply.empty()) {
-                                mapZerocoinSupply = bi.mapZerocoinSupply;
+                               mapZerocoinSupply = bi.mapZerocoinSupply;
                             } else {
                                 // reindex from disk
                                 fReindexZerocoin = true;

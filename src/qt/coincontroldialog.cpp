@@ -72,7 +72,7 @@ CoinControlDialog::CoinControlDialog(QWidget* parent, bool _forDelegation) : QDi
                     ui->labelCoinControlLowOutputText,
                     ui->labelCoinControlFeeText,
                     ui->labelCoinControlQuantityText
-                    }, "text-main-purple");
+                    }, "text-main-grey");
 
     // Value Style
     setCssProperty({ui->labelCoinControlAfterFee,

@@ -53,9 +53,7 @@ DashboardWidget::DashboardWidget(RPDCHAINGUI* parent) :
     // Staking Information
     setCssSubtitleScreen(ui->labelMessage);
     setCssProperty(ui->labelSquareRpd, "square-chart-rpd");
-    setCssProperty(ui->labelSquarezRpd, "square-chart-zrpd");
     setCssProperty(ui->labelRpd, "text-chart-rpd");
-    setCssProperty(ui->labelZrpd, "text-chart-zrpd");
 
     // Staking Amount
     QFont fontBold;
@@ -63,7 +61,6 @@ DashboardWidget::DashboardWidget(RPDCHAINGUI* parent) :
 
     setCssProperty(ui->labelChart, "legend-chart");
     setCssProperty(ui->labelAmountRpd, "text-stake-rpd-disable");
-    setCssProperty(ui->labelAmountZrpd, "text-stake-zrpd-disable");
 
     setCssProperty({ui->pushButtonAll,  ui->pushButtonMonth, ui->pushButtonYear}, "btn-check-time");
     setCssProperty({ui->comboBoxMonths,  ui->comboBoxYears}, "btn-combo-chart-selected");
@@ -664,9 +661,7 @@ void DashboardWidget::onChartRefreshed()
     }
     // init sets
     set0 = new QBarSet(CURRENCY_UNIT.c_str());
-    set1 = new QBarSet("z" + QString(CURRENCY_UNIT.c_str()));
     set0->setColor(QColor(255,85,51));
-    set1->setColor(QColor(255,85,51));
 
     if (!series) {
         series = new QBarSeries();
@@ -676,20 +671,22 @@ void DashboardWidget::onChartRefreshed()
     series->attachAxis(axisY);
 
     set0->append(chartData->valuesRpd);
-    set1->append(chartData->valueszRpd);
 
+    // Set text color for X-axis labels
+    axisX->setLabelsColor(QColor("#d1d5db"));
+
+    // Set text color for Y-axis labels
+    axisY->setLabelsColor(QColor("#d1d5db"));
+    
     // Total
     nDisplayUnit = walletModel->getOptionsModel()->getDisplayUnit();
-    if (chartData->totalRpd > 0 || chartData->totalZrpd > 0) {
-        setCssProperty(ui->labelAmountRpd, "text-stake-rpd");
-        setCssProperty(ui->labelAmountZrpd, "text-stake-zrpd");
+    if (chartData->totalRpd > 0) {
+    setCssProperty(ui->labelAmountRpd, "text-stake-rpd");
     } else {
-        setCssProperty(ui->labelAmountRpd, "text-stake-rpd-disable");
-        setCssProperty(ui->labelAmountZrpd, "text-stake-zrpd-disable");
+    setCssProperty(ui->labelAmountRpd, "text-stake-rpd-disable");
     }
-    forceUpdateStyle({ui->labelAmountRpd, ui->labelAmountZrpd});
+    forceUpdateStyle({ui->labelAmountRpd});
     ui->labelAmountRpd->setText(GUIUtil::formatBalance(chartData->totalRpd, nDisplayUnit));
-    ui->labelAmountZrpd->setText(GUIUtil::formatBalance(chartData->totalZrpd, nDisplayUnit, true));
 
     series->append(set0);
     if (hasZrpdStakes)

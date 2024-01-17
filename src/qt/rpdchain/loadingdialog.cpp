@@ -4,7 +4,6 @@
 
 #include "qt/rpdchain/loadingdialog.h"
 #include "qt/rpdchain/forms/ui_loadingdialog.h"
-#include <QMovie>
 
 void Worker::process(){
     if (runnable) {
@@ -34,12 +33,6 @@ LoadingDialog::LoadingDialog(QWidget *parent) :
     this->setStyleSheet(parent->styleSheet());
 
     ui->frame->setProperty("cssClass", "container-loading");
-
-    QMovie *movie = new QMovie("://ani-loading");
-    ui->labelMovie->setText("");
-    ui->labelMovie->setMovie(movie);
-    movie->start();
-
     ui->labelMessage->setProperty("cssClass", "text-loading");
     ui->labelDots->setProperty("cssClass", "text-loading");
 }

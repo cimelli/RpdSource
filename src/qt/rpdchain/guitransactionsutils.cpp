@@ -53,7 +53,7 @@ namespace GuiTransactionsUtils {
                     WalletModel::UnlockContext ctx(walletModel->requestUnlock());
                     if (!ctx.isValid()) {
                         retStr = parent->translate(
-                                "Error: The wallet was unlocked for staking only. Unlock canceled.");
+                                "Error: The wallet was unlocked for staking only. Unlock cancelled.");
                     }
                 } else
                     retStr = parent->translate("Error: The wallet is unlocked for staking only. Fully unlock the wallet to send the transaction.");

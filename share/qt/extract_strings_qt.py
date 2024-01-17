@@ -26,7 +26,7 @@ def parse_po(text):
 
     for line in text.split('\n'):
         line = line.rstrip('\r')
-        if line.startswith('msgid '):
+        if line.startswith('msgid'):
             if in_msgstr:
                 messages.append((msgid, msgstr))
                 in_msgstr = False
@@ -34,7 +34,7 @@ def parse_po(text):
             in_msgid = True
 
             msgid = [line[6:]]
-        elif line.startswith('msgstr '):
+        elif line.startswith('msgstr'):
             in_msgid = False
             in_msgstr = True
             msgstr = [line[7:]]

@@ -136,7 +136,6 @@
         <file alias="ic-check-box-dark-active">rpdchain/res/img/ic-check-box-dark-active.svg</file>
         <file alias="ic-check-box-indeterminate">rpdchain/res/img/ic-check-box-indeterminate.svg</file>
         <file alias="ic-check-liliac-indeterminate">rpdchain/res/img/ic-check-liliac-indeterminate.svg</file>
-        <file alias="ani-loading">rpdchain/res/img/ani-loading.gif</file>
         <file alias="ic-pending">rpdchain/res/img/ic-pending.svg</file>
         <file alias="ic-transaction-stake-delegated">rpdchain/res/img/ic-transaction-stake-delegated.svg</file>
         <file alias="ic-transaction-stake-delegated-inactive">rpdchain/res/img/ic-transaction-stake-delegated-inactive.svg</file>

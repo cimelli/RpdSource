@@ -567,20 +567,10 @@
           <item>
            <widget class="QLabel" name="labelAmountRpd">
             <property name="text">
-             <string notr="true">0 RPD</string>
+                <string notr="true">0 RPD</string>
             </property>
             <property name="alignment">
-             <set>Qt::AlignCenter</set>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QLabel" name="labelAmountZrpd">
-            <property name="text">
-             <string notr="true">0 zRPD</string>
-            </property>
-            <property name="alignment">
-             <set>Qt::AlignCenter</set>
+                <set>Qt::AlignCenter</set>
             </property>
            </widget>
           </item>
@@ -713,32 +703,6 @@
                    </size>
                   </property>
                  </spacer>
-                </item>
-                <item>
-                 <widget class="QLabel" name="labelSquarezRpd">
-                  <property name="minimumSize">
-                   <size>
-                    <width>14</width>
-                    <height>14</height>
-                   </size>
-                  </property>
-                  <property name="maximumSize">
-                   <size>
-                    <width>14</width>
-                    <height>14</height>
-                   </size>
-                  </property>
-                  <property name="text">
-                   <string/>
-                  </property>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QLabel" name="labelZrpd">
-                  <property name="text">
-                   <string notr="true">zRPD</string>
-                  </property>
-                 </widget>
                 </item>
                </layout>
               </item>
