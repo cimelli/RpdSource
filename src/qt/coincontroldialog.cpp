@@ -82,7 +82,7 @@ CoinControlDialog::CoinControlDialog(QWidget* parent, bool _forDelegation) : QDi
                     ui->labelCoinControlLowOutput,
                     ui->labelCoinControlFee,
                     ui->labelCoinControlQuantity
-                    }, "text-main-purple");
+                    }, "text-main-grey");
 
     ui->groupBox_2->setProperty("cssClass", "group-box");
     ui->treeWidget->setProperty("cssClass", "table-tree");

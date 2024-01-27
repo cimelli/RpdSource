@@ -1622,8 +1622,8 @@ static UniValue gettokentradehistoryforaddress(const JSONRPCRequest& request)
             "\nNote:\n"
             "The documentation only covers the output for a trade, but there are also cancel transactions with different properties.\n"
             "\nExamples:\n"
-            + HelpExampleCli("gettokentradehistoryforaddress", "\"1MCHESTptvd2LnNp7wmr2sGTpRomteAkq8\"")
-            + HelpExampleRpc("gettokentradehistoryforaddress", "\"1MCHESTptvd2LnNp7wmr2sGTpRomteAkq8\"")
+            + HelpExampleCli("gettokentradehistoryforaddress", "\"RMCHESTptvd2LnNp7wmr2sGTpRomteAkq8\"")
+            + HelpExampleRpc("gettokentradehistoryforaddress", "\"RMCHESTptvd2LnNp7wmr2sGTpRomteAkq8\"")
         );
 
     std::string address = ParseAddress(request.params[0]);

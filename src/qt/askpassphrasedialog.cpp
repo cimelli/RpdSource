@@ -35,7 +35,7 @@ AskPassphraseDialog::AskPassphraseDialog(Mode mode, QWidget* parent, WalletModel
 
     ui->left->setProperty("cssClass", "container-dialog");
 
-    ui->labelTitle->setText("Change passphrase");
+    ui->labelTitle->setText("Change Passphrase");
     ui->labelTitle->setProperty("cssClass", "text-title-dialog");
 
     ui->warningLabel->setProperty("cssClass", "text-subtitle");
@@ -50,13 +50,13 @@ AskPassphraseDialog::AskPassphraseDialog(Mode mode, QWidget* parent, WalletModel
     initCssEditLine(ui->passEdit2);
     initCssEditLine(ui->passEdit3);
 
-    ui->passLabel1->setText("Current passphrase");
+    ui->passLabel1->setText("Current Passphrase");
     ui->passLabel1->setProperty("cssClass", "text-title");
 
     ui->passLabel2->setText("New passphrase");
     ui->passLabel2->setProperty("cssClass", "text-title");
 
-    ui->passLabel3->setText("Repeat passphrase");
+    ui->passLabel3->setText("Repeat Passphrase");
     ui->passLabel3->setProperty("cssClass", "text-title");
 
     setCssProperty(ui->passWarningLabel, "text-warning-small");
@@ -97,7 +97,7 @@ AskPassphraseDialog::AskPassphraseDialog(Mode mode, QWidget* parent, WalletModel
         ui->layoutEdit2->hide();
         ui->passLabel3->hide();
         ui->passEdit3->hide();
-        title = tr("Unlock wallet\nfor staking");
+        title = tr("Unlock Wallet\nFor Staking");
         initWatch(ui->layoutEdit);
         break;
     case Mode::Unlock: // Ask passphrase
@@ -107,7 +107,7 @@ AskPassphraseDialog::AskPassphraseDialog(Mode mode, QWidget* parent, WalletModel
         ui->layoutEdit2->hide();
         ui->passLabel3->hide();
         ui->passEdit3->hide();
-        title = tr("Unlock wallet");
+        title = tr("Unlock Wallet");
         initWatch(ui->layoutEdit);
         break;
     case Mode::Decrypt: // Ask passphrase
@@ -117,11 +117,11 @@ AskPassphraseDialog::AskPassphraseDialog(Mode mode, QWidget* parent, WalletModel
         ui->layoutEdit2->hide();
         ui->passLabel3->hide();
         ui->passEdit3->hide();
-        title = tr("Decrypt wallet");
+        title = tr("Decrypt Wallet");
         initWatch(ui->layoutEdit);
         break;
     case Mode::ChangePass: // Ask old passphrase + new passphrase x2
-        title = tr("Change passphrase");
+        title = tr("Change Passphrase");
         ui->warningLabel->setText(tr("Enter the old and new passphrase to the wallet."));
         initWatch(ui->layoutEdit);
         break;
@@ -183,7 +183,7 @@ void AskPassphraseDialog::accept()
         }
         hide();
         bool ret = openStandardDialog(
-                tr("Confirm wallet encryption"),
+                tr("Confirm Wallet Encryption"),
                 "<b>" + tr("WARNING") + ":</b> " + tr("If you encrypt your wallet and lose your passphrase, you will") +
                 " <b>" + tr("LOSE ALL OF YOUR COINS") + "</b>!<br><br>" + tr("Are you sure you wish to encrypt your wallet?"),
                 tr("ENCRYPT"), tr("CANCEL")
@@ -327,7 +327,7 @@ void AskPassphraseDialog::updateWarningsLabel()
     validPassphrases = ui->passEdit2->text() == ui->passEdit3->text();
     QString warningStr = "";
     if (fCapsLock || !validPassphrases) warningStr += tr("WARNING:") + "<br>";
-    if (fCapsLock) warningStr += "* " + tr("The caps lock key is on!");
+    if (fCapsLock) warningStr += "* " + tr("The CAPS lock key is on!");
     if (fCapsLock && !validPassphrases) warningStr += "<br>";
     if (!validPassphrases) warningStr += "* " + tr("Passphrases do not match!");
 
