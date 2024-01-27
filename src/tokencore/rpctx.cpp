@@ -607,7 +607,7 @@ static UniValue sendtokenissuancefixed(const JSONRPCRequest& request)
     if (propertyId > 0)
         throw JSONRPCError(RPC_INTERNAL_ERROR, "Token with this ticker already exists");
 
-    if (!IsTokenTickerValid(ticker) && !IsUsernameValid(ticker))
+    if (!IsTokenTickerValid(ticker) && !IsUsernameValid(ticker) && !IsSubTickerValid(ticker))
         throw JSONRPCError(RPC_INTERNAL_ERROR, "Token ticker is invalid");
 
     if (!IsTokenIPFSValid(data))
