@@ -46,57 +46,6 @@ bool DEx_offerExists(const std::string& addressSeller, uint32_t propertyId)
 }
 
 /**
- * Checks, if the seller has any open offer.
- */
-bool DEx_hasOffer(const std::string& addressSeller)
-{
-    for (auto const& offer : my_offers) {
-        if (offer.first.find(addressSeller) == 0) {
-            return true;
-        }
-    }
-
-    return false;
-}
-
-/**
- * Retrieves the identifier of the token for sale.
- *
- * NOTE: special care, if there are multiple open offers!
- * NOTE: the assumption is there can only be one active offer per seller!
- *
- * @param addressSeller The address of the seller with an open offer
- * @param retTokenId    The token identifier for sale
- * @return True, if there is an open offer
- */
-bool DEx_getTokenForSale(const std::string& addressSeller, uint32_t& retTokenId)
-{
-    for (auto const& offer : my_offers) {
-        if (offer.first.find(addressSeller) == 0) {
-
-            // Format is: "address-tokenid"
-            std::vector<std::string> vstr;
-            boost::split(vstr, offer.first, boost::is_any_of("-"), boost::token_compress_on);
-
-            if (vstr.size() != 2) {
-                PrintToLog("ERROR: failed to parse token for sale: %s\n", offer.first);
-                return false;
-            }
-
-            try {
-                retTokenId = boost::lexical_cast<uint32_t>(vstr[1]);
-                return true;
-            }
-            catch (boost::bad_lexical_cast const& e) {
-                PrintToLog("ERROR: failed to parse token for sale: %s (%s)\n", offer.first, e.what());
-            }
-        }
-    }
-
-    return false;
-}
-
-/**
  * Retrieves a sell offer.
  *
  * @return The sell offer, or NULL, if no match was found
@@ -497,8 +446,8 @@ int DEx_payment(const uint256& txid, unsigned int vout, const std::string& addre
 
     int rc = DEX_ERROR_PAYMENT;
 
-    uint32_t propertyId = TOKEN_PROPERTY_MSC;
-    CMPAccept* p_accept = nullptr;
+    uint32_t propertyId = TOKEN_PROPERTY_MSC; // test for MSC accept first
+    CMPAccept* p_accept = DEx_getAccept(addressSeller, propertyId, addressBuyer);
 
     if (!p_accept) {
         propertyId = TOKEN_PROPERTY_TMSC; // test for TMSC accept second
