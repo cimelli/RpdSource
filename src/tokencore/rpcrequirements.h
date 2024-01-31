@@ -15,7 +15,7 @@ void RequireActiveCrowdsale(uint32_t propertyId);
 void RequireManagedProperty(uint32_t propertyId);
 void RequireTokenIssuer(const std::string& address, uint32_t propertyId);
 void RequireMatchingDExOffer(const std::string& address, uint32_t propertyId);
-void RequireNoOtherDExOffer(const std::string& address);
+void RequireNoOtherDExOffer(const std::string& address, uint32_t propertyId);
 void RequireMatchingDExAccept(const std::string& sellerAddress, uint32_t propertyId, const std::string& buyerAddress);
 void RequireSaneReferenceAmount(int64_t amount);
 void RequireSaneDExPaymentWindow(const std::string& address, uint32_t propertyId);
