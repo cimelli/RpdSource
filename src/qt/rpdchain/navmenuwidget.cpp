@@ -21,7 +21,7 @@ NavMenuWidget::NavMenuWidget(RPDCHAINGUI *mainWindow, QWidget *parent) :
 
     // App version
     ui->labelVersion->setText(QString(tr("v%1")).arg(QString::fromStdString(FormatVersionFriendly())));
-    ui->labelVersion->setProperty("cssClass", "text-title-white");
+    ui->labelVersion->setProperty("cssClass", "text-title");
 
     // Buttons
     ui->btnDashboard->setProperty("name", "dash");

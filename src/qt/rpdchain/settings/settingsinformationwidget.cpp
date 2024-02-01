@@ -60,7 +60,7 @@ SettingsInformationWidget::SettingsInformationWidget(RPDCHAINGUI* _window,QWidge
         ui->labelTitleBlockchain,
         ui->labelTitleMemory,
 
-    },"text-title");
+    },"text-title-screen");
 
     // TODO: Mempool section is not currently implemented and instead, hidden for now
     ui->labelTitleMemory->setVisible(false);

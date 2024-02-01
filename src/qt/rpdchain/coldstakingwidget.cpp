@@ -123,7 +123,7 @@ ColdStakingWidget::ColdStakingWidget(RPDCHAINGUI* parent) :
     connect(sendMultiRow, &SendMultiRow::onContactsClicked, [this](){ onContactsClicked(false); });
 
     // List
-    setCssProperty(ui->labelStakingTotal, "text-title-right");
+    setCssProperty(ui->labelStakingTotal, "text-subtitle");
     setCssProperty(ui->labelListHistory, "text-title");
     setCssProperty(ui->pushImgEmpty, "img-empty-transactions");
     setCssProperty(ui->labelEmpty, "text-empty");

@@ -86,7 +86,7 @@ CoinControlDialog::CoinControlDialog(QWidget* parent, bool _forDelegation) : QDi
 
     ui->groupBox_2->setProperty("cssClass", "group-box");
     ui->treeWidget->setProperty("cssClass", "table-tree");
-    ui->labelLocked->setProperty("cssClass", "text-main-purple");
+    ui->labelLocked->setProperty("cssClass", "text-warning");
 
     // Buttons
     setCssProperty({ui->pushButtonSelectAll, ui->pushButtonToggleLock}, "btn-check");
