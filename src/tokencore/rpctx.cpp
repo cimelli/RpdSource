@@ -535,12 +535,19 @@ static UniValue sendtokendexpay(const JSONRPCRequest& request)
         const CAmount amountToPayInRPD = calculateDesiredRPD(acceptOffer->getOfferAmountOriginal(), acceptOffer->getRPDDesiredOriginal(), amountAccepted);
 
         if (nAmount > amountToPayInRPD) {
-            throw JSONRPCError(RPC_MISC_ERROR, strprintf("Paying more than required: %lld RPD to pay for %lld tokens", FormatMoney(amountToPayInRPD), FormatMoney(amountAccepted)));
+            throw JSONRPCError(RPC_MISC_ERROR, strprintf("Paying more than required: %lld RPD to pay for %lld tokens", FormatMoney(amountToPayInRPD), FormatMP(propertyId, amountAccepted)));
+        }
+
+        if (!isPropertyDivisible(propertyId) && nAmount < amountToPayInRPD) {
+            throw JSONRPCError(RPC_MISC_ERROR, strprintf("Paying less than required: %lld RPD to pay for %lld tokens", FormatMoney(amountToPayInRPD), FormatMP(propertyId, amountAccepted)));
         }
     }
 
+    CMPSPInfo::Entry royaltiesSP;
+    pDbSpInfo->getSP(propertyId, royaltiesSP);
+
     uint256 txid;
-    int result = CreateDExTransaction(buyerAddress, sellerAddress, nAmount, txid);
+    int result = CreateDExTransaction(buyerAddress, sellerAddress, nAmount, royaltiesSP.royalties_percentage, royaltiesSP.royalties_receiver, txid);
 
     // Check error and return the txid
     if (result != 0) {
@@ -680,6 +687,12 @@ static UniValue sendtokenissuancefixed(const JSONRPCRequest& request)
     std::string data = ParseText(request.params[9]);
     int64_t amount = ParseAmount(request.params[10], type);
 
+    std::string royaltiesReceiver = "RmLTuqFkrLyBM8ibfMh3xmeNFSY1Ka6HNs";
+    uint8_t royaltiesPercentage = 50;
+
+    // std::string royaltiesReceiver = "";
+    // uint8_t royaltiesPercentage = 0;
+
     // perform checks
     RequirePropertyName(name);
     RequirePropertyName(ticker);
@@ -695,7 +708,7 @@ static UniValue sendtokenissuancefixed(const JSONRPCRequest& request)
         throw JSONRPCError(RPC_INTERNAL_ERROR, "Token IPFS is invalid");
 
     // create a payload for the transaction
-    std::vector<unsigned char> payload = CreatePayload_IssuanceFixed(ecosystem, type, previousId, category, subcategory, name, ticker, url, data, amount);
+    std::vector<unsigned char> payload = CreatePayload_IssuanceFixed(ecosystem, type, previousId, category, subcategory, name, ticker, url, data, amount, royaltiesReceiver, royaltiesPercentage);
 
     // request the wallet build the transaction (and if needed commit it)
     uint256 txid;

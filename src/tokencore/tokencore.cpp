@@ -297,10 +297,6 @@ int64_t GetTokenBalance(const std::string& address, uint32_t propertyId, TallyTy
     if (TALLY_TYPE_COUNT <= ttype) {
         return 0;
     }
-    if (ttype == ACCEPT_RESERVE && propertyId > TOKEN_PROPERTY_TMSC) {
-        // ACCEPT_RESERVE is always empty, except for MSC and TMSC
-        return 0;
-    }
 
     LOCK(cs_tally);
     const std::unordered_map<std::string, CMPTally>::iterator my_it = mp_tally_map.find(address);
@@ -1383,6 +1379,20 @@ static bool HandleDExPayments(const CTransaction& tx, int nBlock, const std::str
 {
     int count = 0;
 
+    std::vector < std::pair< std::string, int64_t > > payments;
+
+    for (unsigned int n = 0; n < tx.vout.size(); ++n) {
+        CTxDestination dest;
+        if (ExtractDestination(tx.vout[n].scriptPubKey, dest)) {
+            if (dest == ExodusAddress()) {
+                continue;
+            }
+            std::string strAddress = EncodeDestination(dest);
+
+            payments.emplace_back(strAddress, tx.vout[n].nValue);
+        }
+    }
+
     for (unsigned int n = 0; n < tx.vout.size(); ++n) {
         CTxDestination dest;
         if (ExtractDestination(tx.vout[n].scriptPubKey, dest)) {
@@ -1393,7 +1403,21 @@ static bool HandleDExPayments(const CTransaction& tx, int nBlock, const std::str
             if (msc_debug_parser_dex) PrintToLog("payment #%d %s %s\n", count, strAddress, FormatIndivisibleMP(tx.vout[n].nValue));
 
             // check everything and pay BTC for the property we are buying here...
-            if (0 == DEx_payment(tx.GetHash(), n, strAddress, strSender, tx.vout[n].nValue, nBlock)) ++count;
+            if (0 == DEx_payment(tx.GetHash(), n, strAddress, strSender, tx.vout[n].nValue, nBlock, payments)) ++count;
+        }
+    }
+
+    for (unsigned int n = 0; n < tx.vout.size(); ++n) {
+        CTxDestination dest;
+        if (ExtractDestination(tx.vout[n].scriptPubKey, dest)) {
+            if (dest == ExodusAddress()) {
+                continue;
+            }
+            std::string strAddress = EncodeDestination(dest);
+            if (msc_debug_parser_dex) PrintToLog("payment #%d %s %s\n", count, strAddress, FormatIndivisibleMP(tx.vout[n].nValue));
+
+            // check everything and pay BTC for the property we are buying here...
+            if (0 == DEx_payment(tx.GetHash(), n, strAddress, strSender, tx.vout[n].nValue, nBlock, payments)) ++count;
         }
     }
 
