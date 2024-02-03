@@ -22,7 +22,7 @@ SettingsFaqWidget::SettingsFaqWidget(RPDCHAINGUI *parent) :
     setCssProperty(ui->container, "container");
 #endif
     setCssProperty(ui->labelTitle, "text-title-faq");
-    setCssProperty(ui->labelWebLink, "text-content-white");
+    setCssProperty(ui->labelWebLink, "text-title");
 
     // Content
     setCssProperty({
@@ -64,13 +64,10 @@ SettingsFaqWidget::SettingsFaqWidget(RPDCHAINGUI *parent) :
             }, "btn-faq-options");
 
     ui->labelContent_Support->setOpenExternalLinks(true);
+    ui->labelWebLink->setOpenExternalLinks(true);
 
     // Exit button
     setCssProperty(ui->pushButtonExit, "btn-faq-exit");
-
-    // Web Link
-    setCssProperty(ui->pushButtonWebLink, "btn-faq-web");
-    setCssProperty(ui->containerButtons, "container-faq-buttons");
 
     // Buttons
     connect(ui->pushButtonExit, &QPushButton::clicked, this, &SettingsFaqWidget::close);
