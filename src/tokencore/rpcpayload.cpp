@@ -758,23 +758,10 @@ static UniValue createtokenpayloadsendtomany(const JSONRPCRequest& request)
 {
     if (request.fHelp || request.params.size() != 2)
         throw runtime_error(
-            "createtokenpayloadsendtomany ticker outputs\n"
-
-            "\nCreate the payload for a send-to-many token transaction.\n"
-
-            "\nNote: if the server is not synchronized, amounts are considered as divisible, even if the token may have indivisible units!\n"
-
-            "\nArguments:\n"
-            "1. ticker               (string, required) ticker of token to send\n"
-            "2. outputs              (array, required) an array with output index \"output\" starting at 0 and the \"amount\" to send\n"
-
-            "\nResult:\n"
-            "\"payload\"             (string) the hex-encoded payload\n"
-
-            "\nExamples:\n"
-            + HelpExampleCli("createtokenpayloadsendtomany", "TOKEN '[{\"output\": 2, \"amount\": \"10.5\"}, {\"output\": 3, \"amount\": \"0.5\"}]'")
-            + HelpExampleRpc("createtokenpayloadsendtomany", "TOKEN, '[{\"output\": 2, \"amount\": \"10.5\"}, {\"output\": 3, \"amount\": \"0.5\"}]'")
+            "createtokenpayloadsendtomany\n"
         );
+
+    // uint32_t propertyId = ParsePropertyId(request.params[0]);
 
     std::string ticker = ParseText(request.params[0]);
 
