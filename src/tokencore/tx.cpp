@@ -4,6 +4,7 @@
 
 #include "tokencore/activation.h"
 #include "tokencore/dbfees.h"
+#include "tokencore/errors.h"
 #include "tokencore/dbspinfo.h"
 #include "tokencore/dbstolist.h"
 #include "tokencore/dbtradelist.h"
@@ -20,6 +21,8 @@
 #include "tokencore/utilsbitcoin.h"
 #include "tokencore/version.h"
 
+#include "rpc/server.h"
+
 #include "amount.h"
 #include "base58.h"
 #include "main.h"
@@ -35,6 +38,7 @@
 #include <algorithm>
 #include <utility>
 #include <vector>
+#include <tuple>
 #include <sstream>
 
 using boost::algorithm::token_compress_on;
@@ -90,6 +94,7 @@ std::string mastercore::strTransactionType(uint16_t txType)
 {
     switch (txType) {
         case TOKEN_TYPE_SIMPLE_SEND: return "Simple Send";
+        case TOKEN_TYPE_SEND_TO_MANY: return "Send To Many";
         case TOKEN_TYPE_RESTRICTED_SEND: return "Restricted Send";
         case TOKEN_TYPE_SEND_TO_OWNERS: return "Send To Owners";
         case TOKEN_TYPE_SEND_ALL: return "Send All";
@@ -116,6 +121,7 @@ std::string mastercore::strTransactionType(uint16_t txType)
         case TOKEN_TYPE_FREEZE_PROPERTY_TOKENS: return "Freeze Property Tokens";
         case TOKEN_TYPE_UNFREEZE_PROPERTY_TOKENS: return "Unfreeze Property Tokens";
         case TOKEN_TYPE_NOTIFICATION: return "Notification";
+        case TOKEN_TYPE_RAPIDS_PAYMENT: return "Rapids Payment";
         case TOKENCORE_MESSAGE_TYPE_ALERT: return "ALERT";
         case TOKENCORE_MESSAGE_TYPE_DEACTIVATION: return "Feature Deactivation";
         case TOKENCORE_MESSAGE_TYPE_ACTIVATION: return "Feature Activation";
@@ -159,6 +165,9 @@ bool CMPTransaction::interpret_Transaction()
     switch (type) {
         case TOKEN_TYPE_SIMPLE_SEND:
             return interpret_SimpleSend();
+
+        case TOKEN_TYPE_SEND_TO_MANY:
+            return interpret_SendToMany();
 
         case TOKEN_TYPE_SEND_TO_OWNERS:
             return interpret_SendToOwners();
@@ -219,6 +228,9 @@ bool CMPTransaction::interpret_Transaction()
 
         case TOKENCORE_MESSAGE_TYPE_DEACTIVATION:
             return interpret_Deactivation();
+
+        case TOKEN_TYPE_RAPIDS_PAYMENT:
+            return interpret_RapidsPayment();
 
         case TOKENCORE_MESSAGE_TYPE_ACTIVATION:
             return interpret_Activation();
@@ -325,6 +337,53 @@ bool CMPTransaction::interpret_SendAll()
     if ((!rpcOnly && msc_debug_packets) || msc_debug_packets_readonly) {
         PrintToLog("\t       ecosystem: %d\n", (int)ecosystem);
     }
+
+    return true;
+}
+
+/** Tx 5 */
+bool CMPTransaction::interpret_SendToMany()
+{
+    // minimum case without any recipients, still needs propertyid
+    if (pkt_size < 9) {
+        return false;
+    }
+    memcpy(&property, &pkt[4], 4);
+    SwapByteOrder32(property);
+
+    memcpy(&numberOfSTMReceivers, &pkt[8], 1);
+
+    // check total size for all receivers
+    if (pkt_size < (9 + (numberOfSTMReceivers * (1 + 8)))) {
+        return false;
+    }
+
+    if ((!rpcOnly && msc_debug_packets) || msc_debug_packets_readonly) {
+        PrintToLog("\t        property: %d (%s)\n", property, strMPProperty(property));
+        PrintToLog("\t       receivers: %d\n", numberOfSTMReceivers);
+    }
+
+    size_t pos = 9;
+    for (uint8_t i = 0; i < numberOfSTMReceivers; ++i) {
+        uint8_t outputN = 0;
+        memcpy(&outputN, &pkt[pos], 1);
+
+        uint64_t valueN = 0;
+        memcpy(&valueN, &pkt[pos+1], 8);
+        SwapByteOrder64(valueN);
+
+        outputValuesForSTM.push_back(std::make_tuple(outputN, valueN));
+        nValue += valueN;
+
+        pos = pos + 9;
+
+        if ((!rpcOnly && msc_debug_packets) || msc_debug_packets_readonly) {
+            PrintToLog("\t               output: %d\n", outputN);
+            PrintToLog("\t               value: %s\n", FormatMP(property, valueN));
+        }
+    }
+
+    nNewValue = nValue;
 
     return true;
 }
@@ -852,6 +911,24 @@ bool CMPTransaction::interpret_Deactivation()
     return true;
 }
 
+/** Tx 80 */
+bool CMPTransaction::interpret_RapidsPayment()
+{
+    if (pkt_size < 36) {
+        return false;
+    }
+
+    const char* p = 4 + (char*) &pkt;
+    std::string hash(p);
+    linked_txid = ParseHashV(hash, "txid");
+
+    if ((!rpcOnly && msc_debug_packets) || msc_debug_packets_readonly) {
+        PrintToLog("\t     linked txid: %s\n", linked_txid.GetHex());
+    }
+
+    return true;
+}
+
 /** Tx 65534 */
 bool CMPTransaction::interpret_Activation()
 {
@@ -934,6 +1011,9 @@ int CMPTransaction::interpretPacket()
         case TOKEN_TYPE_SIMPLE_SEND:
             return logicMath_SimpleSend();
 
+        case TOKEN_TYPE_SEND_TO_MANY:
+            return logicMath_SendToMany();
+
         case TOKEN_TYPE_SEND_TO_OWNERS:
             return logicMath_SendToOwners();
 
@@ -982,6 +1062,9 @@ int CMPTransaction::interpretPacket()
 
         case TOKEN_TYPE_CHANGE_ISSUER_ADDRESS:
             return logicMath_ChangeIssuer();
+
+        case TOKEN_TYPE_RAPIDS_PAYMENT:
+            return logicMath_RapidsPayment();
 
         case TOKEN_TYPE_ENABLE_FREEZING:
             return logicMath_EnableFreezing();
@@ -1046,10 +1129,12 @@ int CMPTransaction::logicHelper_CrowdsaleParticipation()
             tokens, close_crowdsale);
 
     if (msc_debug_sp) {
+        uint32_t crowdPropertyId = pcrowdsale->getPropertyId();
+
         PrintToLog("%s(): granting via crowdsale to user: %s %d (%s)\n",
-                __func__, FormatMP(property, tokens.first), property, strMPProperty(property));
+                __func__, FormatMP(crowdPropertyId, tokens.first), crowdPropertyId, strMPProperty(crowdPropertyId));
         PrintToLog("%s(): granting via crowdsale to issuer: %s %d (%s)\n",
-                __func__, FormatMP(property, tokens.second), property, strMPProperty(property));
+                __func__, FormatMP(crowdPropertyId, tokens.second), crowdPropertyId, strMPProperty(crowdPropertyId));
     }
 
     // Update the crowdsale object
@@ -1271,6 +1356,89 @@ int CMPTransaction::logicMath_SendAll()
     }
 
     nNewValue = numberOfPropertiesSent;
+
+    return 0;
+}
+
+/** Tx 5 */
+int CMPTransaction::logicMath_SendToMany()
+{
+    if (!IsTransactionTypeAllowed(block, property, type, version)) {
+        PrintToLog("%s(): rejected: type %d or version %d not permitted for property %d at block %d\n",
+                __func__,
+                type,
+                version,
+                property,
+                block);
+        return (PKT_ERROR_SEND_MANY -22);
+    }
+
+    if (nValue <= 0 || MAX_INT_8_BYTES < nValue) {
+        PrintToLog("%s(): rejected: value out of range or zero: %d", __func__, nValue);
+        return (PKT_ERROR_SEND_MANY -23);
+    }
+
+    if (!IsPropertyIdValid(property)) {
+        PrintToLog("%s(): rejected: property %d does not exist\n", __func__, property);
+        return (PKT_ERROR_SEND_MANY -24);
+    }
+
+    int64_t nBalance = GetTokenBalance(sender, property, BALANCE);
+    if (nBalance < (int64_t) nValue) {
+        PrintToLog("%s(): rejected: sender %s has insufficient balance of property %d [%s < %s]\n",
+                __func__,
+                sender,
+                property,
+                FormatMP(property, nBalance),
+                FormatMP(property, nValue));
+        return (PKT_ERROR_SEND_MANY -25);
+    }
+
+    // ------------------------------------------
+
+    uint64_t totalAmount = 0;
+    uint8_t totalOutputs = 0;
+
+    // Check if all outputs refer to valid destinations
+    for (const std::tuple<uint8_t, uint64_t>& entry : outputValuesForSTM) {
+        uint8_t output = std::get<0>(entry);
+        uint64_t amount = std::get<1>(entry);
+
+        std::string receiver;
+        if (!getValidStmAddressAt(output, receiver)) {
+            PrintToLog("%s(): rejected: output %d doesn't refer to valid destination\n", __func__, output);
+            return (PKT_ERROR_SEND_MANY -26);
+        }
+        if (receiver.empty()) {
+            PrintToLog("%s(): rejected: receiver of output %d doesn't refer to valid destination\n", __func__, output);
+            return (PKT_ERROR_SEND_MANY -27);
+        }
+
+        totalAmount += amount;
+        totalOutputs += 1;
+    }
+
+    if (totalAmount != nValue) {
+        PrintToLog("%s(): rejected: mismatch of total amounts [%d != %d]\n", __func__, totalAmount, nValue);
+        return (PKT_ERROR_SEND_MANY -28);
+    }
+
+    if (totalOutputs != numberOfSTMReceivers) {
+        PrintToLog("%s(): rejected: mismatch of number of valid receivers [%d != %d]\n", __func__, totalOutputs, numberOfSTMReceivers);
+        return (PKT_ERROR_SEND_MANY -29);
+    }
+
+    // Move the tokens
+    for (const std::tuple<uint8_t, uint64_t>& entry : outputValuesForSTM) {
+        uint8_t output = std::get<0>(entry);
+        uint64_t amount = std::get<1>(entry);
+
+        std::string receiver;
+        assert(getValidStmAddressAt(output, receiver));
+
+        assert(update_tally_map(sender, property, -amount, BALANCE));
+        assert(update_tally_map(receiver, property, amount, BALANCE));
+    }
 
     return 0;
 }
@@ -1831,24 +1999,10 @@ int CMPTransaction::logicMath_CreatePropertyVariable()
         return (PKT_ERROR_SP -23);
     }
 
-    if (!IsPropertyIdValid(property)) {
+    if (version < MP_TX_PKT_V2 && !IsPropertyIdValid(property)) {
         PrintToLog("%s(): rejected: property %d does not exist\n", __func__, property);
         return (PKT_ERROR_SP -24);
     }
-
-
-    // Allow only RPDx as desired property
-    uint32_t RPDxPropertyId = pDbSpInfo->findSPByTicker("RPDx");
-    if (RPDxPropertyId == 0) {
-        PrintToLog("%s(): rejected: RPDx not issued yet\n", __func__);
-        return (PKT_ERROR_SP -25);
-    }
-
-    if (property != RPDxPropertyId) {
-        PrintToLog("%s(): rejected: desired token must be RPDx\n", __func__);
-        return (PKT_ERROR_SP -26);
-    }
-
 
     if (TOKEN_PROPERTY_TYPE_INDIVISIBLE != prop_type && TOKEN_PROPERTY_TYPE_DIVISIBLE != prop_type) {
         PrintToLog("%s(): rejected: invalid property type: %d\n", __func__, prop_type);
@@ -2568,6 +2722,130 @@ int CMPTransaction::logicMath_Deactivation()
     }
     if (feature_id == FEATURE_TRADEALLPAIRS) {
         MetaDEx_SHUTDOWN_ALLPAIR();
+    }
+
+    return 0;
+}
+
+/** Tx 80 */
+int CMPTransaction::logicMath_RapidsPayment()
+{
+    uint256 blockHash;
+    {
+        LOCK(cs_main);
+
+        CBlockIndex* pindex = chainActive[block];
+        if (pindex == NULL) {
+            PrintToLog("%s(): ERROR: block %d not in the active chain\n", __func__, block);
+            return (PKT_ERROR_TOKENS -20);
+        }
+        blockHash = pindex->GetBlockHash();
+    }
+
+    if (!IsTransactionTypeAllowed(block, property, type, version)) {
+        PrintToLog("%s(): rejected: type %d or version %d not permitted for property %d at block %d\n",
+                __func__,
+                type,
+                version,
+                property,
+                block);
+        return (PKT_ERROR_TOKENS -22);
+    }
+
+    CTransaction linked_tx;
+    uint256 linked_blockHash = 0;
+    int linked_blockHeight = 0;
+    int linked_blockTime = 0;
+
+    if (!GetTransaction(linked_txid, linked_tx, linked_blockHash, true)) {
+        PrintToLog("%s(): rejected: linked transaction %s does not exist\n",
+                __func__,
+                linked_txid.GetHex());
+        return MP_TX_NOT_FOUND;
+    }
+
+    if (linked_blockHash == 0) { // linked transaction is unconfirmed (and thus not yet added to state), cannot process payment
+        PrintToLog("%s(): rejected: linked transaction %s does not exist (unconfirmed)\n",
+                __func__,
+                linked_txid.GetHex());
+        return MP_TX_NOT_FOUND;
+    }
+
+    CBlockIndex* pBlockIndex = GetBlockIndex(linked_blockHash);
+    if (NULL != pBlockIndex) {
+        linked_blockHeight = pBlockIndex->nHeight;
+        linked_blockTime = pBlockIndex->nTime;
+    }
+
+    CMPTransaction mp_obj;
+    int parseRC = ParseTransaction(linked_tx, linked_blockHeight, 0, mp_obj, linked_blockTime);
+    if (parseRC < 0) {
+        PrintToLog("%s(): rejected: linked transaction %s is not an Omni layer transaction\n",
+                __func__,
+                linked_txid.GetHex());
+        return MP_TX_IS_NOT_TOKEN_PROTOCOL;
+    }
+
+    if (!mp_obj.interpret_Transaction()) {
+        PrintToLog("%s(): rejected: linked transaction %s is not an Omni layer transaction\n",
+                __func__,
+                linked_txid.GetHex());
+        return MP_TX_IS_NOT_TOKEN_PROTOCOL;
+    }
+
+    bool linked_valid = false;
+    {
+        LOCK(cs_tally);
+        linked_valid = pDbTransactionList->getValidMPTX(linked_txid);
+    }
+    if (!linked_valid) {
+        PrintToLog("%s(): rejected: linked transaction %s is an invalid transaction\n",
+                __func__,
+                linked_txid.GetHex());
+        return MP_TX_IS_NOT_TOKEN_PROTOCOL -101;
+    }
+
+    uint16_t linked_type = mp_obj.getType();
+    uint16_t linked_version = mp_obj.getVersion();
+    if (!IsRapidsPaymentAllowed(linked_type, linked_version)) {
+        PrintToLog("%s(): rejected: linked transaction %s doesn't support rapids payments\n",
+                __func__,
+                linked_txid.GetHex());
+        return (PKT_ERROR_TOKENS -61);
+    }
+
+    std::string linked_sender = mp_obj.getSender();
+    nValue = GetRapidsPaymentAmount(txid, linked_sender);
+    PrintToLog("\tlinked tx sender: %s\n", linked_sender);
+    PrintToLog("\t  psyment amount: %s\n", FormatDivisibleMP(nValue));
+
+    if (nValue == 0) {
+        PrintToLog("%s(): rejected: no payment to sender of linked transaction\n",
+                __func__,
+                linked_sender,
+                linked_txid.GetHex());
+        return (PKT_ERROR_TOKENS -62);
+    }
+
+    // empty receiver & receiver == linked_sender checks are skipped, since we don't care if the payment was last vout
+
+    if (linked_type == TOKEN_TYPE_CREATE_PROPERTY_VARIABLE) {
+        CMPCrowd* pcrowdsale = getCrowd(receiver);
+        if (pcrowdsale == NULL) {
+            PrintToLog("%s(): rejected: receiver %s does not have an active crowdsale\n", __func__, receiver);
+            return (PKT_ERROR_TOKENS -47);
+        }
+
+        // confirm the crowdsale that the receiver has open now is the same as the transaction referenced in the payment
+        // CMPCrowd class doesn't contain txid, work around by comparing propid for current crowdsale & propid for linked crowdsale
+        uint32_t crowdPropertyId = pcrowdsale->getPropertyId();
+        uint32_t linkPropertyId = pDbSpInfo->findSPByTX(linked_txid); // TODO: Is this safe to lookup the crowdsale this way??
+        if (linkPropertyId != crowdPropertyId) {
+            PrintToLog("%s(): rejected: active crowdsale for receiver %s did not originate from linked txid\n", __func__, receiver);
+            return (PKT_ERROR_TOKENS -48);
+        }
+
+        logicHelper_CrowdsaleParticipation();
     }
 
     return 0;

@@ -206,8 +206,8 @@ static UniValue createtokenpayloadissuancefixed(const JSONRPCRequest& request)
             "\"payload\"             (string) the hex-encoded payload\n"
 
             "\nExamples:\n"
-            + HelpExampleCli("createtokenpayloadissuancefixed", "2 1 0 \"Category\" \"Subcategory\" \"Name\" \"TICKER\" \"\" \"\" \"1000000\"")
-            + HelpExampleRpc("createtokenpayloadissuancefixed", "2 1 0 \"Category\", \"Subcategory\", \"Name\", \"TICKER\", \"\", \"\", \"1000000\",")
+            + HelpExampleCli("createtokenpayloadissuancefixed", "2 1 0 \"Companies\" \"Bitcoin Mining\" \"Quantum Miner\" \"TICKER\" \"\" \"\" \"1000000\"")
+            + HelpExampleRpc("createtokenpayloadissuancefixed", "2, 1, 0, \"Companies\", \"Bitcoin Mining\", \"Quantum Miner\", \"TICKER\", \"\", \"\", \"1000000\"")
         );
 
     uint8_t ecosystem = ParseEcosystem(request.params[0]);
@@ -257,17 +257,20 @@ static UniValue createtokenpayloadissuancecrowdsale(const JSONRPCRequest& reques
             "7. ticker               (string, required) the ticker of the new tokens to create\n"
             "8. url                  (string, required) an URL for further information about the new tokens (can be \"\")\n"
             "9. data                 (string, required) a description for the new tokens (can be \"\")\n"
-            "10. tokensperunit       (string, required) the amount of tokens granted per unit invested in the crowdsale\n"
-            "11. deadline            (number, required) the deadline of the crowdsale as Unix timestamp\n"
-            "12. earlybonus          (number, required) an early bird bonus for participants in percent per week\n"
-            "13. issuerpercentage    (number, required) a percentage of tokens that will be granted to the issuer\n"
+            
+            "10. tokendesired        (string, required) the token ticker eligible to participate in the crowdsale\n"
+            
+            "11. tokensperunit       (string, required) the amount of tokens granted per unit invested in the crowdsale\n"
+            "12. deadline            (number, required) the deadline of the crowdsale as Unix timestamp\n"
+            "13. earlybonus          (number, required) an early bird bonus for participants in percent per week\n"
+            "14. issuerpercentage    (number, required) a percentage of tokens that will be granted to the issuer\n"
 
             "\nResult:\n"
             "\"payload\"             (string) the hex-encoded payload\n"
 
             "\nExamples:\n"
-            + HelpExampleCli("createtokenpayloadissuancecrowdsale", "2 1 0 \"Category\" \"Subcategory\" \"Name\" \"TICKER\" \"\" \"\" \"100\" 1483228800 30 2")
-            + HelpExampleRpc("createtokenpayloadissuancecrowdsale", "2, 1, 0, \"Category\", \"Subcategory\", \"Name\", \"TICKER\", \"\", \"\", \"100\", 1483228800, 30, 2")
+            + HelpExampleCli("createtokenpayloadissuancecrowdsale", "2 1 0 \"Companies\" \"Bitcoin Mining\" \"Quantum Miner\" \"TICKER\" \"\" \"\" \"RPD\" \"100\" 1483228800 30 2")
+            + HelpExampleRpc("createtokenpayloadissuancecrowdsale", "2, 1, 0, \"Companies\", \"Bitcoin Mining\", \"Quantum Miner\", \"TICKER\", \"\", \"\", \"RPD\", \"100\", 1483228800, 30, 2")
         );
 
     uint8_t ecosystem = ParseEcosystem(request.params[0]);
@@ -279,10 +282,13 @@ static UniValue createtokenpayloadissuancecrowdsale(const JSONRPCRequest& reques
     std::string ticker = ParseText(request.params[6]);
     std::string url = ParseText(request.params[7]);
     std::string data = ParseText(request.params[8]);
-    int64_t numTokens = ParseAmount(request.params[9], type);
-    int64_t deadline = ParseDeadline(request.params[10]);
-    uint8_t earlyBonus = ParseEarlyBirdBonus(request.params[11]);
-    uint8_t issuerPercentage = ParseIssuerBonus(request.params[12]);
+
+    std::string desiredToken = ParseText(request.params[9]);
+
+    int64_t numTokens = ParseAmount(request.params[10], type);
+    int64_t deadline = ParseDeadline(request.params[11]);
+    uint8_t earlyBonus = ParseEarlyBirdBonus(request.params[12]);
+    uint8_t issuerPercentage = ParseIssuerBonus(request.params[13]);
 
     RequirePropertyName(name);
     RequirePropertyName(ticker);
@@ -291,10 +297,9 @@ static UniValue createtokenpayloadissuancecrowdsale(const JSONRPCRequest& reques
     if (propertyId > 0)
         throw JSONRPCError(RPC_INTERNAL_ERROR, "Token with this ticker already exists");
 
-    std::string desiredName = "RPDx";
-    uint32_t propertyIdDesired = pDbSpInfo->findSPByTicker(desiredName);
-    if (propertyIdDesired == 0)
-        throw JSONRPCError(RPC_INTERNAL_ERROR, "RPDx token not issued yet");
+    uint32_t propertyIdDesired = pDbSpInfo->findSPByTicker(desiredToken);
+    if (desiredToken != "RPD" && propertyIdDesired == 0)
+        throw JSONRPCError(RPC_INTERNAL_ERROR, "Desired token not found");
 
     if (!IsTokenTickerValid(ticker))
         throw JSONRPCError(RPC_INTERNAL_ERROR, "Token ticker is invalid");
@@ -330,8 +335,8 @@ static UniValue createtokenpayloadissuancemanaged(const JSONRPCRequest& request)
             "\"payload\"             (string) the hex-encoded payload\n"
 
             "\nExamples:\n"
-            + HelpExampleCli("createtokenpayloadissuancemanaged", "2 1 0 \"Category\" \"Subcategory\" \"Name\" \"TICKER\" \"\" \"\"")
-            + HelpExampleRpc("createtokenpayloadissuancemanaged", "2, 1, 0, \"Category\", \"Subcategory\", \"Name\", \"TICKER\", \"\", \"\"")
+            + HelpExampleCli("createtokenpayloadissuancemanaged", "2 1 0 \"Companies\" \"Bitcoin Mining\" \"Quantum Miner\" \"TICKER\" \"\" \"\"")
+            + HelpExampleRpc("createtokenpayloadissuancemanaged", "2, 1, 0, \"Companies\", \"Bitcoin Mining\", \"Quantum Miner\", \"TICKER\", \"\", \"\"")
         );
 
     uint8_t ecosystem = ParseEcosystem(request.params[0]);
@@ -702,8 +707,8 @@ static UniValue token_createpayload_freeze(const JSONRPCRequest& request)
             "\"payload\"             (string) the hex-encoded payload\n"
 
             "\nExamples:\n"
-            + HelpExampleCli("token_createpayload_freeze", "\"RHTHRxu3aSDV4deakjC7VmsiUp7c6dfbvs\" 1 \"100\"")
-            + HelpExampleRpc("token_createpayload_freeze", "\"RHTHRxu3aSDV4deakjC7VmsiUp7c6dfbvs\", 1, \"100\"")
+            + HelpExampleCli("token_createpayload_freeze", "\"3HTHRxu3aSDV4deakjC7VmsiUp7c6dfbvs\" 1 \"100\"")
+            + HelpExampleRpc("token_createpayload_freeze", "\"3HTHRxu3aSDV4deakjC7VmsiUp7c6dfbvs\", 1, \"100\"")
         );
 
     std::string refAddress = ParseAddress(request.params[0]);
@@ -734,8 +739,8 @@ static UniValue token_createpayload_unfreeze(const JSONRPCRequest& request)
             "\"payload\"             (string) the hex-encoded payload\n"
 
             "\nExamples:\n"
-            + HelpExampleCli("token_createpayload_unfreeze", "\"RHTHRxu3aSDV4deakjC7VmsiUp7c6dfbvs\" 1 \"100\"")
-            + HelpExampleRpc("token_createpayload_unfreeze", "\"RHTHRxu3aSDV4deakjC7VmsiUp7c6dfbvs\", 1, \"100\"")
+            + HelpExampleCli("token_createpayload_unfreeze", "\"3HTHRxu3aSDV4deakjC7VmsiUp7c6dfbvs\" 1 \"100\"")
+            + HelpExampleRpc("token_createpayload_unfreeze", "\"3HTHRxu3aSDV4deakjC7VmsiUp7c6dfbvs\", 1, \"100\"")
         );
 
     std::string refAddress = ParseAddress(request.params[0]);
@@ -746,6 +751,46 @@ static UniValue token_createpayload_unfreeze(const JSONRPCRequest& request)
 
     return HexStr(payload.begin(), payload.end());
 }
+
+
+
+static UniValue createtokenpayloadsendtomany(const JSONRPCRequest& request)
+{
+    if (request.fHelp || request.params.size() != 2)
+        throw runtime_error(
+            "createtokenpayloadsendtomany\n"
+        );
+
+    // uint32_t propertyId = ParsePropertyId(request.params[0]);
+
+    std::string ticker = ParseText(request.params[0]);
+
+    uint32_t propertyId = pDbSpInfo->findSPByTicker(ticker);
+    if (propertyId == 0)
+        throw JSONRPCError(RPC_INTERNAL_ERROR, "Token with this ticker doesn't exists");
+
+    std::vector<std::tuple<uint8_t, uint64_t>> outputValues;
+
+    for (unsigned int idx = 0; idx < request.params[1].size(); idx++) {
+        const UniValue& input = request.params[1][idx];
+        const UniValue& o = input.get_obj();
+
+        const UniValue& uvOutput = find_value(o, "output");
+        const UniValue& uvAmount = find_value(o, "amount");
+
+        uint8_t output = uvOutput.get_int();
+        uint64_t amount = ParseAmount(uvAmount, isPropertyDivisible(propertyId));
+
+        outputValues.push_back(std::make_tuple(output, amount));
+    }
+
+    std::vector<unsigned char> payload = CreatePayload_SendToMany(
+        propertyId,
+        outputValues);           
+
+    return HexStr(payload.begin(), payload.end());
+}
+
 
 static const CRPCCommand commands[] =
 { //  category                         name                                      actor (function)                         okSafeMode
@@ -770,6 +815,7 @@ static const CRPCCommand commands[] =
     { "token layer (payload creation)", "token_createpayload_disablefreezing",     &token_createpayload_disablefreezing,     true },
     { "token layer (payload creation)", "token_createpayload_freeze",              &token_createpayload_freeze,              true },
     { "token layer (payload creation)", "token_createpayload_unfreeze",            &token_createpayload_unfreeze,            true },
+    { "token layer (payload creation)", "createtokenpayloadsendtomany",           &createtokenpayloadsendtomany,            true },
 };
 
 void RegisterTokenPayloadCreationRPCCommands()

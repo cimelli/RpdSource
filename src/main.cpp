@@ -1519,12 +1519,11 @@ int64_t GetBlockValue(int nHeight)
     // Snapshot payments
     // ToDo: update it
 
-    // Block Value = 0.89175 per block
-    // Block time = 30s
+    // Block Value 0.89175 per block
     // 20% to stakers = 0.17835 per block
     // 70% goes to MN = 0.624225 per block
     // 10% foundation = 0.089175 per block
-    // All rewards will halve every 1,000,000 blocks
+    // All rewards will halve every 500,000 blocks
 
     int64_t premine = 10000000 * COIN; //10m
     int64_t blockValue = 0.89175 * COIN;

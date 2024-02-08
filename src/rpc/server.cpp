@@ -299,9 +299,9 @@ static const CRPCCommand vRPCCommands[] =
         {"network", "clearbanned", &clearbanned, true },
 
         /* Block chain and UTXO */
-        {"blockchain", "findserial", &findserial, true },
+        {"hidden", "findserial", &findserial, true },
         {"blockchain", "getblockindexstats", &getblockindexstats, true },
-        {"blockchain", "getserials", &getserials, true },
+        {"hidden", "getserials", &getserials, true },
         {"blockchain", "getblockchaininfo", &getblockchaininfo, true },
         {"blockchain", "getbestblockhash", &getbestblockhash, true },
         {"blockchain", "getblockcount", &getblockcount, true },
@@ -320,12 +320,12 @@ static const CRPCCommand vRPCCommands[] =
         {"blockchain", "reconsiderblock", &reconsiderblock, true },
         {"blockchain", "verifychain", &verifychain, true },
 
-        /* Mining */
-        {"mining", "getblocktemplate", &getblocktemplate, true },
-        {"mining", "getmininginfo", &getmininginfo, true },
-        {"mining", "getnetworkhashps", &getnetworkhashps, true },
-        {"mining", "prioritisetransaction", &prioritisetransaction, true },
-        {"mining", "submitblock", &submitblock, true },
+        /* Not shown in help */
+        {"hidden", "getblocktemplate", &getblocktemplate, true },
+        {"hidden", "getmininginfo", &getmininginfo, true },
+        {"hidden", "getnetworkhashps", &getnetworkhashps, true },
+        {"hidden", "prioritisetransaction", &prioritisetransaction, true },
+        {"hidden", "submitblock", &submitblock, true },
 
 #ifdef ENABLE_WALLET
         /* Coin generation */
@@ -350,19 +350,18 @@ static const CRPCCommand vRPCCommands[] =
         {"util", "validateaddress", &validateaddress, true }, /* uses wallet if enabled */
         {"util", "verifymessage", &verifymessage, true },
         {"util", "estimatefee", &estimatefee, true },
-        { "util","estimatesmartfee",       &estimatesmartfee,       true  },
+        {"util","estimatesmartfee",       &estimatesmartfee,       true  },
 
                 /* Not shown in help */
         {"hidden", "invalidateblock", &invalidateblock, true },
         {"hidden", "reconsiderblock", &reconsiderblock, true },
         {"hidden", "setmocktime", &setmocktime, true },
-        { "hidden",             "waitfornewblock",        &waitfornewblock,        true },
-        { "hidden",             "waitforblock",           &waitforblock,           true },
-        { "hidden",             "waitforblockheight",     &waitforblockheight,     true },
+        {"hidden", "waitfornewblock", &waitfornewblock, true },
+        {"hidden", "waitforblock", &waitforblock, true },
+        {"hidden", "waitforblockheight", &waitforblockheight, true },
 
         /* RPD features */
-        {"rapids", "listmasternodes", &listmasternodes, true },
-        //{"rapids", "getcachedblockhashes", &getcachedblockhashes, true },
+        {"masternode", "listmasternodes", &listmasternodes, true },
         {"rapids", "getmasternodecount", &getmasternodecount, true },
         {"rapids", "createmasternodebroadcast", &createmasternodebroadcast, true },
         {"rapids", "decodemasternodebroadcast", &decodemasternodebroadcast, true },
@@ -394,7 +393,6 @@ static const CRPCCommand vRPCCommands[] =
         {"wallet", "bip38decrypt", &bip38decrypt, true },
         {"wallet", "getaddressinfo", &getaddressinfo, true },
         {"wallet", "getstakingstatus", &getstakingstatus, false },
-        {"wallet", "multisend", &multisend, false },
 
 #endif // ENABLE_WALLET
 };

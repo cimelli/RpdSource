@@ -15,6 +15,7 @@ int populateRPCTransactionObject(const CTransaction& tx, const uint256& blockHas
 void populateRPCTypeInfo(CMPTransaction& mp_obj, UniValue& txobj, uint32_t txType, bool extendedDetails, std::string extendedDetailsFilter, int confirmations);
 
 void populateRPCTypeSimpleSend(CMPTransaction& tokenObj, UniValue& txobj);
+void populateRPCTypeSendToMany(CMPTransaction& tokenObj, UniValue& txobj);
 void populateRPCTypeSendToOwners(CMPTransaction& tokenObj, UniValue& txobj, bool extendedDetails, std::string extendedDetailsFilter);
 void populateRPCTypeSendAll(CMPTransaction& tokenObj, UniValue& txobj, int confirmations);
 void populateRPCTypeTradeOffer(CMPTransaction& tokenObj, UniValue& txobj);
@@ -30,6 +31,7 @@ void populateRPCTypeCloseCrowdsale(CMPTransaction& tokenObj, UniValue& txobj);
 void populateRPCTypeGrant(CMPTransaction& tokenObj, UniValue& txobj);
 void populateRPCTypeRevoke(CMPTransaction& tokenOobj, UniValue& txobj);
 void populateRPCTypeChangeIssuer(CMPTransaction& tokenObj, UniValue& txobj);
+void populateRPCTypeRapidsPayment(CMPTransaction& tokenObj, UniValue& txobj);
 void populateRPCTypeActivation(CMPTransaction& tokenObj, UniValue& txobj);
 void populateRPCTypeEnableFreezing(CMPTransaction& tokenObj, UniValue& txobj);
 void populateRPCTypeDisableFreezing(CMPTransaction& tokenObj, UniValue& txobj);

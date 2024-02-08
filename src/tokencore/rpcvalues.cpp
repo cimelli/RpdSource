@@ -172,6 +172,15 @@ uint8_t ParseIssuerBonus(const UniValue& value)
     return static_cast<uint8_t>(percentage);
 }
 
+uint8_t ParseRoyaltiesPercentage(const UniValue& value)
+{
+    int64_t percentage = value.get_int64();
+    if (percentage < 0 || 99 < percentage) {
+        throw JSONRPCError(RPC_TYPE_ERROR, "Royalties percentage can be 0-99 percent");
+    }
+    return static_cast<uint8_t>(percentage);
+}
+
 uint8_t ParseMetaDExAction(const UniValue& value)
 {
     int64_t action = value.get_int64();
@@ -207,6 +216,20 @@ CPubKey ParsePubKeyOrAddress(const UniValue& value)
     }
     return pubKey;
 }
+
+CPubKey ParsePubKey(const UniValue& value)
+{
+    CPubKey pubKey;
+
+    if (IsHex(value.get_str()))
+        pubKey = CPubKey(ParseHex(value.get_str()));
+
+    if (!pubKey.IsFullyValid())
+        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid public key");
+
+    return pubKey;
+}
+
 
 uint32_t ParseOutputIndex(const UniValue& value)
 {

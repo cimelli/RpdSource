@@ -45,7 +45,7 @@ static UniValue sendtokenfunded(const JSONRPCRequest& request)
 
             "\nCreates and sends a funded simple send transaction.\n"
 
-            "\nAll RPD from the sender are consumed and if there are RPD missing, they are taken from the specified fee source. Change is sent to the fee source!\n"
+            "\nAll bitcoins from the sender are consumed and if there are bitcoins missing, they are taken from the specified fee source. Change is sent to the fee source!\n"
 
             "\nArguments:\n"
             "1. fromaddress          (string, required) the address to send the tokens from\n"
@@ -58,8 +58,8 @@ static UniValue sendtokenfunded(const JSONRPCRequest& request)
             "\"hash\"                  (string) the hex-encoded transaction hash\n"
 
             "\nExamples:\n"
-            + HelpExampleCli("sendtokenfunded", "\"RDFa5bT6KMEr6ta29QJouainsjaNBsJQhH\" \"R5cWrfuvMxyxGst2FisrQcvcpF48x6sXoH\" TICKER \"100.0\" \"R5Jhzz4omEXEyFKbdcccJwuVPea5LqsKM1\"")
-            + HelpExampleRpc("sendtokenfunded", "\"RDFa5bT6KMEr6ta29QJouainsjaNBsJQhH\", \"R5cWrfuvMxyxGst2FisrQcvcpF48x6sXoH\", TICKER, \"100.0\", \"R5Jhzz4omEXEyFKbdcccJwuVPea5LqsKM1\"")
+            + HelpExampleCli("sendtokenfunded", "\"1DFa5bT6KMEr6ta29QJouainsjaNBsJQhH\" \"15cWrfuvMxyxGst2FisrQcvcpF48x6sXoH\" TOKEN \"100.0\" \"15Jhzz4omEXEyFKbdcccJwuVPea5LqsKM1\"")
+            + HelpExampleRpc("sendtokenfunded", "\"1DFa5bT6KMEr6ta29QJouainsjaNBsJQhH\", \"15cWrfuvMxyxGst2FisrQcvcpF48x6sXoH\", TOKEN, \"100.0\", \"15Jhzz4omEXEyFKbdcccJwuVPea5LqsKM1\"")
         );
 
     // obtain parameters & info
@@ -99,7 +99,7 @@ static UniValue sendtokenfundedall(const JSONRPCRequest& request)
 
             "\nCreates and sends a transaction that transfers all available tokens in the given ecosystem to the recipient.\n"
 
-            "\nAll RPD from the sender are consumed and if there are RPD missing, they are taken from the specified fee source. Change is sent to the fee source!\n"
+            "\nAll bitcoins from the sender are consumed and if there are bitcoins missing, they are taken from the specified fee source. Change is sent to the fee source!\n"
 
             "\nArguments:\n"
             "1. fromaddress          (string, required) the address to the tokens send from\n"
@@ -111,8 +111,8 @@ static UniValue sendtokenfundedall(const JSONRPCRequest& request)
             "\"hash\"                  (string) the hex-encoded transaction hash\n"
 
             "\nExamples:\n"
-            + HelpExampleCli("sendtokenfundedall", "\"RDFa5bT6KMEr6ta29QJouainsjaNBsJQhH\" \"R5cWrfuvMxyxGst2FisrQcvcpF48x6sXoH\" 1 \"R5Jhzz4omEXEyFKbdcccJwuVPea5LqsKM1\"")
-            + HelpExampleRpc("sendtokenfundedall", "\"RDFa5bT6KMEr6ta29QJouainsjaNBsJQhH\", \"R5cWrfuvMxyxGst2FisrQcvcpF48x6sXoH\", 1, \"R5Jhzz4omEXEyFKbdcccJwuVPea5LqsKM1\"")
+            + HelpExampleCli("sendtokenfundedall", "\"1DFa5bT6KMEr6ta29QJouainsjaNBsJQhH\" \"15cWrfuvMxyxGst2FisrQcvcpF48x6sXoH\" 1 \"15Jhzz4omEXEyFKbdcccJwuVPea5LqsKM1\"")
+            + HelpExampleRpc("sendtokenfundedall", "\"1DFa5bT6KMEr6ta29QJouainsjaNBsJQhH\", \"15cWrfuvMxyxGst2FisrQcvcpF48x6sXoH\", 1, \"15Jhzz4omEXEyFKbdcccJwuVPea5LqsKM1\"")
         );
 
     // obtain parameters & info
@@ -145,12 +145,12 @@ static UniValue token_sendrawtx(const JSONRPCRequest& request)
             "2. rawtransaction       (string, required) the hex-encoded raw transaction\n"
             "3. referenceaddress     (string, optional) a reference address (none by default)\n"
             "4. redeemaddress        (string, optional) an address that can spent the transaction dust (sender by default)\n"
-            "5. referenceamount      (string, optional) a RPD amount that is sent to the receiver (minimal by default)\n"
+            "5. referenceamount      (string, optional) a bitcoin amount that is sent to the receiver (minimal by default)\n"
             "\nResult:\n"
             "\"hash\"                  (string) the hex-encoded transaction hash\n"
             "\nExamples:\n"
-            + HelpExampleCli("token_sendrawtx", "\"RMCHESTptvd2LnNp7wmr2sGTpRomteAkq8\" \"000000000000000100000000017d7840\" \"REqTta1Rt8ixAA32DuC29oukbsSWU62qAV\"")
-            + HelpExampleRpc("token_sendrawtx", "\"RMCHESTptvd2LnNp7wmr2sGTpRomteAkq8\", \"000000000000000100000000017d7840\", \"REqTta1Rt8ixAA32DuC29oukbsSWU62qAV\"")
+            + HelpExampleCli("token_sendrawtx", "\"1MCHESTptvd2LnNp7wmr2sGTpRomteAkq8\" \"000000000000000100000000017d7840\" \"1EqTta1Rt8ixAA32DuC29oukbsSWU62qAV\"")
+            + HelpExampleRpc("token_sendrawtx", "\"1MCHESTptvd2LnNp7wmr2sGTpRomteAkq8\", \"000000000000000100000000017d7840\", \"1EqTta1Rt8ixAA32DuC29oukbsSWU62qAV\"")
         );
 
     std::string fromAddress = ParseAddress(request.params[0]);
@@ -190,14 +190,14 @@ static UniValue sendtoken(const JSONRPCRequest& request)
             "3. ticker               (string, required) the ticker of the token to send\n"
             "4. amount               (string, required) the amount to send\n"
             "5. redeemaddress        (string, optional) an address that can spend the transaction dust (sender by default)\n"
-            "6. referenceamount      (string, optional) a RPD amount that is sent to the receiver (minimal by default)\n"
+            "6. referenceamount      (string, optional) a bitcoin amount that is sent to the receiver (minimal by default)\n"
 
             "\nResult:\n"
             "\"hash\"                  (string) the hex-encoded transaction hash\n"
 
             "\nExamples:\n"
-            + HelpExampleCli("sendtoken", "\"RM9qvHKtgARhqcMtM5cRT9VaiDJ5PSfQGY\" \"R7FaKponF7zqoMLUjEiko25pDiuVH5YLEa\" TICKER \"100.0\"")
-            + HelpExampleRpc("sendtoken", "\"RM9qvHKtgARhqcMtM5cRT9VaiDJ5PSfQGY\", \"R7FaKponF7zqoMLUjEiko25pDiuVH5YLEa\", TICKER, \"100.0\"")
+            + HelpExampleCli("sendtoken", "\"3M9qvHKtgARhqcMtM5cRT9VaiDJ5PSfQGY\" \"37FaKponF7zqoMLUjEiko25pDiuVH5YLEa\" TOKEN \"100.0\"")
+            + HelpExampleRpc("sendtoken", "\"3M9qvHKtgARhqcMtM5cRT9VaiDJ5PSfQGY\", \"37FaKponF7zqoMLUjEiko25pDiuVH5YLEa\", TOKEN, \"100.0\"")
         );
 
     // obtain parameters & info
@@ -239,6 +239,187 @@ static UniValue sendtoken(const JSONRPCRequest& request)
     }
 }
 
+
+
+
+
+static UniValue sendtokenmany(const JSONRPCRequest& request)
+{
+    // if (request.fHelp || request.params.size() < 4 || request.params.size() > 6)
+    //     throw runtime_error(
+    //         "sendtoken \"fromaddress\" \"toaddress\" ticker \"amount\" ( \"redeemaddress\" \"referenceamount\" )\n"
+
+    //         "\nCreate and broadcast a simple send transaction.\n"
+
+    //         "\nArguments:\n"
+    //         "1. fromaddress          (string, required) the address to send from\n"
+    //         "2. toaddress            (string, required) the address of the receiver\n"
+    //         "3. ticker               (string, required) the ticker of the token to send\n"
+    //         "4. amount               (string, required) the amount to send\n"
+    //         "5. redeemaddress        (string, optional) an address that can spend the transaction dust (sender by default)\n"
+    //         "6. referenceamount      (string, optional) a bitcoin amount that is sent to the receiver (minimal by default)\n"
+
+    //         "\nResult:\n"
+    //         "\"hash\"                  (string) the hex-encoded transaction hash\n"
+
+    //         "\nExamples:\n"
+    //         + HelpExampleCli("sendtoken", "\"3M9qvHKtgARhqcMtM5cRT9VaiDJ5PSfQGY\" \"37FaKponF7zqoMLUjEiko25pDiuVH5YLEa\" TOKEN \"100.0\"")
+    //         + HelpExampleRpc("sendtoken", "\"3M9qvHKtgARhqcMtM5cRT9VaiDJ5PSfQGY\", \"37FaKponF7zqoMLUjEiko25pDiuVH5YLEa\", TOKEN, \"100.0\"")
+    //     );
+
+    std::string fromAddress = ParseAddress(request.params[0]);
+    std::string ticker = ParseText(request.params[1]);
+
+    uint32_t propertyId = pDbSpInfo->findSPByTicker(ticker);
+    if (propertyId == 0)
+        throw JSONRPCError(RPC_INTERNAL_ERROR, "Token with this ticker doesn't exists");
+
+    RequireBoundedStmReceiverNumber(request.params[2].size());
+
+    // ---
+    // dry run to get positions for send-to-many outputs
+    // ---
+
+    std::vector<std::string> receiverAddresses;
+    std::vector<std::tuple<uint8_t, uint64_t>> outputValues;
+
+    uint64_t amountToSend = 0;
+    uint8_t output = 1; // dummy position
+
+    for (unsigned int idx = 0; idx < request.params[2].size(); idx++) {
+        const UniValue& input = request.params[2][idx];
+        const UniValue& o = input.get_obj();
+
+        const UniValue& uvOutput = find_value(o, "address");
+        const UniValue& uvAmount = find_value(o, "amount");
+
+        std::string address = ParseAddress(uvOutput);
+        uint64_t amount = ParseAmount(uvAmount, isPropertyDivisible(propertyId));
+
+        amountToSend += amount;
+        receiverAddresses.push_back(address);
+        outputValues.push_back(std::make_tuple(output, amount));
+
+        output += 1;
+    }
+
+    std::vector<unsigned char> testPayload = CreatePayload_SendToMany(
+        propertyId,
+        outputValues);
+
+    int outputCount = GetDryPayloadOutputCount(fromAddress, "", testPayload);
+
+    // perform checks
+    RequireExistingProperty(propertyId);
+    RequireBalance(fromAddress, propertyId, amountToSend);
+
+    if (outputCount < 0) {
+        throw JSONRPCError(RPC_TYPE_ERROR, "Error creating send-to-many payload");
+    }
+
+    // ---
+    // actual run
+    // --
+
+    receiverAddresses.clear();
+    outputValues.clear();
+    output = outputCount;
+
+    for (unsigned int idx = 0; idx < request.params[2].size(); idx++) {
+        const UniValue& input = request.params[2][idx];
+        const UniValue& o = input.get_obj();
+
+        const UniValue& uvOutput = find_value(o, "address");
+        const UniValue& uvAmount = find_value(o, "amount");
+
+        std::string address = ParseAddress(uvOutput);
+        uint64_t amount = ParseAmount(uvAmount, isPropertyDivisible(propertyId));
+
+        receiverAddresses.push_back(address);
+        outputValues.push_back(std::make_tuple(output, amount));
+
+        output += 1;
+    }
+
+    std::vector<unsigned char> payload = CreatePayload_SendToMany(
+        propertyId,
+        outputValues);
+
+    // request the wallet build the transaction (and if needed commit it)
+    uint256 txid;
+    std::string rawHex;
+    int result = WalletTxBuilder(fromAddress, receiverAddresses, "", 0, payload, txid, rawHex, autoCommit);
+
+    // check error and return the txid (or raw hex depending on autocommit)
+    if (result != 0) {
+        throw JSONRPCError(result, error_str(result));
+    } else {
+        if (!autoCommit) {
+            return rawHex;
+        } else {
+            PendingAdd(txid, fromAddress, TOKEN_TYPE_SEND_TO_MANY, propertyId, amountToSend);
+            return txid.GetHex();
+        }
+    }
+
+}
+
+
+
+
+
+// sendtokenrpdpayment - send a RPD payment
+static UniValue sendtokenrpdpayment(const JSONRPCRequest& request)
+{
+    if (request.fHelp || request.params.size() != 4)
+        throw runtime_error(
+            "sendtokenrpdpayment \"fromaddress\" \"toaddress\" \"linkedtxid\" \"amount\"\n"
+
+            "\nCreate and broadcast a RPD payment transaction.\n"
+
+            "\nArguments:\n"
+            "1. fromaddress          (string, required) the address to send from\n"
+            "2. toaddress            (string, required) the address of the receiver\n"
+            "3. linkedtxid           (string, required) the transaction ID of the linked transaction\n"
+            "4. amount               (string, required) the amount of Bitcoin to send\n"
+
+            "\nResult:\n"
+            "\"hash\"                  (string) the hex-encoded transaction hash\n"
+
+            "\nExamples:\n"
+            + HelpExampleCli("sendtokenrpdpayment", "\"3M9qvHKtgARhqcMtM5cRT9VaiDJ5PSfQGY\" \"37FaKponF7zqoMLUjEiko25pDiuVH5YLEa\" \"txid\" \"0.01\"")
+            + HelpExampleRpc("sendtokenrpdpayment", "\"3M9qvHKtgARhqcMtM5cRT9VaiDJ5PSfQGY\", \"37FaKponF7zqoMLUjEiko25pDiuVH5YLEa\", \"txid\", \"0.01\"")
+        );
+
+    // obtain parameters & info
+    std::string fromAddress = ParseAddress(request.params[0]);
+    std::string toAddress = ParseAddress(request.params[1]);
+    uint256 linkedtxid = ParseHashV(request.params[2], "txid");
+    int64_t referenceAmount = ParseAmount(request.params[3], true);
+
+    // create a payload for the transaction
+    std::vector<unsigned char> payload = CreatePayload_RapidsPayment(linkedtxid);
+
+    // request the wallet build the transaction (and if needed commit it)
+    uint256 txid;
+    std::string rawHex;
+
+    int result = WalletTxBuilder(fromAddress, toAddress, fromAddress, referenceAmount, payload, txid, rawHex, autoCommit);
+
+    // check error and return the txid (or raw hex depending on autocommit)
+    if (result != 0) {
+        throw JSONRPCError(result, error_str(result));
+    } else {
+        if (!autoCommit) {
+            return rawHex;
+        } else {
+            PendingAdd(txid, fromAddress, TOKEN_TYPE_RAPIDS_PAYMENT, RPD_PROPERTY_ID, referenceAmount);
+            return txid.GetHex();
+        }
+    }
+}
+
+
 static UniValue sendalltokens(const JSONRPCRequest& request)
 {
     if (request.fHelp || request.params.size() < 3 || request.params.size() > 5)
@@ -252,14 +433,14 @@ static UniValue sendalltokens(const JSONRPCRequest& request)
             "2. toaddress            (string, required) the address of the receiver\n"
             "3. ecosystem            (number, required) the ecosystem of the tokens to send (1 for main ecosystem, 2 for test ecosystem)\n"
             "4. redeemaddress        (string, optional) an address that can spend the transaction dust (sender by default)\n"
-            "5. referenceamount      (string, optional) a RPD amount that is sent to the receiver (minimal by default)\n"
+            "5. referenceamount      (string, optional) a bitcoin amount that is sent to the receiver (minimal by default)\n"
 
             "\nResult:\n"
             "\"hash\"                  (string) the hex-encoded transaction hash\n"
 
             "\nExamples:\n"
-            + HelpExampleCli("sendalltokens", "\"RM9qvHKtgARhqcMtM5cRT9VaiDJ5PSfQGY\" \"R7FaKponF7zqoMLUjEiko25pDiuVH5YLEa\" 2")
-            + HelpExampleRpc("sendalltokens", "\"RM9qvHKtgARhqcMtM5cRT9VaiDJ5PSfQGY\", \"R7FaKponF7zqoMLUjEiko25pDiuVH5YLEa\" 2")
+            + HelpExampleCli("sendalltokens", "\"3M9qvHKtgARhqcMtM5cRT9VaiDJ5PSfQGY\" \"37FaKponF7zqoMLUjEiko25pDiuVH5YLEa\" 2")
+            + HelpExampleRpc("sendalltokens", "\"3M9qvHKtgARhqcMtM5cRT9VaiDJ5PSfQGY\", \"37FaKponF7zqoMLUjEiko25pDiuVH5YLEa\" 2")
         );
 
     // obtain parameters & info
@@ -315,8 +496,8 @@ static UniValue sendtokendexsell(const JSONRPCRequest& request)
             "\"hash\"                  (string) the hex-encoded transaction hash\n"
 
             "\nExamples:\n"
-            + HelpExampleCli("tokenforsale", "\"R7FaKponF7zqoMLUjEiko25pDiuVH5YLEa\" TICKER \"1.5\" \"0.75\" 25 \"0.0005\" 1")
-            + HelpExampleRpc("tokenforsale", "\"R7FaKponF7zqoMLUjEiko25pDiuVH5YLEa\", TICKER, \"1.5\", \"0.75\", 25, \"0.0005\", 1")
+            + HelpExampleCli("tokenforsale", "\"37FaKponF7zqoMLUjEiko25pDiuVH5YLEa\" TOKEN \"1.5\" \"0.75\" 25 \"0.0005\" 1")
+            + HelpExampleRpc("tokenforsale", "\"37FaKponF7zqoMLUjEiko25pDiuVH5YLEa\", TOKEN, \"1.5\", \"0.75\", 25, \"0.0005\", 1")
         );
 
     // obtain parameters & info
@@ -405,8 +586,8 @@ static UniValue sendtokendexaccept(const JSONRPCRequest& request)
             "\"hash\"                  (string) the hex-encoded transaction hash\n"
 
             "\nExamples:\n"
-            + HelpExampleCli("sendtokendexaccept", "\"R5URq1NN3xL6GeRKUP6vzaQVcxoJiiJKd8\" \"R7FaKponF7zqoMLUjEiko25pDiuVH5YLEa\" TICKER \"15.0\"")
-            + HelpExampleRpc("sendtokendexaccept", "\"R5URq1NN3xL6GeRKUP6vzaQVcxoJiiJKd8\", \"R7FaKponF7zqoMLUjEiko25pDiuVH5YLEa\", TICKER, \"15.0\"")
+            + HelpExampleCli("sendtokendexaccept", "\"35URq1NN3xL6GeRKUP6vzaQVcxoJiiJKd8\" \"37FaKponF7zqoMLUjEiko25pDiuVH5YLEa\" TOKEN \"15.0\"")
+            + HelpExampleRpc("sendtokendexaccept", "\"35URq1NN3xL6GeRKUP6vzaQVcxoJiiJKd8\", \"37FaKponF7zqoMLUjEiko25pDiuVH5YLEa\", TOKEN, \"15.0\"")
         );
 
     // obtain parameters & info
@@ -560,7 +741,7 @@ static UniValue sendtokendexpay(const JSONRPCRequest& request)
 
 static UniValue sendtokenissuancecrowdsale(const JSONRPCRequest& request)
 {
-    if (request.fHelp || request.params.size() != 14)
+    if (request.fHelp || request.params.size() != 15)
         throw runtime_error(
             "sendtokenissuancecrowdsale \"fromaddress\" ecosystem type previousid \"category\" \"subcategory\" \"name\" \"url\" \"data\" tokensperunit deadline ( earlybonus issuerpercentage )\n"
 
@@ -576,18 +757,21 @@ static UniValue sendtokenissuancecrowdsale(const JSONRPCRequest& request)
             "7. name                 (string, required) the name of the new tokens to create\n"
             "8. ticker               (string, required) the ticker of the new tokens to create\n"
             "9. url                  (string, required) an URL for further information about the new tokens (can be \"\")\n"
-            "10. ipfs                 (string, required) IPFS string for the new tokens (can be \"\")\n"
-            "11. tokensperunit       (string, required) the amount of tokens granted per unit invested in the crowdsale\n"
-            "12. deadline            (number, required) the deadline of the crowdsale as Unix timestamp\n"
-            "13. earlybonus          (number, required) an early bird bonus for participants in percent per week\n"
-            "14. issuerpercentage    (number, required) a percentage of tokens that will be granted to the issuer\n"
+            "10. ipfs                (string, required) IPFS string for the new tokens (can be \"\")\n"
+            
+            "11. tokendesired        (string, required) the token ticker eligible to participate in the crowdsale\n"
+
+            "12. tokensperunit       (string, required) the amount of tokens granted per unit invested in the crowdsale\n"
+            "13. deadline            (number, required) the deadline of the crowdsale as Unix timestamp\n"
+            "14. earlybonus          (number, required) an early bird bonus for participants in percent per week\n"
+            "15. issuerpercentage    (number, required) a percentage of tokens that will be granted to the issuer\n"
 
             "\nResult:\n"
             "\"hash\"                  (string) the hex-encoded transaction hash\n"
 
             "\nExamples:\n"
-            + HelpExampleCli("sendtokenissuancecrowdsale", "\"RJYd75REX3HXn1vAU83YuGfmiPXW7BpYXo\" 2 1 0 \"Category\" \"Subcategory\" \"Name\" \"TICKER\" \"\" \"\" \"100\" 1483228800 30 2")
-            + HelpExampleRpc("sendtokenissuancecrowdsale", "\"RJYd75REX3HXn1vAU83YuGfmiPXW7BpYXo\", 2, 1, 0, \"Category\", \"Subcategory\", \"Name\", \"TICKER\", \"\", \"\", \"100\", 1483228800, 30, 2")
+            + HelpExampleCli("sendtokenissuancecrowdsale", "\"3JYd75REX3HXn1vAU83YuGfmiPXW7BpYXo\" 2 1 0 \"Companies\" \"Bitcoin Mining\" \"Quantum Miner\" \"TICKER\" \"\" \"\" \"RPD\" \"100\" 1483228800 30 2")
+            + HelpExampleRpc("sendtokenissuancecrowdsale", "\"3JYd75REX3HXn1vAU83YuGfmiPXW7BpYXo\", 2, 1, 0, \"Companies\", \"Bitcoin Mining\", \"Quantum Miner\", \"TICKER\", \"\", \"\", \"RPD\", \"100\", 1483228800, 30, 2")
         );
 
     // obtain parameters & info
@@ -601,10 +785,13 @@ static UniValue sendtokenissuancecrowdsale(const JSONRPCRequest& request)
     std::string ticker = ParseText(request.params[7]);
     std::string url = ParseText(request.params[8]);
     std::string data = ParseText(request.params[9]);
-    int64_t numTokens = ParseAmount(request.params[10], type);
-    int64_t deadline = ParseDeadline(request.params[11]);
-    uint8_t earlyBonus = ParseEarlyBirdBonus(request.params[12]);
-    uint8_t issuerPercentage = ParseIssuerBonus(request.params[13]);
+    
+    std::string desiredToken = ParseText(request.params[10]);
+
+    int64_t numTokens = ParseAmount(request.params[11], type);
+    int64_t deadline = ParseDeadline(request.params[12]);
+    uint8_t earlyBonus = ParseEarlyBirdBonus(request.params[13]);
+    uint8_t issuerPercentage = ParseIssuerBonus(request.params[14]);
 
     // perform checks
     RequirePropertyName(name);
@@ -614,16 +801,17 @@ static UniValue sendtokenissuancecrowdsale(const JSONRPCRequest& request)
     if (propertyId > 0)
         throw JSONRPCError(RPC_INTERNAL_ERROR, "Token with this ticker already exists");
 
-    std::string desiredName = "RPDx";
-    uint32_t propertyIdDesired = pDbSpInfo->findSPByTicker(desiredName);
-    if (propertyIdDesired == 0)
-        throw JSONRPCError(RPC_INTERNAL_ERROR, "RPDx token not issued yet");
+    uint32_t propertyIdDesired = pDbSpInfo->findSPByTicker(desiredToken);
+    if (desiredToken != "RPD" && propertyIdDesired == 0)
+        throw JSONRPCError(RPC_INTERNAL_ERROR, "Desired token not found");
 
     if (!IsTokenIPFSValid(data))
         throw JSONRPCError(RPC_INTERNAL_ERROR, "Token IPFS is invalid");
 
-    RequireExistingProperty(propertyIdDesired);
-    RequireSameEcosystem(ecosystem, propertyIdDesired);
+    if (propertyIdDesired != RPD_PROPERTY_ID) {
+        RequireExistingProperty(propertyIdDesired);
+        RequireSameEcosystem(ecosystem, propertyIdDesired);
+    }
 
     // create a payload for the transaction
     std::vector<unsigned char> payload = CreatePayload_IssuanceVariable(ecosystem, type, previousId, category, subcategory, name, ticker, url, data, propertyIdDesired, numTokens, deadline, earlyBonus, issuerPercentage);
@@ -647,31 +835,33 @@ static UniValue sendtokenissuancecrowdsale(const JSONRPCRequest& request)
 
 static UniValue sendtokenissuancefixed(const JSONRPCRequest& request)
 {
-    if (request.fHelp || request.params.size() != 11)
+    if (request.fHelp || request.params.size() < 11 || request.params.size() > 13)
         throw runtime_error(
             "sendtokenissuancefixed \"fromaddress\" ecosystem type previousid \"category\" \"subcategory\" \"name\" \"ticker\" \"url\" \"data\" \"amount\"\n"
 
             "\nCreate new tokens with fixed supply.\n"
 
             "\nArguments:\n"
-            "1. fromaddress          (string, required) the address to send from\n"
-            "2. ecosystem            (string, required) the ecosystem to create the tokens in (1 for main ecosystem, 2 for test ecosystem)\n"
-            "3. type                 (number, required) the type of the tokens to create: (1 for indivisible tokens, 2 for divisible tokens)\n"
-            "4. previousid           (number, required) an identifier of a predecessor token (use 0 for new tokens)\n"
-            "5. category             (string, required) a category for the new tokens (can be \"\")\n"
-            "6. subcategory          (string, required) a subcategory for the new tokens  (can be \"\")\n"
-            "7. name                 (string, required) the name of the new tokens to create\n"
-            "8. ticker               (string, required) the ticker of the new tokens to create\n"
-            "9. url                  (string, required) an URL for further information about the new tokens (can be \"\")\n"
-            "10. ipfs                (string, required) IPFS string for the new tokens (can be \"\")\n"
-            "11. amount              (string, required) the number of tokens to create\n"
+            "1. fromaddress           (string, required) the address to send from\n"
+            "2. ecosystem             (string, required) the ecosystem to create the tokens in (1 for main ecosystem, 2 for test ecosystem)\n"
+            "3. type                  (number, required) the type of the tokens to create: (1 for indivisible tokens, 2 for divisible tokens)\n"
+            "4. previousid            (number, required) an identifier of a predecessor token (use 0 for new tokens)\n"
+            "5. category              (string, required) a category for the new tokens (can be \"\")\n"
+            "6. subcategory           (string, required) a subcategory for the new tokens  (can be \"\")\n"
+            "7. name                  (string, required) the name of the new tokens to create\n"
+            "8. ticker                (string, required) the ticker of the new tokens to create\n"
+            "9. url                   (string, required) an URL for further information about the new tokens (can be \"\")\n"
+            "10. ipfs                 (string, required) IPFS string for the new tokens (can be \"\")\n"
+            "11. amount               (string, required) the number of tokens to create\n"
+            "12. royalties_receiver   (string, optional, default=\"\") DEX royalties receiver\n"
+            "13. royalties_percentage (number, optional, default=0) DEX royalties percentage\n"
 
             "\nResult:\n"
             "\"hash\"                  (string) the hex-encoded transaction hash\n"
 
             "\nExamples:\n"
-            + HelpExampleCli("sendtokenissuancefixed", "\"RCk2kEGLJtZw9ENj2tameMCtS3HB7uRar3\" 2 1 0 \"Category\" \"Subcategory\" \"Name\" \"TICKER\ \"\" \"\" \"1000000\"")
-            + HelpExampleRpc("sendtokenissuancefixed", "\"RCk2kEGLJtZw9ENj2tameMCtS3HB7uRar3\", 2, 1, 0, \"Category\", \"Subcategory\", \"Name\", \"TICKER\ \"\", \"\", \"1000000\"")
+            + HelpExampleCli("sendtokenissuancefixed", "\"3Ck2kEGLJtZw9ENj2tameMCtS3HB7uRar3\" 2 1 0 \"Companies\" \"Bitcoin Mining\" \"Quantum Miner\" \"TICKER\" \"\" \"\" \"1000000\"")
+            + HelpExampleRpc("sendtokenissuancefixed", "\"3Ck2kEGLJtZw9ENj2tameMCtS3HB7uRar3\", 2, 1, 0, \"Companies\", \"Bitcoin Mining\", \"Quantum Miner\", \"TICKER\", \"\", \"\", \"1000000\"")
         );
 
     // obtain parameters & info
@@ -687,11 +877,28 @@ static UniValue sendtokenissuancefixed(const JSONRPCRequest& request)
     std::string data = ParseText(request.params[9]);
     int64_t amount = ParseAmount(request.params[10], type);
 
-    std::string royaltiesReceiver = "RmLTuqFkrLyBM8ibfMh3xmeNFSY1Ka6HNs";
-    uint8_t royaltiesPercentage = 50;
+    std::string royaltiesReceiver = (request.params.size() > 11 && !ParseText(request.params[11]).empty()) ? ParseText(request.params[11]): "";
+    uint8_t royaltiesPercentage = (request.params.size() > 12) ? ParseRoyaltiesPercentage(request.params[12]) : 0;
 
-    // std::string royaltiesReceiver = "";
-    // uint8_t royaltiesPercentage = 0;
+    if (royaltiesReceiver != "")
+    {
+        if (IsUsernameValid(royaltiesReceiver)) {
+            if (GetUsernameAddress(royaltiesReceiver) == "")
+                throw JSONRPCError(RPC_INTERNAL_ERROR, strprintf("Username %s not registered", royaltiesReceiver));
+        } else {
+            if (!IsValidDestination(DecodeDestination(royaltiesReceiver)))
+                throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, strprintf("Invalid royalties address %s", royaltiesReceiver));
+        }
+    }
+
+    if (royaltiesReceiver == "" && royaltiesPercentage > 0)
+        throw JSONRPCError(RPC_INTERNAL_ERROR, "Royalties receiver can't be empty if royalties percentage greater than zero");
+
+    if (royaltiesReceiver != "" && royaltiesPercentage == 0)
+        throw JSONRPCError(RPC_INTERNAL_ERROR, "Royalties percentage can't be zero if royalties receiver not empty");
+
+    std::cout << "\n\nroyaltiesReceiver: " << royaltiesReceiver << "\n";
+    std::cout << "royaltiesPercentage: " << royaltiesPercentage << "\n\n";
 
     // perform checks
     RequirePropertyName(name);
@@ -751,8 +958,8 @@ static UniValue sendtokenissuancemanaged(const JSONRPCRequest& request)
             "\"hash\"                  (string) the hex-encoded transaction hash\n"
 
             "\nExamples:\n"
-            + HelpExampleCli("sendtokenissuancemanaged", "\"RpAVz7YHGFjVrr29iiSmezkvd3SzBbuK7p\" 2 1 0 \"Category\" \"Subcategory\" \"Name\" \"TICKER\ \"\" \"\"")
-            + HelpExampleRpc("sendtokenissuancemanaged", "\"RpAVz7YHGFjVrr29iiSmezkvd3SzBbuK7p\", 2, 1, 0, \"Category\", \"Subcategory\", \"Name\", \"TICKER\, \"\", \"\"")
+            + HelpExampleCli("sendtokenissuancemanaged", "\"RpAVz7YHGFjVrr29iiSmezkvd3SzBbuK7p\" 2 1 0 \"Companies\" \"Bitcoin Mining\" \"Quantum Miner\" \"TICKER\" \"\" \"\"")
+            + HelpExampleRpc("sendtokenissuancemanaged", "\"RpAVz7YHGFjVrr29iiSmezkvd3SzBbuK7p\", 2, 1, 0, \"Companies\", \"Bitcoin Mining\", \"Quantum Miner\", \"TICKER\", \"\", \"\"")
         );
 
     // obtain parameters & info
@@ -820,8 +1027,8 @@ static UniValue token_sendsto(const JSONRPCRequest& request)
             "\"hash\"                  (string) the hex-encoded transaction hash\n"
 
             "\nExamples:\n"
-            + HelpExampleCli("token_sendsto", "\"R2Z3tJccZuqQZ4PhJR2hxHC3tjgjA8cbqz\" \"R7FaKponF7zqoMLUjEiko25pDiuVH5YLEa\" 3 \"5000\"")
-            + HelpExampleRpc("token_sendsto", "\"R2Z3tJccZuqQZ4PhJR2hxHC3tjgjA8cbqz\", \"R7FaKponF7zqoMLUjEiko25pDiuVH5YLEa\", 3, \"5000\"")
+            + HelpExampleCli("token_sendsto", "\"32Z3tJccZuqQZ4PhJR2hxHC3tjgjA8cbqz\" \"37FaKponF7zqoMLUjEiko25pDiuVH5YLEa\" 3 \"5000\"")
+            + HelpExampleRpc("token_sendsto", "\"32Z3tJccZuqQZ4PhJR2hxHC3tjgjA8cbqz\", \"37FaKponF7zqoMLUjEiko25pDiuVH5YLEa\", 3, \"5000\"")
         );
 
     // obtain parameters & info
@@ -874,8 +1081,8 @@ static UniValue sendtokengrant(const JSONRPCRequest& request)
             "\"hash\"                  (string) the hex-encoded transaction hash\n"
 
             "\nExamples:\n"
-            + HelpExampleCli("sendtokengrant", "\"RHsJvhr9qzgRe3ss97b1QHs38rmaLExLcH\" \"\" TOKEN \"7000\"")
-            + HelpExampleRpc("sendtokengrant", "\"RHsJvhr9qzgRe3ss97b1QHs38rmaLExLcH\", \"\", TOKEN, \"7000\"")
+            + HelpExampleCli("sendtokengrant", "\"3HsJvhr9qzgRe3ss97b1QHs38rmaLExLcH\" \"\" TOKEN \"7000\"")
+            + HelpExampleRpc("sendtokengrant", "\"3HsJvhr9qzgRe3ss97b1QHs38rmaLExLcH\", \"\", TOKEN, \"7000\"")
         );
 
     // obtain parameters & info
@@ -933,8 +1140,8 @@ static UniValue sendtokenrevoke(const JSONRPCRequest& request)
             "\"hash\"                  (string) the hex-encoded transaction hash\n"
 
             "\nExamples:\n"
-            + HelpExampleCli("sendtokenrevoke", "\"RpAVz7YHGFjVrr29iiSmezkvd3SzBbuK7p\" \"\" TICKER \"100\"")
-            + HelpExampleRpc("sendtokenrevoke", "\"RpAVz7YHGFjVrr29iiSmezkvd3SzBbuK7p\", \"\", TICKER, \"100\"")
+            + HelpExampleCli("sendtokenrevoke", "\"RpAVz7YHGFjVrr29iiSmezkvd3SzBbuK7p\" \"\" TOKEN \"100\"")
+            + HelpExampleRpc("sendtokenrevoke", "\"RpAVz7YHGFjVrr29iiSmezkvd3SzBbuK7p\", \"\", TOKEN, \"100\"")
         );
 
     // obtain parameters & info
@@ -990,8 +1197,8 @@ static UniValue sendtokenclosecrowdsale(const JSONRPCRequest& request)
             "\"hash\"                  (string) the hex-encoded transaction hash\n"
 
             "\nExamples:\n"
-            + HelpExampleCli("sendtokenclosecrowdsale", "\"RJYd75REX3HXn1vAU83YuGfmiPXW7BpYXo\" 70")
-            + HelpExampleRpc("sendtokenclosecrowdsale", "\"RJYd75REX3HXn1vAU83YuGfmiPXW7BpYXo\", 70")
+            + HelpExampleCli("sendtokenclosecrowdsale", "\"3JYd75REX3HXn1vAU83YuGfmiPXW7BpYXo\" 70")
+            + HelpExampleRpc("sendtokenclosecrowdsale", "\"3JYd75REX3HXn1vAU83YuGfmiPXW7BpYXo\", 70")
         );
 
     // obtain parameters & info
@@ -1047,8 +1254,8 @@ static UniValue sendtokentrade(const JSONRPCRequest& request)
             "\"hash\"                  (string) the hex-encoded transaction hash\n"
 
             "\nExamples:\n"
-            + HelpExampleCli("sendtokentrade", "\"RBydPiSLPP3DR5cf726hDQ89fpqWLxPKLR\" TICKER \"250.0\" DESIRED \"10.0\"")
-            + HelpExampleRpc("sendtokentrade", "\"RBydPiSLPP3DR5cf726hDQ89fpqWLxPKLR\", TICKER, \"250.0\", DESIRED, \"10.0\"")
+            + HelpExampleCli("sendtokentrade", "\"3BydPiSLPP3DR5cf726hDQ89fpqWLxPKLR\" TOKEN \"250.0\" DESIRED \"10.0\"")
+            + HelpExampleRpc("sendtokentrade", "\"3BydPiSLPP3DR5cf726hDQ89fpqWLxPKLR\", TOKEN, \"250.0\", DESIRED, \"10.0\"")
         );
 
     // obtain parameters & info
@@ -1115,8 +1322,8 @@ static UniValue sendtokencanceltradesbyprice(const JSONRPCRequest& request)
             "\"hash\"                  (string) the hex-encoded transaction hash\n"
 
             "\nExamples:\n"
-            + HelpExampleCli("sendtokencanceltradesbyprice", "\"RBydPiSLPP3DR5cf726hDQ89fpqWLxPKLR\" TICKER \"100.0 \" DESIRED \"5.0\"")
-            + HelpExampleRpc("sendtokencanceltradesbyprice", "\"RBydPiSLPP3DR5cf726hDQ89fpqWLxPKLR\", TICKER, \"100.0\", DESIRED, \"5.0\"")
+            + HelpExampleCli("sendtokencanceltradesbyprice", "\"3BydPiSLPP3DR5cf726hDQ89fpqWLxPKLR\" TOKEN \"100.0\" DESIRED \"5.0\"")
+            + HelpExampleRpc("sendtokencanceltradesbyprice", "\"3BydPiSLPP3DR5cf726hDQ89fpqWLxPKLR\", TOKEN, \"100.0\", DESIRED, \"5.0\"")
         );
 
     // obtain parameters & info
@@ -1181,8 +1388,8 @@ static UniValue sendtokencanceltradesbypair(const JSONRPCRequest& request)
             "\"hash\"                  (string) the hex-encoded transaction hash\n"
 
             "\nExamples:\n"
-            + HelpExampleCli("sendtokencanceltradesbypair", "\"RBydPiSLPP3DR5cf726hDQ89fpqWLxPKLR\" TOKEN DESIRED")
-            + HelpExampleRpc("sendtokencanceltradesbypair", "\"RBydPiSLPP3DR5cf726hDQ89fpqWLxPKLR\", TOKEN, DESIRED")
+            + HelpExampleCli("sendtokencanceltradesbypair", "\"3BydPiSLPP3DR5cf726hDQ89fpqWLxPKLR\" TOKEN DESIRED")
+            + HelpExampleRpc("sendtokencanceltradesbypair", "\"3BydPiSLPP3DR5cf726hDQ89fpqWLxPKLR\", TOKEN, DESIRED")
         );
 
     // obtain parameters & info
@@ -1242,8 +1449,8 @@ static UniValue sendtokencancelalltrades(const JSONRPCRequest& request)
             "\"hash\"                  (string) the hex-encoded transaction hash\n"
 
             "\nExamples:\n"
-            + HelpExampleCli("sendtokencancelalltrades", "\"RBydPiSLPP3DR5cf726hDQ89fpqWLxPKLR\" 1")
-            + HelpExampleRpc("sendtokencancelalltrades", "\"RBydPiSLPP3DR5cf726hDQ89fpqWLxPKLR\", 1")
+            + HelpExampleCli("sendtokencancelalltrades", "\"3BydPiSLPP3DR5cf726hDQ89fpqWLxPKLR\" 1")
+            + HelpExampleRpc("sendtokencancelalltrades", "\"3BydPiSLPP3DR5cf726hDQ89fpqWLxPKLR\", 1")
         );
 
     // obtain parameters & info
@@ -1291,8 +1498,8 @@ static UniValue sendtokenchangeissuer(const JSONRPCRequest& request)
             "\"hash\"                  (string) the hex-encoded transaction hash\n"
 
             "\nExamples:\n"
-            + HelpExampleCli("sendtokenchangeissuer", "\"RARjWDkZ7kT9fwjPrjcQyvbXDkEySzKHwu\" \"RHTHRxu3aSDV4deakjC7VmsiUp7c6dfbvs\" TICKER")
-            + HelpExampleRpc("sendtokenchangeissuer", "\"RARjWDkZ7kT9fwjPrjcQyvbXDkEySzKHwu\", \"RHTHRxu3aSDV4deakjC7VmsiUp7c6dfbvs\", TICKER")
+            + HelpExampleCli("sendtokenchangeissuer", "\"1ARjWDkZ7kT9fwjPrjcQyvbXDkEySzKHwu\" \"3HTHRxu3aSDV4deakjC7VmsiUp7c6dfbvs\" TOKEN")
+            + HelpExampleRpc("sendtokenchangeissuer", "\"1ARjWDkZ7kT9fwjPrjcQyvbXDkEySzKHwu\", \"3HTHRxu3aSDV4deakjC7VmsiUp7c6dfbvs\", TOKEN")
         );
 
     // obtain parameters & info
@@ -1344,8 +1551,8 @@ static UniValue sendtokenenablefreezing(const JSONRPCRequest& request)
             "\"hash\"                  (string) the hex-encoded transaction hash\n"
 
             "\nExamples:\n"
-            + HelpExampleCli("sendtokenenablefreezing", "\"RHTHRxu3aSDV4deakjC7VmsiUp7c6dfbvs\" TICKER")
-            + HelpExampleRpc("sendtokenenablefreezing", "\"RHTHRxu3aSDV4deakjC7VmsiUp7c6dfbvs\", TICKER")
+            + HelpExampleCli("sendtokenenablefreezing", "\"3HTHRxu3aSDV4deakjC7VmsiUp7c6dfbvs\" TOKEN")
+            + HelpExampleRpc("sendtokenenablefreezing", "\"3HTHRxu3aSDV4deakjC7VmsiUp7c6dfbvs\", TOKEN")
         );
 
     // obtain parameters & info
@@ -1398,8 +1605,8 @@ static UniValue sendtokendisablefreezing(const JSONRPCRequest& request)
             "\"hash\"                  (string) the hex-encoded transaction hash\n"
 
             "\nExamples:\n"
-            + HelpExampleCli("sendtokendisablefreezing", "\"RHTHRxu3aSDV4deakjC7VmsiUp7c6dfbvs\" TICKER")
-            + HelpExampleRpc("sendtokendisablefreezing", "\"RHTHRxu3aSDV4deakjC7VmsiUp7c6dfbvs\", TICKER")
+            + HelpExampleCli("sendtokendisablefreezing", "\"3HTHRxu3aSDV4deakjC7VmsiUp7c6dfbvs\" TOKEN")
+            + HelpExampleRpc("sendtokendisablefreezing", "\"3HTHRxu3aSDV4deakjC7VmsiUp7c6dfbvs\", TOKEN")
         );
 
     // obtain parameters & info
@@ -1450,8 +1657,8 @@ static UniValue sendtokenfreeze(const JSONRPCRequest& request)
             "\nResult:\n"
             "\"hash\"                  (string) the hex-encoded transaction hash\n"
             "\nExamples:\n"
-            + HelpExampleCli("sendtokenfreeze", "\"REXoDusjGwvnjZUyKkxZ4UHEf77z6A5S4P\" \"RHTHRxu3aSDV4deakjC7VmsiUp7c6dfbvs\" TICKER 0")
-            + HelpExampleRpc("sendtokenfreeze", "\"REXoDusjGwvnjZUyKkxZ4UHEf77z6A5S4P\", \"RHTHRxu3aSDV4deakjC7VmsiUp7c6dfbvs\", TICKER, 0")
+            + HelpExampleCli("sendtokenfreeze", "\"1EXoDusjGwvnjZUyKkxZ4UHEf77z6A5S4P\" \"3HTHRxu3aSDV4deakjC7VmsiUp7c6dfbvs\" TOKEN 0")
+            + HelpExampleRpc("sendtokenfreeze", "\"1EXoDusjGwvnjZUyKkxZ4UHEf77z6A5S4P\", \"3HTHRxu3aSDV4deakjC7VmsiUp7c6dfbvs\", TOKEN, 0")
         );
 
     // obtain parameters & info
@@ -1506,8 +1713,8 @@ static UniValue sendtokenunfreeze(const JSONRPCRequest& request)
             "\nResult:\n"
             "\"hash\"                  (string) the hex-encoded transaction hash\n"
             "\nExamples:\n"
-            + HelpExampleCli("sendtokenunfreeze", "\"REXoDusjGwvnjZUyKkxZ4UHEf77z6A5S4P\" \"RHTHRxu3aSDV4deakjC7VmsiUp7c6dfbvs\" TICKER 0")
-            + HelpExampleRpc("sendtokenunfreeze", "\"REXoDusjGwvnjZUyKkxZ4UHEf77z6A5S4P\", \"RHTHRxu3aSDV4deakjC7VmsiUp7c6dfbvs\", TICKER, 0")
+            + HelpExampleCli("sendtokenunfreeze", "\"1EXoDusjGwvnjZUyKkxZ4UHEf77z6A5S4P\" \"3HTHRxu3aSDV4deakjC7VmsiUp7c6dfbvs\" TOKEN 0")
+            + HelpExampleRpc("sendtokenunfreeze", "\"1EXoDusjGwvnjZUyKkxZ4UHEf77z6A5S4P\", \"3HTHRxu3aSDV4deakjC7VmsiUp7c6dfbvs\", TOKEN, 0")
         );
 
     // obtain parameters & info
@@ -1562,8 +1769,8 @@ static UniValue token_sendactivation(const JSONRPCRequest& request)
             "\nResult:\n"
             "\"hash\"                  (string) the hex-encoded transaction hash\n"
             "\nExamples:\n"
-            + HelpExampleCli("token_sendactivation", "\"REXoDusjGwvnjZUyKkxZ4UHEf77z6A5S4P\" 1 370000 999")
-            + HelpExampleRpc("token_sendactivation", "\"REXoDusjGwvnjZUyKkxZ4UHEf77z6A5S4P\", 1, 370000, 999")
+            + HelpExampleCli("token_sendactivation", "\"1EXoDusjGwvnjZUyKkxZ4UHEf77z6A5S4P\" 1 370000 999")
+            + HelpExampleRpc("token_sendactivation", "\"1EXoDusjGwvnjZUyKkxZ4UHEf77z6A5S4P\", 1, 370000, 999")
         );
 
     // obtain parameters & info
@@ -1605,8 +1812,8 @@ static UniValue token_senddeactivation(const JSONRPCRequest& request)
             "\nResult:\n"
             "\"hash\"                  (string) the hex-encoded transaction hash\n"
             "\nExamples:\n"
-            + HelpExampleCli("token_senddeactivation", "\"REXoDusjGwvnjZUyKkxZ4UHEf77z6A5S4P\" 1")
-            + HelpExampleRpc("token_senddeactivation", "\"REXoDusjGwvnjZUyKkxZ4UHEf77z6A5S4P\", 1")
+            + HelpExampleCli("token_senddeactivation", "\"1EXoDusjGwvnjZUyKkxZ4UHEf77z6A5S4P\" 1")
+            + HelpExampleRpc("token_senddeactivation", "\"1EXoDusjGwvnjZUyKkxZ4UHEf77z6A5S4P\", 1")
         );
 
     // obtain parameters & info
@@ -1754,6 +1961,7 @@ static const CRPCCommand commands[] =
 #ifdef ENABLE_WALLET
     // { "tokens (transaction creation)", "token_sendrawtx",               &token_sendrawtx,               false },
     { "tokens (transaction creation)", "sendtoken",                    &sendtoken,                    false },
+    { "tokens (transaction creation)", "sendtokenmany",                &sendtokenmany,                false },
     { "tokens (transaction creation)", "sendtokendexsell",             &sendtokendexsell,             false },
     { "tokens (transaction creation)", "sendtokendexaccept",           &sendtokendexaccept,           false },
     { "tokens (transaction creation)", "sendtokendexpay",              &sendtokendexpay,              false },
@@ -1769,6 +1977,9 @@ static const CRPCCommand commands[] =
     { "tokens (transaction creation)", "sendtokenrevoke",              &sendtokenrevoke,              false },
     { "tokens (transaction creation)", "sendtokenclosecrowdsale",      &sendtokenclosecrowdsale,      false },
     { "tokens (transaction creation)", "sendtokenchangeissuer",        &sendtokenchangeissuer,        false },
+    
+    { "tokens (transaction creation)", "sendtokenrpdpayment",          &sendtokenrpdpayment,          false },
+    
     { "tokens (transaction creation)", "sendalltokens",                &sendalltokens,                false },
     { "tokens (transaction creation)", "sendtokenenablefreezing",      &sendtokenenablefreezing,      false },
     { "tokens (transaction creation)", "sendtokendisablefreezing",     &sendtokendisablefreezing,     false },

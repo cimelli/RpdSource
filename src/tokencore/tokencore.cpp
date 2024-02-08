@@ -1063,7 +1063,11 @@ static int parseTransaction(bool bRPConly, const CTransaction& wtx, int nBlock, 
             if (!(dest == ExodusAddress())) {
                 // saving for Class A processing or reference
                 GetScriptPushes(wtx.vout[n].scriptPubKey, script_data);
-                address_data.push_back(EncodeDestination(dest));
+                std::string address = EncodeDestination(dest);
+                address_data.push_back(address);
+                if (!address.empty()) {
+                    mp_tx.addValidStmAddress(n, address);
+                }
                 value_data.push_back(wtx.vout[n].nValue);
                 if (msc_debug_parser_data) PrintToLog("saving address_data #%d: %s:%s\n", n, EncodeDestination(dest), ScriptToAsmStr(wtx.vout[n].scriptPubKey));
             }
@@ -1365,6 +1369,29 @@ static int parseTransaction(bool bRPConly, const CTransaction& wtx, int nBlock, 
 int ParseTransaction(const CTransaction& tx, int nBlock, unsigned int idx, CMPTransaction& mptx, unsigned int nTime)
 {
     return parseTransaction(true, tx, nBlock, idx, mptx, nTime);
+}
+
+/**
+ * Helper to provide the amount of КЗВ sent to a particular address in a transaction
+ */
+int64_t GetRapidsPaymentAmount(const uint256& txid, const std::string& recipient)
+{
+    CTransaction tx;
+    uint256 blockHash;
+    if (!GetTransaction(txid, tx, blockHash, true)) return 0;
+
+    int64_t totalSatoshis = 0;
+
+    for (unsigned int n = 0; n < tx.vout.size(); ++n) {
+        CTxDestination dest;
+        if (ExtractDestination(tx.vout[n].scriptPubKey, dest)) {
+            std::string strAddress = EncodeDestination(dest);
+            if (strAddress != recipient) continue;
+            totalSatoshis += tx.vout[n].nValue;
+        }
+    }
+
+    return totalSatoshis;
 }
 
 /**
@@ -2017,7 +2044,8 @@ int mastercore_handler_block_end(int nBlockNow, CBlockIndex const * pBlockIndex,
     PendingCheck();
 
     // transactions were found in the block, signal the UI accordingly
-    if (countMP > 0) CheckWalletUpdate(true);
+    // if (countMP > 0) CheckWalletUpdate(true);
+    CheckWalletUpdate(true);
 
     // calculate and print a consensus hash if required
     if (ShouldConsensusHashBlock(nBlockNow)) {

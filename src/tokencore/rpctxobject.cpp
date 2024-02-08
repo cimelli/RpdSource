@@ -38,6 +38,7 @@
 #include <stdint.h>
 #include <string>
 #include <vector>
+#include <tuple>
 
 // Namespaces
 using namespace mastercore;
@@ -173,6 +174,9 @@ void populateRPCTypeInfo(CMPTransaction& mp_obj, UniValue& txobj, uint32_t txTyp
         case TOKEN_TYPE_SIMPLE_SEND:
             populateRPCTypeSimpleSend(mp_obj, txobj);
             break;
+        case TOKEN_TYPE_SEND_TO_MANY:
+            populateRPCTypeSendToMany(mp_obj, txobj);
+            break;
         case TOKEN_TYPE_SEND_TO_OWNERS:
             populateRPCTypeSendToOwners(mp_obj, txobj, extendedDetails, extendedDetailsFilter);
             break;
@@ -230,6 +234,11 @@ void populateRPCTypeInfo(CMPTransaction& mp_obj, UniValue& txobj, uint32_t txTyp
         case TOKEN_TYPE_UNFREEZE_PROPERTY_TOKENS:
             populateRPCTypeUnfreezeTokens(mp_obj, txobj);
             break;
+
+        case TOKEN_TYPE_RAPIDS_PAYMENT:
+            populateRPCTypeRapidsPayment(mp_obj, txobj);
+            break;
+
         case TOKENCORE_MESSAGE_TYPE_ACTIVATION:
             populateRPCTypeActivation(mp_obj, txobj);
             break;
@@ -242,6 +251,7 @@ bool showRefForTx(uint32_t txType)
 {
     switch (txType) {
         case TOKEN_TYPE_SIMPLE_SEND: return true;
+        case TOKEN_TYPE_SEND_TO_MANY: return false;
         case TOKEN_TYPE_SEND_TO_OWNERS: return false;
         case TOKEN_TYPE_TRADE_OFFER: return false;
         case TOKEN_TYPE_METADEX_TRADE: return false;
@@ -257,6 +267,7 @@ bool showRefForTx(uint32_t txType)
         case TOKEN_TYPE_REVOKE_PROPERTY_TOKENS: return false;
         case TOKEN_TYPE_CHANGE_ISSUER_ADDRESS: return true;
         case TOKEN_TYPE_SEND_ALL: return true;
+        case TOKEN_TYPE_RAPIDS_PAYMENT: return true;
         case TOKEN_TYPE_ENABLE_FREEZING: return false;
         case TOKEN_TYPE_DISABLE_FREEZING: return false;
         case TOKEN_TYPE_FREEZE_PROPERTY_TOKENS: return true;
@@ -298,6 +309,36 @@ void populateRPCTypeSimpleSend(CMPTransaction& tokenObj, UniValue& txobj)
         txobj.push_back(Pair("divisible", isPropertyDivisible(propertyId)));
         txobj.push_back(Pair("amount", FormatMP(propertyId, tokenObj.getAmount())));
     }
+}
+
+void populateRPCTypeSendToMany(CMPTransaction& omniObj, UniValue& txobj)
+{
+    uint32_t propertyId = omniObj.getProperty();
+    txobj.pushKV("propertyid", (uint64_t) propertyId);
+    txobj.push_back(Pair("propertyname", getPropertyName(propertyId)));
+    txobj.push_back(Pair("propertyticker", getPropertyTicker(propertyId)));
+    txobj.pushKV("divisible", isPropertyDivisible(propertyId));
+
+    UniValue outputValues(UniValue::VARR);
+
+    for (const std::tuple<uint8_t, uint64_t>& entry : omniObj.getStmOutputValues()) {
+
+        uint8_t output = std::get<0>(entry);
+        std::string amount = FormatMP(propertyId, std::get<1>(entry));
+        std::string destination;
+        bool valid = omniObj.getValidStmAddressAt(output, destination);
+
+        if (valid) {
+            UniValue outputEntry(UniValue::VOBJ);
+            outputEntry.pushKV("output", output);
+            outputEntry.pushKV("address", destination);
+            outputEntry.pushKV("amount", amount);
+            outputValues.push_back(outputEntry);
+        }
+    }
+
+    txobj.pushKV("receivers", outputValues);
+    txobj.pushKV("totalamount", FormatMP(propertyId, omniObj.getAmount()));
 }
 
 void populateRPCTypeSendToOwners(CMPTransaction& tokenObj, UniValue& txobj, bool extendedDetails, std::string extendedDetailsFilter)
@@ -596,6 +637,39 @@ void populateRPCTypeUnfreezeTokens(CMPTransaction& tokenObj, UniValue& txobj)
     txobj.push_back(Pair("propertyname", getPropertyName(tokenObj.getProperty())));
     txobj.push_back(Pair("propertyticker", getPropertyTicker(tokenObj.getProperty())));
 }
+
+
+void populateRPCTypeRapidsPayment(CMPTransaction& omniObj, UniValue& txobj)
+{
+    uint256 linked_txid = omniObj.getLinkedTXID();
+    txobj.push_back(Pair("linkedtxid", linked_txid.GetHex()));
+
+    CTransaction linked_tx;
+    uint256 linked_blockHash = 0;
+    int linked_blockHeight = 0;
+    int linked_blockTime = 0;
+    if (GetTransaction(linked_txid, linked_tx, linked_blockHash, true)) {
+        if (linked_blockHash != 0) {
+            CBlockIndex* pBlockIndex = GetBlockIndex(linked_blockHash);
+            if (NULL != pBlockIndex) {
+                linked_blockHeight = pBlockIndex->nHeight;
+                linked_blockTime = pBlockIndex->nTime;
+            }
+            CMPTransaction mp_obj;
+            int parseRC = ParseTransaction(linked_tx, linked_blockHeight, 0, mp_obj, linked_blockTime);
+            if (parseRC >= 0) {
+                if (mp_obj.interpret_Transaction()) {
+                    txobj.push_back(Pair("linkedtxtype", mp_obj.getTypeString()));
+                    txobj.push_back(Pair("paymentrecipient", mp_obj.getSender()));
+                    txobj.push_back(Pair("paymentamount", FormatDivisibleMP(GetRapidsPaymentAmount(omniObj.getHash(), mp_obj.getSender()))));
+                }
+            }
+        }
+    }
+
+    // TODO: what about details about what this payment did (eg crowdsale purchase, paid accept etc)?
+}
+
 
 void populateRPCExtendedTypeSendToOwners(const uint256 txid, std::string extendedDetailsFilter, UniValue& txobj, uint16_t version)
 {
