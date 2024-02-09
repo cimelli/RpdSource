@@ -227,7 +227,6 @@ static const CRPCConvertParam vRPCConvertParams[] =
         { "token_sendalert", 1 },
         { "token_sendalert", 2 },
         { "sendtokenfundedall", 2 },
-        { "sendtokenmany", 2 },
 
         /* Token Core - raw transaction calls */
         { "decodetokentransaction", 1 },
