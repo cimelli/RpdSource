@@ -447,9 +447,17 @@ void populateRPCTypeMetaDExCancelPrice(CMPTransaction& tokenObj, UniValue& txobj
 
     // populate
     txobj.push_back(Pair("propertyidforsale", (uint64_t)tokenObj.getProperty()));
+
+    txobj.pushKV("propertynameforsale", getPropertyName(tokenObj.getProperty()));
+    txobj.pushKV("propertytickerforsale", getPropertyTicker(tokenObj.getProperty()));
+
     txobj.push_back(Pair("propertyidforsaleisdivisible", propertyIdForSaleIsDivisible));
     txobj.push_back(Pair("amountforsale", FormatMP(tokenObj.getProperty(), tokenObj.getAmount())));
     txobj.push_back(Pair("propertyiddesired", (uint64_t)metaObj.getDesProperty()));
+
+    txobj.pushKV("propertynamedesired", getPropertyName(metaObj.getDesProperty()));
+    txobj.pushKV("propertytickerdesired", getPropertyTicker(metaObj.getDesProperty()));
+
     txobj.push_back(Pair("propertyiddesiredisdivisible", propertyIdDesiredIsDivisible));
     txobj.push_back(Pair("amountdesired", FormatMP(metaObj.getDesProperty(), metaObj.getAmountDesired())));
     txobj.push_back(Pair("unitprice", unitPriceStr));
@@ -462,7 +470,15 @@ void populateRPCTypeMetaDExCancelPair(CMPTransaction& tokenObj, UniValue& txobj,
 
     // populate
     txobj.push_back(Pair("propertyidforsale", (uint64_t)tokenObj.getProperty()));
+
+    txobj.pushKV("propertynameforsale", getPropertyName(tokenObj.getProperty()));
+    txobj.pushKV("propertytickerforsale", getPropertyTicker(tokenObj.getProperty()));
+
     txobj.push_back(Pair("propertyiddesired", (uint64_t)metaObj.getDesProperty()));
+
+    txobj.pushKV("propertynamedesired", getPropertyName(metaObj.getDesProperty()));
+    txobj.pushKV("propertytickerdesired", getPropertyTicker(metaObj.getDesProperty()));
+
     if (extendedDetails) populateRPCExtendedTypeMetaDExCancel(tokenObj.getHash(), txobj);
 }
 
@@ -655,19 +671,34 @@ void populateRPCTypeRapidsPayment(CMPTransaction& omniObj, UniValue& txobj)
                 linked_blockHeight = pBlockIndex->nHeight;
                 linked_blockTime = pBlockIndex->nTime;
             }
+
             CMPTransaction mp_obj;
             int parseRC = ParseTransaction(linked_tx, linked_blockHeight, 0, mp_obj, linked_blockTime);
+
             if (parseRC >= 0) {
-                if (mp_obj.interpret_Transaction()) {
-                    txobj.push_back(Pair("linkedtxtype", mp_obj.getTypeString()));
-                    txobj.push_back(Pair("paymentrecipient", mp_obj.getSender()));
-                    txobj.push_back(Pair("paymentamount", FormatDivisibleMP(GetRapidsPaymentAmount(omniObj.getHash(), mp_obj.getSender()))));
+                int64_t crowdPropertyId = 0, crowdTokens = 0, issuerTokens = 0;
+
+                bool crowdPurchase = isCrowdsalePurchase(omniObj.getHash(), omniObj.getReceiver(), &crowdPropertyId, &crowdTokens, &issuerTokens);
+                if (crowdPurchase) {
+                    CMPSPInfo::Entry sp;
+                    if (false == pDbSpInfo->getSP(crowdPropertyId, sp)) {
+                        PrintToLog("SP Error: Crowdsale purchase for non-existent property %d in transaction %s", crowdPropertyId, omniObj.getHash().GetHex());
+                        return;
+                    }
+                    txobj.push_back(Pair("propertyname", "Rapids"));
+                    txobj.push_back(Pair("propertyticker", "RPD"));
+                    txobj.push_back(Pair("divisible", true));
+                    txobj.push_back(Pair("amount", FormatDivisibleMP(GetRapidsPaymentAmount(omniObj.getHash(), mp_obj.getSender()))));
+                    txobj.push_back(Pair("purchasedpropertyid", crowdPropertyId));
+                    txobj.push_back(Pair("purchasedpropertyname", sp.name));
+                    txobj.push_back(Pair("purchasedpropertyticker", sp.ticker));
+                    txobj.push_back(Pair("purchasedpropertydivisible", sp.isDivisible()));
+                    txobj.push_back(Pair("purchasedtokens", FormatMP(crowdPropertyId, crowdTokens)));
+                    txobj.push_back(Pair("issuertokens", FormatMP(crowdPropertyId, issuerTokens)));
                 }
             }
         }
     }
-
-    // TODO: what about details about what this payment did (eg crowdsale purchase, paid accept etc)?
 }
 
 

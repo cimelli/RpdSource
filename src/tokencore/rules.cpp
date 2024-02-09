@@ -55,6 +55,7 @@ std::vector<TransactionRestriction> CConsensusParams::GetRestrictions() const
         { TOKEN_TYPE_CLOSE_CROWDSALE,           MP_TX_PKT_V0,  false,   TOKEN_SP_BLOCK       },
 
         { TOKEN_TYPE_RAPIDS_PAYMENT,            MP_TX_PKT_V0,  true,    TOKEN_SP_BLOCK       },
+        { TOKEN_TYPE_SEND_TO_MANY,              MP_TX_PKT_V0,  true,    TOKEN_SP_BLOCK       },
 
         { TOKEN_TYPE_CREATE_PROPERTY_MANUAL,    MP_TX_PKT_V0,  false,   TOKEN_MANUALSP_BLOCK },
         { TOKEN_TYPE_GRANT_PROPERTY_TOKENS,     MP_TX_PKT_V0,  false,   TOKEN_MANUALSP_BLOCK },
@@ -204,6 +205,7 @@ CRegTestConsensusParams::CRegTestConsensusParams()
     MULTISIG_BLOCK = 0;
     NULLDATA_BLOCK = 0;
     // Transaction restrictions:
+
     TOKEN_ALERT_BLOCK = 0;
     TOKEN_SEND_BLOCK = 0;
     TOKEN_DEX_BLOCK = 0;
@@ -212,15 +214,18 @@ CRegTestConsensusParams::CRegTestConsensusParams()
     TOKEN_STO_BLOCK = 0;
     TOKEN_METADEX_BLOCK = 0;
     TOKEN_SEND_ALL_BLOCK = 0;
-    TOKEN_BET_BLOCK = 999999;
-    TOKEN_STOV1_BLOCK = 999999;
+
     // Other feature activations:
-    GRANTEFFECTS_FEATURE_BLOCK = 999999;
-    DEXMATH_FEATURE_BLOCK = 999999;
-    SPCROWDCROSSOVER_FEATURE_BLOCK = 999999;
-    TRADEALLPAIRS_FEATURE_BLOCK = 999999;
-    FEES_FEATURE_BLOCK = 999999;
-    FREEZENOTICE_FEATURE_BLOCK = 999999;
+    GRANTEFFECTS_FEATURE_BLOCK = 0;
+    DEXMATH_FEATURE_BLOCK = 0;
+    SPCROWDCROSSOVER_FEATURE_BLOCK = 0;
+    TRADEALLPAIRS_FEATURE_BLOCK = 0;
+
+    TOKEN_BET_BLOCK = std::numeric_limits<int>::max();
+    TOKEN_STOV1_BLOCK = std::numeric_limits<int>::max();
+
+    FEES_FEATURE_BLOCK = std::numeric_limits<int>::max();
+    FREEZENOTICE_FEATURE_BLOCK = std::numeric_limits<int>::max();
 }
 
 //! Consensus parameters for mainnet

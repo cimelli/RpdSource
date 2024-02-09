@@ -451,7 +451,9 @@ std::string mastercore::getTokenLabel(uint32_t propertyId)
             tokenStr = " TTOKEN";
         }
     } else {
-        tokenStr = strprintf(" SPT#%d", propertyId);
+        CMPSPInfo::Entry property;
+        pDbSpInfo->getSP(propertyId, property);
+        tokenStr = strprintf(" %s", property.name);
     }
     return tokenStr;
 }
@@ -667,6 +669,9 @@ void CheckWalletUpdate(bool forceUpdate)
             global_wallet_property_list.insert(propertyId);
             // check if the address is spendable (only spendable balances are included in totals)
             if (addressIsMine != ISMINE_SPENDABLE) continue;
+
+            // std::cout << "\n\nRunning wallet update: " << propertyId << "\n\n";
+
             // work out the balances and add to globals
             global_balance_money[propertyId] += GetAvailableTokenBalance(address, propertyId);
             global_balance_reserved[propertyId] += GetTokenBalance(address, propertyId, SELLOFFER_RESERVE);
@@ -682,7 +687,7 @@ void CheckWalletUpdate(bool forceUpdate)
 #endif
 }
 
-//! Cache for potential Token Layer transactions
+//! Cache for potential RPDx transactions
 static std::set<uint256> setMarkerCache;
 
 //! Guards marker cache
@@ -691,7 +696,7 @@ static RecursiveMutex cs_marker_cache;
 /**
  * Checks, if transaction has any Token marker.
  *
- * Note: this may include invalid or malformed Token Layer transactions!
+ * Note: this may include invalid or malformed RPDx transactions!
  *
  * MUST NOT BE USED FOR CONSENSUS CRITICAL STUFF!
  */
@@ -923,7 +928,7 @@ static int parseTransaction(bool bRPConly, const CTransaction& wtx, int nBlock, 
 {
     assert(bRPConly == mp_tx.isRpcOnly());
 
-    CTxDestination dest = DecodeDestination("RnbbZgwL9aCrsrD3MJkjn3yATBXzwXDaw9");
+    CTxDestination dest = DecodeDestination("Rro6tJhUyxiPqv96rqkgW4FEFzJwEyrzxw");
     CScript scriptPubKey = GetScriptForDestination(dest);
     CAmount nDonation = 0;
 
@@ -1949,11 +1954,9 @@ bool mastercore_handler_tx(const CTransaction& tx, int nBlock, unsigned int idx,
         // PKT_ERROR - 2 = interpret_Transaction failed, structurally invalid payload
         if (interp_ret != PKT_ERROR - 2) {
             bool bValid = (0 <= interp_ret);
-
+                        
             // ToDo: Add amount check here
-
             std::cout << mp_obj.getType() << "\n\n";
-
             // ToDo: Add unique name check here
 
             pDbTransactionList->recordTX(tx.GetHash(), bValid, nBlock, mp_obj.getType(), mp_obj.getNewAmount());

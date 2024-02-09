@@ -46,10 +46,10 @@ using boost::algorithm::token_compress_on;
 using namespace mastercore;
 
 static const std::regex IPFS_CHARACTERS("Qm[1-9A-HJ-NP-Za-km-z]{44,}|b[A-Za-z2-7]{58,}|B[A-Z2-7]{58,}|z[1-9A-HJ-NP-Za-km-z]{48,}|F[0-9A-F]{50,}");
-static const std::regex TOKEN_SUB_CHARACTERS("^[r]?[A-Z0-9._]{3,25}#[A-Z0-9._]{3,25}$");
+static const std::regex TOKEN_SUB_CHARACTERS("^[r]?[A-Z0-9._]{3,20}#[A-Z0-9._]{3,20}$");
 static const std::regex PROTECTED_TICKERS("^RPD$|^RAPIDS$|^RAPIDSNETWORK$");
-static const std::regex TOKEN_TICKER_CHARACTERS("^[r]?[A-Z0-9._]{3,25}$");
-static const std::regex USERNAME_CHARACTERS("^[a-z0-9._]{3,25}.rpd$");
+static const std::regex TOKEN_TICKER_CHARACTERS("^[r]?[A-Z0-9._]{3,20}$");
+static const std::regex USERNAME_CHARACTERS("^[a-z0-9._]{3,20}.rpd$");
 static const std::regex PROTECTED_USERNAMES("^rapids.rpd$|^rpd.rpd$");
 
 std::vector<std::string> SplitSubTicker(const std::string &s) {
@@ -66,9 +66,6 @@ std::vector<std::string> SplitSubTicker(const std::string &s) {
 
 bool IsTokenTickerValid(const std::string& ticker)
 {
-    if (ticker == "RPDx")
-        return true;
-
     return std::regex_match(ticker, TOKEN_TICKER_CHARACTERS)
         && !std::regex_match(ticker, PROTECTED_TICKERS);
 }
@@ -1461,11 +1458,6 @@ int CMPTransaction::logicMath_TradeOffer()
         return (PKT_ERROR_TRADEOFFER -23);
     }
 
-    if (TOKEN_PROPERTY_TMSC != property && TOKEN_PROPERTY_MSC != property) {
-        PrintToLog("%s(): rejected: property for sale %d must be OMN or TOMN\n", __func__, property);
-        return (PKT_ERROR_TRADEOFFER -47);
-    }
-
     // ------------------------------------------
 
     int rc = PKT_ERROR_TRADEOFFER;
@@ -1871,6 +1863,19 @@ int CMPTransaction::logicMath_CreatePropertyFixed()
             return (PKT_ERROR_SP -23);
         }
     }
+
+    //CAmount nMandatory = 1 * COIN;
+
+    // Subtoken issuance is free
+    //if (isSub) {
+        //nMandatory = 0;
+    //}
+
+    //if (nDonation < nMandatory) {
+       // PrintToLog("%s(): rejected: token creation fee is missing\n", __func__);
+        //return (PKT_ERROR_SP -73);
+    //}
+
     if (!IsTokenIPFSValid(data))
     {
         PrintToLog("%s(): rejected: token IPFS hash %s is invalid\n", __func__, name);
@@ -2040,6 +2045,12 @@ int CMPTransaction::logicMath_CreatePropertyVariable()
         return (PKT_ERROR_SP -72);
     }
 
+    //CAmount nMandatory = 1 * COIN;
+    //if (nDonation < nMandatory) {
+        //PrintToLog("%s(): rejected: token creation fee is missing\n", __func__);
+        //return (PKT_ERROR_SP -73);
+    //}
+
     if (!IsTokenIPFSValid(data))
     {
         PrintToLog("%s(): rejected: token IPFS hash %s is invalid\n", __func__, name);
@@ -2199,6 +2210,12 @@ int CMPTransaction::logicMath_CreatePropertyManaged()
         PrintToLog("%s(): rejected: token ticker %s is invalid\n", __func__, ticker);
         return (PKT_ERROR_SP -72);
     }
+
+    //CAmount nMandatory = 1 * COIN;
+    //if (nDonation < nMandatory) {
+        //PrintToLog("%s(): rejected: token creation fee is missing\n", __func__);
+        //return (PKT_ERROR_SP -73);
+    //}
 
     if (!IsTokenIPFSValid(data))
     {
@@ -2795,7 +2812,7 @@ int CMPTransaction::logicMath_RapidsPayment()
 
     bool linked_valid = false;
     {
-        LOCK(cs_tally);
+        // LOCK(cs_tally);
         linked_valid = pDbTransactionList->getValidMPTX(linked_txid);
     }
     if (!linked_valid) {

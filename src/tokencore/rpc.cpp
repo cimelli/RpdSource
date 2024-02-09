@@ -80,7 +80,7 @@ void PopulateFailure(int error)
         case MP_INVALID_TX_IN_DB_FOUND:
             throw JSONRPCError(RPC_INTERNAL_ERROR, "Potential database corruption: Invalid transaction found");
         case MP_TX_IS_NOT_TOKEN_PROTOCOL:
-            throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "No Token Layer Protocol transaction");
+            throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "No RPDx Protocol transaction");
     }
     throw JSONRPCError(RPC_INTERNAL_ERROR, "Generic transaction population failure");
 }
@@ -906,6 +906,7 @@ static UniValue gettokenbalances(const JSONRPCRequest& request)
 
     for (std::set<uint32_t>::iterator it = global_wallet_property_list.begin() ; it != global_wallet_property_list.end(); ++it) {
         uint32_t propertyId = *it;
+        bool addToken = false;
 
         CMPSPInfo::Entry property;
         if (!pDbSpInfo->getSP(propertyId, property)) {
@@ -959,11 +960,15 @@ static UniValue gettokenbalances(const JSONRPCRequest& request)
             }
 
             addresses.push_back(objAddrBalance);
+
+            if (addr_balance > 0 || addr_reserved > 0 || addr_frozen)
+                addToken = true;
         }
 
         objBalance.pushKV("addresses", addresses);
 
-        response.push_back(objBalance);
+        if (addToken)
+            response.push_back(objBalance);
     }
 
 #endif
@@ -1214,8 +1219,8 @@ static UniValue gettokencrowdsale(const JSONRPCRequest& request)
             "  ]\n"
             "}\n"
             "\nExamples:\n"
-            + HelpExampleCli("gettokencrowdsale", "3 true")
-            + HelpExampleRpc("gettokencrowdsale", "3, true")
+            + HelpExampleCli("gettokencrowdsale", "TOKEN true")
+            + HelpExampleRpc("gettokencrowdsale", "TOKEN, true")
         );
 
     std::string ticker = ParseText(request.params[0]);
@@ -1622,8 +1627,8 @@ static UniValue gettokentradehistoryforaddress(const JSONRPCRequest& request)
             "\nNote:\n"
             "The documentation only covers the output for a trade, but there are also cancel transactions with different properties.\n"
             "\nExamples:\n"
-            + HelpExampleCli("gettokentradehistoryforaddress", "\"RMCHESTptvd2LnNp7wmr2sGTpRomteAkq8\"")
-            + HelpExampleRpc("gettokentradehistoryforaddress", "\"RMCHESTptvd2LnNp7wmr2sGTpRomteAkq8\"")
+            + HelpExampleCli("gettokentradehistoryforaddress", "\"1MCHESTptvd2LnNp7wmr2sGTpRomteAkq8\"")
+            + HelpExampleRpc("gettokentradehistoryforaddress", "\"1MCHESTptvd2LnNp7wmr2sGTpRomteAkq8\"")
         );
 
     std::string address = ParseAddress(request.params[0]);
@@ -2449,8 +2454,8 @@ static const CRPCCommand commands[] =
     { "tokens (data retrieval)", "listtokentransactions",           &listtokentransactions,            false },
     // { "tokens (data retrieval)", "token_getfeeshare",               &token_getfeeshare,                false },
     // { "tokens (configuration)",  "token_setautocommit",             &token_setautocommit,              true  },
-    // { "tokens (data retrieval)", "getwallettokenbalances",          &getwallettokenbalances,           false },
-    // { "tokens (data retrieval)", "getwalletaddresstokenbalances",   &getwalletaddresstokenbalances,    false },
+    { "tokens (data retrieval)", "getwallettokenbalances",          &getwallettokenbalances,           false },
+    { "tokens (data retrieval)", "getwalletaddresstokenbalances",   &getwalletaddresstokenbalances,    false },
     { "tokens (data retrieval)", "gettokenbalances",                &gettokenbalances,                 false },
 #endif
 };

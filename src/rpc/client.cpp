@@ -169,8 +169,8 @@ static const CRPCConvertParam vRPCConvertParams[] =
         { "getwalletaddresstokenbalances", 0 },
 
         /* Token Core - transaction calls */
-        { "token_sendsto", 1 },
-        { "token_sendsto", 4 },
+        //{ "sendtokensto", 1 },
+        //{ "sendtokensto", 4 },
         { "sendalltokens", 2 },
         { "sendtokencancelalltrades", 1 },
         { "sendtokenissuancefixed", 1 },
@@ -189,12 +189,12 @@ static const CRPCConvertParam vRPCConvertParams[] =
         { "sendtokendexsell", 4 },
         { "sendtokendexsell", 6 },
         { "sendtokendexaccept", 4 },
-        { "token_senddeactivation", 1 },
-        { "token_sendactivation", 1 },
-        { "token_sendactivation", 2 },
-        { "token_sendactivation", 3 },
-        { "token_sendalert", 1 },
-        { "token_sendalert", 2 },
+        //{ "token_senddeactivation", 1 },
+        //{ "token_sendactivation", 1 },
+        //{ "token_sendactivation", 2 },
+        //{ "token_sendactivation", 3 },
+        //{ "token_sendalert", 1 },
+        //{ "token_sendalert", 2 },
         { "sendtokenfundedall", 2 },
         { "sendtokenmany", 2 },
 
@@ -208,14 +208,13 @@ static const CRPCConvertParam vRPCConvertParams[] =
         { "createrawtokentxchange", 4 },
 
         /* Token Core - payload creation */
-        { "omni_createpayload_sendtomany", 1 },
-        { "token_createpayload_sendall", 0 },
-        { "token_createpayload_dexsell", 0 },
-        { "token_createpayload_dexsell", 3 },
-        { "token_createpayload_dexsell", 5 },
-        { "token_createpayload_dexaccept", 0 },
-        { "token_createpayload_sto", 0 },
-        { "token_createpayload_sto", 2 },
+        { "createtokenpayloadsendtomany", 1 },
+        { "createtokenpayloadsimplesend", 1 },
+        { "createtokenpayloadsendall", 0 },
+        { "createtokenpayloaddexsell", 3 },
+        { "createtokenpayloaddexsell", 5 },
+        { "createtokenpayloadsto", 0 },
+        { "createtokenpayloadsto", 2 },
         { "createtokenpayloadissuancefixed", 0 },
         { "createtokenpayloadissuancefixed", 1 },
         { "createtokenpayloadissuancefixed", 2 },
@@ -228,17 +227,20 @@ static const CRPCConvertParam vRPCConvertParams[] =
         { "createtokenpayloadissuancecrowdsale", 10 },
         { "createtokenpayloadissuancecrowdsale", 11 },
         { "createtokenpayloadissuancecrowdsale", 12 },
-        { "token_createpayload_trade", 0 },
-        { "token_createpayload_trade", 2 },
-        { "token_createpayload_canceltradesbyprice", 0 },
-        { "token_createpayload_canceltradesbyprice", 2 },
-        { "token_createpayload_canceltradesbypair", 0 },
-        { "token_createpayload_canceltradesbypair", 1 },
-        { "token_createpayload_cancelalltrades", 0 },
-        { "token_createpayload_enablefreezing", 0 },
-        { "token_createpayload_disablefreezing", 0 },
-        { "token_createpayload_freeze", 1 },
-        { "token_createpayload_unfreeze", 1 },
+        { "createtokenpayloadclosecrowdsale", 1 },
+        { "createtokenpayloadcancelalltrades", 0 },
+        { "createtokenpayloadenablefreezing", 0 },
+        { "createtokenpayloaddisablefreezing", 0 },
+        { "createtokenpayloadfreeze", 1 },
+        { "createtokenpayloadunfreeze", 1 },
+        
+        /* todo
+         createtokenpayloaddexaccept
+         createtokenpayloadtrade
+         createtokenpayloadcanceltradesbypair
+         createtokenpayloadcanceltradesbyprice
+         createtokenpayloadchangeissuer
+         */
 
         /* Token Core - backwards compatibility */
         { "getcrowdsale_MP", 0 },
