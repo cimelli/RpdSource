@@ -16,7 +16,6 @@
 #include "tokencore/sp.h"
 #include "tokencore/tx.h"
 #include "tokencore/wallettxbuilder.h"
-#include "tokencore/utilsbitcoin.h"
 
 #include "init.h"
 #include <key_io.h>
@@ -135,12 +134,12 @@ static UniValue sendtokenfundedall(const JSONRPCRequest& request)
     return retTxid.ToString();
 }
 
-static UniValue sendtokenrawtx(const JSONRPCRequest& request)
+static UniValue token_sendrawtx(const JSONRPCRequest& request)
 {
     if (request.fHelp || request.params.size() < 2 || request.params.size() > 5)
         throw runtime_error(
-            "sendtokenrawtx \"fromaddress\" \"rawtransaction\" ( \"referenceaddress\" \"redeemaddress\" \"referenceamount\" )\n"
-            "\nBroadcasts a raw RPDx transaction.\n"
+            "token_sendrawtx \"fromaddress\" \"rawtransaction\" ( \"referenceaddress\" \"redeemaddress\" \"referenceamount\" )\n"
+            "\nBroadcasts a raw Token Layer transaction.\n"
             "\nArguments:\n"
             "1. fromaddress          (string, required) the address to send from\n"
             "2. rawtransaction       (string, required) the hex-encoded raw transaction\n"
@@ -150,8 +149,8 @@ static UniValue sendtokenrawtx(const JSONRPCRequest& request)
             "\nResult:\n"
             "\"hash\"                  (string) the hex-encoded transaction hash\n"
             "\nExamples:\n"
-            + HelpExampleCli("sendtokenrawtx", "\"1MCHESTptvd2LnNp7wmr2sGTpRomteAkq8\" \"000000000000000100000000017d7840\" \"1EqTta1Rt8ixAA32DuC29oukbsSWU62qAV\"")
-            + HelpExampleRpc("sendtokenrawtx", "\"1MCHESTptvd2LnNp7wmr2sGTpRomteAkq8\", \"000000000000000100000000017d7840\", \"1EqTta1Rt8ixAA32DuC29oukbsSWU62qAV\"")
+            + HelpExampleCli("token_sendrawtx", "\"1MCHESTptvd2LnNp7wmr2sGTpRomteAkq8\" \"000000000000000100000000017d7840\" \"1EqTta1Rt8ixAA32DuC29oukbsSWU62qAV\"")
+            + HelpExampleRpc("token_sendrawtx", "\"1MCHESTptvd2LnNp7wmr2sGTpRomteAkq8\", \"000000000000000100000000017d7840\", \"1EqTta1Rt8ixAA32DuC29oukbsSWU62qAV\"")
         );
 
     std::string fromAddress = ParseAddress(request.params[0]);
@@ -539,18 +538,21 @@ static UniValue sendtokendexsell(const JSONRPCRequest& request)
     switch (action) {
         case CMPTransaction::NEW:
         {
+            RequirePrimaryToken(propertyIdForSale);
             RequireBalance(fromAddress, propertyIdForSale, amountForSale);
-            RequireNoOtherDExOffer(fromAddress);
+            RequireNoOtherDExOffer(fromAddress, propertyIdForSale);
             break;
         }
         case CMPTransaction::UPDATE:
         {
+            RequirePrimaryToken(propertyIdForSale);
             RequireBalance(fromAddress, propertyIdForSale, amountForSale);
             RequireMatchingDExOffer(fromAddress, propertyIdForSale);
             break;
         }
         case CMPTransaction::CANCEL:
         {
+            RequirePrimaryToken(propertyIdForSale);
             RequireMatchingDExOffer(fromAddress, propertyIdForSale);
             break;
         }
@@ -931,10 +933,6 @@ static UniValue sendtokenissuancefixed(const JSONRPCRequest& request)
     // request the wallet build the transaction (and if needed commit it)
     uint256 txid;
     std::string rawHex;
-
-    // Subtoken doesn't require donation
-    //bool requireDonation = !IsSubTickerValid(ticker);
-
     int result = WalletTxBuilder(fromAddress, "", "", 0, payload, txid, rawHex, autoCommit);
 
     // check error and return the txid (or raw hex depending on autocommit)
@@ -1023,12 +1021,11 @@ static UniValue sendtokenissuancemanaged(const JSONRPCRequest& request)
     }
 }
 
-/*
-static UniValue sendtokensto(const JSONRPCRequest& request)
+static UniValue token_sendsto(const JSONRPCRequest& request)
 {
     if (request.fHelp || request.params.size() < 3 || request.params.size() > 5)
         throw runtime_error(
-            "sendtokensto \"fromaddress\" propertyid \"amount\" ( \"redeemaddress\" distributionproperty )\n"
+            "token_sendsto \"fromaddress\" propertyid \"amount\" ( \"redeemaddress\" distributionproperty )\n"
 
             "\nCreate and broadcast a send-to-owners transaction.\n"
 
@@ -1043,8 +1040,8 @@ static UniValue sendtokensto(const JSONRPCRequest& request)
             "\"hash\"                  (string) the hex-encoded transaction hash\n"
 
             "\nExamples:\n"
-            + HelpExampleCli("sendtokensto", "\"32Z3tJccZuqQZ4PhJR2hxHC3tjgjA8cbqz\" \"37FaKponF7zqoMLUjEiko25pDiuVH5YLEa\" 3 \"5000\"")
-            + HelpExampleRpc("sendtokensto", "\"32Z3tJccZuqQZ4PhJR2hxHC3tjgjA8cbqz\", \"37FaKponF7zqoMLUjEiko25pDiuVH5YLEa\", 3, \"5000\"")
+            + HelpExampleCli("token_sendsto", "\"32Z3tJccZuqQZ4PhJR2hxHC3tjgjA8cbqz\" \"37FaKponF7zqoMLUjEiko25pDiuVH5YLEa\" 3 \"5000\"")
+            + HelpExampleRpc("token_sendsto", "\"32Z3tJccZuqQZ4PhJR2hxHC3tjgjA8cbqz\", \"37FaKponF7zqoMLUjEiko25pDiuVH5YLEa\", 3, \"5000\"")
         );
 
     // obtain parameters & info
@@ -1077,8 +1074,7 @@ static UniValue sendtokensto(const JSONRPCRequest& request)
         }
     }
 }
-*/
- 
+
 static UniValue sendtokengrant(const JSONRPCRequest& request)
 {
     if (request.fHelp || request.params.size() < 4 || request.params.size() > 5)
@@ -1098,8 +1094,8 @@ static UniValue sendtokengrant(const JSONRPCRequest& request)
             "\"hash\"                  (string) the hex-encoded transaction hash\n"
 
             "\nExamples:\n"
-            + HelpExampleCli("sendtokengrant", "\"RpAVz7YHGFjVrr29iiSmezkvd3SzBbuK7p\" \"\" TOKEN \"7000\"")
-            + HelpExampleRpc("sendtokengrant", "\"RpAVz7YHGFjVrr29iiSmezkvd3SzBbuK7p\", \"\", TOKEN, \"7000\"")
+            + HelpExampleCli("sendtokengrant", "\"3HsJvhr9qzgRe3ss97b1QHs38rmaLExLcH\" \"\" TOKEN \"7000\"")
+            + HelpExampleRpc("sendtokengrant", "\"3HsJvhr9qzgRe3ss97b1QHs38rmaLExLcH\", \"\", TOKEN, \"7000\"")
         );
 
     // obtain parameters & info
@@ -1214,8 +1210,8 @@ static UniValue sendtokenclosecrowdsale(const JSONRPCRequest& request)
             "\"hash\"                  (string) the hex-encoded transaction hash\n"
 
             "\nExamples:\n"
-            + HelpExampleCli("sendtokenclosecrowdsale", "\"3JYd75REX3HXn1vAU83YuGfmiPXW7BpYXo\" TOKEN")
-            + HelpExampleRpc("sendtokenclosecrowdsale", "\"3JYd75REX3HXn1vAU83YuGfmiPXW7BpYXo\", TOKEN")
+            + HelpExampleCli("sendtokenclosecrowdsale", "\"3JYd75REX3HXn1vAU83YuGfmiPXW7BpYXo\" 70")
+            + HelpExampleRpc("sendtokenclosecrowdsale", "\"3JYd75REX3HXn1vAU83YuGfmiPXW7BpYXo\", 70")
         );
 
     // obtain parameters & info
@@ -1976,7 +1972,7 @@ static const CRPCCommand commands[] =
 { //  category                         name                            actor (function)               okSafeMode
   //  -------------------------------- ------------------------------- ------------------------------ ----------
 #ifdef ENABLE_WALLET
-    { "tokens (transaction creation)", "sendtokenrawtx",               &sendtokenrawtx,               false },
+    // { "tokens (transaction creation)", "token_sendrawtx",               &token_sendrawtx,               false },
     { "tokens (transaction creation)", "sendtoken",                    &sendtoken,                    false },
     { "tokens (transaction creation)", "sendtokenmany",                &sendtokenmany,                false },
     { "tokens (transaction creation)", "sendtokendexsell",             &sendtokendexsell,             false },
@@ -1989,7 +1985,7 @@ static const CRPCCommand commands[] =
     { "tokens (transaction creation)", "sendtokencanceltradesbyprice", &sendtokencanceltradesbyprice, false },
     { "tokens (transaction creation)", "sendtokencanceltradesbypair",  &sendtokencanceltradesbypair,  false },
     { "tokens (transaction creation)", "sendtokencancelalltrades",     &sendtokencancelalltrades,     false },
-    //{ "tokens (transaction creation)", "sendtokensto",                 &sendtokensto,                 false },
+    // { "tokens (transaction creation)", "token_sendsto",                 &token_sendsto,                 false },
     { "tokens (transaction creation)", "sendtokengrant",               &sendtokengrant,               false },
     { "tokens (transaction creation)", "sendtokenrevoke",              &sendtokenrevoke,              false },
     { "tokens (transaction creation)", "sendtokenclosecrowdsale",      &sendtokenclosecrowdsale,      false },

@@ -62,7 +62,6 @@ std::map<std::string, uint256> FetchWalletTokenTransactions(unsigned int count, 
     if (pwalletMain == NULL) {
         return mapResponse;
     }
-
     std::set<uint256> seenHashes;
     std::list<CAccountingEntry> acentries;
     CWallet::TxItems txOrdered;
@@ -70,7 +69,6 @@ std::map<std::string, uint256> FetchWalletTokenTransactions(unsigned int count, 
         LOCK(pwalletMain->cs_wallet);
         txOrdered = pwalletMain->wtxOrdered;
     }
-
     // Iterate backwards through wallet transactions until we have count items to return:
     for (CWallet::TxItems::reverse_iterator it = txOrdered.rbegin(); it != txOrdered.rend(); ++it) {
         const CWalletTx* pwtx = it->second.first;

@@ -18,8 +18,7 @@ int WalletTxBuilder(
         const std::vector<unsigned char>& payload,
         uint256& retTxid,
         std::string& retRawTx,
-        bool commit,
-        bool nDonation = false);
+        bool commit);
 
 /**
  * Creates and sends a transaction with multiple receivers.
@@ -32,8 +31,7 @@ int WalletTxBuilder(
         const std::vector<unsigned char>& payload,
         uint256& retTxid,
         std::string& retRawTx,
-        bool commit,
-        bool nDonation = false);
+        bool commit);
 
 /**
  * Simulates the creation of a payload to count the required outputs.

@@ -193,12 +193,12 @@ CTestNetConsensusParams::CTestNetConsensusParams()
 CRegTestConsensusParams::CRegTestConsensusParams()
 {
     // Exodus related:
-    GENESIS_BLOCK = 101;
+    GENESIS_BLOCK = 1;
     // Notice range for feature activations:
-    MIN_ACTIVATION_BLOCKS = 5;
-    MAX_ACTIVATION_BLOCKS = 10;
+    MIN_ACTIVATION_BLOCKS = 0;  // ~2 weeks
+    MAX_ACTIVATION_BLOCKS = 99999999; // ~12 weeks
     // Waiting period for enabling freezing
-    TOKEN_FREEZE_WAIT_PERIOD = 10;
+    TOKEN_FREEZE_WAIT_PERIOD = 4096; // ~4 weeks
     // Script related:
     PUBKEYHASH_BLOCK = 0;
     SCRIPTHASH_BLOCK = 0;

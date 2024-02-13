@@ -50,11 +50,11 @@ static UniValue createtokenpayloadsimplesend(const JSONRPCRequest& request)
     return HexStr(payload.begin(), payload.end());
 }
 
-static UniValue createtokenpayloadsendall(const JSONRPCRequest& request)
+static UniValue token_createpayload_sendall(const JSONRPCRequest& request)
 {
     if (request.fHelp || request.params.size() != 1)
         throw runtime_error(
-            "createtokenpayloadsendall ecosystem\n"
+            "token_createpayload_sendall ecosystem\n"
 
             "\nCreate the payload for a send all transaction.\n"
 
@@ -65,8 +65,8 @@ static UniValue createtokenpayloadsendall(const JSONRPCRequest& request)
             "\"payload\"               (string) the hex-encoded payload\n"
 
             "\nExamples:\n"
-            + HelpExampleCli("createtokenpayloadsendall", "2")
-            + HelpExampleRpc("createtokenpayloadsendall", "2")
+            + HelpExampleCli("token_createpayload_sendall", "2")
+            + HelpExampleRpc("token_createpayload_sendall", "2")
         );
 
     uint8_t ecosystem = ParseEcosystem(request.params[0]);
@@ -161,11 +161,11 @@ static UniValue createtokenpayloaddexaccept(const JSONRPCRequest& request)
     return HexStr(payload.begin(), payload.end());
 }
 
-static UniValue createtokenpayloadsto(const JSONRPCRequest& request)
+static UniValue token_createpayload_sto(const JSONRPCRequest& request)
 {
     if (request.fHelp || request.params.size() < 2 || request.params.size() > 3)
         throw runtime_error(
-            "createtokenpayloadsto propertyid \"amount\" ( distributionproperty )\n"
+            "token_createpayload_sto propertyid \"amount\" ( distributionproperty )\n"
 
             "\nCreates the payload for a send-to-owners transaction.\n"
 
@@ -179,8 +179,8 @@ static UniValue createtokenpayloadsto(const JSONRPCRequest& request)
             "\"payload\"             (string) the hex-encoded payload\n"
 
             "\nExamples:\n"
-            + HelpExampleCli("createtokenpayloadsto", "3 \"5000\"")
-            + HelpExampleRpc("createtokenpayloadsto", "3, \"5000\"")
+            + HelpExampleCli("token_createpayload_sto", "3 \"5000\"")
+            + HelpExampleRpc("token_createpayload_sto", "3, \"5000\"")
         );
 
     uint32_t propertyId = ParsePropertyId(request.params[0]);
@@ -674,11 +674,11 @@ static UniValue createtokenpayloadcancelalltrades(const JSONRPCRequest& request)
     return HexStr(payload.begin(), payload.end());
 }
 
-static UniValue createtokenpayloadenablefreezing(const JSONRPCRequest& request)
+static UniValue token_createpayload_enablefreezing(const JSONRPCRequest& request)
 {
     if (request.fHelp || request.params.size() != 1)
         throw runtime_error(
-            "createtokenpayloadenablefreezing propertyid\n"
+            "token_createpayload_enablefreezing propertyid\n"
 
             "\nCreates the payload to enable address freezing for a centrally managed property.\n"
 
@@ -689,8 +689,8 @@ static UniValue createtokenpayloadenablefreezing(const JSONRPCRequest& request)
             "\"payload\"             (string) the hex-encoded payload\n"
 
             "\nExamples:\n"
-            + HelpExampleCli("createtokenpayloadenablefreezing", "3")
-            + HelpExampleRpc("createtokenpayloadenablefreezing", "3")
+            + HelpExampleCli("token_createpayload_enablefreezing", "3")
+            + HelpExampleRpc("token_createpayload_enablefreezing", "3")
         );
 
     uint32_t propertyId = ParsePropertyId(request.params[0]);
@@ -700,11 +700,11 @@ static UniValue createtokenpayloadenablefreezing(const JSONRPCRequest& request)
     return HexStr(payload.begin(), payload.end());
 }
 
-static UniValue createtokenpayloaddisablefreezing(const JSONRPCRequest& request)
+static UniValue token_createpayload_disablefreezing(const JSONRPCRequest& request)
 {
     if (request.fHelp || request.params.size() != 1)
         throw runtime_error(
-            "createtokenpayloaddisablefreezing propertyid\n"
+            "token_createpayload_disablefreezing propertyid\n"
 
             "\nCreates the payload to disable address freezing for a centrally managed property.\n"
             "\nIMPORTANT NOTE:  Disabling freezing for a property will UNFREEZE all frozen addresses for that property!"
@@ -716,8 +716,8 @@ static UniValue createtokenpayloaddisablefreezing(const JSONRPCRequest& request)
             "\"payload\"             (string) the hex-encoded payload\n"
 
             "\nExamples:\n"
-            + HelpExampleCli("createtokenpayloaddisablefreezing", "3")
-            + HelpExampleRpc("createtokenpayloaddisablefreezing", "3")
+            + HelpExampleCli("token_createpayload_disablefreezing", "3")
+            + HelpExampleRpc("token_createpayload_disablefreezing", "3")
         );
 
     uint32_t propertyId = ParsePropertyId(request.params[0]);
@@ -728,11 +728,11 @@ static UniValue createtokenpayloaddisablefreezing(const JSONRPCRequest& request)
 }
 
 
-static UniValue createtokenpayloadfreeze(const JSONRPCRequest& request)
+static UniValue token_createpayload_freeze(const JSONRPCRequest& request)
 {
     if (request.fHelp || request.params.size() != 3)
         throw runtime_error(
-            "createtokenpayloadfreeze \"toaddress\" propertyid amount \n"
+            "token_createpayload_freeze \"toaddress\" propertyid amount \n"
 
             "\nCreates the payload to freeze an address for a centrally managed token.\n"
 
@@ -747,8 +747,8 @@ static UniValue createtokenpayloadfreeze(const JSONRPCRequest& request)
             "\"payload\"             (string) the hex-encoded payload\n"
 
             "\nExamples:\n"
-            + HelpExampleCli("createtokenpayloadfreeze", "\"3HTHRxu3aSDV4deakjC7VmsiUp7c6dfbvs\" 1 \"100\"")
-            + HelpExampleRpc("createtokenpayloadfreeze", "\"3HTHRxu3aSDV4deakjC7VmsiUp7c6dfbvs\", 1, \"100\"")
+            + HelpExampleCli("token_createpayload_freeze", "\"3HTHRxu3aSDV4deakjC7VmsiUp7c6dfbvs\" 1 \"100\"")
+            + HelpExampleRpc("token_createpayload_freeze", "\"3HTHRxu3aSDV4deakjC7VmsiUp7c6dfbvs\", 1, \"100\"")
         );
 
     std::string refAddress = ParseAddress(request.params[0]);
@@ -760,11 +760,11 @@ static UniValue createtokenpayloadfreeze(const JSONRPCRequest& request)
     return HexStr(payload.begin(), payload.end());
 }
 
-static UniValue createtokenpayloadunfreeze(const JSONRPCRequest& request)
+static UniValue token_createpayload_unfreeze(const JSONRPCRequest& request)
 {
     if (request.fHelp || request.params.size() != 3)
         throw runtime_error(
-            "createtokenpayloadunfreeze \"toaddress\" propertyid amount \n"
+            "token_createpayload_unfreeze \"toaddress\" propertyid amount \n"
 
             "\nCreates the payload to unfreeze an address for a centrally managed token.\n"
 
@@ -779,8 +779,8 @@ static UniValue createtokenpayloadunfreeze(const JSONRPCRequest& request)
             "\"payload\"             (string) the hex-encoded payload\n"
 
             "\nExamples:\n"
-            + HelpExampleCli("createtokenpayloadunfreeze", "\"3HTHRxu3aSDV4deakjC7VmsiUp7c6dfbvs\" 1 \"100\"")
-            + HelpExampleRpc("createtokenpayloadunfreeze", "\"3HTHRxu3aSDV4deakjC7VmsiUp7c6dfbvs\", 1, \"100\"")
+            + HelpExampleCli("token_createpayload_unfreeze", "\"3HTHRxu3aSDV4deakjC7VmsiUp7c6dfbvs\" 1 \"100\"")
+            + HelpExampleRpc("token_createpayload_unfreeze", "\"3HTHRxu3aSDV4deakjC7VmsiUp7c6dfbvs\", 1, \"100\"")
         );
 
     std::string refAddress = ParseAddress(request.params[0]);
@@ -837,7 +837,9 @@ static UniValue createtokenpayloadsendtomany(const JSONRPCRequest& request)
         outputValues.push_back(std::make_tuple(output, amount));
     }
 
-    std::vector<unsigned char> payload = CreatePayload_SendToMany(propertyId, outputValues);
+    std::vector<unsigned char> payload = CreatePayload_SendToMany(
+        propertyId,
+        outputValues);           
 
     return HexStr(payload.begin(), payload.end());
 }
@@ -847,10 +849,10 @@ static const CRPCCommand commands[] =
 { //  category                         name                                      actor (function)                         okSafeMode
   //  -------------------------------- ----------------------------------------- ---------------------------------------- ----------
     { "token layer (payload creation)", "createtokenpayloadsimplesend",          &createtokenpayloadsimplesend,          true },
-    { "token layer (payload creation)", "createtokenpayloadsendall",             &createtokenpayloadsendall,             true },
+    { "token layer (payload creation)", "token_createpayload_sendall",             &token_createpayload_sendall,             true },
     { "token layer (payload creation)", "createtokenpayloaddexsell",             &createtokenpayloaddexsell,             true },
     { "token layer (payload creation)", "createtokenpayloaddexaccept",           &createtokenpayloaddexaccept,           true },
-    { "token layer (payload creation)", "createtokenpayloadsto",                 &createtokenpayloadsto,               true },
+    { "token layer (payload creation)", "token_createpayload_sto",                 &token_createpayload_sto,                 true },
     { "token layer (payload creation)", "createtokenpayloadgrant",               &createtokenpayloadgrant,               true },
     { "token layer (payload creation)", "createtokenpayloadrevoke",              &createtokenpayloadrevoke,              true },
     { "token layer (payload creation)", "createtokenpayloadchangeissuer",        &createtokenpayloadchangeissuer,        true },
@@ -862,10 +864,10 @@ static const CRPCCommand commands[] =
     { "token layer (payload creation)", "createtokenpayloadcanceltradesbyprice", &createtokenpayloadcanceltradesbyprice, true },
     { "token layer (payload creation)", "createtokenpayloadcanceltradesbypair",  &createtokenpayloadcanceltradesbypair,  true },
     { "token layer (payload creation)", "createtokenpayloadcancelalltrades",     &createtokenpayloadcancelalltrades,     true },
-    { "token layer (payload creation)", "createtokenpayloadenablefreezing",      &createtokenpayloadenablefreezing,      true },
-    { "token layer (payload creation)", "createtokenpayloaddisablefreezing",     &createtokenpayloaddisablefreezing,     true },
-    { "token layer (payload creation)", "createtokenpayloadfreeze",              &createtokenpayloadfreeze,              true },
-    { "token layer (payload creation)", "createtokenpayloadunfreeze",            &createtokenpayloadunfreeze,            true },
+    { "token layer (payload creation)", "token_createpayload_enablefreezing",      &token_createpayload_enablefreezing,      true },
+    { "token layer (payload creation)", "token_createpayload_disablefreezing",     &token_createpayload_disablefreezing,     true },
+    { "token layer (payload creation)", "token_createpayload_freeze",              &token_createpayload_freeze,              true },
+    { "token layer (payload creation)", "token_createpayload_unfreeze",            &token_createpayload_unfreeze,            true },
     { "token layer (payload creation)", "createtokenpayloadsendtomany",           &createtokenpayloadsendtomany,            true },
 };
 

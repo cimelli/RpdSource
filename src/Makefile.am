@@ -209,6 +209,7 @@ BITCOIN_CORE_H = \
   merkleblock.h \
   messagesigner.h \
   miner.h \
+  governance/governance.h \
   net.h \
   netaddress.h \
   netbase.h \
@@ -312,6 +313,7 @@ libbitcoin_server_a_SOURCES = \
   main.cpp \
   merkleblock.cpp \
   miner.cpp \
+  governance/governance.cpp \
   net.cpp \
   noui.cpp \
   policy/fees.cpp \

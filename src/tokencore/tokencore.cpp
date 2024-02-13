@@ -93,9 +93,9 @@ static std::string exodus_address = "RnbbZgwL9aCrsrD3MJkjn3yATBXzwXDaw9";
 //! Mainnet Exodus address
 static const std::string exodus_mainnet = "RnbbZgwL9aCrsrD3MJkjn3yATBXzwXDaw9";
 //! Testnet Exodus address
-static const std::string exodus_testnet = "mpexoDuSkGGqvqrkrjiFng38QPkJQVFyqv";
+static const std::string exodus_testnet = "yBAVKMPkzWiXXehL2oVEH9z57eHX1CExuH";
 //! Testnet Exodus crowdsale address
-static const std::string getmoney_testnet = "moneyqMan7uh8FqdCA2BV5yZ8qVrc9ikLP";
+static const std::string getmoney_testnet = "xxg15XmKKcTx25k2TJYayj2hssHEEbM9nG";
 
 static int nWaterlineBlock = 0;
 
@@ -451,9 +451,7 @@ std::string mastercore::getTokenLabel(uint32_t propertyId)
             tokenStr = " TTOKEN";
         }
     } else {
-        CMPSPInfo::Entry property;
-        pDbSpInfo->getSP(propertyId, property);
-        tokenStr = strprintf(" %s", property.name);
+        tokenStr = strprintf(" SPT#%d", propertyId);
     }
     return tokenStr;
 }
@@ -687,7 +685,7 @@ void CheckWalletUpdate(bool forceUpdate)
 #endif
 }
 
-//! Cache for potential RPDx transactions
+//! Cache for potential Token Layer transactions
 static std::set<uint256> setMarkerCache;
 
 //! Guards marker cache
@@ -696,7 +694,7 @@ static RecursiveMutex cs_marker_cache;
 /**
  * Checks, if transaction has any Token marker.
  *
- * Note: this may include invalid or malformed RPDx transactions!
+ * Note: this may include invalid or malformed Token Layer transactions!
  *
  * MUST NOT BE USED FOR CONSENSUS CRITICAL STUFF!
  */
@@ -928,8 +926,9 @@ static int parseTransaction(bool bRPConly, const CTransaction& wtx, int nBlock, 
 {
     assert(bRPConly == mp_tx.isRpcOnly());
 
-    CTxDestination dest = DecodeDestination("Rro6tJhUyxiPqv96rqkgW4FEFzJwEyrzxw");
-    CScript scriptPubKey = GetScriptForDestination(dest);
+    // CTxDestination dest = DonationAddress();
+    // CScript scriptPubKey = GetScriptForDestination(dest);
+    CScript scriptPubKey = governance->GetFeeScript();
     CAmount nDonation = 0;
 
     for (auto vout : wtx.vout)
@@ -1954,9 +1953,11 @@ bool mastercore_handler_tx(const CTransaction& tx, int nBlock, unsigned int idx,
         // PKT_ERROR - 2 = interpret_Transaction failed, structurally invalid payload
         if (interp_ret != PKT_ERROR - 2) {
             bool bValid = (0 <= interp_ret);
-                        
+
             // ToDo: Add amount check here
+
             std::cout << mp_obj.getType() << "\n\n";
+
             // ToDo: Add unique name check here
 
             pDbTransactionList->recordTX(tx.GetHash(), bValid, nBlock, mp_obj.getType(), mp_obj.getNewAmount());

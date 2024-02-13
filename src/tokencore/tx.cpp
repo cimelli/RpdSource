@@ -1458,6 +1458,11 @@ int CMPTransaction::logicMath_TradeOffer()
         return (PKT_ERROR_TRADEOFFER -23);
     }
 
+    if (TOKEN_PROPERTY_TMSC != property && TOKEN_PROPERTY_MSC != property) {
+        PrintToLog("%s(): rejected: property for sale %d must be OMN or TOMN\n", __func__, property);
+        return (PKT_ERROR_TRADEOFFER -47);
+    }
+
     // ------------------------------------------
 
     int rc = PKT_ERROR_TRADEOFFER;
@@ -1864,17 +1869,18 @@ int CMPTransaction::logicMath_CreatePropertyFixed()
         }
     }
 
-    //CAmount nMandatory = 1 * COIN;
+    CAmount nIssuanceCost = governance->GetCost(GOVERNANCE_COST_FIXED);
 
-    // Subtoken issuance is free
-    //if (isSub) {
-        //nMandatory = 0;
-    //}
+    if (isSub)
+        nIssuanceCost = governance->GetCost(GOVERNANCE_COST_SUB);
 
-    //if (nDonation < nMandatory) {
-       // PrintToLog("%s(): rejected: token creation fee is missing\n", __func__);
-        //return (PKT_ERROR_SP -73);
-    //}
+    if (isUsername)
+        nIssuanceCost = governance->GetCost(GOVERNANCE_COST_USERNAME);
+
+    if (nDonation < nIssuanceCost) {
+        PrintToLog("%s(): rejected: token creation fee is missing\n", __func__);
+        return (PKT_ERROR_SP -73);
+    }
 
     if (!IsTokenIPFSValid(data))
     {
@@ -2045,11 +2051,10 @@ int CMPTransaction::logicMath_CreatePropertyVariable()
         return (PKT_ERROR_SP -72);
     }
 
-    //CAmount nMandatory = 1 * COIN;
-    //if (nDonation < nMandatory) {
-        //PrintToLog("%s(): rejected: token creation fee is missing\n", __func__);
-        //return (PKT_ERROR_SP -73);
-    //}
+    if (nDonation < governance->GetCost(GOVERNANCE_COST_VARIABLE)) {
+        PrintToLog("%s(): rejected: token creation fee is missing\n", __func__);
+        return (PKT_ERROR_SP -73);
+    }
 
     if (!IsTokenIPFSValid(data))
     {
@@ -2211,11 +2216,10 @@ int CMPTransaction::logicMath_CreatePropertyManaged()
         return (PKT_ERROR_SP -72);
     }
 
-    //CAmount nMandatory = 1 * COIN;
-    //if (nDonation < nMandatory) {
-        //PrintToLog("%s(): rejected: token creation fee is missing\n", __func__);
-        //return (PKT_ERROR_SP -73);
-    //}
+    if (nDonation < governance->GetCost(GOVERNANCE_COST_MANAGED)) {
+        PrintToLog("%s(): rejected: token creation fee is missing\n", __func__);
+        return (PKT_ERROR_SP -73);
+    }
 
     if (!IsTokenIPFSValid(data))
     {

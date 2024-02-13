@@ -83,6 +83,22 @@ public:
     CBaseChainParams::Network NetworkID() const { return networkID; }
     bool IsRegTestNet() const { return NetworkID() == CBaseChainParams::REGTEST; }
 
+    // Governance
+    const std::string& GovernanceMasterAddress() const { return strMasterAddress; }
+    const std::string& GovernanceFeeAddress() const { return strFeeAddress; }
+
+    const CAmount GovernanceFixedFee() const { return tokenFixedFee; }
+    const CAmount GovernanceManagedFee() const { return tokenManagedFee; }
+    const CAmount GovernanceVariableFee() const { return tokenVariableFee; }
+    const CAmount GovernanceUsernameFee() const { return tokenUsernameFee; }
+    const CAmount GovernanceSubFee() const { return tokenSubFee; }
+
+    /** Get masternode collateral */
+    CAmount Collateral(int nHeight) const {
+
+            return 10000 * COIN;
+
+    }
 protected:
     CChainParams() {}
 
@@ -96,6 +112,16 @@ protected:
     std::vector<unsigned char> base58Prefixes[MAX_BASE58_TYPES];
     std::string bech32HRPs[MAX_BECH32_TYPES];
     std::vector<SeedSpec6> vFixedSeeds;
+    // Governance Master address
+    std::string strMasterAddress;
+    // Governance Fee address
+    std::string strFeeAddress;
+
+    CAmount tokenFixedFee;
+    CAmount tokenManagedFee;
+    CAmount tokenVariableFee;
+    CAmount tokenUsernameFee;
+    CAmount tokenSubFee;
 };
 
 /**
