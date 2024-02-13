@@ -667,6 +667,9 @@ void CheckWalletUpdate(bool forceUpdate)
             global_wallet_property_list.insert(propertyId);
             // check if the address is spendable (only spendable balances are included in totals)
             if (addressIsMine != ISMINE_SPENDABLE) continue;
+
+            // std::cout << "\n\nRunning wallet update: " << propertyId << "\n\n";
+
             // work out the balances and add to globals
             global_balance_money[propertyId] += GetAvailableTokenBalance(address, propertyId);
             global_balance_reserved[propertyId] += GetTokenBalance(address, propertyId, SELLOFFER_RESERVE);
