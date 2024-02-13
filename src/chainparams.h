@@ -88,10 +88,9 @@ public:
     const std::string& GovernanceFeeAddress() const { return strFeeAddress; }
     /** Get masternode collateral */
     CAmount Collateral(int nHeight) const {
-        if (nHeight > consensus.height_supply_reduction)
+
             return 10000 * COIN;
 
-        return 10000000 * COIN;
     }
 protected:
     CChainParams() {}
