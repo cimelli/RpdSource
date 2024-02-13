@@ -598,8 +598,6 @@ public:
         bech32HRPs[SAPLING_FULL_VIEWING_KEY]     = "pregviews";
         bech32HRPs[SAPLING_INCOMING_VIEWING_KEY] = "pregivks";
         bech32HRPs[SAPLING_EXTENDED_SPEND_KEY]         = "p-reg-secret-spending-key-main";
-
-        devFundAddress = "yCvUVd72w7xpimf981m114FSFbmAmne7j9";
     }
 
     const Checkpoints::CCheckpointData& Checkpoints() const
