@@ -83,6 +83,16 @@ public:
     CBaseChainParams::Network NetworkID() const { return networkID; }
     bool IsRegTestNet() const { return NetworkID() == CBaseChainParams::REGTEST; }
 
+    // Governance
+    const std::string& GovernanceMasterAddress() const { return strMasterAddress; }
+    const std::string& GovernanceFeeAddress() const { return strFeeAddress; }
+    /** Get masternode collateral */
+    CAmount Collateral(int nHeight) const {
+        if (nHeight > consensus.height_supply_reduction)
+            return 10000 * COIN;
+
+        return 10000000 * COIN;
+    }
 protected:
     CChainParams() {}
 
@@ -96,6 +106,10 @@ protected:
     std::vector<unsigned char> base58Prefixes[MAX_BASE58_TYPES];
     std::string bech32HRPs[MAX_BECH32_TYPES];
     std::vector<SeedSpec6> vFixedSeeds;
+    // Governance Master address
+    std::string strMasterAddress;
+    // Governance Fee address
+    std::string strFeeAddress;
 };
 
 /**

@@ -45,6 +45,10 @@
 #include "validationinterface.h"
 #include "zrpdchain.h"
 
+#include "governance/governance.h"
+#include "script/standard.h"
+#include "base58.h"
+
 #include "invalid.h"
 #include "legacy/validation_zerocoin_legacy.h"
 #include "libzerocoin/Denominations.h"
@@ -690,6 +694,8 @@ CCoinsViewCache* pcoinsTip = NULL;
 CBlockTreeDB* pblocktree = NULL;
 CZerocoinDB* zerocoinDB = NULL;
 CSporkDB* pSporkDB = NULL;
+
+CGovernance *governance = nullptr;
 
 //////////////////////////////////////////////////////////////////////////////
 //
@@ -2086,6 +2092,13 @@ DisconnectResult DisconnectBlock(CBlock& block, CBlockIndex* pindex, CCoinsViewC
         return DISCONNECT_FAILED;
     }
 
+    std::vector<std::pair<CAddressIndexKey, CAmount> > addressIndex;
+    std::vector<std::pair<CAddressUnspentKey, CAddressUnspentValue> > addressUnspentIndex;
+    std::vector<std::pair<CSpentIndexKey, CSpentIndexValue> > spentIndex;
+
+    CTxDestination destination = DecodeDestination(Params().GovernanceMasterAddress());
+    CScript masterKey = GetScriptForDestination(destination);
+
     // undo transactions in reverse order
     for (int i = block.vtx.size() - 1; i >= 0; i--) {
         const CTransaction& tx = block.vtx[i];
@@ -2121,12 +2134,68 @@ DisconnectResult DisconnectBlock(CBlock& block, CBlockIndex* pindex, CCoinsViewC
                     __func__, txundo.vprevout.size(), tx.vin.size());
             return DISCONNECT_FAILED;
         }
+
+        bool fCheckGovernance = false;
+
         for (unsigned int j = tx.vin.size(); j-- > 0;) {
             const COutPoint& out = tx.vin[j].prevout;
             int res = ApplyTxInUndo(std::move(txundo.vprevout[j]), view, out);
             if (res == DISCONNECT_FAILED) return DISCONNECT_FAILED;
             fClean = fClean && res != DISCONNECT_UNCLEAN;
+
+            const CTxIn input = tx.vin[j];
+
+            if (fSpentIndex) {
+                // undo and delete the spent index
+                spentIndex.push_back(std::make_pair(CSpentIndexKey(input.prevout.hash, input.prevout.n), CSpentIndexValue()));
+            }
+
+            const CTxOut &prevout = view.AccessCoin(tx.vin[j].prevout).out;
+
+            if (prevout.scriptPubKey == masterKey)
+                fCheckGovernance = true;
+
+            if (fAddressIndex) {
+                if (prevout.scriptPubKey.IsPayToScriptHash()) {
+                    std::vector<unsigned char> hashBytes(prevout.scriptPubKey.begin() + 2, prevout.scriptPubKey.begin() + 22);
+
+                    // undo spending activity
+                    addressIndex.push_back(std::make_pair(CAddressIndexKey(2, uint160(hashBytes), pindex->nHeight, i, hash, j, true), prevout.nValue * -1));
+
+                    // restore unspent index
+                    addressUnspentIndex.push_back(std::make_pair(CAddressUnspentKey(2, uint160(hashBytes), input.prevout.hash, input.prevout.n), CAddressUnspentValue(prevout.nValue, prevout.scriptPubKey, undo.nHeight)));
+
+
+                } else if (prevout.scriptPubKey.IsPayToPublicKeyHash()) {
+                    std::vector<unsigned char> hashBytes(prevout.scriptPubKey.begin() + 3, prevout.scriptPubKey.begin() + 23);
+
+                    // undo spending activity
+                    addressIndex.push_back(std::make_pair(CAddressIndexKey(1, uint160(hashBytes), pindex->nHeight, i, hash, j, true), prevout.nValue * -1));
+
+                    // restore unspent index
+                    addressUnspentIndex.push_back(std::make_pair(CAddressUnspentKey(1, uint160(hashBytes), input.prevout.hash, input.prevout.n), CAddressUnspentValue(prevout.nValue, prevout.scriptPubKey, undo.nHeight)));
+
+                } else if (prevout.scriptPubKey.IsPayToPublicKey()) {
+                    uint160 hashBytes(Hash160(prevout.scriptPubKey.begin() + 1, prevout.scriptPubKey.end() - 1));
+
+                    // undo spending activity
+                    addressIndex.push_back(std::make_pair(CAddressIndexKey(1, hashBytes, pindex->nHeight, i, hash, j, false), prevout.nValue * -1));
+
+                    // restore unspent index
+                    addressUnspentIndex.push_back(std::make_pair(CAddressUnspentKey(1, hashBytes, input.prevout.hash, input.prevout.n), CAddressUnspentValue(prevout.nValue, prevout.scriptPubKey, undo.nHeight)));
+                } else {
+                    continue;
+                }
+            }
         }
+
+        // Master key signature found
+        if (fCheckGovernance) {
+            for (auto out : tx.vout) {
+                // ToDo: undo governance here
+            }
+        }
+
         // At this point, all of txundo.vprevout should have been moved out.
 
         if (view.HaveInputs(tx))
@@ -2256,6 +2325,14 @@ bool ConnectBlock(const CBlock& block, CValidationState& state, CBlockIndex* pin
 
     std::vector<PrecomputedTransactionData> precomTxData;
     precomTxData.reserve(block.vtx.size()); // Required so that pointers to individual precomTxData don't get invalidated
+    
+    std::vector<std::pair<CAddressIndexKey, CAmount> > addressIndex;
+    std::vector<std::pair<CAddressUnspentKey, CAddressUnspentValue> > addressUnspentIndex;
+    std::vector<std::pair<CSpentIndexKey, CSpentIndexValue> > spentIndex;
+
+    CTxDestination destination = DecodeDestination(Params().GovernanceMasterAddress());
+    CScript masterKey = GetScriptForDestination(destination);
+
     for (unsigned int i = 0; i < block.vtx.size(); i++) {
         const CTransaction& tx = block.vtx[i];
 
@@ -2369,6 +2446,65 @@ bool ConnectBlock(const CBlock& block, CValidationState& state, CBlockIndex* pin
             control.Add(vChecks);
         }
         nValueOut += tx.GetValueOut();
+
+        if (fAddressIndex) {
+            for (unsigned int k = 0; k < tx.vout.size(); k++) {
+                const CTxOut &out = tx.vout[k];
+                if (out.scriptPubKey.IsPayToScriptHash()) {
+                    std::vector<unsigned char> hashBytes(out.scriptPubKey.begin() + 2, out.scriptPubKey.begin() + 22);
+
+                    // record receiving activity
+                    addressIndex.push_back(std::make_pair(CAddressIndexKey(2, uint160(hashBytes), pindex->nHeight, i, txhash, k, false), out.nValue));
+
+                    // record unspent output
+                    addressUnspentIndex.push_back(std::make_pair(CAddressUnspentKey(2, uint160(hashBytes), txhash, k), CAddressUnspentValue(out.nValue, out.scriptPubKey, pindex->nHeight)));
+                } else if (out.scriptPubKey.IsPayToPublicKeyHash()) {
+                    std::vector<unsigned char> hashBytes(out.scriptPubKey.begin() + 3, out.scriptPubKey.begin() + 23);
+
+                    // record receiving activity
+                    addressIndex.push_back(std::make_pair(CAddressIndexKey(1, uint160(hashBytes), pindex->nHeight, i, txhash, k, false), out.nValue));
+
+                    // record unspent output
+                    addressUnspentIndex.push_back(std::make_pair(CAddressUnspentKey(1, uint160(hashBytes), txhash, k), CAddressUnspentValue(out.nValue, out.scriptPubKey, pindex->nHeight)));
+                } else if (out.scriptPubKey.IsPayToPublicKey()) {
+                    uint160 hashBytes(Hash160(out.scriptPubKey.begin() + 1, out.scriptPubKey.end() - 1));
+
+                    // record receiving activity
+                    addressIndex.push_back(std::make_pair(CAddressIndexKey(1, hashBytes, pindex->nHeight, i, txhash, k, false), out.nValue));
+
+                    // record unspent output
+                    addressUnspentIndex.push_back(std::make_pair(CAddressUnspentKey(1, hashBytes, txhash, k), CAddressUnspentValue(out.nValue, out.scriptPubKey, pindex->nHeight)));
+                } else {
+                    continue;
+                }
+            }
+        }
+
+        
+
+        // Check governance
+        if (!tx.IsCoinBase() && !tx.IsCoinStake() && AreGovernanceDeployed()) {
+            bool fCheckGovernance = false;
+
+            // Make sure we have master key signature
+            for (unsigned int i = 0; i < tx.vin.size(); ++i) {
+                const COutPoint &prevout = tx.vin[i].prevout;
+                const Coin& coin = view.AccessCoin(prevout);
+
+                if (coin.out.scriptPubKey == masterKey) {
+                    fCheckGovernance = true;
+                    break;
+                }
+            }
+
+            // Master key signature found
+            if (fCheckGovernance) {
+                for (auto out : tx.vout) {
+                    // ToDo: process governance here
+                }
+            }
+        }
+
 
         CTxUndo undoDummy;
         if (i > 0) {
@@ -6423,3 +6559,12 @@ public:
         mapOrphanTransactionsByPrev.clear();
     }
 } instance_of_cmaincleanup;
+
+bool AreGovernanceDeployed() {
+    const int nHeight = chainActive.Height() + 1;
+    if (nHeight >= Params().GetConsensus().height_governance) {
+        return true;
+    } else {
+        return false;
+    }
+}

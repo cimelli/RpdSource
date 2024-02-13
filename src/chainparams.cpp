@@ -243,6 +243,8 @@ root@vultr:~/live#
         consensus.height_start_ZC_SerialRangeCheck = std::numeric_limits<int>::max();
         consensus.height_ZC_RecalcAccumulators = std::numeric_limits<int>::max();
 
+        consensus.height_governance = std::numeric_limits<int>::max();
+
         // validation by-pass
         consensus.nRpdChainBadBlockTime = 1471401614;    // Skip nBit validation of Block 259201 per PR #915
         consensus.nRpdChainBadBlockBits = 0x1c056dac;    // Skip nBit validation of Block 259201 per PR #915
@@ -326,6 +328,7 @@ root@vultr:~/live#
         bech32HRPs[SAPLING_FULL_VIEWING_KEY]     = "pviews";
         bech32HRPs[SAPLING_INCOMING_VIEWING_KEY] = "pivks";
         bech32HRPs[SAPLING_EXTENDED_SPEND_KEY]         = "p-secret-spending-key-main";
+        strFeeAddress = "RbuTqj3g88CU4Z8ipFP8ANBJ8ER7TejAd4";
     }
 
     const Checkpoints::CCheckpointData& Checkpoints() const
@@ -392,6 +395,8 @@ public:
         consensus.height_start_ZC_InvalidSerials = 999999999;
         consensus.height_start_ZC_SerialRangeCheck = 1;
         consensus.height_ZC_RecalcAccumulators = 999999999;
+
+        consensus.height_governance = std::numeric_limits<int>::max();
 
         // validation by-pass
         consensus.nRpdChainBadBlockTime = 1489001494; // Skip nBit validation of Block 201 per PR #915
@@ -475,6 +480,7 @@ public:
         bech32HRPs[SAPLING_FULL_VIEWING_KEY]     = "pviewtestsapling";
         bech32HRPs[SAPLING_INCOMING_VIEWING_KEY] = "rpdktestsapling";
         bech32HRPs[SAPLING_EXTENDED_SPEND_KEY]         = "p-secret-spending-key-test";
+        strFeeAddress = "y76GjREPurY29hD4bxTtKRrRDsw2zgxJyc";
     }
 
     const Checkpoints::CCheckpointData& Checkpoints() const
@@ -545,6 +551,8 @@ public:
         consensus.height_start_ZC_SerialRangeCheck = 300;
         consensus.height_ZC_RecalcAccumulators = 999999999;
 
+        consensus.height_governance = std::numeric_limits<int>::max();
+
         // Zerocoin-related params
         consensus.ZC_Modulus = "25195908475657893494027183240048398571429282126204032027777137836043662020707595556264018525880784"
                 "4069182906412495150821892985591491761845028084891200728449926873928072877767359714183472702618963750149718246911"
@@ -598,6 +606,7 @@ public:
         bech32HRPs[SAPLING_FULL_VIEWING_KEY]     = "pregviews";
         bech32HRPs[SAPLING_INCOMING_VIEWING_KEY] = "pregivks";
         bech32HRPs[SAPLING_EXTENDED_SPEND_KEY]         = "p-reg-secret-spending-key-main";
+        strFeeAddress = "yCvUVd72w7xpimf981m114FSFbmAmne7j9";
     }
 
     const Checkpoints::CCheckpointData& Checkpoints() const
