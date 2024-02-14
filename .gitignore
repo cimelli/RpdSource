@@ -1,9 +1,54 @@
 
 .vs/CMake Overview
 
+<<<<<<< HEAD
 .vs/cmake.db
 
 .vs/ProjectSettings.json
+=======
+*.exe
+src/rapids
+src/rapidsd
+src/rapids-cli
+src/rapids-tx
+src/bench/bench_rapids
+src/bench/bench_pivx
+src/test/test_rapids
+src/qt/test/test_rapids-qt
+
+# autoreconf
+Makefile.in
+aclocal.m4
+autom4te.cache/
+build-aux/config.guess
+build-aux/config.sub
+build-aux/depcomp
+build-aux/install-sh
+build-aux/ltmain.sh
+build-aux/m4/libtool.m4
+build-aux/m4/lt~obsolete.m4
+build-aux/m4/ltoptions.m4
+build-aux/m4/ltsugar.m4
+build-aux/m4/ltversion.m4
+build-aux/missing
+build-aux/compile
+build-aux/test-driver
+config.log
+config.status
+configure
+confdefs.h
+conftest.cpp
+conftest.err
+libtool
+src/config/rapids-config.h
+src/config/pivx-config.h
+src/config/rapids-config.h.in
+src/config/pivx-config.h.in
+src/config/stamp-h1
+share/setup.nsi
+share/qt/Info.plist
+contrib/devtools/split-debug.sh
+>>>>>>> 800eb7a4a (Address index)
 
 .vs/RpdSource/FileContentIndex/06906190-fb02-40d8-809e-a7aae14e98c8.vsidx
 
@@ -11,7 +56,26 @@
 
 .vs/RpdSource/FileContentIndex/4bfbf6cf-c83c-436c-aa1c-01088a0eefa1.vsidx
 
+<<<<<<< HEAD
 .vs/RpdSource/FileContentIndex/fcb2a2bd-cf4b-410b-94f1-4910e344484c.vsidx
+=======
+.deps
+.dirstamp
+.libs
+.*.swp
+*.*~*
+*.bak
+*.rej
+*.orig
+*.pyc
+*.o
+*.o-*
+*.patch
+.rapids
+*.a
+*.pb.cc
+*.pb.h
+>>>>>>> 800eb7a4a (Address index)
 
 .vs/RpdSource/FileContentIndex/read.lock
 
@@ -19,11 +83,27 @@
 
 .vs/RpdSource/v17/Browse.VC.db
 
+<<<<<<< HEAD
 .vs/RpdSource/v17/workspaceFileList.bin
+=======
+# Compilation and Qt preprocessor part
+*.qm
+Makefile
+rapids-qt
+PIVX-Qt.app
+background.tiff*
+>>>>>>> 800eb7a4a (Address index)
 
 .vs/slnx.sqlite
 
+<<<<<<< HEAD
 .vs/VSWorkspaceState.json
+=======
+# Unit-tests
+Makefile.test
+rapids-qt_test
+src/test/buildenv.py
+>>>>>>> 800eb7a4a (Address index)
 
 .vs/RpdSource/FileContentIndex/18e3fea9-c451-4582-87e5-5f873ff0135c.vsidx
 
@@ -31,8 +111,37 @@
 
 .vs/RpdSource/FileContentIndex/89a6e000-2770-4fdb-b8cc-99c69313f545.vsidx
 
+<<<<<<< HEAD
 .vs/RpdSource/FileContentIndex/a0e94b0e-c2e6-41a8-ab6a-84d85ad53bc6.vsidx
+=======
+#lcov
+*.gcno
+/*.info
+test_rapids.coverage/
+total.coverage/
+coverage_percent.txt
+>>>>>>> 800eb7a4a (Address index)
 
 .vs/RpdSource/FileContentIndex/d493ffb2-865d-4d67-9c6f-7d2ed1552f75.vsidx
 
+<<<<<<< HEAD
 .vs/RpdSource/v17/.suo
+=======
+!src/leveldb*/Makefile
+
+.cproject
+.project
+/doc/doxygen/
+/nbproject/
+libbitcoinconsensus.pc
+.idea
+CMakeLists.txt
+cmake-build-debug
+
+moc_*
+*.tmp
+ui_*
+build*
+rapidsd.*
+rapidsd-new-gui.*
+>>>>>>> 800eb7a4a (Address index)
