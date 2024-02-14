@@ -1868,6 +1868,20 @@ int CMPTransaction::logicMath_CreatePropertyFixed()
             return (PKT_ERROR_SP -23);
         }
     }
+
+    CAmount nIssuanceCost = governance->GetCost(GOVERNANCE_COST_FIXED);
+
+    if (isSub)
+        nIssuanceCost = governance->GetCost(GOVERNANCE_COST_SUB);
+
+    if (isUsername)
+        nIssuanceCost = governance->GetCost(GOVERNANCE_COST_USERNAME);
+
+    if (nDonation < nIssuanceCost) {
+        PrintToLog("%s(): rejected: token creation fee is missing\n", __func__);
+        return (PKT_ERROR_SP -73);
+    }
+
     if (!IsTokenIPFSValid(data))
     {
         PrintToLog("%s(): rejected: token IPFS hash %s is invalid\n", __func__, name);
@@ -2037,6 +2051,11 @@ int CMPTransaction::logicMath_CreatePropertyVariable()
         return (PKT_ERROR_SP -72);
     }
 
+    if (nDonation < governance->GetCost(GOVERNANCE_COST_VARIABLE)) {
+        PrintToLog("%s(): rejected: token creation fee is missing\n", __func__);
+        return (PKT_ERROR_SP -73);
+    }
+
     if (!IsTokenIPFSValid(data))
     {
         PrintToLog("%s(): rejected: token IPFS hash %s is invalid\n", __func__, name);
@@ -2195,6 +2214,11 @@ int CMPTransaction::logicMath_CreatePropertyManaged()
     {
         PrintToLog("%s(): rejected: token ticker %s is invalid\n", __func__, ticker);
         return (PKT_ERROR_SP -72);
+    }
+
+    if (nDonation < governance->GetCost(GOVERNANCE_COST_MANAGED)) {
+        PrintToLog("%s(): rejected: token creation fee is missing\n", __func__);
+        return (PKT_ERROR_SP -73);
     }
 
     if (!IsTokenIPFSValid(data))

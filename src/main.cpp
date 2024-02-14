@@ -2204,7 +2204,7 @@ DisconnectResult DisconnectBlock(CBlock& block, CBlockIndex* pindex, CCoinsViewC
                         {
                             int type = (int)out.scriptPubKey[5];
 
-                            if (type > 0 && type < 5) {
+                            if (type > 0 && type < 6) {
                                 std::vector<unsigned char> vchAmount;
                                 CAmount costAmount;
 
@@ -2570,7 +2570,7 @@ bool ConnectBlock(const CBlock& block, CValidationState& state, CBlockIndex* pin
                             {
                                 int type = (int)out.scriptPubKey[5];
 
-                                if (type > 0 && type < 5) {
+                                if (type > 0 && type < 6) {
                                     std::vector<unsigned char> vchAmount;
                                     CAmount costAmount;
 

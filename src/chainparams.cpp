@@ -329,6 +329,12 @@ root@vultr:~/live#
         bech32HRPs[SAPLING_INCOMING_VIEWING_KEY] = "pivks";
         bech32HRPs[SAPLING_EXTENDED_SPEND_KEY]         = "p-secret-spending-key-main";
         strFeeAddress = "RbuTqj3g88CU4Z8ipFP8ANBJ8ER7TejAd4";
+
+        tokenFixedFee = 0 * COIN;
+        tokenManagedFee = 0 * COIN;
+        tokenVariableFee = 1 * COIN;
+        tokenUsernameFee = 1 * COIN;
+        tokenSubFee = 0 * COIN;
     }
 
     const Checkpoints::CCheckpointData& Checkpoints() const
@@ -481,6 +487,12 @@ public:
         bech32HRPs[SAPLING_INCOMING_VIEWING_KEY] = "rpdktestsapling";
         bech32HRPs[SAPLING_EXTENDED_SPEND_KEY]         = "p-secret-spending-key-test";
         strFeeAddress = "y76GjREPurY29hD4bxTtKRrRDsw2zgxJyc";
+
+        tokenFixedFee = 0 * COIN;
+        tokenManagedFee = 0 * COIN;
+        tokenVariableFee = 1 * COIN;
+        tokenUsernameFee = 1 * COIN;
+        tokenSubFee = 0 * COIN;
     }
 
     const Checkpoints::CCheckpointData& Checkpoints() const
@@ -607,6 +619,12 @@ public:
         bech32HRPs[SAPLING_INCOMING_VIEWING_KEY] = "pregivks";
         bech32HRPs[SAPLING_EXTENDED_SPEND_KEY]         = "p-reg-secret-spending-key-main";
         strFeeAddress = "yCvUVd72w7xpimf981m114FSFbmAmne7j9";
+
+        tokenFixedFee = 1 * COIN;
+        tokenManagedFee = 1 * COIN;
+        tokenVariableFee = 1 * COIN;
+        tokenUsernameFee = 1 * COIN;
+        tokenSubFee = 1 * COIN;
     }
 
     const Checkpoints::CCheckpointData& Checkpoints() const
