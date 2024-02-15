@@ -18,6 +18,16 @@ QT_FORMS_UI = \
   qt/forms/openuridialog.ui \
   qt/forms/optionsdialog.ui \
   qt/forms/rpcconsole.ui \
+  qt/forms/sendmpdialog.ui \
+  qt/forms/lookupaddressdialog.ui \
+  qt/forms/lookupspdialog.ui \
+  qt/forms/lookuptxdialog.ui \
+  qt/forms/txhistorydialog.ui \
+  qt/forms/metadexcanceldialog.ui \
+  qt/forms/metadexdialog.ui \
+  qt/forms/tradehistorydialog.ui \
+  qt/forms/balancesdialog.ui \
+  qt/forms/usernamesdialog.ui \
   qt/rpdchain/forms/loadingdialog.ui \
   qt/rpdchain/forms/snackbar.ui \
   qt/rpdchain/forms/navmenuwidget.ui \
@@ -99,6 +109,16 @@ QT_MOC_CPP = \
   qt/moc_transactiontablemodel.cpp \
   qt/moc_utilitydialog.cpp \
   qt/moc_walletmodel.cpp \
+  qt/moc_sendmpdialog.cpp \
+  qt/moc_lookupaddressdialog.cpp \
+  qt/moc_lookupspdialog.cpp \
+  qt/moc_lookuptxdialog.cpp \
+  qt/moc_txhistorydialog.cpp \
+  qt/moc_balancesdialog.cpp \
+  qt/moc_usernamesdialog.cpp \
+  qt/moc_metadexdialog.cpp \
+  qt/moc_metadexcanceldialog.cpp \
+  qt/moc_tradehistorydialog.cpp \
   qt/rpdchain/moc_loadingdialog.cpp \
   qt/rpdchain/moc_pwidget.cpp \
   qt/rpdchain/moc_focuseddialog.cpp \
@@ -216,6 +236,18 @@ BITCOIN_QT_H = \
   qt/rpdchain/pfborderimage.h \
   qt/rpdchain/loadingdialog.h \
   qt/winshutdownmonitor.h \
+  qt/lookupaddressdialog.h \
+  qt/lookupspdialog.h \
+  qt/lookuptxdialog.h \
+  qt/txhistorydialog.h \
+  qt/balancesdialog.h \
+  qt/usernamesdialog.h \
+  qt/tokencore_init.h \
+  qt/metadexdialog.h \
+  qt/metadexcanceldialog.h \
+  qt/tradehistorydialog.h \
+  qt/sendmpdialog.h \
+  qt/tokencore_qtutils.h \
   qt/rpdchain/pwidget.h \
   qt/rpdchain/focuseddialog.h \
   qt/rpdchain/guitransactionsutils.h \
@@ -418,7 +450,10 @@ RES_ICONS = \
   qt/rpdchain/res/img/ic-transaction-stake-hot-inactive.svg \
   qt/rpdchain/res/img/ic-transaction-cs-contract.svg \
   qt/rpdchain/res/img/ic-transaction-cs-contract-inactive.svg \
-  qt/rpdchain/res/img/ic-check-box-indeterminate.svg
+  qt/rpdchain/res/img/ic-check-box-indeterminate.svg \
+  qt/rpdchain/res/img/ic-nav-tokens-hover.svg \
+  qt/rpdchain/res/img/ic-nav-tokens-active.svg \
+  qt/rpdchain/res/img/ic-nav-tokens.svg
 
 
 BITCOIN_QT_BASE_CPP = \
@@ -440,7 +475,10 @@ BITCOIN_QT_BASE_CPP = \
   qt/qvaluecombobox.cpp \
   qt/rpcconsole.cpp \
   qt/trafficgraphwidget.cpp \
-  qt/utilitydialog.cpp
+  qt/utilitydialog.cpp \
+  qt/utilitydialog.cpp \
+  qt/tokencore_init.cpp \
+  qt/tokencore_qtutils.cpp
 
 BITCOIN_QT_WINDOWS_CPP = qt/winshutdownmonitor.cpp
 
@@ -460,6 +498,16 @@ BITCOIN_QT_WALLET_CPP = \
   qt/transactiontablemodel.cpp \
   qt/walletmodel.cpp \
   qt/walletmodeltransaction.cpp \
+  qt/sendmpdialog.cpp \
+  qt/lookupaddressdialog.cpp \
+  qt/lookupspdialog.cpp \
+  qt/lookuptxdialog.cpp \
+  qt/txhistorydialog.cpp \
+  qt/balancesdialog.cpp \
+  qt/usernamesdialog.cpp \
+  qt/metadexdialog.cpp \
+  qt/metadexcanceldialog.cpp \
+  qt/tradehistorydialog.cpp \
   qt/rpdchain/loadingdialog.cpp \
   qt/rpdchain/pwidget.cpp \
   qt/rpdchain/focuseddialog.cpp \
@@ -537,8 +585,7 @@ RES_IMAGES = \
 
 RES_CSS = \
   qt/res/css/default.css \
-  qt/rpdchain/res/css/style_dark.css \
-  qt/rpdchain/res/css/style_light.css
+  qt/rpdchain/res/css/style_dark.css
 
 BITCOIN_RC = qt/res/rpdchain-qt-res.rc
 

@@ -332,8 +332,8 @@ root@vultr:~/live#
 
         tokenFixedFee = 0 * COIN;
         tokenManagedFee = 0 * COIN;
-        tokenVariableFee = 1 * COIN;
-        tokenUsernameFee = 1 * COIN;
+        tokenVariableFee = 0 * COIN;
+        tokenUsernameFee = 0 * COIN;
         tokenSubFee = 0 * COIN;
     }
 

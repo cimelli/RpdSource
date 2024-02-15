@@ -194,6 +194,39 @@ QPushButton[cssClass="btn-check-cold-staking"]:checked {
 ******end cold staking*********
  ********************/
 
+*[cssClass="btn-nav-tokens"] {
+    qproperty-icon: url("://ic-nav-tokens") off,
+    url("://ic-nav-tokens-active") on;
+    qproperty-iconSize: 24px 40px;
+    background-color:transparent;
+    font-size:14px;
+    color: #d1d5db;
+}
+
+*[cssClass="btn-nav-tokens"]:checked {
+    background-color: #3c3c3b;
+    font-size:14px;
+    color: #d1d5db;
+}
+
+*[cssClass="btn-nav-tokens"]:checked:hover {
+    background-color: #3c3c3b;
+    color: #d1d5db;
+}
+
+*[cssClass="btn-nav-tokens"]:hover {
+    background-color: #3c3c3b;
+    color: #d1d5db;
+}
+
+*[cssClass="btn-nav-tokens-active"] {
+    qproperty-icon:url("://ic-nav-tokens-active");
+    qproperty-iconSize: 24px 40px;
+    background-color: #3c3c3b;
+    font-size:14px;
+    color: #ff5533;
+}
+
 *[cssClass="btn-nav-settings"] {
     qproperty-icon: url("://ic-nav-settings") off,
     url("://ic-nav-settings-active") on;
@@ -967,8 +1000,8 @@ QPushButton[cssClass="btn-menu"] {
 }
 
 QPushButton[cssClass="btn-dropdown"] {
-    qproperty-icon: url("://ic-arrow-drop-down-white") off,
-    url("://ic-arrow-drop-down-white") on ;
+    qproperty-icon: url("://ic-arrow-drop-down") off,
+    url("://ic-arrow-drop-down") on ;
     qproperty-iconSize: 24px 24px;
 }
 
@@ -1691,54 +1724,6 @@ QPushButton[cssClass="btn-chart-arrow-right"]:pressed {
     background-color: #ff5533;
 }
 
-QComboBox[cssClass="btn-combo-secundary"] {
-    background-color:#3c3c3b;
-    padding:6px 12px 6px 6px;
-    font-size:16px;
-    border:1px solid #d1d5db;
-    color: #d1d5db;
-    text-align: right;
-    border-radius:2px;
-}
-
-QComboBox[cssClass="btn-combo-secundary"]::down-arrow {
-    image: url("://ic-arrow-drop-down");
-    width: 24px;
-    height: 24px;
-}
-
-QComboBox[cssClass="btn-combo-secundary"]::down-arrow:on {
-    image: url("://ic-arrow-drop-down-white");
-    width: 24px;
-    height: 24px;
-}
-
-QComboBox[cssClass="btn-combo-chart"] {
-    background-color:#3c3c3b;
-    padding:6px 12px 6px 6px;
-    font-size:16px;
-    border:1px solid #d1d5db;
-    color: #d1d5db;
-    text-align: right;
-    border-radius:2px;
-}
-
-QComboBox[cssClass="btn-combo-chart"]::down-arrow {
-    image: url("://ic-arrow-drop-down");
-    width: 24px;
-    height: 24px;
-}
-
-QComboBox[cssClass="btn-combo-chart"]::down-arrow:on {
-    image: url("://ic-arrow-drop-down-white");
-    width: 24px;
-    height: 24px;
-}
-
-QComboBox[cssClass="btn-combo-chart"]:hover {
-    background-color: rgba(255, 85, 51, 0.5);
-}
-
 QComboBox[cssClass="btn-combo-chart-selected"] {
     background-color:#3c3c3b;
     padding:6px 12px 6px 6px;
@@ -1773,14 +1758,6 @@ QComboBox[cssClass="btn-combo-chart-selected"]:disabled {
     border-radius:2px;
 }
 
-QComboBox::drop-down {
-    border-width: 0px;
-}
-
-QComboBox::down-arrow {
-    image: url(noimg); border-width: 0px;
-}
-
 QPushButton[cssClass="btn-check-time"] {
     background-color:#3c3c3b;
     font-size:14px;
@@ -1808,6 +1785,15 @@ QPushButton[cssClass="btn-check-time"]:hover {
     border:1px solid rgba(209, 213, 219, 0.5);
 }
 
+QPushButton[cssClass="btn-check-time"]:checked:hover {
+    background-color:#3c3c3b;
+    border-radius:2px;
+    font-size:14px;
+    padding:4px;
+    color: #d1d5db;
+    border:1px solid #d1d5db;
+}
+
 QPushButton[cssClass="btn-check-time"]:pressed {
     background-color:#ff5533;
     border-radius:2px;
@@ -1824,6 +1810,32 @@ QPushButton[cssClass="btn-check-time"]:disabled {
     padding:4px;
     color: rgba(209, 213, 219, 0.5);
     border:1px solid rgba(209, 213, 219, 0.5);
+}
+
+/*HHHHHHHHHHHHHHHHHHHHHHHHHHHHHH
+       TOKEN PAGE
+HHHHHHHHHHHHHHHHHHHHHHHHHHHHHH*/
+
+QComboBox[cssClass="btn-combo-address"] {
+     background-color: #3c3c3b;
+     padding: 6px 12px 6px 6px;
+     font-size: 16px;
+     border: 1px solid #d1d5db;
+     color: #d1d5db;
+     text-align: right;
+     border-radius: 2px;
+ }
+
+QComboBox[cssClass="btn-combo-address"]::down-arrow {
+     image: url("://ic-arrow-drop-down");
+     width: 24px;
+     height: 24px;
+}
+
+QComboBox[cssClass="btn-combo-address"]::down-arrow:on {
+    image: url("://ic-arrow-drop-down-white");
+    width: 24px;
+    height: 24px;
 }
 
 /*HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH
@@ -1867,40 +1879,6 @@ QCheckBox[cssClass="btn-watch-password"]::indicator:unchecked {
 
 QCheckBox[cssClass="btn-watch-password"]::indicator:checked {
     image: url("://ic-watch-password-white");
-}
-
-/*HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH
-HH        REQUEST DIALOG
-HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH*/
-
-QComboBox[cssClass="btn-combo-coins"] {
-    background-color:#3c3c3b;
-    padding:10px 20px 10px 10px;
-    font-size:16px;
-    border:1px solid #d1d5db;
-    color: #d1d5db;
-}
-
-QLabel[cssClass="btn-combo-coins"] {
-    background-color:#3c3c3b;
-    padding:10px 10px 10px 10px;
-    font-size:16px;
-    border:1px solid #d1d5db;
-    color: #d1d5db;
-}
-
-QComboBox[cssClass="btn-combo-coins"]::down-arrow {
-    image: url("://ic-arrow-drop-down");
-    padding-right: 10px;
-    height: 16px;
-    width: 16px;
-}
-
-QComboBox[cssClass="btn-combo-coins"]::down-arrow:on {
-    image: url("://ic-arrow-drop-down-white");
-    padding-right: 10px;
-    height: 16px;
-    width: 16px;
 }
 
 /*HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH
@@ -2066,7 +2044,7 @@ QComboBox::down-arrow:on {
 }
 
 QComboBox:item {
-    color: #d1d5db;
+    background-color:rgba(255, 85, 51, 0.5);
     font-size:18px;
 }
 
@@ -2398,7 +2376,7 @@ QComboBox[cssClass="btn-combo-edit-dialog"] {
     text-align: right;
 }
 
-QComboBox[cssClass="btn-combo-edit-dialog"]::down-arrow {
+QComboBox[cssClass="btn-combo-edit-dialog"]::down-arrow:on {
     image: url("://ic-arrow-drop-down-white");
     width: 24px;
     height: 24px;
@@ -2801,7 +2779,7 @@ HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH*/
 }
 
 *[cssClass="btn-list-menu"]:hover{
-    background-color:rgba(255, 85, 51, 0.5);
+    color:rgba(255, 85, 51, 0.5);
 }
 
 /*HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH
@@ -2959,7 +2937,7 @@ HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH*/
     border-bottom: 1px solid #d1d5db;
     border-radius:0px;
     color: #ff5533;
-    background-color: rgba(255, 85, 51, 0.5);
+    background-color: #3c3c3b;
 }
 
 #treeWidget::branch {
@@ -3159,4 +3137,100 @@ QRadioButton[cssClass="radio-welcome"]::indicator:unchecked {
     background: url("://btn-radio-off");
     background-repeat:no-repeat;
     background-position:center;
+}
+
+/*HHHHHHHHHHHHHHHHHHHHH
+    TOKEN PAGE
+ HHHHHHHHHHHHHHHHHHHH*/
+
+ QTableWidget {
+    alternate-background-color: #3c3c3b;
+    gridline-color: transparent;
+    selection-color: #d1d5db;
+    selection-background-color: rgba(255, 85, 51, 0.5);
+    border: 1px solid transparent;
+    border-radius: 0px;
+ }
+
+ QTableWidget QTableWidgetItem {
+    font: 18px;
+    height: 50px;
+    border: 1px solid #d1d5db;
+ }
+
+ QTableWidget QScrollBar:vertical {
+     border: 0px solid #d1d5db;
+     background:#d1d5db;
+     width:10px;
+     margin: 0px 0px 0px 0px;
+ }
+
+ QTableWidget QScrollBar::handle:vertical {
+    background: #ff5533;
+    min-height: 0px;
+ }
+
+QTableWidget QScrollBar::add-line:vertical {
+    background: #d1d5db;
+    height: 0 px;
+    subcontrol-position: top;
+    subcontrol-origin: margin;
+}
+
+QTableWidget QScrollBar::sub-line:vertical {
+    background: #d1d5db;
+    height: 0 px;
+    subcontrol-position: top;
+    subcontrol-origin: margin;
+}
+
+QTableWidget QScrollBar::up-arrow:vertical, QTableWidget QScrollBar::down-arrow:vertical {
+    border: none;
+    background: none;
+    color: none;
+}
+
+QTableWidget QScrollBar::add-page:vertical, QTableWidget QScrollBar::sub-page:vertical {
+    background: none;
+}
+
+QTableWidget QScrollBar:horizontal {
+    border: 1px solid #d1d5db;
+    height: 30px;
+    margin: 0px 32px 0px 32px;
+}
+
+QTableWidget QScrollBar::handle:horizontal {
+    background: #ff5533;
+    min-width: 10px;
+}
+
+QTableWidget QScrollBar::add-line:horizontal {
+    border: 1px #d1d5db;
+    border-radius: 6px;
+    width: 30px;
+    subcontrol-position: right;
+    subcontrol-origin: margin;
+}
+
+QTableWidget QScrollBar::sub-line:horizontal {
+    border: 1px #d1d5db;
+    border-radius: 6px;
+    width: 30px;
+    subcontrol-position: left;
+    subcontrol-origin: margin;
+}
+
+QTableWidget QScrollBar::left-arrow:horizontal, QTableWidget QScrollBar::right-arrow:horizontal  {
+    border: none;
+    background: none;
+    color: none;
+}
+
+QTableWidget QScrollBar::add-page:horizontal, QTableWidget QScrollBar::sub-page:horizontal {
+    background: none;
+}
+
+QTableWidget QHeaderView QTableWidgetItem {
+    background: #3c3c3b;
 }

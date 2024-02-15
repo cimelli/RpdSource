@@ -482,7 +482,7 @@ bool ToolTipToRichTextFilter::eventFilter(QObject* obj, QEvent* evt)
                 tooltip = HtmlEscape(tooltip, true);
             // Envelop with <qt></qt> to make sure Qt detects every tooltip as rich text
             // and style='white-space:pre' to preserve line composition
-            tooltip = "<qt style='white-space:pre'>" + tooltip + "</qt>";
+            tooltip = "<qt style='white-space:pre; background-color:#3c3c3b;'>" + tooltip + "</qt>";
             widget->setToolTip(tooltip);
             return true;
         }

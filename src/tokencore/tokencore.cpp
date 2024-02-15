@@ -451,7 +451,7 @@ std::string mastercore::getTokenLabel(uint32_t propertyId)
             tokenStr = " TTOKEN";
         }
     } else {
-        tokenStr = strprintf(" SPT#%d", propertyId);
+        tokenStr = strprintf(" #%d", propertyId);
     }
     return tokenStr;
 }
@@ -2084,6 +2084,7 @@ int mastercore_handler_disc_end(int nBlockNow, CBlockIndex const * pBlockIndex)
 /**
  * Returns the Exodus address.
  */
+
 const CTxDestination ExodusAddress()
 {
     if (isNonMainNet()) {

@@ -12,7 +12,7 @@
     <qresource prefix="/css">
         <file>res/css/default.css</file>
         <file alias="default-dark">rpdchain/res/css/style_dark.css</file>
-        <file alias="default">rpdchain/res/css/style_light.css</file>
+        <file alias="default">rpdchain/res/css/style_dark.css</file>
     </qresource>
     <qresource prefix="/images">
         <file alias="about">res/images/about.png</file>
@@ -148,5 +148,8 @@
         <file alias="ic-check-cold-staking">rpdchain/res/img/ic-check-cold-staking.svg</file>
         <file alias="ic-check-cold-staking-off">rpdchain/res/img/ic-check-cold-staking-off.svg</file>
         <file alias="ic-check-cold-staking-enabled">rpdchain/res/img/ic-check-cold-staking-enabled.svg</file>
+        <file alias="ic-nav-tokens-active">rpdchain/res/img/ic-nav-tokens-active.svg</file>
+        <file alias="ic-nav-tokens-hover">rpdchain/res/img/ic-nav-tokens-hover.svg</file>
+        <file alias="ic-nav-tokens">rpdchain/res/img/ic-nav-tokens.svg</file>
     </qresource>
 </RCC>

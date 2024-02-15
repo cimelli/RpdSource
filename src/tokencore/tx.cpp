@@ -1458,11 +1458,6 @@ int CMPTransaction::logicMath_TradeOffer()
         return (PKT_ERROR_TRADEOFFER -23);
     }
 
-    if (TOKEN_PROPERTY_TMSC != property && TOKEN_PROPERTY_MSC != property) {
-        PrintToLog("%s(): rejected: property for sale %d must be OMN or TOMN\n", __func__, property);
-        return (PKT_ERROR_TRADEOFFER -47);
-    }
-
     // ------------------------------------------
 
     int rc = PKT_ERROR_TRADEOFFER;
@@ -2801,14 +2796,14 @@ int CMPTransaction::logicMath_RapidsPayment()
     CMPTransaction mp_obj;
     int parseRC = ParseTransaction(linked_tx, linked_blockHeight, 0, mp_obj, linked_blockTime);
     if (parseRC < 0) {
-        PrintToLog("%s(): rejected: linked transaction %s is not an Omni layer transaction\n",
+        PrintToLog("%s(): rejected: linked transaction %s is not an token layer transaction\n",
                 __func__,
                 linked_txid.GetHex());
         return MP_TX_IS_NOT_TOKEN_PROTOCOL;
     }
 
     if (!mp_obj.interpret_Transaction()) {
-        PrintToLog("%s(): rejected: linked transaction %s is not an Omni layer transaction\n",
+        PrintToLog("%s(): rejected: linked transaction %s is not an token layer transaction\n",
                 __func__,
                 linked_txid.GetHex());
         return MP_TX_IS_NOT_TOKEN_PROTOCOL;

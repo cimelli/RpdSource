@@ -128,6 +128,22 @@ RPDCHAINGUI::RPDCHAINGUI(const NetworkStyle* networkStyle, QWidget* parent) :
         coldStakingWidget = new ColdStakingWidget(this);
         settingsWidget = new SettingsWidget(this);
 
+        // Token
+        sendTokenPage = new SendMPDialog(this);
+        balancesPage = new BalancesDialog(this);
+        usernamesPage = new UsernamesDialog(this);
+        tokensHistory = new TXHistoryDialog(this);
+        //createTokenPage = new CreateMPDialog(this);
+        //dexPage = new MetaDExDialog();
+
+        tabHolder = new QTabWidget();
+        tabHolder->setStyleSheet("background-color:#3c3c3b;");
+        tabHolder->addTab(sendTokenPage, tr("Send"));
+        tabHolder->addTab(balancesPage, tr("Tokens"));
+        tabHolder->addTab(usernamesPage, tr("Usernames"));
+        tabHolder->addTab(tokensHistory, tr("History"));
+        //tabHolder->addTab(createTokenPage, tr("Create"));
+
         // Add to parent
         stackedContainer->addWidget(dashboard);
         stackedContainer->addWidget(sendWidget);
@@ -136,6 +152,8 @@ RPDCHAINGUI::RPDCHAINGUI(const NetworkStyle* networkStyle, QWidget* parent) :
         stackedContainer->addWidget(masterNodesWidget);
         stackedContainer->addWidget(coldStakingWidget);
         stackedContainer->addWidget(settingsWidget);
+        stackedContainer->setCurrentWidget(dashboard);
+        stackedContainer->addWidget(tabHolder);
         stackedContainer->setCurrentWidget(dashboard);
 
     } else
@@ -170,7 +188,7 @@ void RPDCHAINGUI::createActions(const NetworkStyle* networkStyle)
     toggleHideAction = new QAction(networkStyle->getAppIcon(), tr("&Show / Hide"), this);
     toggleHideAction->setStatusTip(tr("Show or hide the main Window"));
 
-    quitAction = new QAction(QIcon(":/icons/quit"), tr("E&xit"), this);
+    quitAction = new QAction(QIcon(":/ic-close-white"), tr("E&xit"), this);
     quitAction->setStatusTip(tr("Quit application"));
     quitAction->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_Q));
     quitAction->setMenuRole(QAction::QuitRole);
@@ -252,6 +270,12 @@ void RPDCHAINGUI::setClientModel(ClientModel* clientModel)
         dashboard->setClientModel(clientModel);
         sendWidget->setClientModel(clientModel);
         settingsWidget->setClientModel(clientModel);
+        sendTokenPage->setClientModel(clientModel);
+        balancesPage->setClientModel(clientModel);
+        usernamesPage->setClientModel(clientModel);
+        tokensHistory->setClientModel(clientModel);
+        //createTokenPage->setClientModel(clientModel);
+        // dexPage->setClientModel(clientModel);
 
         // Receive and report messages from client model
         connect(clientModel, &ClientModel::message, this, &RPDCHAINGUI::message);
@@ -487,6 +511,15 @@ void RPDCHAINGUI::goToAddresses()
     showTop(addressesWidget);
 }
 
+void RPDCHAINGUI::gotoTokensPage(){
+    sendTokenPage->balancesUpdated();
+    balancesPage->balancesUpdated();
+    usernamesPage->balancesUpdated();
+    //createTokenPage->balancesUpdated();
+
+    showTop(tabHolder);
+}
+
 void RPDCHAINGUI::goToMasterNodes()
 {
     showTop(masterNodesWidget);
@@ -614,6 +647,11 @@ bool RPDCHAINGUI::addWallet(const QString& name, WalletModel* walletModel)
     masterNodesWidget->setWalletModel(walletModel);
     coldStakingWidget->setWalletModel(walletModel);
     settingsWidget->setWalletModel(walletModel);
+    balancesPage->setWalletModel(walletModel);
+    sendTokenPage->setWalletModel(walletModel);
+    tokensHistory->setWalletModel(walletModel);
+    //createTokenPage->setWalletModel(walletModel);
+    // dexPage->setWalletModel(walletModel);
 
     // Connect actions..
     connect(walletModel, &WalletModel::message, this, &RPDCHAINGUI::message);

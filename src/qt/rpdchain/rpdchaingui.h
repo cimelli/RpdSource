@@ -24,6 +24,12 @@
 #include "qt/rpdchain/masternodeswidget.h"
 #include "qt/rpdchain/snackbar.h"
 #include "qt/rpdchain/settings/settingswidget.h"
+#include "qt/txhistorydialog.h"
+#include "qt/sendmpdialog.h"
+//#include "qt/creatempdialog.h"
+#include "qt/balancesdialog.h"
+#include "qt/usernamesdialog.h"
+#include "qt/metadexdialog.h"
 #include "qt/rpcconsole.h"
 
 
@@ -68,6 +74,7 @@ public Q_SLOTS:
     void goToMasterNodes();
     void goToColdStaking();
     void goToSettings();
+    void gotoTokensPage();
     void goToSettingsInfo();
     void openNetworkMonitor();
 
@@ -133,6 +140,13 @@ private:
     MasterNodesWidget *masterNodesWidget = nullptr;
     ColdStakingWidget *coldStakingWidget = nullptr;
     SettingsWidget* settingsWidget = nullptr;
+    SendMPDialog *sendTokenPage = nullptr;
+    BalancesDialog *balancesPage = nullptr;
+    UsernamesDialog *usernamesPage = nullptr;
+    TXHistoryDialog *tokensHistory = nullptr;
+    //CreateMPDialog *createTokenPage = nullptr;
+    QTabWidget *tabHolder = nullptr;
+    // MetaDExDialog *dexPage = nullptr;
 
     SnackBar *snackBar = nullptr;
 

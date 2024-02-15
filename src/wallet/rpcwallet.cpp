@@ -3208,11 +3208,10 @@ unsigned int sumMultiSend()
     return sum;
 }
 
-/* disable multisend
 UniValue multisend(const JSONRPCRequest& request)
 {
     throw std::runtime_error("Multisend is disabled in this wallet version");
-    
+    /* disable multisend
     CWalletDB walletdb(pwalletMain->strWalletFile);
     bool fFileBacked;
     //MultiSend Commands
@@ -3361,8 +3360,8 @@ UniValue multisend(const JSONRPCRequest& request)
         }
     }
     return printMultiSend();
+    */
 }
- */
 
 extern UniValue dumpprivkey(const JSONRPCRequest& request); // in rpcdump.cpp
 extern UniValue importprivkey(const JSONRPCRequest& request);
