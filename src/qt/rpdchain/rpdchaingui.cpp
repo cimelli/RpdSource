@@ -91,14 +91,14 @@ RPDCHAINGUI::RPDCHAINGUI(const NetworkStyle* networkStyle, QWidget* parent) :
 
         // First the nav
         navMenu = new NavMenuWidget(this);
-        centralWidgetLayouot->addWidget(navMenu);
+        centralWidgetLayout->addWidget(navMenu);
 
         this->setCentralWidget(centralWidget);
         this->setContentsMargins(0,0,0,0);
 
         QFrame *container = new QFrame(centralWidget);
         container->setContentsMargins(0,0,0,0);
-        centralWidgetLayouot->addWidget(container);
+        centralWidgetLayout->addWidget(container);
 
         // Then topbar + the stackedWidget
         QVBoxLayout *baseScreensContainer = new QVBoxLayout(this);
@@ -130,19 +130,16 @@ RPDCHAINGUI::RPDCHAINGUI(const NetworkStyle* networkStyle, QWidget* parent) :
 
         // Token
         sendTokenPage = new SendMPDialog(this);
-        balancesPage = new BalancesDialog(this);
+        tokensPage = new TokensDialog(this);
+        nftsPage = new NftsDialog(this);
         usernamesPage = new UsernamesDialog(this);
-        tokensHistory = new TXHistoryDialog(this);
-        //createTokenPage = new CreateMPDialog(this);
-        //dexPage = new MetaDExDialog();
 
         tabHolder = new QTabWidget();
-        tabHolder->setStyleSheet("background-color:#3c3c3b;");
+        tabHolder->setStyleSheet("background-color:#3c3c3b; border:none;");
         tabHolder->addTab(sendTokenPage, tr("Send"));
-        tabHolder->addTab(balancesPage, tr("Tokens"));
+        tabHolder->addTab(tokensPage, tr("Tokens"));
+        tabHolder->addTab(nftsPage, tr("NFTs"));
         tabHolder->addTab(usernamesPage, tr("Usernames"));
-        tabHolder->addTab(tokensHistory, tr("History"));
-        //tabHolder->addTab(createTokenPage, tr("Create"));
 
         // Add to parent
         stackedContainer->addWidget(dashboard);
@@ -271,11 +268,9 @@ void RPDCHAINGUI::setClientModel(ClientModel* clientModel)
         sendWidget->setClientModel(clientModel);
         settingsWidget->setClientModel(clientModel);
         sendTokenPage->setClientModel(clientModel);
-        balancesPage->setClientModel(clientModel);
+        tokensPage->setClientModel(clientModel);
+        nftsPage->setClientModel(clientModel);
         usernamesPage->setClientModel(clientModel);
-        tokensHistory->setClientModel(clientModel);
-        //createTokenPage->setClientModel(clientModel);
-        // dexPage->setClientModel(clientModel);
 
         // Receive and report messages from client model
         connect(clientModel, &ClientModel::message, this, &RPDCHAINGUI::message);
@@ -513,9 +508,9 @@ void RPDCHAINGUI::goToAddresses()
 
 void RPDCHAINGUI::gotoTokensPage(){
     sendTokenPage->balancesUpdated();
-    balancesPage->balancesUpdated();
+    tokensPage->balancesUpdated();
+    nftsPage->balancesUpdated();
     usernamesPage->balancesUpdated();
-    //createTokenPage->balancesUpdated();
 
     showTop(tabHolder);
 }
@@ -647,11 +642,9 @@ bool RPDCHAINGUI::addWallet(const QString& name, WalletModel* walletModel)
     masterNodesWidget->setWalletModel(walletModel);
     coldStakingWidget->setWalletModel(walletModel);
     settingsWidget->setWalletModel(walletModel);
-    balancesPage->setWalletModel(walletModel);
+    tokensPage->setWalletModel(walletModel);
+    nftsPage->setWalletModel(walletModel);
     sendTokenPage->setWalletModel(walletModel);
-    tokensHistory->setWalletModel(walletModel);
-    //createTokenPage->setWalletModel(walletModel);
-    // dexPage->setWalletModel(walletModel);
 
     // Connect actions..
     connect(walletModel, &WalletModel::message, this, &RPDCHAINGUI::message);

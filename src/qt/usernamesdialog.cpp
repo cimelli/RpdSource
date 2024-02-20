@@ -17,7 +17,6 @@
 
 #include "amount.h"
 #include "sync.h"
-// #include "ui_interface.h"
 #include "wallet/wallet.h"
 
 #include <stdint.h>
@@ -52,14 +51,15 @@ UsernamesDialog::UsernamesDialog(QWidget *parent) :
     setCssProperty(ui->balancesTable, "token-table");
 
     ui->balancesTable->setShowGrid(false);
-    ui->balancesTable->setStyleSheet("QTableWidget {color:#d1d5db;background-color:transparent;} QHeaderView::section { font-weight: bold; }");
-
-    // setCssProperty(ui->balancesTable, "token-table");
+    ui->balancesTable->setStyleSheet("QTableWidget {color:#d1d5db;border:none;background-color:transparent;} QHeaderView::section {font-weight:bold;}");
 
     ui->balancesTable->setColumnCount(2);
-    ui->balancesTable->setHorizontalHeaderItem(0, new QTableWidgetItem("Address"));
-    ui->balancesTable->setHorizontalHeaderItem(1, new QTableWidgetItem("Username"));
+    ui->balancesTable->setHorizontalHeaderItem(0, new QTableWidgetItem("Username"));
+    ui->balancesTable->setHorizontalHeaderItem(1, new QTableWidgetItem("Address"));
     borrowedColumnResizingFixer = new GUIUtil::TableViewLastColumnResizingFixer(ui->balancesTable, 100, 100);
+    // Align text in header cells
+    ui->balancesTable->horizontalHeaderItem(0)->setTextAlignment(Qt::AlignLeft);
+    ui->balancesTable->horizontalHeaderItem(1)->setTextAlignment(Qt::AlignLeft);
     // note neither resizetocontents or stretch allow user to adjust - go interactive then manually set widths
     #if QT_VERSION < 0x050000
        ui->balancesTable->horizontalHeader()->setResizeMode(0, QHeaderView::Interactive);
@@ -69,20 +69,19 @@ UsernamesDialog::UsernamesDialog(QWidget *parent) :
        ui->balancesTable->horizontalHeader()->setSectionResizeMode(1, QHeaderView::Interactive);
     #endif
     ui->balancesTable->setAlternatingRowColors(true);
-
+    
     // do an initial population
     PopulateUsernames();
 
     // initial resizing
-    // ui->balancesTable->resizeColumnToContents(0);
-    // ui->balancesTable->resizeColumnToContents(1);
-    // borrowedColumnResizingFixer->stretchColumnWidth(0);
-    // borrowedColumnResizingFixer->stretchColumnWidth(1);
+    ui->balancesTable->resizeColumnToContents(0);
+    ui->balancesTable->resizeColumnToContents(1);
     ui->balancesTable->verticalHeader()->setVisible(false);
-    ui->balancesTable->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    ui->balancesTable->setHorizontalScrollBarPolicy(Qt::ScrollBarAsNeeded);
     ui->balancesTable->setSelectionBehavior(QAbstractItemView::SelectRows);
     ui->balancesTable->setSelectionMode(QAbstractItemView::SingleSelection);
-    ui->balancesTable->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
+    ui->balancesTable->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
+    ui->balancesTable->verticalHeader()->setFixedWidth(10);
     ui->balancesTable->setTabKeyNavigation(false);
     ui->balancesTable->setContextMenuPolicy(Qt::CustomContextMenu);
     ui->balancesTable->setEditTriggers(QAbstractItemView::NoEditTriggers);
@@ -145,8 +144,8 @@ void UsernamesDialog::AddRow(const std::string& label, const std::string& addres
     labelCell->setTextAlignment(Qt::AlignLeft + Qt::AlignVCenter);
     addressCell->setTextAlignment(Qt::AlignLeft + Qt::AlignVCenter);
 
-    ui->balancesTable->setItem(workingRow, 0, labelCell);
-    ui->balancesTable->setItem(workingRow, 1, addressCell);
+    ui->balancesTable->setItem(workingRow, 0, addressCell);
+    ui->balancesTable->setItem(workingRow, 1, labelCell);
 }
 
 void UsernamesDialog::PopulateUsernames()
@@ -200,4 +199,3 @@ void UsernamesDialog::resizeEvent(QResizeEvent* event)
     QWidget::resizeEvent(event);
     borrowedColumnResizingFixer->stretchColumnWidth(1);
 }
-

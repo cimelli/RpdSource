@@ -26,18 +26,25 @@
       <widget class="QLabel" name="feeWarningLabel">
        <property name="font">
         <font>
-         <pointsize>8</pointsize>
+         <pointsize>12</pointsize>
         </font>
        </property>
        <property name="styleSheet">
-        <string notr="true">QLabel { 
-    border: 1px solid rgb(142,61,0);padding:5px 5px 5px 5px;background-repeat: no-repeat;background-position: 10px center;color: #d1d5db;background-color: rgb(255, 85, 51); color:rgb(209, 213, 219);} </string>
+           <string notr="true">QLabel {
+               border: 0px;
+               padding: 5px 5px 5px 5px;
+               background-repeat: no-repeat;
+               background-position: 15px center;
+               background-color: transparent;
+               color: rgb(255, 85, 51);
+               font-family: monospace;
+           }</string>
        </property>
        <property name="text">
         <string>Warning: You will not be able to send this transaction.</string>
        </property>
        <property name="alignment">
-        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+        <set>Qt::AlignLeading|Qt::AlignCenter|Qt::AlignVCenter</set>
        </property>
       </widget>
      </item>
@@ -98,7 +105,7 @@
             <string>Available: 0.00000000</string>
            </property>
            <property name="margin">
-            <number>8</number>
+            <number>8,75,8,8</number>
            </property>
           </widget>
          </item>
@@ -263,15 +270,8 @@
          <height>40</height>
         </size>
        </property>
-       <property name="toolTip">
-        <string>Confirm the send action</string>
-       </property>
        <property name="text">
         <string>Send</string>
-       </property>
-       <property name="icon">
-        <iconset>
-         <normaloff>:/icons/send</normaloff>:/icons/send</iconset>
        </property>
        <property name="default">
         <bool>true</bool>
@@ -286,15 +286,8 @@
             <height>40</height>
            </size>
        </property>
-       <property name="toolTip">
-        <string>Clear all fields of the form.</string>
-       </property>
        <property name="text">
         <string>Clear All</string>
-       </property>
-       <property name="icon">
-        <iconset>
-         <normaloff>:/icons/remove</normaloff>:/icons/remove</iconset>
        </property>
        <property name="autoRepeatDelay">
         <number>300</number>
@@ -364,7 +357,7 @@
   </layout>
  </widget>
  <resources>
-  <include location="../bitcoin.qrc"/>
+  <include location="../rpdchain.qrc"/>
  </resources>
  <connections/>
 </ui>

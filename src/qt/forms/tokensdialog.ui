@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>balancesDialog</class>
- <widget class="QWidget" name="balancesDialog">
+ <class>tokensDialog</class>
+ <widget class="QWidget" name="tokensDialog">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>664</width>
-    <height>474</height>
+    <width>1200</width>
+    <height>750</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -21,8 +21,8 @@
      </property>
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout">
-       <property name="topMargin">
-        <number>0</number>
+       <property name="rightMargin">
+        <number>20</number>
        </property>
        <item>
         <spacer name="horizontalSpacer">
@@ -40,7 +40,7 @@
        <item>
         <widget class="QLabel" name="label">
          <property name="text">
-          <string>Show balances for:</string>
+          <string></string>
          </property>
         </widget>
        </item>

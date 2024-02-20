@@ -1,7 +1,7 @@
 // Copyright (c) 2011-2013 The Bitcoin developers // Distributed under the MIT/X11 software license, see the accompanying // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#include "balancesdialog.h"
-#include "ui_balancesdialog.h"
+#include "tokensdialog.h"
+#include "ui_tokensdialog.h"
 
 #include "qt/rpdchain/qtutils.h"
 
@@ -16,7 +16,6 @@
 
 #include "amount.h"
 #include "sync.h"
-// #include "ui_interface.h"
 #include "wallet/wallet.h"
 
 #include <stdint.h>
@@ -40,8 +39,8 @@ using std::ostringstream;
 using std::string;
 using namespace mastercore;
 
-BalancesDialog::BalancesDialog(QWidget *parent) :
-    QDialog(parent), ui(new Ui::balancesDialog), clientModel(0), walletModel(0)
+TokensDialog::TokensDialog(QWidget *parent) :
+    QDialog(parent), ui(new Ui::tokensDialog), clientModel(0), walletModel(0)
 {
     // setup
     ui->setupUi(this);
@@ -54,9 +53,7 @@ BalancesDialog::BalancesDialog(QWidget *parent) :
     ui->propSelectorWidget->setView(new QListView());
 
     ui->balancesTable->setShowGrid(false);
-    ui->balancesTable->setStyleSheet("QTableWidget {color:#d1d5db; background-color:transparent;} QHeaderView::section { font-weight: bold; }");
-
-    // setCssProperty(ui->balancesTable, "token-table");
+    ui->balancesTable->setStyleSheet("QTableWidget {color:#d1d5db; border:none; background-color:transparent;} QHeaderView::section {font-weight:bold;}");
 
     ui->balancesTable->setColumnCount(4);
     ui->balancesTable->setHorizontalHeaderItem(0, new QTableWidgetItem("ID"));
@@ -64,6 +61,11 @@ BalancesDialog::BalancesDialog(QWidget *parent) :
     ui->balancesTable->setHorizontalHeaderItem(2, new QTableWidgetItem("Reserved"));
     ui->balancesTable->setHorizontalHeaderItem(3, new QTableWidgetItem("Available"));
     borrowedColumnResizingFixer = new GUIUtil::TableViewLastColumnResizingFixer(ui->balancesTable, 100, 100);
+    // Align text in header cells
+    ui->balancesTable->horizontalHeaderItem(0)->setTextAlignment(Qt::AlignLeft);
+    ui->balancesTable->horizontalHeaderItem(1)->setTextAlignment(Qt::AlignLeft);
+    ui->balancesTable->horizontalHeaderItem(2)->setTextAlignment(Qt::AlignRight);
+    ui->balancesTable->horizontalHeaderItem(3)->setTextAlignment(Qt::AlignRight);
     // note neither resizetocontents or stretch allow user to adjust - go interactive then manually set widths
     #if QT_VERSION < 0x050000
        ui->balancesTable->horizontalHeader()->setResizeMode(0, QHeaderView::Interactive);
@@ -84,14 +86,15 @@ BalancesDialog::BalancesDialog(QWidget *parent) :
 
     // initial resizing
     ui->balancesTable->resizeColumnToContents(0);
+    ui->balancesTable->resizeColumnToContents(1);
     ui->balancesTable->resizeColumnToContents(2);
     ui->balancesTable->resizeColumnToContents(3);
-    borrowedColumnResizingFixer->stretchColumnWidth(1);
     ui->balancesTable->verticalHeader()->setVisible(false);
-    ui->balancesTable->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    ui->balancesTable->setHorizontalScrollBarPolicy(Qt::ScrollBarAsNeeded);
     ui->balancesTable->setSelectionBehavior(QAbstractItemView::SelectRows);
     ui->balancesTable->setSelectionMode(QAbstractItemView::SingleSelection);
-    ui->balancesTable->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
+    ui->balancesTable->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
+    ui->balancesTable->verticalHeader()->setFixedWidth(10);
     ui->balancesTable->setTabKeyNavigation(false);
     ui->balancesTable->setContextMenuPolicy(Qt::CustomContextMenu);
     ui->balancesTable->setEditTriggers(QAbstractItemView::NoEditTriggers);
@@ -126,12 +129,12 @@ BalancesDialog::BalancesDialog(QWidget *parent) :
     connect(balancesCopyAvailableAmountAction, SIGNAL(triggered()), this, SLOT(balancesCopyCol3()));
 }
 
-BalancesDialog::~BalancesDialog()
+TokensDialog::~TokensDialog()
 {
     delete ui;
 }
 
-void BalancesDialog::reinitToken()
+void TokensDialog::reinitToken()
 {
     ui->propSelectorWidget->clear();
     ui->balancesTable->setRowCount(0);
@@ -139,7 +142,7 @@ void BalancesDialog::reinitToken()
     PopulateBalances(2147483646); // 2147483646 = summary (last possible ID for test eco props)
 }
 
-void BalancesDialog::setClientModel(ClientModel *model)
+void TokensDialog::setClientModel(ClientModel *model)
 {
     this->clientModel = model;
     if (model != NULL) {
@@ -148,13 +151,13 @@ void BalancesDialog::setClientModel(ClientModel *model)
     }
 }
 
-void BalancesDialog::setWalletModel(WalletModel *model)
+void TokensDialog::setWalletModel(WalletModel *model)
 {
     this->walletModel = model;
     if (model != NULL) { } // do nothing, signals from walletModel no longer needed
 }
 
-void BalancesDialog::UpdatePropSelector()
+void TokensDialog::UpdatePropSelector()
 {
     LOCK(cs_tally);
 
@@ -164,21 +167,21 @@ void BalancesDialog::UpdatePropSelector()
     // a new property has been added to the wallet, update the property selector
     QString spId = ui->propSelectorWidget->itemData(ui->propSelectorWidget->currentIndex()).toString();
     ui->propSelectorWidget->clear();
-    ui->propSelectorWidget->addItem("Wallet Totals (Summary)","2147483646"); //use last possible ID for summary for now
+    ui->propSelectorWidget->addItem("Select Here For More Info","2147483646"); //use last possible ID for summary for now
     // populate property selector
     for (std::set<uint32_t>::iterator it = global_wallet_property_list.begin() ; it != global_wallet_property_list.end(); ++it) {
         uint32_t propertyId = *it;
         std::string spId = strprintf("%d", propertyId);
         std::string spName = getPropertyName(propertyId).c_str();
         if(spName.size()>20) spName=spName.substr(0,20)+"...";
-        spName += " (#" + spId + ")";
+        spName += " (ID#" + spId + ")";
         ui->propSelectorWidget->addItem(spName.c_str(), spId.c_str());
     }
     int propIdx = ui->propSelectorWidget->findData(spId);
     if (propIdx != -1) { ui->propSelectorWidget->setCurrentIndex(propIdx); }
 }
 
-void BalancesDialog::AddRow(const std::string& label, const std::string& address, const std::string& reserved, const std::string& available)
+void TokensDialog::AddRow(const std::string& label, const std::string& address, const std::string& reserved, const std::string& available)
 {
     int workingRow = ui->balancesTable->rowCount();
     ui->balancesTable->insertRow(workingRow);
@@ -209,33 +212,40 @@ void BalancesDialog::AddRow(const std::string& label, const std::string& address
     ui->balancesTable->setItem(workingRow, 3, availableCell);
 }
 
-void BalancesDialog::PopulateBalances(unsigned int propertyId)
+void TokensDialog::PopulateBalances(unsigned int propertyId)
 {
-    ui->balancesTable->setRowCount(0); // fresh slate (note this will automatically cleanup all existing QWidgetItems in the table)
+    ui->balancesTable->setRowCount(0); // Fresh slate (note this will automatically clean up all existing QWidgetItems in the table)
 
     LOCK(cs_tally);
-    //are we summary?
-    if(propertyId==2147483646) {
+
+    // Are we summarizing?
+    if(propertyId == 2147483646) {
         ui->balancesTable->setHorizontalHeaderItem(0, new QTableWidgetItem("ID"));
         ui->balancesTable->setHorizontalHeaderItem(1, new QTableWidgetItem("Token Name"));
+        ui->balancesTable->horizontalHeaderItem(0)->setTextAlignment(Qt::AlignLeft);
+        ui->balancesTable->horizontalHeaderItem(1)->setTextAlignment(Qt::AlignLeft);
 
-        // loop over the wallet property list and add the wallet totals
-        for (std::set<uint32_t>::iterator it = global_wallet_property_list.begin() ; it != global_wallet_property_list.end(); ++it) {
+        // Loop over the wallet property list and add the wallet totals
+        for (std::set<uint32_t>::iterator it = global_wallet_property_list.begin(); it != global_wallet_property_list.end(); ++it) {
             uint32_t propertyId = *it;
             std::string spId = strprintf("%d", propertyId);
             std::string spName = getPropertyName(propertyId).c_str();
             std::string available = FormatMP(propertyId, global_balance_money[propertyId]);
             std::string reserved = FormatMP(propertyId, global_balance_reserved[propertyId]);
 
-            if (global_balance_money[propertyId] > 0 || global_balance_reserved[propertyId] > 0)
+            // Check if available balance is greater than 1, or if reserved balance is greater than 1 or if 0
+            if ((global_balance_money[propertyId] > 1 && global_balance_reserved[propertyId] == 0) ||
+                (global_balance_money[propertyId] == 0 && global_balance_reserved[propertyId] > 1))
                 AddRow(spId, spName, reserved, available);
         }
     } else {
         ui->balancesTable->setHorizontalHeaderItem(0, new QTableWidgetItem("Label"));
         ui->balancesTable->setHorizontalHeaderItem(1, new QTableWidgetItem("Address"));
-        bool propertyIsDivisible = isPropertyDivisible(propertyId); // only fetch the SP once, not for every address
+        ui->balancesTable->horizontalHeaderItem(0)->setTextAlignment(Qt::AlignLeft);
+        ui->balancesTable->horizontalHeaderItem(1)->setTextAlignment(Qt::AlignLeft);
+        bool propertyIsDivisible = isPropertyDivisible(propertyId); // Only fetch the SP once, not for every address
 
-        // iterate mp_tally_map looking for addresses that hold a balance in propertyId
+        // Iterate mp_tally_map looking for addresses that hold a balance in propertyId
         for(std::unordered_map<string, CMPTally>::iterator my_it = mp_tally_map.begin(); my_it != mp_tally_map.end(); ++my_it) {
             const std::string& address = my_it->first;
             CMPTally& tally = my_it->second;
@@ -249,21 +259,21 @@ void BalancesDialog::PopulateBalances(unsigned int propertyId)
                     break;
                 }
             }
-            if (!includeAddress) continue; //ignore this address, has never transacted in this propertyId
+            if (!includeAddress) continue; // Ignore this address, has never transacted in this propertyId
 
-            // determine if this address is in the wallet
+            // Determine if this address is in the wallet
             int addressIsMine = IsMyAddress(address);
-            if (!addressIsMine) continue; // ignore this address, not in wallet
+            if (!addressIsMine) continue; // Ignore this address, not in the wallet
             if (addressIsMine != ISMINE_SPENDABLE) watchAddress = true;
 
-            // obtain the balances for the address directly form tally
+            // Obtain the balances for the address directly from tally
             int64_t available = tally.getMoney(propertyId, BALANCE);
             available += tally.getMoney(propertyId, PENDING);
             int64_t reserved = tally.getMoney(propertyId, SELLOFFER_RESERVE);
             reserved += tally.getMoney(propertyId, ACCEPT_RESERVE);
             reserved += tally.getMoney(propertyId, METADEX_RESERVE);
 
-            // format the balances
+            // Format the balances
             string reservedStr, availableStr;
             if (propertyIsDivisible) {
                 reservedStr = FormatDivisibleMP(reserved);
@@ -283,14 +293,14 @@ void BalancesDialog::PopulateBalances(unsigned int propertyId)
     }
 }
 
-void BalancesDialog::propSelectorChanged()
+void TokensDialog::propSelectorChanged()
 {
     QString spId = ui->propSelectorWidget->itemData(ui->propSelectorWidget->currentIndex()).toString();
     unsigned int propertyId = spId.toUInt();
     PopulateBalances(propertyId);
 }
 
-void BalancesDialog::contextualMenu(const QPoint &point)
+void TokensDialog::contextualMenu(const QPoint &point)
 {
     QModelIndex index = ui->balancesTable->indexAt(point);
     if(index.isValid())
@@ -305,27 +315,27 @@ void BalancesDialog::contextualMenu(const QPoint &point)
     }
 }
 
-void BalancesDialog::balancesCopyCol0()
+void TokensDialog::balancesCopyCol0()
 {
     GUIUtil::setClipboard(ui->balancesTable->item(ui->balancesTable->currentRow(),0)->text());
 }
 
-void BalancesDialog::balancesCopyCol1()
+void TokensDialog::balancesCopyCol1()
 {
     GUIUtil::setClipboard(ui->balancesTable->item(ui->balancesTable->currentRow(),1)->text());
 }
 
-void BalancesDialog::balancesCopyCol2()
+void TokensDialog::balancesCopyCol2()
 {
     GUIUtil::setClipboard(ui->balancesTable->item(ui->balancesTable->currentRow(),2)->text());
 }
 
-void BalancesDialog::balancesCopyCol3()
+void TokensDialog::balancesCopyCol3()
 {
     GUIUtil::setClipboard(ui->balancesTable->item(ui->balancesTable->currentRow(),3)->text());
 }
 
-void BalancesDialog::balancesUpdated()
+void TokensDialog::balancesUpdated()
 {
     UpdatePropSelector();
     propSelectorChanged(); // refresh the table with the currently selected property ID
@@ -333,9 +343,8 @@ void BalancesDialog::balancesUpdated()
 
 // We override the virtual resizeEvent of the QWidget to adjust tables column
 // sizes as the tables width is proportional to the dialogs width.
-void BalancesDialog::resizeEvent(QResizeEvent* event)
+void TokensDialog::resizeEvent(QResizeEvent* event)
 {
     QWidget::resizeEvent(event);
     borrowedColumnResizingFixer->stretchColumnWidth(1);
 }
-

@@ -442,7 +442,7 @@ color:#d1d5db;
 QTableWidget { /* Table Background */
 background-color: #3c3c3b;
 alternate-background-color: yellow;
-border:1px solid #d1d5db;
+border:0px solid #d1d5db;
 }
 
 QTableWidget:focus, QTableView, QTableView:focus { /* Remove focus outline */

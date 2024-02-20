@@ -133,8 +133,8 @@ void SendMPDialog::updatePropSelector()
             std::string spName = getPropertyName(propertyId);
             std::string spId = strprintf("%d", propertyId);
             if(spName.size()>23) spName=spName.substr(0,23) + "...";
-            spName += " (#" + spId + ")";
-            if (isPropertyDivisible(propertyId)) { spName += " [D]"; } else { spName += " [I]"; }
+            spName += " (ID#" + spId + ")";
+            if (isPropertyDivisible(propertyId)) { spName += ""; } else { spName += ""; }
             ui->propertyComboBox->addItem(spName.c_str(),spId.c_str());
         }
     }
@@ -142,9 +142,9 @@ void SendMPDialog::updatePropSelector()
         if ((global_balance_money[propertyId] > 0) || (global_balance_reserved[propertyId] > 0)) {
             std::string spName = getPropertyName(propertyId);
             std::string spId = strprintf("%d", propertyId);
-            if(spName.size()>23) spName=spName.substr(0,23)+"...";
-            spName += " (#" + spId + ")";
-            if (isPropertyDivisible(propertyId)) { spName += " [D]"; } else { spName += " [I]"; }
+            if(spName.size()>23) spName=spName.substr(0,23) + "...";
+            spName += " (ID#" + spId + ")";
+            if (isPropertyDivisible(propertyId)) { spName += ""; } else { spName += ""; }
             ui->propertyComboBox->addItem(spName.c_str(),spId.c_str());
         }
     }
@@ -170,7 +170,7 @@ void SendMPDialog::updateFrom()
         comboDisplay->setText(QString::fromStdString(currentSetFromAddress));
         comboDisplay->setReadOnly(true);
 
-        comboDisplay->setStyleSheet("QLineEdit {color:#d1d5db;background-color:transparent;padding:40px 0px;border: none;}");
+        comboDisplay->setStyleSheet("QLineEdit {color:#d1d5db;background-color:transparent;padding:40px 0px;border:none;}");
     }
 
     if (currentSetFromAddress.empty()) {
@@ -181,7 +181,7 @@ void SendMPDialog::updateFrom()
         QString spId = ui->propertyComboBox->itemData(ui->propertyComboBox->currentIndex()).toString();
         uint32_t propertyId = spId.toUInt();
         if (propertyId > 0) {
-            ui->balanceLabel->setText(QString::fromStdString("Address Balance: " + FormatMP(propertyId, GetAvailableTokenBalance(currentSetFromAddress, propertyId)) + getTokenLabel(propertyId)));
+            ui->balanceLabel->setText(QString::fromStdString("Address Balance: " + FormatMP(propertyId, GetAvailableTokenBalance(currentSetFromAddress, propertyId))));
         }
         // warning label will be lit if insufficient fees for simple send (16 byte payload)
         if (CheckFee(currentSetFromAddress, 16)) {

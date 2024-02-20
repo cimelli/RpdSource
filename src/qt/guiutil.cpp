@@ -482,7 +482,7 @@ bool ToolTipToRichTextFilter::eventFilter(QObject* obj, QEvent* evt)
                 tooltip = HtmlEscape(tooltip, true);
             // Envelop with <qt></qt> to make sure Qt detects every tooltip as rich text
             // and style='white-space:pre' to preserve line composition
-            tooltip = "<qt style='white-space:pre; background-color:#3c3c3b;'>" + tooltip + "</qt>";
+            tooltip = "<qt style='white-space:pre'>" + tooltip + "</qt>";
             widget->setToolTip(tooltip);
             return true;
         }
@@ -560,18 +560,15 @@ void TableViewLastColumnResizingFixer::stretchColumnWidth(int column)
     connectViewHeadersSignals();
 }
 
-// When a section is resized this is a slot-proxy for ajustAmountColumnWidth().
 void TableViewLastColumnResizingFixer::on_sectionResized(int logicalIndex, int oldSize, int newSize)
 {
     adjustTableColumnsWidth();
     int remainingWidth = getAvailableWidthForColumn(logicalIndex);
-    if (newSize > remainingWidth) {
+    if (newSize > remainingWidth && logicalIndex != secondToLastColumnIndex) {
         resizeColumn(logicalIndex, remainingWidth);
     }
 }
 
-// When the tabless geometry is ready, we manually perform the stretch of the "Message" column,
-// as the "Stretch" resize mode does not allow for interactive resizing.
 void TableViewLastColumnResizingFixer::on_geometriesChanged()
 {
     if ((getColumnsWidth() - this->tableView->horizontalHeader()->width()) != 0) {
@@ -585,9 +582,10 @@ void TableViewLastColumnResizingFixer::on_geometriesChanged()
  * Initializes all internal variables and prepares the
  * the resize modes of the last 2 columns of the table and
  */
-TableViewLastColumnResizingFixer::TableViewLastColumnResizingFixer(QTableView* table, int lastColMinimumWidth, int allColsMinimumWidth) : tableView(table),
-                                                                                                                                          lastColumnMinimumWidth(lastColMinimumWidth),
-                                                                                                                                          allColumnsMinimumWidth(allColsMinimumWidth)
+TableViewLastColumnResizingFixer::TableViewLastColumnResizingFixer(QTableView* table, int lastColMinimumWidth, int allColsMinimumWidth)
+    : tableView(table),
+      lastColumnMinimumWidth(lastColMinimumWidth),
+      allColumnsMinimumWidth(allColsMinimumWidth)
 {
     columnCount = tableView->horizontalHeader()->count();
     lastColumnIndex = columnCount - 1;

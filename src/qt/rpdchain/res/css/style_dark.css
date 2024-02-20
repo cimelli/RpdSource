@@ -3148,38 +3148,39 @@ QRadioButton[cssClass="radio-welcome"]::indicator:unchecked {
     gridline-color: transparent;
     selection-color: #d1d5db;
     selection-background-color: rgba(255, 85, 51, 0.5);
-    border: 1px solid transparent;
+    border: 0px;
+    padding:25px 25px 25px 25px;
     border-radius: 0px;
  }
 
  QTableWidget QTableWidgetItem {
     font: 18px;
     height: 50px;
-    border: 1px solid #d1d5db;
+    border: 0px;
  }
 
  QTableWidget QScrollBar:vertical {
      border: 0px solid #d1d5db;
      background:#d1d5db;
      width:10px;
-     margin: 0px 0px 0px 0px;
+     margin: 50px 0px 0px 0px;
  }
 
  QTableWidget QScrollBar::handle:vertical {
     background: #ff5533;
-    min-height: 0px;
+    min-height: 10px;
  }
 
 QTableWidget QScrollBar::add-line:vertical {
     background: #d1d5db;
-    height: 0 px;
+    height: 0px;
     subcontrol-position: top;
     subcontrol-origin: margin;
 }
 
 QTableWidget QScrollBar::sub-line:vertical {
     background: #d1d5db;
-    height: 0 px;
+    height: 0px;
     subcontrol-position: top;
     subcontrol-origin: margin;
 }
@@ -3196,8 +3197,8 @@ QTableWidget QScrollBar::add-page:vertical, QTableWidget QScrollBar::sub-page:ve
 
 QTableWidget QScrollBar:horizontal {
     border: 1px solid #d1d5db;
-    height: 30px;
-    margin: 0px 32px 0px 32px;
+    height: 10px;
+    margin: 0px 0px 0px 0px;
 }
 
 QTableWidget QScrollBar::handle:horizontal {
@@ -3206,7 +3207,7 @@ QTableWidget QScrollBar::handle:horizontal {
 }
 
 QTableWidget QScrollBar::add-line:horizontal {
-    border: 1px #d1d5db;
+    border: 0px #d1d5db;
     border-radius: 6px;
     width: 30px;
     subcontrol-position: right;
@@ -3214,7 +3215,7 @@ QTableWidget QScrollBar::add-line:horizontal {
 }
 
 QTableWidget QScrollBar::sub-line:horizontal {
-    border: 1px #d1d5db;
+    border: 0px #d1d5db;
     border-radius: 6px;
     width: 30px;
     subcontrol-position: left;
