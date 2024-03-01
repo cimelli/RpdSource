@@ -21,7 +21,7 @@
 #include "tokencore/sp.h"
 #include "tokencore/sto.h"
 #include "tokencore/tx.h"
-#include "tokencore/utilsbitcoin.h"
+#include "tokencore/utilsrpdchain.h"
 #include "tokencore/walletutils.h"
 
 #include "chainparams.h"

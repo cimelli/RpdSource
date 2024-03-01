@@ -1742,7 +1742,7 @@ QComboBox[cssClass="btn-combo-chart-selected"]::down-arrow {
 }
 
 QComboBox[cssClass="btn-combo-chart-selected"]::down-arrow:on {
-    image: url("://ic-arrow-drop-down-white");
+    image: url("://ic-arrow-drop-up-white");
     width: 24px;
     padding-right: 10px;
     height: 24px;
@@ -1817,8 +1817,8 @@ QPushButton[cssClass="btn-check-time"]:disabled {
 HHHHHHHHHHHHHHHHHHHHHHHHHHHHHH*/
 
 QComboBox[cssClass="btn-combo-address"] {
-     background-color: #3c3c3b;
-     padding: 6px 12px 6px 6px;
+     background-color: transparent;
+     padding: 8px 20px 8px 8px;
      font-size: 16px;
      border: 1px solid #d1d5db;
      color: #d1d5db;
@@ -1833,7 +1833,7 @@ QComboBox[cssClass="btn-combo-address"]::down-arrow {
 }
 
 QComboBox[cssClass="btn-combo-address"]::down-arrow:on {
-    image: url("://ic-arrow-drop-down-white");
+    image: url("://ic-arrow-drop-up-white");
     width: 24px;
     height: 24px;
 }
@@ -1942,7 +1942,7 @@ QComboBox[cssClass="btn-combo"]::down-arrow {
 }
 
 QComboBox[cssClass="btn-combo"]::down-arrow:on {
-    image: url("://ic-arrow-drop-down-white");
+    image: url("://ic-arrow-drop-up-white");
     width: 24px;
     height: 24px;
 }
@@ -1963,7 +1963,7 @@ QComboBox[cssClass="btn-combo-small"]::down-arrow {
 }
 
 QComboBox[cssClass="btn-combo-small"]::down-arrow:on {
-    image: url("://ic-arrow-drop-down-white");
+    image: url("://ic-arrow-drop-up-white");
     width: 15px;
     height: 15px;
 }
@@ -1983,7 +1983,7 @@ QComboBox[cssClass="btn-combo-edit"]::down-arrow {
 }
 
 QComboBox[cssClass="btn-combo-edit"]::down-arrow:on {
-    image: url("://ic-arrow-drop-down-white");
+    image: url("://ic-arrow-drop-up-white");
     width: 24px;
     height: 24px;
 }
@@ -2004,7 +2004,7 @@ QComboBox[cssClass="btn-combo-options"]::down-arrow {
 }
 
 QComboBox[cssClass="btn-combo-options"]::down-arrow:on {
-    image: url("://ic-arrow-drop-down-white");
+    image: url("://ic-arrow-drop-up-white");
     width: 24px;
     height: 24px;
 }
@@ -2038,13 +2038,13 @@ QComboBox::down-arrow {
 }
 
 QComboBox::down-arrow:on {
-    image: url("://ic-arrow-drop-down-white");
+    image: url("://ic-arrow-drop-up-white");
     width: 24px;
     height: 24px;
 }
 
 QComboBox:item {
-    background-color:rgba(255, 85, 51, 0.5);
+    color: #d1d5db;
     font-size:18px;
 }
 
@@ -2347,10 +2347,6 @@ QComboBox[cssClass="btn-combo-dialog"] {
     text-align: right;
 }
 
-QComboBox[cssClass="btn-combo-dialog"]:hover {
-    background-color: rgba(255, 85, 51, 0.5);
-}
-
 QComboBox[cssClass="btn-combo-dialog"]::down-arrow {
     image: url("://ic-arrow-drop-down");
     background-color: transparent;
@@ -2360,7 +2356,7 @@ QComboBox[cssClass="btn-combo-dialog"]::down-arrow {
 }
 
 QComboBox[cssClass="btn-combo-dialog"]::down-arrow:on {
-    image: url("://ic-arrow-drop-down-white");
+    image: url("://ic-arrow-drop-up-white");
     background-color: transparent;
     width: 24px;
     height: 24px;
@@ -2377,7 +2373,7 @@ QComboBox[cssClass="btn-combo-edit-dialog"] {
 }
 
 QComboBox[cssClass="btn-combo-edit-dialog"]::down-arrow:on {
-    image: url("://ic-arrow-drop-down-white");
+    image: url("://ic-arrow-drop-up-white");
     width: 24px;
     height: 24px;
     padding-right: 12px;
@@ -2407,7 +2403,7 @@ QPushButton[cssClass="btn-settings-check"]:checked {
     border:none;
     border-bottom:1px solid transparent;
     font-size:20px;
-    color: #d1d5db;
+    color: #ff5533;
     text-align:left;
 }
 
@@ -2469,6 +2465,10 @@ HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH*/
     qproperty-iconSize: 24px 24px;
     background-color: transparent;
     border:none;
+}
+
+*[cssClass="ic-arrow-down"]:pressed {
+    image: url("://ic-arrow-drop-down-white");
 }
 
 *[cssClass="ic-copy"] {
@@ -2691,7 +2691,7 @@ QComboBox[cssClass="btn-combo-welcome"]::down-arrow {
 }
 
 QComboBox[cssClass="btn-combo-welcome"]::down-arrow:on {
-    image: url("://ic-arrow-drop-down-white");
+    image: url("://ic-arrow-drop-up-white");
     width: 24px;
     height: 24px;
 }
@@ -2912,7 +2912,7 @@ HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH*/
 #treeWidget::branch:open:has-children:!has-siblings,
 #treeWidget::branch:open:has-children:has-siblings {
     border-image: none;
-    image: url("://ic-arrow-drop-down-white");
+    image: url("://ic-arrow-drop-up-white");
     border-bottom: 1px solid #d1d5db;
 }
 

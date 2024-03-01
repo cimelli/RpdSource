@@ -46,7 +46,6 @@ public Q_SLOTS:
     void sendFromComboBoxChanged(int idx);
     void clearButtonClicked();
     void sendButtonClicked();
-    void onCopyClicked();
     void balancesUpdated();
     void updateFrom();
 

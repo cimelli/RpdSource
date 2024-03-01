@@ -167,7 +167,7 @@ void TokensDialog::UpdatePropSelector()
     // a new property has been added to the wallet, update the property selector
     QString spId = ui->propSelectorWidget->itemData(ui->propSelectorWidget->currentIndex()).toString();
     ui->propSelectorWidget->clear();
-    ui->propSelectorWidget->addItem("Select Here For More Info","2147483646"); //use last possible ID for summary for now
+    ui->propSelectorWidget->addItem("Select Here For Address Info","2147483646"); //use last possible ID for summary for now
     // populate property selector
     for (std::set<uint32_t>::iterator it = global_wallet_property_list.begin() ; it != global_wallet_property_list.end(); ++it) {
         uint32_t propertyId = *it;

@@ -28,7 +28,8 @@
 #include <QScreen>
 #include <QShortcut>
 #include <QWindowStateChangeEvent>
-
+#include <QTabWidget>
+#include <QWidget>
 
 #define BASE_WINDOW_WIDTH 1200
 #define BASE_WINDOW_HEIGHT 740
@@ -81,10 +82,10 @@ RPDCHAINGUI::RPDCHAINGUI(const NetworkStyle* networkStyle, QWidget* parent) :
         QFrame* centralWidget = new QFrame(this);
         this->setMinimumWidth(BASE_WINDOW_MIN_WIDTH);
         this->setMinimumHeight(BASE_WINDOW_MIN_HEIGHT);
-        QHBoxLayout* centralWidgetLayouot = new QHBoxLayout();
-        centralWidget->setLayout(centralWidgetLayouot);
-        centralWidgetLayouot->setContentsMargins(0,0,0,0);
-        centralWidgetLayouot->setSpacing(0);
+        QHBoxLayout* centralWidgetLayout = new QHBoxLayout();
+        centralWidget->setLayout(centralWidgetLayout);
+        centralWidgetLayout->setContentsMargins(0,0,0,0);
+        centralWidgetLayout->setSpacing(0);
 
         centralWidget->setProperty("cssClass", "container");
         centralWidget->setStyleSheet("padding:0px; border:none; margin:0px;");
@@ -135,11 +136,18 @@ RPDCHAINGUI::RPDCHAINGUI(const NetworkStyle* networkStyle, QWidget* parent) :
         usernamesPage = new UsernamesDialog(this);
 
         tabHolder = new QTabWidget();
-        tabHolder->setStyleSheet("background-color:#3c3c3b; border:none;");
-        tabHolder->addTab(sendTokenPage, tr("Send"));
-        tabHolder->addTab(tokensPage, tr("Tokens"));
-        tabHolder->addTab(nftsPage, tr("NFTs"));
-        tabHolder->addTab(usernamesPage, tr("Usernames"));
+        tabHolder->addTab(sendTokenPage, tr("SEND"));
+        tabHolder->addTab(tokensPage, tr("TOKENS"));
+        tabHolder->addTab(nftsPage, tr("NFTS"));
+        tabHolder->addTab(usernamesPage, tr("USERNAMES"));
+
+        tabHolder->setStyleSheet(
+            "QTabWidget::pane { border: none; } "
+            "QTabBar::tab { background-color: #80d1d5db; border: none; border-top-left-radius: 4px; border-top-right-radius: 4px; min-width: 150px; padding: 6px; color: #3c3c3b; font-family: monospace; font-size: 14px; } "
+            "QTabBar::tab:selected { background-color: #d1d5db; border: none; } "
+            "QTabBar::tab:!selected { margin-top: 2px; } "
+            "QTabWidget::pane:selected { background-color: #3c3c3b; } "
+        );
 
         // Add to parent
         stackedContainer->addWidget(dashboard);

@@ -3,7 +3,7 @@
 #include "tokencore/log.h"
 #include "tokencore/tokencore.h"
 #include "tokencore/rules.h"
-#include "tokencore/utilsbitcoin.h"
+#include "tokencore/utilsrpdchain.h"
 #include "tokencore/version.h"
 
 #include "main.h"

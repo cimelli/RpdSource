@@ -7,7 +7,7 @@
 #include "tokencore/notifications.h"
 #include "tokencore/tokencore.h"
 #include "tokencore/tx.h"
-#include "tokencore/utilsbitcoin.h"
+#include "tokencore/utilsrpdchain.h"
 
 #include "chain.h"
 #include "chainparams.h"

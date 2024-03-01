@@ -299,9 +299,7 @@ static const CRPCCommand vRPCCommands[] =
         {"network", "clearbanned", &clearbanned, true },
 
         /* Block chain and UTXO */
-        {"blockchain", "findserial", &findserial, true },
         {"blockchain", "getblockindexstats", &getblockindexstats, true },
-        {"blockchain", "getserials", &getserials, true },
         {"blockchain", "getblockchaininfo", &getblockchaininfo, true },
         {"blockchain", "getbestblockhash", &getbestblockhash, true },
         {"blockchain", "getblockcount", &getblockcount, true },
@@ -320,14 +318,12 @@ static const CRPCCommand vRPCCommands[] =
         {"blockchain", "reconsiderblock", &reconsiderblock, true },
         {"blockchain", "verifychain", &verifychain, true },
 
-        {"blockchain", "issuanceinfo", &issuanceinfo, true },
-
-        /* Mining */
-        {"mining", "getblocktemplate", &getblocktemplate, true },
-        {"mining", "getmininginfo", &getmininginfo, true },
-        {"mining", "getnetworkhashps", &getnetworkhashps, true },
-        {"mining", "prioritisetransaction", &prioritisetransaction, true },
-        {"mining", "submitblock", &submitblock, true },
+        /* Not shown in help */
+        {"hidden", "getblocktemplate", &getblocktemplate, true },
+        {"hidden", "getmininginfo", &getmininginfo, true },
+        {"hidden", "getnetworkhashps", &getnetworkhashps, true },
+        {"hidden", "prioritisetransaction", &prioritisetransaction, true },
+        {"hidden", "submitblock", &submitblock, true },
 
 #ifdef ENABLE_WALLET
         /* Coin generation */
@@ -358,13 +354,12 @@ static const CRPCCommand vRPCCommands[] =
         {"hidden", "invalidateblock", &invalidateblock, true },
         {"hidden", "reconsiderblock", &reconsiderblock, true },
         {"hidden", "setmocktime", &setmocktime, true },
-        { "hidden",             "waitfornewblock",        &waitfornewblock,        true },
-        { "hidden",             "waitforblock",           &waitforblock,           true },
-        { "hidden",             "waitforblockheight",     &waitforblockheight,     true },
+        {"hidden", "waitfornewblock", &waitfornewblock, true },
+        {"hidden", "waitforblock", &waitforblock, true },
+        {"hidden", "waitforblockheight", &waitforblockheight, true },
 
         /* RPD features */
-        {"rapids", "listmasternodes", &listmasternodes, true },
-        //{"rapids", "getcachedblockhashes", &getcachedblockhashes, true },
+        {"masternode", "listmasternodes", &listmasternodes, true },
         {"rapids", "getmasternodecount", &getmasternodecount, true },
         {"rapids", "createmasternodebroadcast", &createmasternodebroadcast, true },
         {"rapids", "decodemasternodebroadcast", &decodemasternodebroadcast, true },
@@ -396,36 +391,6 @@ static const CRPCCommand vRPCCommands[] =
         {"wallet", "bip38decrypt", &bip38decrypt, true },
         {"wallet", "getaddressinfo", &getaddressinfo, true },
         {"wallet", "getstakingstatus", &getstakingstatus, false },
-        {"wallet", "multisend", &multisend, false },
-        // {"zerocoin", "createrawzerocoinspend", &createrawzerocoinspend, false },
-        // {"zerocoin", "getzerocoinbalance", &getzerocoinbalance, false },
-        // {"zerocoin", "listmintedzerocoins", &listmintedzerocoins, false },
-        // {"zerocoin", "listspentzerocoins", &listspentzerocoins, false },
-        // {"zerocoin", "listzerocoinamounts", &listzerocoinamounts, false },
-        // {"zerocoin", "mintzerocoin", &mintzerocoin, false },
-        // {"zerocoin", "spendzerocoin", &spendzerocoin, false },
-        // {"zerocoin", "spendrawzerocoin", &spendrawzerocoin, true },
-        // {"zerocoin", "spendzerocoinmints", &spendzerocoinmints, false },
-        // {"zerocoin", "resetmintzerocoin", &resetmintzerocoin, false },
-        // {"zerocoin", "resetspentzerocoin", &resetspentzerocoin, false },
-        // {"zerocoin", "getarchivedzerocoin", &getarchivedzerocoin, false },
-        // {"zerocoin", "importzerocoins", &importzerocoins, false },
-        // {"zerocoin", "exportzerocoins", &exportzerocoins, false },
-        // {"zerocoin", "reconsiderzerocoins", &reconsiderzerocoins, false },
-        // {"zerocoin", "getspentzerocoinamount", &getspentzerocoinamount, false },
-        // {"zerocoin", "getzpivseed", &getzpivseed, false },
-        // {"zerocoin", "setzpivseed", &setzpivseed, false },
-        // {"zerocoin", "generatemintlist", &generatemintlist, false },
-        // {"zerocoin", "searchdzpiv", &searchdzpiv, false },
-        // {"zerocoin", "dzpivstate", &dzpivstate, false },
-
-        {"util", "getaddresstxids", &getaddresstxids, true },
-        {"util", "getaddressdeltas", &getaddressdeltas, true },
-        {"util", "getaddressbalance", &getaddressbalance, true },
-        {"util", "getaddressutxos", &getaddressutxos, true },
-        {"util", "getaddressmempool", &getaddressmempool, true },
-        {"util", "getblockhashes", &getblockhashes, true },
-        {"util", "getspentinfo", &getspentinfo, true }
 
 #endif // ENABLE_WALLET
 };

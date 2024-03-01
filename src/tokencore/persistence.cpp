@@ -13,7 +13,7 @@
 #include "tokencore/rules.h"
 #include "tokencore/sp.h"
 #include "tokencore/tally.h"
-#include "tokencore/utilsbitcoin.h"
+#include "tokencore/utilsrpdchain.h"
 
 #include "chain.h"
 #include "main.h"

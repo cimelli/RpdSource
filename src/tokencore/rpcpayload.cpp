@@ -216,8 +216,8 @@ static UniValue createtokenpayloadissuancefixed(const JSONRPCRequest& request)
             "\"payload\"             (string) the hex-encoded payload\n"
 
             "\nExamples:\n"
-            + HelpExampleCli("createtokenpayloadissuancefixed", "2 1 0 \"Companies\" \"Bitcoin Mining\" \"Quantum Miner\" \"TICKER\" \"\" \"\" \"1000000\"")
-            + HelpExampleRpc("createtokenpayloadissuancefixed", "2, 1, 0, \"Companies\", \"Bitcoin Mining\", \"Quantum Miner\", \"TICKER\", \"\", \"\", \"1000000\"")
+            + HelpExampleCli("createtokenpayloadissuancefixed", "2 1 0 \"Category\" \"Subcategory\" \"Name\" \"TICKER\" \"\" \"\" \"1000000\"")
+            + HelpExampleRpc("createtokenpayloadissuancefixed", "2 1 0 \"Category\", \"Subcategory\", \"Name\", \"TICKER\", \"\", \"\", \"1000000\",")
         );
 
     uint8_t ecosystem = ParseEcosystem(request.params[0]);
@@ -279,8 +279,8 @@ static UniValue createtokenpayloadissuancecrowdsale(const JSONRPCRequest& reques
             "\"payload\"             (string) the hex-encoded payload\n"
 
             "\nExamples:\n"
-            + HelpExampleCli("createtokenpayloadissuancecrowdsale", "2 1 0 \"Companies\" \"Bitcoin Mining\" \"Quantum Miner\" \"TICKER\" \"\" \"\" \"RPD\" \"100\" 1483228800 30 2")
-            + HelpExampleRpc("createtokenpayloadissuancecrowdsale", "2, 1, 0, \"Companies\", \"Bitcoin Mining\", \"Quantum Miner\", \"TICKER\", \"\", \"\", \"RPD\", \"100\", 1483228800, 30, 2")
+            + HelpExampleCli("createtokenpayloadissuancecrowdsale", "2 1 0 \"Category\" \"Subcategory\" \"Name\" \"TICKER\" \"\" \"\" \"100\" 1483228800 30 2")
+            + HelpExampleRpc("createtokenpayloadissuancecrowdsale", "2, 1, 0, \"Category\", \"Subcategory\", \"Name\", \"TICKER\", \"\", \"\", \"100\", 1483228800, 30, 2")
         );
 
     uint8_t ecosystem = ParseEcosystem(request.params[0]);
@@ -345,8 +345,8 @@ static UniValue createtokenpayloadissuancemanaged(const JSONRPCRequest& request)
             "\"payload\"             (string) the hex-encoded payload\n"
 
             "\nExamples:\n"
-            + HelpExampleCli("createtokenpayloadissuancemanaged", "2 1 0 \"Companies\" \"Bitcoin Mining\" \"Quantum Miner\" \"TICKER\" \"\" \"\"")
-            + HelpExampleRpc("createtokenpayloadissuancemanaged", "2, 1, 0, \"Companies\", \"Bitcoin Mining\", \"Quantum Miner\", \"TICKER\", \"\", \"\"")
+            + HelpExampleCli("createtokenpayloadissuancemanaged", "2 1 0 \"Category\" \"Subcategory\" \"Name\" \"TICKER\" \"\" \"\"")
+            + HelpExampleRpc("createtokenpayloadissuancemanaged", "2, 1, 0, \"Category\", \"Subcategory\", \"Name\", \"TICKER\", \"\", \"\"")
         );
 
     uint8_t ecosystem = ParseEcosystem(request.params[0]);
@@ -747,8 +747,8 @@ static UniValue token_createpayload_freeze(const JSONRPCRequest& request)
             "\"payload\"             (string) the hex-encoded payload\n"
 
             "\nExamples:\n"
-            + HelpExampleCli("token_createpayload_freeze", "\"3HTHRxu3aSDV4deakjC7VmsiUp7c6dfbvs\" 1 \"100\"")
-            + HelpExampleRpc("token_createpayload_freeze", "\"3HTHRxu3aSDV4deakjC7VmsiUp7c6dfbvs\", 1, \"100\"")
+            + HelpExampleCli("token_createpayload_freeze", "\"RHTHRxu3aSDV4deakjC7VmsiUp7c6dfbvs\" 1 \"100\"")
+            + HelpExampleRpc("token_createpayload_freeze", "\"RHTHRxu3aSDV4deakjC7VmsiUp7c6dfbvs\", 1, \"100\"")
         );
 
     std::string refAddress = ParseAddress(request.params[0]);
@@ -779,8 +779,8 @@ static UniValue token_createpayload_unfreeze(const JSONRPCRequest& request)
             "\"payload\"             (string) the hex-encoded payload\n"
 
             "\nExamples:\n"
-            + HelpExampleCli("token_createpayload_unfreeze", "\"3HTHRxu3aSDV4deakjC7VmsiUp7c6dfbvs\" 1 \"100\"")
-            + HelpExampleRpc("token_createpayload_unfreeze", "\"3HTHRxu3aSDV4deakjC7VmsiUp7c6dfbvs\", 1, \"100\"")
+            + HelpExampleCli("token_createpayload_unfreeze", "\"RHTHRxu3aSDV4deakjC7VmsiUp7c6dfbvs\" 1 \"100\"")
+            + HelpExampleRpc("token_createpayload_unfreeze", "\"RHTHRxu3aSDV4deakjC7VmsiUp7c6dfbvs\", 1, \"100\"")
         );
 
     std::string refAddress = ParseAddress(request.params[0]);

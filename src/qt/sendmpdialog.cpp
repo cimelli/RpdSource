@@ -21,7 +21,7 @@
 #include "tokencore/pending.h"
 #include "tokencore/sp.h"
 #include "tokencore/tally.h"
-#include "tokencore/utilsbitcoin.h"
+#include "tokencore/utilsrpdchain.h"
 #include "tokencore/wallettxbuilder.h"
 #include "tokencore/walletutils.h"
 #include "tokencore/tx.h"
@@ -78,9 +78,6 @@ SendMPDialog::SendMPDialog(QWidget *parent) :
     ui->sendFromComboBox->setView(new QListView());
     ui->propertyComboBox->setView(new QListView());
 
-    ui->copyButton->setLayoutDirection(Qt::RightToLeft);
-    setCssProperty(ui->copyButton, "btn-secundary-copy");
-
 #if QT_VERSION >= 0x040700 // populate placeholder text
     ui->sendToLineEdit->setPlaceholderText("Enter address");
     ui->amountLineEdit->setPlaceholderText("Enter amount");
@@ -91,7 +88,6 @@ SendMPDialog::SendMPDialog(QWidget *parent) :
     connect(ui->sendFromComboBox, SIGNAL(activated(int)), this, SLOT(sendFromComboBoxChanged(int)));
     connect(ui->clearButton, SIGNAL(clicked()), this, SLOT(clearButtonClicked()));
     connect(ui->sendButton, SIGNAL(clicked()), this, SLOT(sendButtonClicked()));
-    connect(ui->copyButton, SIGNAL(clicked()), this, SLOT(onCopyClicked()));
 
     // initial update
     // balancesUpdated();
@@ -405,20 +401,6 @@ void SendMPDialog::clearButtonClicked()
 void SendMPDialog::sendButtonClicked()
 {
     sendMPTransaction();
-}
-
-void SendMPDialog::onCopyClicked()
-{
-    GUIUtil::setClipboard(ui->sendFromComboBox->currentText());
-    inform(tr("Address copied"));
-}
-
-void SendMPDialog::inform(const QString& text)
-{
-    if (!snackBar) snackBar = new SnackBar(nullptr, this);
-    snackBar->setText(text);
-    snackBar->resize(this->width(), snackBar->height());
-    openDialog(snackBar, this);
 }
 
 void SendMPDialog::balancesUpdated()

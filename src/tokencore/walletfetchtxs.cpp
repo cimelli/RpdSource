@@ -12,7 +12,7 @@
 #include "tokencore/log.h"
 #include "tokencore/tokencore.h"
 #include "tokencore/pending.h"
-#include "tokencore/utilsbitcoin.h"
+#include "tokencore/utilsrpdchain.h"
 
 #include "init.h"
 #include "main.h"

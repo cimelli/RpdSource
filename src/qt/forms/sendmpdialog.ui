@@ -90,50 +90,43 @@
           </widget>
          </item>
          <item>
-          <widget class="QComboBox" name="sendFromComboBox">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QLabel" name="balanceLabel">
-           <property name="text">
-            <string>Available: 0.00000000</string>
-           </property>
-           <property name="margin">
-            <number>8,75,8,8</number>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QPushButton" name="copyButton">
-           <property name="text">
-            <string>Copy</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <spacer name="horizontalSpacer_2">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeType">
-            <enum>QSizePolicy::Fixed</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>15</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
-        </layout>
-       </item>
+            <widget class="QComboBox" name="sendFromComboBox">
+                <property name="sizePolicy">
+                    <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                        <horstretch>0</horstretch>
+                        <verstretch>0</verstretch>
+                    </sizepolicy>
+                </property>
+            </widget>
+        </item>
+        <item>
+            <widget class="QLabel" name="balanceLabel">
+                <property name="text">
+                    <string>Available: 0.00000000</string>
+                </property>
+                <property name="margin">
+                    <number>8</number>
+                </property>
+            </widget>
+        </item>
+        <item>
+            <spacer name="horizontalSpacer_2">
+                <property name="orientation">
+                    <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeType">
+                    <enum>QSizePolicy::Fixed</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                    <size>
+                        <width>15</width>
+                        <height>20</height>
+                    </size>
+                </property>
+            </spacer>
+        </item>
+       </layout>
+      </item>
        <item>
         <layout class="QHBoxLayout" name="ToHLayout">
          <item>

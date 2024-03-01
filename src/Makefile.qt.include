@@ -19,9 +19,6 @@ QT_FORMS_UI = \
   qt/forms/optionsdialog.ui \
   qt/forms/rpcconsole.ui \
   qt/forms/sendmpdialog.ui \
-  qt/forms/lookupaddressdialog.ui \
-  qt/forms/lookupspdialog.ui \
-  qt/forms/lookuptxdialog.ui \
   qt/forms/tokensdialog.ui \
   qt/forms/nftsdialog.ui \
   qt/forms/usernamesdialog.ui \
@@ -107,9 +104,6 @@ QT_MOC_CPP = \
   qt/moc_utilitydialog.cpp \
   qt/moc_walletmodel.cpp \
   qt/moc_sendmpdialog.cpp \
-  qt/moc_lookupaddressdialog.cpp \
-  qt/moc_lookupspdialog.cpp \
-  qt/moc_lookuptxdialog.cpp \
   qt/moc_tokensdialog.cpp \
   qt/moc_nftsdialog.cpp \
   qt/moc_usernamesdialog.cpp \
@@ -230,9 +224,6 @@ BITCOIN_QT_H = \
   qt/rpdchain/pfborderimage.h \
   qt/rpdchain/loadingdialog.h \
   qt/winshutdownmonitor.h \
-  qt/lookupaddressdialog.h \
-  qt/lookupspdialog.h \
-  qt/lookuptxdialog.h \
   qt/tokensdialog.h \
   qt/nftsdialog.h \
   qt/usernamesdialog.h \
@@ -490,9 +481,6 @@ BITCOIN_QT_WALLET_CPP = \
   qt/walletmodel.cpp \
   qt/walletmodeltransaction.cpp \
   qt/sendmpdialog.cpp \
-  qt/lookupaddressdialog.cpp \
-  qt/lookupspdialog.cpp \
-  qt/lookuptxdialog.cpp \
   qt/tokensdialog.cpp \
   qt/nftsdialog.cpp \
   qt/usernamesdialog.cpp \
