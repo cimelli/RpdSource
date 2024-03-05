@@ -41,6 +41,8 @@
 
 #include <stdint.h>
 
+#include "tokencore/utilsui.h"
+
 #include <boost/thread.hpp>
 
 #include <QApplication>
@@ -531,6 +533,9 @@ WId BitcoinApplication::getMainWinId() const
 int main(int argc, char* argv[])
 {
     SetupEnvironment();
+    
+    // Indicate UI mode
+     fQtMode = true;
 
     /// 1. Parse command-line options. These take precedence over anything else.
     // Command-line options take precedence:

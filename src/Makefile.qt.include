@@ -18,6 +18,10 @@ QT_FORMS_UI = \
   qt/forms/openuridialog.ui \
   qt/forms/optionsdialog.ui \
   qt/forms/rpcconsole.ui \
+  qt/forms/sendmpdialog.ui \
+  qt/forms/tokensdialog.ui \
+  qt/forms/nftsdialog.ui \
+  qt/forms/usernamesdialog.ui \
   qt/rpdchain/forms/loadingdialog.ui \
   qt/rpdchain/forms/snackbar.ui \
   qt/rpdchain/forms/navmenuwidget.ui \
@@ -99,6 +103,10 @@ QT_MOC_CPP = \
   qt/moc_transactiontablemodel.cpp \
   qt/moc_utilitydialog.cpp \
   qt/moc_walletmodel.cpp \
+  qt/moc_sendmpdialog.cpp \
+  qt/moc_tokensdialog.cpp \
+  qt/moc_nftsdialog.cpp \
+  qt/moc_usernamesdialog.cpp \
   qt/rpdchain/moc_loadingdialog.cpp \
   qt/rpdchain/moc_pwidget.cpp \
   qt/rpdchain/moc_focuseddialog.cpp \
@@ -216,6 +224,12 @@ BITCOIN_QT_H = \
   qt/rpdchain/pfborderimage.h \
   qt/rpdchain/loadingdialog.h \
   qt/winshutdownmonitor.h \
+  qt/tokensdialog.h \
+  qt/nftsdialog.h \
+  qt/usernamesdialog.h \
+  qt/tokencore_init.h \
+  qt/sendmpdialog.h \
+  qt/tokencore_qtutils.h \
   qt/rpdchain/pwidget.h \
   qt/rpdchain/focuseddialog.h \
   qt/rpdchain/guitransactionsutils.h \
@@ -288,11 +302,8 @@ RES_ICONS = \
   qt/res/icons/tx_output.svg \
   qt/res/icons/tx_input.svg \
   qt/rpdchain/res/img/bg-dashboard-banner.png \
-  qt/rpdchain/res/img/bg-multi-number-dark.svg \
   qt/rpdchain/res/img/ic-check-locked.svg \
   qt/rpdchain/res/img/ic-nav-address.svg \
-  qt/rpdchain/res/img/ic-update.svg \
-  qt/rpdchain/res/img/bg-multi-number.svg \
   qt/rpdchain/res/img/ic-check-mint-off.svg \
   qt/rpdchain/res/img/ic-nav-cold-staking.svg \
   qt/rpdchain/res/img/ic-nav-cold-staking-active.svg \
@@ -320,59 +331,38 @@ RES_ICONS = \
   qt/rpdchain/res/img/img-dashboard-banner.jpg \
   qt/rpdchain/res/img/btn-radio-active.svg \
   qt/rpdchain/res/img/ic-check-sync-off.svg \
-  qt/rpdchain/res/img/ic-nav-privacy-active.svg \
   qt/rpdchain/res/img/img-empty-contacts.svg \
   qt/rpdchain/res/img/btn-radio-off.svg \
-  qt/rpdchain/res/img/ic-nav-privacy-hover.svg \
   qt/rpdchain/res/img/img-empty-dark-contacts.svg \
-  qt/rpdchain/res/img/ic-contact-arrow-down.svg \
-  qt/rpdchain/res/img/ic-contact-arrow-down-white.svg \
+  qt/rpdchain/res/img/ic-arrow-right-hover.svg \
   qt/rpdchain/res/img/ic-check-sync.svg \
   qt/rpdchain/res/img/ic-check-faq.svg \
-  qt/rpdchain/res/img/ic-nav-privacy.svg \
   qt/rpdchain/res/img/img-empty-dark-error.svg \
   qt/rpdchain/res/img/ic-add-label.svg \
   qt/rpdchain/res/img/ic-pending.svg \
-  qt/rpdchain/res/img/ic-check-theme-dark.svg \
   qt/rpdchain/res/img/ic-nav-receive-active.svg \
   qt/rpdchain/res/img/img-empty-dark-masternode.svg \
-  qt/rpdchain/res/img/ic-add-liliac.svg \
-  qt/rpdchain/res/img/ic-check-theme-light.svg \
   qt/rpdchain/res/img/ic-nav-receive-hover.svg \
   qt/rpdchain/res/img/img-empty-dark-multisend.svg \
-  qt/rpdchain/res/img/ic-add-purple.svg \
-  qt/rpdchain/res/img/ic-check-white.svg \
   qt/rpdchain/res/img/ic-nav-receive.svg \
   qt/rpdchain/res/img/img-empty-dark-peers.svg \
-  qt/rpdchain/res/img/ic-add.svg \
   qt/rpdchain/res/img/ic-check.svg \
   qt/rpdchain/res/img/ic-nav-send-active.svg \
   qt/rpdchain/res/img/img-empty-dark-staking-off.svg \
   qt/rpdchain/res/img/img-empty-dark-staking-on.svg \
-  qt/rpdchain/res/img/ic-address-book-grey.svg \
-  qt/rpdchain/res/img/ic-chevron-left.svg \
   qt/rpdchain/res/img/ic-nav-send-hover.svg \
   qt/rpdchain/res/img/img-empty-dark-transactions.svg \
-  qt/rpdchain/res/img/ic-address-book-white.svg \
-  qt/rpdchain/res/img/ic-chevron-right.svg \
   qt/rpdchain/res/img/ic-nav-send.svg \
   qt/rpdchain/res/img/img-empty-error.svg \
-  qt/rpdchain/res/img/ic-address-book.svg \
-  qt/rpdchain/res/img/ic-clear-liliac.svg \
   qt/rpdchain/res/img/ic-nav-settings-active.svg \
   qt/rpdchain/res/img/img-empty-masternode.svg \
-  qt/rpdchain/res/img/ic-address-send-white.svg \
-  qt/rpdchain/res/img/ic-clear-purple.svg \
   qt/rpdchain/res/img/ic-nav-settings-hover.svg \
   qt/rpdchain/res/img/img-empty-multisend.svg \
   qt/rpdchain/res/img/ic-address-send.svg \
   qt/rpdchain/res/img/ic-close-white.svg \
   qt/rpdchain/res/img/ic-nav-settings.svg \
   qt/rpdchain/res/img/img-empty-peers.svg \
-  qt/rpdchain/res/img/img-empty-privacy.svg \
-  qt/rpdchain/res/img/img-empty-privacy-dark.svg \
   qt/rpdchain/res/img/ic-arrow-drop-down-white.svg \
-  qt/rpdchain/res/img/ic-close.svg \
   qt/rpdchain/res/img/ic-radio-liliac-on.svg \
   qt/rpdchain/res/img/img-empty-staking-off.svg \
   qt/rpdchain/res/img/ic-arrow-drop-down.svg \
@@ -385,30 +375,20 @@ RES_ICONS = \
   qt/rpdchain/res/img/ic-arrow-drop-up.svg \
   qt/rpdchain/res/img/ic-received.svg \
   qt/rpdchain/res/img/img-logo-rpdchain.png \
-  qt/rpdchain/res/img/ic-arrow-drop-white-down.svg \
-  qt/rpdchain/res/img/ic-combo-box.svg \
   qt/rpdchain/res/img/ic-send.svg \
-  qt/rpdchain/res/img/ic-arrow-purple-down.svg \
   qt/rpdchain/res/img/ic-connect.svg \
   qt/rpdchain/res/img/ic-submenu-lock.svg \
   qt/rpdchain/res/img/img-logo-rpdchain.svg \
   qt/rpdchain/res/img/ic-arrow-right-white.svg \
   qt/rpdchain/res/img/ic-arrow-left-white.svg \
-  qt/rpdchain/res/img/ic-arrow-left.svg \
-  qt/rpdchain/res/img/ic-copy-liliac.svg \
   qt/rpdchain/res/img/ic-submenu-staking.svg \
   qt/rpdchain/res/img/img-nav-logo-rpdchain.png \
-  qt/rpdchain/res/img/ic-arrow-right.svg \
   qt/rpdchain/res/img/ic-copy.svg \
   qt/rpdchain/res/img/ic-copy-big.svg \
-  qt/rpdchain/res/img/ic-copy-big-white.svg \
   qt/rpdchain/res/img/ic-submenu-unlock.svg \
   qt/rpdchain/res/img/img-nav-logo.png \
-  qt/rpdchain/res/img/ic-arrow-white-left.svg \
   qt/rpdchain/res/img/ic-exit.svg \
-  qt/rpdchain/res/img/ic-switch-liliac-on.svg \
   qt/rpdchain/res/img/img-nav-logo.svg \
-  qt/rpdchain/res/img/ic-arrow-white-right.svg \
   qt/rpdchain/res/img/ic-expand.svg \
   qt/rpdchain/res/img/ic-switch-off.svg \
   qt/rpdchain/res/img/img-qr-test-big.png \
@@ -420,7 +400,6 @@ RES_ICONS = \
   qt/rpdchain/res/img/ic-check-box-dark-active.svg \
   qt/rpdchain/res/img/ic-check-box-indeterminate.svg \
   qt/rpdchain/res/img/ic-check-box-liliac-indeterminate.svg \
-  qt/rpdchain/res/img/ic-label-liliac.svg \
   qt/rpdchain/res/img/ic-transaction-warning.svg \
   qt/rpdchain/res/img/ic-transaction-mint.svg \
   qt/rpdchain/res/img/ic-transaction-mint-inactive.svg \
@@ -431,14 +410,12 @@ RES_ICONS = \
   qt/rpdchain/res/img/ic-check-connect-off.svg \
   qt/rpdchain/res/img/ic-check-tor-off.svg \
   qt/rpdchain/res/img/ic-check-tor.svg \
-  qt/rpdchain/res/img/ic-label.svg \
   qt/rpdchain/res/img/ic-transaction-received.svg \
   qt/rpdchain/res/img/ic-transaction-received-inactive.svg \
   qt/rpdchain/res/img/ic-check-connect.svg \
   qt/rpdchain/res/img/ic-menu-hover.svg \
   qt/rpdchain/res/img/ic-transaction-sent.svg \
   qt/rpdchain/res/img/ic-transaction-sent-inactive.svg \
-  qt/rpdchain/res/img/ic-check-dark.svg \
   qt/rpdchain/res/img/ic-mint.svg \
   qt/rpdchain/res/img/ic-transaction-staked.svg \
   qt/rpdchain/res/img/ic-transaction-staked-inactive.svg \
@@ -447,9 +424,6 @@ RES_ICONS = \
   qt/rpdchain/res/img/ic-unlock-staking.svg \
   qt/rpdchain/res/img/ic-check-locked-off.svg \
   qt/rpdchain/res/img/ic-nav-address-hover.svg \
-  qt/rpdchain/res/img/ic-update-liliac.svg \
-  qt/rpdchain/res/img/ic-arrow-drop-down-purple.svg \
-  qt/rpdchain/res/img/ic-arrow-drop-up-purple.svg \
   qt/rpdchain/res/img/ic-check-liliac-indeterminate.svg \
   qt/rpdchain/res/img/ic-check-box-liliac-indeterminate.svg \
   qt/rpdchain/res/img/ic-transaction-stake-delegated.svg \
@@ -459,8 +433,9 @@ RES_ICONS = \
   qt/rpdchain/res/img/ic-transaction-cs-contract.svg \
   qt/rpdchain/res/img/ic-transaction-cs-contract-inactive.svg \
   qt/rpdchain/res/img/ic-check-box-indeterminate.svg \
-  qt/rpdchain/res/img/ani-loading.gif
-
+  qt/rpdchain/res/img/ic-nav-tokens-hover.svg \
+  qt/rpdchain/res/img/ic-nav-tokens-active.svg \
+  qt/rpdchain/res/img/ic-nav-tokens.svg
 
 
 BITCOIN_QT_BASE_CPP = \
@@ -482,7 +457,10 @@ BITCOIN_QT_BASE_CPP = \
   qt/qvaluecombobox.cpp \
   qt/rpcconsole.cpp \
   qt/trafficgraphwidget.cpp \
-  qt/utilitydialog.cpp
+  qt/utilitydialog.cpp \
+  qt/utilitydialog.cpp \
+  qt/tokencore_init.cpp \
+  qt/tokencore_qtutils.cpp
 
 BITCOIN_QT_WINDOWS_CPP = qt/winshutdownmonitor.cpp
 
@@ -502,6 +480,10 @@ BITCOIN_QT_WALLET_CPP = \
   qt/transactiontablemodel.cpp \
   qt/walletmodel.cpp \
   qt/walletmodeltransaction.cpp \
+  qt/sendmpdialog.cpp \
+  qt/tokensdialog.cpp \
+  qt/nftsdialog.cpp \
+  qt/usernamesdialog.cpp \
   qt/rpdchain/loadingdialog.cpp \
   qt/rpdchain/pwidget.cpp \
   qt/rpdchain/focuseddialog.cpp \
@@ -579,8 +561,7 @@ RES_IMAGES = \
 
 RES_CSS = \
   qt/res/css/default.css \
-  qt/rpdchain/res/css/style_dark.css \
-  qt/rpdchain/res/css/style_light.css
+  qt/rpdchain/res/css/style_dark.css
 
 BITCOIN_RC = qt/res/rpdchain-qt-res.rc
 

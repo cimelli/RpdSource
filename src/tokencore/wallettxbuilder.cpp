@@ -111,7 +111,7 @@ int WalletTxBuilder(
         vecRecipients.push_back(recipient);
     }
 
-    // Ask the wallet to create the transaction (note mining fee determined by Bitcoin Core params)
+    // Ask the wallet to create the transaction (note mining fee determined by RPDCHAIN Core params)
     int nChangePosInOut = vecRecipients.size();
     if (!pwalletMain->CreateTransaction(vecRecipients, wtxNew, reserveKey, nFeeRet, nChangePosInOut, strFailReason, &coinControl)) {
         PrintToLog("%s: ERROR: wallet transaction creation failed: %s\n", __func__, strFailReason);
@@ -488,7 +488,7 @@ int CreateDExTransaction(const std::string& buyerAddress, const std::string& sel
         vecRecipients.push_back({royaltiesDestScript, royaltiesAmount, false}); // Royalties
     }
 
-    // Ask the wallet to create the transaction (note mining fee determined by Bitcoin Core params)
+    // Ask the wallet to create the transaction (note mining fee determined by RPDCHAIN Core params)
     CAmount nFeeRet = 0;
     int nChangePosInOut = -1;
     std::string strFailReason;

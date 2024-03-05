@@ -4,7 +4,7 @@
 #include "tokencore/dex.h"
 #include "tokencore/tokencore.h"
 #include "tokencore/sp.h"
-#include "tokencore/utilsbitcoin.h"
+#include "tokencore/utilsrpdchain.h"
 
 #include "amount.h"
 #include "main.h"

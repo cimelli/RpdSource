@@ -61,7 +61,7 @@ WelcomeContentWidget::WelcomeContentWidget(QWidget *parent) :
     // position
     backButton->move(backX, backY);
     backButton->setStyleSheet("QPushButton {"
-                                  "    background: url(://ic-arrow-white-left);"
+                                  "    background: url(://ic-arrow-left-white);"
                                   "    background-repeat: no-repeat;"
                                   "    background-position: center;"
                                   "    border: 0;"
@@ -70,11 +70,11 @@ WelcomeContentWidget::WelcomeContentWidget(QWidget *parent) :
                                   "    border-radius: 2px;"
                                   "}"
                                   "QPushButton:hover {"
-                                  "    background-color: #ff5533;"
+                                  "    background-color: #50ff5533;"
                                   "}");
     nextButton->move(nextX, nextY);
     nextButton->setStyleSheet("QPushButton {"
-                              "    background: url(://ic-arrow-white-right);"
+                              "    background: url(://ic-arrow-right-white);"
                               "    background-repeat: no-repeat;"
                               "    background-position: center;"
                               "    border: 0;"
@@ -83,7 +83,7 @@ WelcomeContentWidget::WelcomeContentWidget(QWidget *parent) :
                               "    border-radius: 2px;"
                               "}"
                               "QPushButton:hover {"
-                              "    background-color: #ff5533;"
+                              "    background-color: #50ff5533;"
                               "}");
 
     if (pos == 0) {

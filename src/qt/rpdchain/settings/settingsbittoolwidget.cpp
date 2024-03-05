@@ -85,7 +85,7 @@ SettingsBitToolWidget::SettingsBitToolWidget(RPDCHAINGUI* _window, QWidget *pare
     ui->encryptedKeyOut_ENC->setReadOnly(true);
     initCssEditLine(ui->encryptedKeyOut_ENC);
 
-    btnContact = ui->addressIn_ENC->addAction(QIcon("://ic-contact-arrow-down"), QLineEdit::TrailingPosition);
+    btnContact = ui->addressIn_ENC->addAction(QIcon("://ic-arrow-drop-down"), QLineEdit::TrailingPosition);
     setCssBtnPrimary(ui->pushButtonEncrypt);
     setCssBtnSecondary(ui->pushButtonClear);
     setCssBtnSecondary(ui->pushButtonDecryptClear);

@@ -255,7 +255,7 @@ public:
         validOutputAddressesForSTM[output] = address;
     }
 
-    /** Return an output address, if it's considered as valid Omni destination. */
+    /** Return an output address, if it's considered as valid token destination. */
     bool getValidStmAddressAt(uint8_t output, std::string& addressOut) {
         if (validOutputAddressesForSTM.find(output) != validOutputAddressesForSTM.end()) {
             addressOut = validOutputAddressesForSTM[output];

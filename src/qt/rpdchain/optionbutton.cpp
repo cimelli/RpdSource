@@ -57,7 +57,7 @@ void OptionButton::setActive(bool isActive)
 {
     if (isActive) {
         ui->layoutCircle->setVisible(true);
-        setCssProperty(ui->labelTitleChange, "btn-title-purple");
+        setCssProperty(ui->labelTitleChange, "btn-title-orange");
         updateStyle(ui->labelTitleChange);
     } else {
         ui->layoutCircle->setVisible(false);

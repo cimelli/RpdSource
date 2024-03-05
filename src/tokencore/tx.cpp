@@ -18,7 +18,7 @@
 #include "tokencore/rules.h"
 #include "tokencore/sp.h"
 #include "tokencore/sto.h"
-#include "tokencore/utilsbitcoin.h"
+#include "tokencore/utilsrpdchain.h"
 #include "tokencore/version.h"
 
 #include "rpc/server.h"
@@ -47,10 +47,10 @@ using namespace mastercore;
 
 static const std::regex IPFS_CHARACTERS("Qm[1-9A-HJ-NP-Za-km-z]{44,}|b[A-Za-z2-7]{58,}|B[A-Z2-7]{58,}|z[1-9A-HJ-NP-Za-km-z]{48,}|F[0-9A-F]{50,}");
 static const std::regex TOKEN_SUB_CHARACTERS("^[r]?[A-Z0-9._]{3,20}#[A-Z0-9._]{3,20}$");
-static const std::regex PROTECTED_TICKERS("^RPD$|^RAPIDS$|^RAPIDSNETWORK$");
+static const std::regex PROTECTED_TICKERS("^RPD$|^RPDCHAIN$");
 static const std::regex TOKEN_TICKER_CHARACTERS("^[r]?[A-Z0-9._]{3,20}$");
 static const std::regex USERNAME_CHARACTERS("^[a-z0-9._]{3,20}.rpd$");
-static const std::regex PROTECTED_USERNAMES("^rapids.rpd$|^rpd.rpd$");
+static const std::regex PROTECTED_USERNAMES("^rpdchain.rpd$|^rpd.rpd$");
 
 std::vector<std::string> SplitSubTicker(const std::string &s) {
     std::vector<std::string> elements;
@@ -1458,11 +1458,6 @@ int CMPTransaction::logicMath_TradeOffer()
         return (PKT_ERROR_TRADEOFFER -23);
     }
 
-    if (TOKEN_PROPERTY_TMSC != property && TOKEN_PROPERTY_MSC != property) {
-        PrintToLog("%s(): rejected: property for sale %d must be OMN or TOMN\n", __func__, property);
-        return (PKT_ERROR_TRADEOFFER -47);
-    }
-
     // ------------------------------------------
 
     int rc = PKT_ERROR_TRADEOFFER;
@@ -2801,14 +2796,14 @@ int CMPTransaction::logicMath_RapidsPayment()
     CMPTransaction mp_obj;
     int parseRC = ParseTransaction(linked_tx, linked_blockHeight, 0, mp_obj, linked_blockTime);
     if (parseRC < 0) {
-        PrintToLog("%s(): rejected: linked transaction %s is not an Omni layer transaction\n",
+        PrintToLog("%s(): rejected: linked transaction %s is not an token layer transaction\n",
                 __func__,
                 linked_txid.GetHex());
         return MP_TX_IS_NOT_TOKEN_PROTOCOL;
     }
 
     if (!mp_obj.interpret_Transaction()) {
-        PrintToLog("%s(): rejected: linked transaction %s is not an Omni layer transaction\n",
+        PrintToLog("%s(): rejected: linked transaction %s is not an token layer transaction\n",
                 __func__,
                 linked_txid.GetHex());
         return MP_TX_IS_NOT_TOKEN_PROTOCOL;

@@ -22,7 +22,7 @@ static const bool DEFAULT_SPLASHSCREEN = true;
 #define STYLE_INVALID "background:#FF5533"
 
 /* Transaction list -- unconfirmed transaction */
-#define COLOR_UNCONFIRMED QColor(209, 213, 219)
+#define COLOR_UNCONFIRMED QColor(209, 213, 219, 0.5)
 /* Transaction list -- negative amount */
 #define COLOR_NEGATIVE QColor(209, 213, 219, 0.5)
 /* Transaction list -- bare address (without label) */
@@ -32,7 +32,7 @@ static const bool DEFAULT_SPLASHSCREEN = true;
 /* Transaction list -- TX status decoration - default color */
 #define COLOR_BLACK QColor(209, 213, 219)
 /* Transaction list -- TX status decoration - conflicted */
-#define COLOR_CONFLICTED QColor(209, 213, 219)
+#define COLOR_CONFLICTED QColor(209, 213, 219, 0.5)
 /* Transaction list -- TX status decoration - orphan (RPD Light Gray #d1d5db) */
 #define COLOR_ORPHAN QColor(209, 213, 219, 0.5)
 /* Transaction list -- TX status decoration - stake (RPD Orange #ff5533) */

@@ -4,7 +4,7 @@
 #include "tokencore/tokencore.h"
 #include "tokencore/rules.h"
 #include "tokencore/script.h"
-#include "tokencore/utilsbitcoin.h"
+#include "tokencore/utilsrpdchain.h"
 
 #include "amount.h"
 #include "base58.h"
@@ -35,7 +35,7 @@ namespace mastercore
 bool AddressToPubKey(const std::string& key, CPubKey& pubKey)
 {
 #ifdef ENABLE_WALLET
-    // Case 1: Bitcoin address and the key is in the wallet
+    // Case 1: RPDCHAIN address and the key is in the wallet
     CTxDestination dest = DecodeDestination(key);
     if (!IsValidDestination(dest)) {
         return false;
@@ -156,7 +156,7 @@ int IsMyAddress(const std::string& address)
     if (pwalletMain) {
         // TODO: resolve deadlock caused cs_tally, cs_wallet
         // LOCK(pwalletMain->cs_wallet);
-        // CBitcoinAddress parsedAddress(address);
+        // CRPDCHAINAddress parsedAddress(address);
         CTxDestination destination = DecodeDestination(address);
         isminetype isMine = IsMine(*pwalletMain, destination);
 

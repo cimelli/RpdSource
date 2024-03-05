@@ -24,14 +24,16 @@
 #include "qt/rpdchain/masternodeswidget.h"
 #include "qt/rpdchain/snackbar.h"
 #include "qt/rpdchain/settings/settingswidget.h"
+#include "qt/sendmpdialog.h"
+#include "qt/tokensdialog.h"
+#include "qt/nftsdialog.h"
+#include "qt/usernamesdialog.h"
 #include "qt/rpcconsole.h"
-
 
 class ClientModel;
 class NetworkStyle;
 class Notificator;
 class WalletModel;
-
 
 /**
   RPDCHAIN GUI main class. This class represents the main window of the RPDCHAIN UI. It communicates with both the client and
@@ -68,6 +70,7 @@ public Q_SLOTS:
     void goToMasterNodes();
     void goToColdStaking();
     void goToSettings();
+    void gotoTokensPage();
     void goToSettingsInfo();
     void openNetworkMonitor();
 
@@ -133,6 +136,11 @@ private:
     MasterNodesWidget *masterNodesWidget = nullptr;
     ColdStakingWidget *coldStakingWidget = nullptr;
     SettingsWidget* settingsWidget = nullptr;
+    SendMPDialog *sendTokenPage = nullptr;
+    TokensDialog *tokensPage = nullptr;
+    NftsDialog *nftsPage = nullptr;
+    UsernamesDialog *usernamesPage = nullptr;
+    QTabWidget *tabHolder = nullptr;
 
     SnackBar *snackBar = nullptr;
 

@@ -63,7 +63,7 @@ SettingsSignMessageWidgets::SettingsSignMessageWidgets(RPDCHAINGUI* _window, QWi
     setShadow(ui->signatureOut_SM);
 
     // Buttons
-    btnContact = ui->addressIn_SM->addAction(QIcon("://ic-contact-arrow-down"), QLineEdit::TrailingPosition);
+    btnContact = ui->addressIn_SM->addAction(QIcon("://ic-arrow-drop-down"), QLineEdit::TrailingPosition);
 
     setCssBtnPrimary(ui->pushButtonSave);
     setCssBtnSecondary(ui->pushButtonClear);

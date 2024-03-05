@@ -28,7 +28,8 @@
 #include <QScreen>
 #include <QShortcut>
 #include <QWindowStateChangeEvent>
-
+#include <QTabWidget>
+#include <QWidget>
 
 #define BASE_WINDOW_WIDTH 1200
 #define BASE_WINDOW_HEIGHT 740
@@ -81,24 +82,24 @@ RPDCHAINGUI::RPDCHAINGUI(const NetworkStyle* networkStyle, QWidget* parent) :
         QFrame* centralWidget = new QFrame(this);
         this->setMinimumWidth(BASE_WINDOW_MIN_WIDTH);
         this->setMinimumHeight(BASE_WINDOW_MIN_HEIGHT);
-        QHBoxLayout* centralWidgetLayouot = new QHBoxLayout();
-        centralWidget->setLayout(centralWidgetLayouot);
-        centralWidgetLayouot->setContentsMargins(0,0,0,0);
-        centralWidgetLayouot->setSpacing(0);
+        QHBoxLayout* centralWidgetLayout = new QHBoxLayout();
+        centralWidget->setLayout(centralWidgetLayout);
+        centralWidgetLayout->setContentsMargins(0,0,0,0);
+        centralWidgetLayout->setSpacing(0);
 
         centralWidget->setProperty("cssClass", "container");
         centralWidget->setStyleSheet("padding:0px; border:none; margin:0px;");
 
         // First the nav
         navMenu = new NavMenuWidget(this);
-        centralWidgetLayouot->addWidget(navMenu);
+        centralWidgetLayout->addWidget(navMenu);
 
         this->setCentralWidget(centralWidget);
         this->setContentsMargins(0,0,0,0);
 
         QFrame *container = new QFrame(centralWidget);
         container->setContentsMargins(0,0,0,0);
-        centralWidgetLayouot->addWidget(container);
+        centralWidgetLayout->addWidget(container);
 
         // Then topbar + the stackedWidget
         QVBoxLayout *baseScreensContainer = new QVBoxLayout(this);
@@ -128,6 +129,26 @@ RPDCHAINGUI::RPDCHAINGUI(const NetworkStyle* networkStyle, QWidget* parent) :
         coldStakingWidget = new ColdStakingWidget(this);
         settingsWidget = new SettingsWidget(this);
 
+        // Token
+        sendTokenPage = new SendMPDialog(this);
+        tokensPage = new TokensDialog(this);
+        nftsPage = new NftsDialog(this);
+        usernamesPage = new UsernamesDialog(this);
+
+        tabHolder = new QTabWidget();
+        tabHolder->addTab(sendTokenPage, tr("SEND"));
+        tabHolder->addTab(tokensPage, tr("TOKENS"));
+        tabHolder->addTab(nftsPage, tr("NFTS"));
+        tabHolder->addTab(usernamesPage, tr("USERNAMES"));
+
+        tabHolder->setStyleSheet(
+            "QTabWidget::pane { border: none; } "
+            "QTabBar::tab { background-color: #80d1d5db; border: none; border-top-left-radius: 4px; border-top-right-radius: 4px; min-width: 150px; padding: 6px; color: #3c3c3b; font-family: monospace; font-size: 14px; } "
+            "QTabBar::tab:selected { background-color: #d1d5db; border: none; } "
+            "QTabBar::tab:!selected { margin-top: 2px; } "
+            "QTabWidget::pane:selected { background-color: #3c3c3b; } "
+        );
+
         // Add to parent
         stackedContainer->addWidget(dashboard);
         stackedContainer->addWidget(sendWidget);
@@ -136,6 +157,8 @@ RPDCHAINGUI::RPDCHAINGUI(const NetworkStyle* networkStyle, QWidget* parent) :
         stackedContainer->addWidget(masterNodesWidget);
         stackedContainer->addWidget(coldStakingWidget);
         stackedContainer->addWidget(settingsWidget);
+        stackedContainer->setCurrentWidget(dashboard);
+        stackedContainer->addWidget(tabHolder);
         stackedContainer->setCurrentWidget(dashboard);
 
     } else
@@ -170,7 +193,7 @@ void RPDCHAINGUI::createActions(const NetworkStyle* networkStyle)
     toggleHideAction = new QAction(networkStyle->getAppIcon(), tr("&Show / Hide"), this);
     toggleHideAction->setStatusTip(tr("Show or hide the main Window"));
 
-    quitAction = new QAction(QIcon(":/icons/quit"), tr("E&xit"), this);
+    quitAction = new QAction(QIcon(":/ic-close-white"), tr("E&xit"), this);
     quitAction->setStatusTip(tr("Quit application"));
     quitAction->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_Q));
     quitAction->setMenuRole(QAction::QuitRole);
@@ -252,6 +275,10 @@ void RPDCHAINGUI::setClientModel(ClientModel* clientModel)
         dashboard->setClientModel(clientModel);
         sendWidget->setClientModel(clientModel);
         settingsWidget->setClientModel(clientModel);
+        sendTokenPage->setClientModel(clientModel);
+        tokensPage->setClientModel(clientModel);
+        nftsPage->setClientModel(clientModel);
+        usernamesPage->setClientModel(clientModel);
 
         // Receive and report messages from client model
         connect(clientModel, &ClientModel::message, this, &RPDCHAINGUI::message);
@@ -487,6 +514,15 @@ void RPDCHAINGUI::goToAddresses()
     showTop(addressesWidget);
 }
 
+void RPDCHAINGUI::gotoTokensPage(){
+    sendTokenPage->balancesUpdated();
+    tokensPage->balancesUpdated();
+    nftsPage->balancesUpdated();
+    usernamesPage->balancesUpdated();
+
+    showTop(tabHolder);
+}
+
 void RPDCHAINGUI::goToMasterNodes()
 {
     showTop(masterNodesWidget);
@@ -614,6 +650,9 @@ bool RPDCHAINGUI::addWallet(const QString& name, WalletModel* walletModel)
     masterNodesWidget->setWalletModel(walletModel);
     coldStakingWidget->setWalletModel(walletModel);
     settingsWidget->setWalletModel(walletModel);
+    tokensPage->setWalletModel(walletModel);
+    nftsPage->setWalletModel(walletModel);
+    sendTokenPage->setWalletModel(walletModel);
 
     // Connect actions..
     connect(walletModel, &WalletModel::message, this, &RPDCHAINGUI::message);

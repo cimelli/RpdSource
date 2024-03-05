@@ -30,13 +30,14 @@ public Q_SLOTS:
     void onShowHideColdStakingChanged(bool show);
 
 private Q_SLOTS:
-    void onSendClicked();
     void onDashboardClicked();
+    void onSendClicked();
+    void onReceiveClicked();
     void onAddressClicked();
     void onMasterNodesClicked();
     void onColdStakingClicked();
+    void onTokensClicked();
     void onSettingsClicked();
-    void onReceiveClicked();
     void updateButtonStyles();
 private:
     Ui::NavMenuWidget *ui;

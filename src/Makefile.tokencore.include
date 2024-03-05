@@ -38,7 +38,7 @@ TOKENCORE_H = \
   tokencore/tally.h \
   tokencore/tx.h \
   tokencore/uint256_extensions.h \
-  tokencore/utilsbitcoin.h \
+  tokencore/utilsrpdchain.h \
   tokencore/utilsui.h \
   tokencore/version.h \
   tokencore/walletcache.h \
@@ -84,7 +84,7 @@ TOKENCORE_CPP = \
   tokencore/sto.cpp \
   tokencore/tally.cpp \
   tokencore/tx.cpp \
-  tokencore/utilsbitcoin.cpp \
+  tokencore/utilsrpdchain.cpp \
   tokencore/utilsui.cpp \
   tokencore/version.cpp \
   tokencore/walletcache.cpp \

@@ -47,7 +47,7 @@ MasterNodeWizardDialog::MasterNodeWizardDialog(WalletModel *model, QWidget *pare
     // Frame 1
     setCssProperty(ui->labelTitle1, "text-title-dialog");
     setCssProperty(ui->labelMessage1a, "text-main-grey");
-    setCssProperty(ui->labelMessage1b, "text-main-purple");
+    setCssProperty(ui->labelMessage1b, "text-main-orange");
 
     // Frame 3
     setCssProperty(ui->labelTitle3, "text-title-dialog");

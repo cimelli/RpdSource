@@ -37,6 +37,7 @@ public:
     bool validate();
     SendCoinsRecipient getValue();
     QString getAddress();
+    QString getUsername();
     CAmount getAmountValue();
 
     /** Return whether the entry is still empty and unedited */
