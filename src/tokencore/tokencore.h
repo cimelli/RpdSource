@@ -78,7 +78,7 @@ enum TransactionType {
   TOKEN_TYPE_CHANGE_ISSUER_ADDRESS      = 70,
   TOKEN_TYPE_ENABLE_FREEZING            = 71,
   TOKEN_TYPE_DISABLE_FREEZING           = 72,
-  TOKEN_TYPE_RAPIDS_PAYMENT             = 80,
+  TOKEN_TYPE_RPD_PAYMENT             = 80,
   TOKEN_TYPE_FREEZE_PROPERTY_TOKENS     = 185,
   TOKEN_TYPE_UNFREEZE_PROPERTY_TOKENS   = 186,
   TOKENCORE_MESSAGE_TYPE_DEACTIVATION  = 65533,
@@ -180,7 +180,7 @@ void CheckWalletUpdate(bool forceUpdate = false);
 /** Used to notify that the number of tokens for a property has changed. */
 void NotifyTotalTokensChanged(uint32_t propertyId, int block);
 
-int64_t GetRapidsPaymentAmount(const uint256& txid, const std::string& recipient);
+int64_t GetRPDPaymentAmount(const uint256& txid, const std::string& recipient);
 
 namespace mastercore
 {

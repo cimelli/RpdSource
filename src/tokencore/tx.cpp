@@ -118,7 +118,7 @@ std::string mastercore::strTransactionType(uint16_t txType)
         case TOKEN_TYPE_FREEZE_PROPERTY_TOKENS: return "Freeze Property Tokens";
         case TOKEN_TYPE_UNFREEZE_PROPERTY_TOKENS: return "Unfreeze Property Tokens";
         case TOKEN_TYPE_NOTIFICATION: return "Notification";
-        case TOKEN_TYPE_RAPIDS_PAYMENT: return "Rapids Payment";
+        case TOKEN_TYPE_RPD_PAYMENT: return "RPD Payment";
         case TOKENCORE_MESSAGE_TYPE_ALERT: return "ALERT";
         case TOKENCORE_MESSAGE_TYPE_DEACTIVATION: return "Feature Deactivation";
         case TOKENCORE_MESSAGE_TYPE_ACTIVATION: return "Feature Activation";
@@ -226,8 +226,8 @@ bool CMPTransaction::interpret_Transaction()
         case TOKENCORE_MESSAGE_TYPE_DEACTIVATION:
             return interpret_Deactivation();
 
-        case TOKEN_TYPE_RAPIDS_PAYMENT:
-            return interpret_RapidsPayment();
+        case TOKEN_TYPE_RPD_PAYMENT:
+            return interpret_RPDPayment();
 
         case TOKENCORE_MESSAGE_TYPE_ACTIVATION:
             return interpret_Activation();
@@ -909,7 +909,7 @@ bool CMPTransaction::interpret_Deactivation()
 }
 
 /** Tx 80 */
-bool CMPTransaction::interpret_RapidsPayment()
+bool CMPTransaction::interpret_RPDPayment()
 {
     if (pkt_size < 36) {
         return false;
@@ -1060,8 +1060,8 @@ int CMPTransaction::interpretPacket()
         case TOKEN_TYPE_CHANGE_ISSUER_ADDRESS:
             return logicMath_ChangeIssuer();
 
-        case TOKEN_TYPE_RAPIDS_PAYMENT:
-            return logicMath_RapidsPayment();
+        case TOKEN_TYPE_RPD_PAYMENT:
+            return logicMath_RPDPayment();
 
         case TOKEN_TYPE_ENABLE_FREEZING:
             return logicMath_EnableFreezing();
@@ -2744,7 +2744,7 @@ int CMPTransaction::logicMath_Deactivation()
 }
 
 /** Tx 80 */
-int CMPTransaction::logicMath_RapidsPayment()
+int CMPTransaction::logicMath_RPDPayment()
 {
     uint256 blockHash;
     {
@@ -2823,15 +2823,15 @@ int CMPTransaction::logicMath_RapidsPayment()
 
     uint16_t linked_type = mp_obj.getType();
     uint16_t linked_version = mp_obj.getVersion();
-    if (!IsRapidsPaymentAllowed(linked_type, linked_version)) {
-        PrintToLog("%s(): rejected: linked transaction %s doesn't support rapids payments\n",
+    if (!IsRPDPaymentAllowed(linked_type, linked_version)) {
+        PrintToLog("%s(): rejected: linked transaction %s doesn't support RPD payments\n",
                 __func__,
                 linked_txid.GetHex());
         return (PKT_ERROR_TOKENS -61);
     }
 
     std::string linked_sender = mp_obj.getSender();
-    nValue = GetRapidsPaymentAmount(txid, linked_sender);
+    nValue = GetRPDPaymentAmount(txid, linked_sender);
     PrintToLog("\tlinked tx sender: %s\n", linked_sender);
     PrintToLog("\t  psyment amount: %s\n", FormatDivisibleMP(nValue));
 

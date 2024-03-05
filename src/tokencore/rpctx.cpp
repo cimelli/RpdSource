@@ -378,7 +378,7 @@ static UniValue sendtokenrpdpayment(const JSONRPCRequest& request)
             "1. fromaddress          (string, required) the address to send from\n"
             "2. toaddress            (string, required) the address of the receiver\n"
             "3. ticker               (string, required) the ticker of crowdsale token\n"
-            "4. amount               (string, required) the amount of Rapids to send\n"
+            "4. amount               (string, required) the amount of RPD to send\n"
 
             "\nResult:\n"
             "\"hash\"                  (string) the hex-encoded transaction hash\n"
@@ -411,7 +411,7 @@ static UniValue sendtokenrpdpayment(const JSONRPCRequest& request)
     int64_t referenceAmount = ParseAmount(request.params[3], true);
 
     // create a payload for the transaction
-    std::vector<unsigned char> payload = CreatePayload_RapidsPayment(linkedtxid);
+    std::vector<unsigned char> payload = CreatePayload_RPDPayment(linkedtxid);
 
     // request the wallet build the transaction (and if needed commit it)
     uint256 txid;
@@ -426,7 +426,7 @@ static UniValue sendtokenrpdpayment(const JSONRPCRequest& request)
         if (!autoCommit) {
             return rawHex;
         } else {
-            PendingAdd(txid, fromAddress, TOKEN_TYPE_RAPIDS_PAYMENT, RPD_PROPERTY_ID, referenceAmount);
+            PendingAdd(txid, fromAddress, TOKEN_TYPE_RPD_PAYMENT, RPD_PROPERTY_ID, referenceAmount);
             return txid.GetHex();
         }
     }
@@ -500,7 +500,7 @@ static UniValue sendtokendexsell(const JSONRPCRequest& request)
             "1. fromaddress          (string, required) the address to send from\n"
             "2. tokenforsale         (string, required) the ticker of token to list for sale\n"
             "3. amountforsale        (string, required) the amount of tokens to list for sale\n"
-            "4. amountdesired        (string, required) the amount of Rapids desired\n"
+            "4. amountdesired        (string, required) the amount of RPD desired\n"
             "5. paymentwindow        (number, required) a time limit in blocks a buyer has to pay following a successful accepting order\n"
             "6. minacceptfee         (string, required) a minimum mining fee a buyer has to pay to accept the offer\n"
             "7. action               (number, required) the action to take (1 for new offers, 2 to update\", 3 to cancel)\n"

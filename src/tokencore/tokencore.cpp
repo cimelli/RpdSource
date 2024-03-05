@@ -1378,7 +1378,7 @@ int ParseTransaction(const CTransaction& tx, int nBlock, unsigned int idx, CMPTr
 /**
  * Helper to provide the amount of КЗВ sent to a particular address in a transaction
  */
-int64_t GetRapidsPaymentAmount(const uint256& txid, const std::string& recipient)
+int64_t GetRPDPaymentAmount(const uint256& txid, const std::string& recipient)
 {
     CTransaction tx;
     uint256 blockHash;

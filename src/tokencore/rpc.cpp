@@ -1733,7 +1733,7 @@ static UniValue gettokenactivedexsells(const JSONRPCRequest& request)
             "    \"propertyid\" : n,                   (number) the identifier of the tokens for sale\n"
             "    \"seller\" : \"address\",               (string) the address of the seller\n"
             "    \"amountavailable\" : \"n.nnnnnnnn\",   (string) the number of tokens still listed for sale and currently available\n"
-            "    \"rapidsdesired\" : \"n.nnnnnnnn\",    (string) the number of RPD desired in exchange\n"
+            "    \"RPDdesired\" : \"n.nnnnnnnn\",    (string) the number of RPD desired in exchange\n"
             "    \"unitprice\" : \"n.nnnnnnnn\" ,        (string) the unit price (RPD/token)\n"
             "    \"timelimit\" : nn,                   (number) the time limit in blocks a buyer has to pay following a successful accept\n"
             "    \"minimumfee\" : \"n.nnnnnnnn\",        (string) the minimum mining fee a buyer has to pay to accept this offer\n"
@@ -1781,7 +1781,7 @@ static UniValue gettokenactivedexsells(const JSONRPCRequest& request)
         int64_t minFee = selloffer.getMinFee();
         uint8_t timeLimit = selloffer.getBlockTimeLimit();
         int64_t sellOfferAmount = selloffer.getOfferAmountOriginal(); //badly named - "Original" implies off the wire, but is amended amount
-        int64_t sellRapidsDesired = selloffer.getRPDDesiredOriginal(); //badly named - "Original" implies off the wire, but is amended amount
+        int64_t sellRPDDesired = selloffer.getRPDDesiredOriginal(); //badly named - "Original" implies off the wire, but is amended amount
         int64_t amountAvailable = GetTokenBalance(seller, propertyId, SELLOFFER_RESERVE);
         int64_t amountAccepted = GetTokenBalance(seller, propertyId, ACCEPT_RESERVE);
 
@@ -1794,14 +1794,14 @@ static UniValue gettokenactivedexsells(const JSONRPCRequest& request)
 
         // calculate unit price and updated amount of RPD desired
         double unitPriceFloat = 0.0;
-        if ((sellOfferAmount > 0) && (sellRapidsDesired > 0)) {
-            unitPriceFloat = (double) sellRapidsDesired / (double) sellOfferAmount; // divide by zero protection
+        if ((sellOfferAmount > 0) && (sellRPDDesired > 0)) {
+            unitPriceFloat = (double) sellRPDDesired / (double) sellOfferAmount; // divide by zero protection
             if (!isPropertyDivisible(propertyId)) {
                 unitPriceFloat /= 100000000.0;
             }
         }
         int64_t unitPrice = rounduint64(unitPriceFloat * COIN);
-        int64_t bitcoinDesired = calculateDesiredRPD(sellOfferAmount, sellRapidsDesired, amountAvailable);
+        int64_t bitcoinDesired = calculateDesiredRPD(sellOfferAmount, sellRPDDesired, amountAvailable);
 
         UniValue responseObj(UniValue::VOBJ);
         responseObj.pushKV("txid", txid);
@@ -1810,7 +1810,7 @@ static UniValue gettokenactivedexsells(const JSONRPCRequest& request)
         responseObj.pushKV("ticker", property.ticker);
         responseObj.pushKV("seller", seller);
         responseObj.pushKV("amountavailable", FormatMP(propertyId, amountAvailable));
-        responseObj.pushKV("rapidsdesired", FormatDivisibleMP(bitcoinDesired));
+        responseObj.pushKV("rpddesired", FormatDivisibleMP(bitcoinDesired));
         responseObj.pushKV("unitprice", FormatDivisibleMP(unitPrice));
         responseObj.pushKV("timelimit", timeLimit);
         responseObj.pushKV("minimumfee", FormatDivisibleMP(minFee));

@@ -339,7 +339,7 @@ void CMasternodePayments::FillBlockPayee(CMutableTransaction& txNew, const CBloc
      if (hasPayment) {
         CAmount masternodePayment = GetMasternodePayment(nHeight);
 
-        // Now Rapids using GetBlockStakeSubsidy function with
+        // Now RPDCHAIN using GetBlockStakeSubsidy function with
         // masternode payment already subtracted, so there is
         // no need to do it here
 

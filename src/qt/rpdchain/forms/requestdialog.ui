@@ -324,16 +324,22 @@
                    <property name="bottomMargin">
                     <number>0</number>
                    </property>
-                   <item>
-                    <widget class="QLabel" name="comboBoxCoin">
-                     <property name="text">
-                      <string>RPD</string>
-                     </property>
-                     <property name="alignment">
-                      <set>Qt::AlignCenter</set>
-                     </property>
-                    </widget>
-                   </item>
+                    <item>
+                        <widget class="QLabel" name="comboBoxCoin">
+                            <property name="text">
+                                <string>RPD</string>
+                            </property>
+                            <property name="alignment">
+                                <set>Qt::AlignCenter</set>
+                            </property>
+                            <property name="font">
+                                <font>
+                                    <pointsize>24</pointsize>
+                                    <family>monospace</family>
+                                </font>
+                            </property>
+                        </widget>
+                    </item>
                   </layout>
                  </widget>
                 </item>
@@ -542,7 +548,7 @@
           <item alignment="Qt::AlignHCenter">
            <widget class="QLabel" name="labelAddress">
             <property name="text">
-             <string>D7VFR83SQbiezrW72hjcWJtcfip5krte2Z </string>
+             <string>R7VFR83SQbiezrW72hjcWJtcfip5krte2Z</string>
             </property>
            </widget>
           </item>
