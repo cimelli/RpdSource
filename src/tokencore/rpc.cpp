@@ -906,6 +906,7 @@ static UniValue gettokenbalances(const JSONRPCRequest& request)
 
     for (std::set<uint32_t>::iterator it = global_wallet_property_list.begin() ; it != global_wallet_property_list.end(); ++it) {
         uint32_t propertyId = *it;
+        bool addToken = false;
 
         CMPSPInfo::Entry property;
         if (!pDbSpInfo->getSP(propertyId, property)) {
@@ -959,11 +960,15 @@ static UniValue gettokenbalances(const JSONRPCRequest& request)
             }
 
             addresses.push_back(objAddrBalance);
+
+            if (addr_balance > 0 || addr_reserved > 0 || addr_frozen)
+                addToken = true;
         }
 
         objBalance.pushKV("addresses", addresses);
 
-        response.push_back(objBalance);
+        if (addToken)
+            response.push_back(objBalance);
     }
 
 #endif
@@ -1214,8 +1219,8 @@ static UniValue gettokencrowdsale(const JSONRPCRequest& request)
             "  ]\n"
             "}\n"
             "\nExamples:\n"
-            + HelpExampleCli("gettokencrowdsale", "3 true")
-            + HelpExampleRpc("gettokencrowdsale", "3, true")
+            + HelpExampleCli("gettokencrowdsale", "TOKEN true")
+            + HelpExampleRpc("gettokencrowdsale", "TOKEN, true")
         );
 
     std::string ticker = ParseText(request.params[0]);
@@ -2205,7 +2210,7 @@ static UniValue token_getsto(const JSONRPCRequest& request)
             "  \"propertyid\" : n,               (number) the identifier of sent tokens\n"
             "  \"divisible\" : true|false,       (boolean) whether the sent tokens are divisible\n"
             "  \"amount\" : \"n.nnnnnnnn\",        (string) the number of tokens sent to owners\n"
-            "  \"totalstofee\" : \"n.nnnnnnnn\",   (string) the fee paid by the sender, nominated in OMN or TOMN\n"
+            "  \"totalstofee\" : \"n.nnnnnnnn\",   (string) the fee paid by the sender, nominated in RPD\n"
             "  \"recipients\": [                 (array of JSON objects) a list of recipients\n"
             "    {\n"
             "      \"address\" : \"address\",          (string) the address of the recipient\n"
@@ -2449,8 +2454,8 @@ static const CRPCCommand commands[] =
     { "tokens (data retrieval)", "listtokentransactions",           &listtokentransactions,            false },
     // { "tokens (data retrieval)", "token_getfeeshare",               &token_getfeeshare,                false },
     // { "tokens (configuration)",  "token_setautocommit",             &token_setautocommit,              true  },
-    // { "tokens (data retrieval)", "getwallettokenbalances",          &getwallettokenbalances,           false },
-    // { "tokens (data retrieval)", "getwalletaddresstokenbalances",   &getwalletaddresstokenbalances,    false },
+    { "tokens (data retrieval)", "getwallettokenbalances",          &getwallettokenbalances,           false },
+    { "tokens (data retrieval)", "getwalletaddresstokenbalances",   &getwalletaddresstokenbalances,    false },
     { "tokens (data retrieval)", "gettokenbalances",                &gettokenbalances,                 false },
 #endif
 };
