@@ -588,11 +588,15 @@ TableViewLastColumnResizingFixer::TableViewLastColumnResizingFixer(QTableView* t
       allColumnsMinimumWidth(allColsMinimumWidth)
 {
     columnCount = tableView->horizontalHeader()->count();
-    lastColumnIndex = columnCount - 1;
-    secondToLastColumnIndex = columnCount - 2;
+    lastColumnIndex = std::max(0, columnCount - 2);
+    secondToLastColumnIndex = std::max(0, columnCount - 3);
     tableView->horizontalHeader()->setMinimumSectionSize(allColumnsMinimumWidth);
-    setViewHeaderResizeMode(secondToLastColumnIndex, QHeaderView::Interactive);
-    setViewHeaderResizeMode(lastColumnIndex, QHeaderView::Interactive);
+    if (columnCount > 0) {
+        setViewHeaderResizeMode(secondToLastColumnIndex, QHeaderView::Interactive);
+    }
+    if (columnCount > 1) {
+        setViewHeaderResizeMode(lastColumnIndex, QHeaderView::Interactive);
+    }
 }
 
 /**
