@@ -120,8 +120,8 @@ void MetaDexObjectToJSON(const CMPMetaDEx& obj, UniValue& metadex_obj)
 
     CMPSPInfo::Entry desiredproperty;
     pDbSpInfo->getSP(obj.getDesProperty(), desiredproperty);
-    metadex_obj.pushKV("tokendesiredname", desiredproperty.name);
-    metadex_obj.pushKV("tokendesired", desiredproperty.ticker);
+    metadex_obj.pushKV("desiredname", desiredproperty.name);
+    metadex_obj.pushKV("desiredticker", desiredproperty.ticker);
 
     metadex_obj.pushKV("propertyiddesiredisdivisible", propertyIdDesiredIsDivisible);
     metadex_obj.pushKV("amountdesired", FormatMP(obj.getDesProperty(), obj.getAmountDesired()));
@@ -166,329 +166,12 @@ bool BalanceToJSON(const std::string& address, uint32_t property, UniValue& bala
     return (nAvailable || nReserved || nFrozen);
 }
 
-// Obtains details of a fee distribution
-static UniValue token_getfeedistribution(const JSONRPCRequest& request)
-{
-    if (request.fHelp || request.params.size() != 1)
-        throw runtime_error(
-            "token_getfeedistribution distributionid\n"
-            "\nGet the details for a fee distribution.\n"
-            "\nArguments:\n"
-            "1. distributionid           (number, required) the distribution to obtain details for\n"
-            "\nResult:\n"
-            "{\n"
-            "  \"distributionid\" : n,          (number) the distribution id\n"
-            "  \"propertyid\" : n,              (number) the property id of the distributed tokens\n"
-            "  \"block\" : n,                   (number) the block the distribution occurred\n"
-            "  \"amount\" : \"n.nnnnnnnn\",     (string) the amount that was distributed\n"
-            "  \"recipients\": [                (array of JSON objects) a list of recipients\n"
-            "    {\n"
-            "      \"address\" : \"address\",          (string) the address of the recipient\n"
-            "      \"amount\" : \"n.nnnnnnnn\"         (string) the amount of fees received by the recipient\n"
-            "    },\n"
-            "    ...\n"
-            "  ]\n"
-            "}\n"
-            "\nExamples:\n"
-            + HelpExampleCli("token_getfeedistribution", "1")
-            + HelpExampleRpc("token_getfeedistribution", "1")
-        );
-
-    int id = request.params[0].get_int();
-
-    int block = 0;
-    uint32_t propertyId = 0;
-    int64_t total = 0;
-
-    UniValue response(UniValue::VOBJ);
-
-    bool found = pDbFeeHistory->GetDistributionData(id, &propertyId, &block, &total);
-    if (!found) {
-        throw JSONRPCError(RPC_INTERNAL_ERROR, "Fee distribution ID does not exist");
-    }
-    response.pushKV("distributionid", id);
-    response.pushKV("propertyid", (uint64_t)propertyId);
-    response.pushKV("block", block);
-    response.pushKV("amount", FormatMP(propertyId, total));
-    UniValue recipients(UniValue::VARR);
-    std::set<std::pair<std::string,int64_t> > sRecipients = pDbFeeHistory->GetFeeDistribution(id);
-    bool divisible = isPropertyDivisible(propertyId);
-    if (!sRecipients.empty()) {
-        for (std::set<std::pair<std::string,int64_t> >::iterator it = sRecipients.begin(); it != sRecipients.end(); it++) {
-            std::string address = (*it).first;
-            int64_t amount = (*it).second;
-            UniValue recipient(UniValue::VOBJ);
-            recipient.pushKV("address", address);
-            if (divisible) {
-                recipient.pushKV("amount", FormatDivisibleMP(amount));
-            } else {
-                recipient.pushKV("amount", FormatIndivisibleMP(amount));
-            }
-            recipients.push_back(recipient);
-        }
-    }
-    response.pushKV("recipients", recipients);
-    return response;
-}
-
-// Obtains all fee distributions for a property
-// TODO : Split off code to populate a fee distribution object into a seperate function
-static UniValue token_getfeedistributions(const JSONRPCRequest& request)
-{
-    if (request.fHelp || request.params.size() != 1)
-        throw runtime_error(
-            "token_getfeedistributions propertyid\n"
-            "\nGet the details of all fee distributions for a property.\n"
-            "\nArguments:\n"
-            "1. propertyid           (number, required) the property id to retrieve distributions for\n"
-            "\nResult:\n"
-            "[                       (array of JSON objects)\n"
-            "  {\n"
-            "    \"distributionid\" : n,          (number) the distribution id\n"
-            "    \"propertyid\" : n,              (number) the property id of the distributed tokens\n"
-            "    \"block\" : n,                   (number) the block the distribution occurred\n"
-            "    \"amount\" : \"n.nnnnnnnn\",     (string) the amount that was distributed\n"
-            "    \"recipients\": [                (array of JSON objects) a list of recipients\n"
-            "      {\n"
-            "        \"address\" : \"address\",          (string) the address of the recipient\n"
-            "        \"amount\" : \"n.nnnnnnnn\"         (string) the amount of fees received by the recipient\n"
-            "      },\n"
-            "      ...\n"
-            "  }\n"
-            "]\n"
-            "\nExamples:\n"
-            + HelpExampleCli("token_getfeedistributions", "1")
-            + HelpExampleRpc("token_getfeedistributions", "1")
-        );
-
-    uint32_t prop = ParsePropertyId(request.params[0]);
-    RequireExistingProperty(prop);
-
-    UniValue response(UniValue::VARR);
-
-    std::set<int> sDistributions = pDbFeeHistory->GetDistributionsForProperty(prop);
-    if (!sDistributions.empty()) {
-        for (std::set<int>::iterator it = sDistributions.begin(); it != sDistributions.end(); it++) {
-            int id = *it;
-            int block = 0;
-            uint32_t propertyId = 0;
-            int64_t total = 0;
-            UniValue responseObj(UniValue::VOBJ);
-            bool found = pDbFeeHistory->GetDistributionData(id, &propertyId, &block, &total);
-            if (!found) {
-                PrintToLog("Fee History Error - Distribution data not found for distribution ID %d but it was included in GetDistributionsForProperty(prop %d)\n", id, prop);
-                continue;
-            }
-            responseObj.pushKV("distributionid", id);
-            responseObj.pushKV("propertyid", (uint64_t)propertyId);
-            responseObj.pushKV("block", block);
-            responseObj.pushKV("amount", FormatMP(propertyId, total));
-            UniValue recipients(UniValue::VARR);
-            std::set<std::pair<std::string,int64_t> > sRecipients = pDbFeeHistory->GetFeeDistribution(id);
-            bool divisible = isPropertyDivisible(propertyId);
-            if (!sRecipients.empty()) {
-                for (std::set<std::pair<std::string,int64_t> >::iterator it = sRecipients.begin(); it != sRecipients.end(); it++) {
-                    std::string address = (*it).first;
-                    int64_t amount = (*it).second;
-                    UniValue recipient(UniValue::VOBJ);
-                    recipient.pushKV("address", address);
-                    if (divisible) {
-                        recipient.pushKV("amount", FormatDivisibleMP(amount));
-                    } else {
-                        recipient.pushKV("amount", FormatIndivisibleMP(amount));
-                    }
-                    recipients.push_back(recipient);
-                }
-            }
-            responseObj.pushKV("recipients", recipients);
-            response.push_back(responseObj);
-        }
-    }
-    return response;
-}
-
-// Obtains the trigger value for fee distribution for a/all properties
-static UniValue token_getfeetrigger(const JSONRPCRequest& request)
-{
-    if (request.fHelp || request.params.size() > 1)
-        throw runtime_error(
-            "token_getfeetrigger ( propertyid )\n"
-            "\nReturns the amount of fees required in the cache to trigger distribution.\n"
-            "\nArguments:\n"
-            "1. propertyid           (number, optional) filter the results on this property id\n"
-            "\nResult:\n"
-            "[                       (array of JSON objects)\n"
-            "  {\n"
-            "    \"propertyid\" : nnnnnnn,          (number) the property id\n"
-            "    \"feetrigger\" : \"n.nnnnnnnn\",   (string) the amount of fees required to trigger distribution\n"
-            "  },\n"
-            "  ...\n"
-            "]\n"
-            "\nExamples:\n"
-            + HelpExampleCli("token_getfeetrigger", "3")
-            + HelpExampleRpc("token_getfeetrigger", "3")
-        );
-
-    uint32_t propertyId = 0;
-    if (0 < request.params.size()) {
-        propertyId = ParsePropertyId(request.params[0]);
-    }
-
-    if (propertyId > 0) {
-        RequireExistingProperty(propertyId);
-    }
-
-    UniValue response(UniValue::VARR);
-
-    for (uint8_t ecosystem = 1; ecosystem <= 2; ecosystem++) {
-        uint32_t startPropertyId = (ecosystem == 1) ? 1 : TEST_ECO_PROPERTY_1;
-        for (uint32_t itPropertyId = startPropertyId; itPropertyId < pDbSpInfo->peekNextSPID(ecosystem); itPropertyId++) {
-            if (propertyId == 0 || propertyId == itPropertyId) {
-                int64_t feeTrigger = pDbFeeCache->GetDistributionThreshold(itPropertyId);
-                std::string strFeeTrigger = FormatMP(itPropertyId, feeTrigger);
-                UniValue cacheObj(UniValue::VOBJ);
-                cacheObj.pushKV("propertyid", (uint64_t)itPropertyId);
-                cacheObj.pushKV("feetrigger", strFeeTrigger);
-                response.push_back(cacheObj);
-            }
-        }
-    }
-
-    return response;
-}
-
-// Provides the fee share the wallet (or specific address) will receive from fee distributions
-static UniValue token_getfeeshare(const JSONRPCRequest& request)
-{
-    if (request.fHelp || request.params.size() > 2)
-        throw runtime_error(
-            "token_getfeeshare ( address ecosystem )\n"
-            "\nReturns the percentage share of fees distribution applied to the wallet (default) or address (if supplied).\n"
-            "\nArguments:\n"
-            "1. address              (string, optional) retrieve the fee share for the supplied address\n"
-            "2. ecosystem            (number, optional) the ecosystem to check the fee share (1 for main ecosystem, 2 for test ecosystem)\n"
-            "\nResult:\n"
-            "[                       (array of JSON objects)\n"
-            "  {\n"
-            "    \"address\" : nnnnnnn,          (number) the property id\n"
-            "    \"feeshare\" : \"n.nnnnnnnn\",   (string) the percentage of fees this address will receive based on current state\n"
-            "  },\n"
-            "  ...\n"
-            "]\n"
-            "\nExamples:\n"
-            + HelpExampleCli("token_getfeeshare", "\"RiGQ12CCidStpSKmjdJMfzc2uE9JFD7epe\" 1")
-            + HelpExampleRpc("token_getfeeshare", "\"RiGQ12CCidStpSKmjdJMfzc2uE9JFD7epe\", 1")
-        );
-
-    std::string address;
-    uint8_t ecosystem = 1;
-    if (0 < request.params.size()) {
-        if ("*" != request.params[0].get_str()) { //ParseAddressOrEmpty doesn't take wildcards
-            address = ParseAddressOrEmpty(request.params[0]);
-        } else {
-            address = "*";
-        }
-    }
-
-    if (1 < request.params.size()) {
-        ecosystem = ParseEcosystem(request.params[1]);
-    }
-
-    UniValue response(UniValue::VARR);
-    bool addObj = false;
-
-    OwnerAddrType receiversSet;
-    if (ecosystem == 1) {
-        receiversSet = STO_GetReceivers("FEEDISTRIBUTION", TOKEN_PROPERTY_MSC, COIN);
-    } else {
-        receiversSet = STO_GetReceivers("FEEDISTRIBUTION", TOKEN_PROPERTY_TMSC, COIN);
-    }
-
-    for (OwnerAddrType::reverse_iterator it = receiversSet.rbegin(); it != receiversSet.rend(); ++it) {
-        addObj = false;
-        if (address.empty()) {
-            if (IsMyAddress(it->second)) {
-                addObj = true;
-            }
-        } else if (address == it->second || address == "*") {
-            addObj = true;
-        }
-        if (addObj) {
-            UniValue feeShareObj(UniValue::VOBJ);
-            // NOTE: using float here as this is a display value only which isn't an exact percentage and
-            //       changes block to block (due to dev Token) so high precision not required(?)
-            double feeShare = (double(it->first) / double(COIN)) * (double)100;
-            std::string strFeeShare = strprintf("%.4f", feeShare);
-            strFeeShare += "%";
-            feeShareObj.pushKV("address", it->second);
-            feeShareObj.pushKV("feeshare", strFeeShare);
-            response.push_back(feeShareObj);
-        }
-    }
-
-    return response;
-}
-
-// Provides the current values of the fee cache
-static UniValue token_getfeecache(const JSONRPCRequest& request)
-{
-    if (request.fHelp || request.params.size() > 1)
-        throw runtime_error(
-            "token_getfeecache ( propertyid )\n"
-            "\nReturns the amount of fees cached for distribution.\n"
-            "\nArguments:\n"
-            "1. propertyid           (number, optional) filter the results on this property id\n"
-            "\nResult:\n"
-            "[                       (array of JSON objects)\n"
-            "  {\n"
-            "    \"propertyid\" : nnnnnnn,          (number) the property id\n"
-            "    \"cachedfees\" : \"n.nnnnnnnn\",   (string) the amount of fees cached for this property\n"
-            "  },\n"
-            "  ...\n"
-            "]\n"
-            "\nExamples:\n"
-            + HelpExampleCli("token_getfeecache", "31")
-            + HelpExampleRpc("token_getfeecache", "31")
-        );
-
-    uint32_t propertyId = 0;
-    if (0 < request.params.size()) {
-        propertyId = ParsePropertyId(request.params[0]);
-    }
-
-    if (propertyId > 0) {
-        RequireExistingProperty(propertyId);
-    }
-
-    UniValue response(UniValue::VARR);
-
-    for (uint8_t ecosystem = 1; ecosystem <= 2; ecosystem++) {
-        uint32_t startPropertyId = (ecosystem == 1) ? 1 : TEST_ECO_PROPERTY_1;
-        for (uint32_t itPropertyId = startPropertyId; itPropertyId < pDbSpInfo->peekNextSPID(ecosystem); itPropertyId++) {
-            if (propertyId == 0 || propertyId == itPropertyId) {
-                int64_t cachedFee = pDbFeeCache->GetCachedAmount(itPropertyId);
-                if (cachedFee == 0) {
-                    // filter empty results unless the call specifically requested this property
-                    if (propertyId != itPropertyId) continue;
-                }
-                std::string strFee = FormatMP(itPropertyId, cachedFee);
-                UniValue cacheObj(UniValue::VOBJ);
-                cacheObj.pushKV("propertyid", (uint64_t)itPropertyId);
-                cacheObj.pushKV("cachedfees", strFee);
-                response.push_back(cacheObj);
-            }
-        }
-    }
-
-    return response;
-}
-
 // generate a list of seed blocks based on the data in LevelDB
 static UniValue gettokenseedblocks(const JSONRPCRequest& request)
 {
     if (request.fHelp || request.params.size() != 2)
         throw runtime_error(
-            "token_getseedblocks startblock endblock\n"
+            "gettokenseedblocks startblock endblock\n"
             "\nReturns a list of blocks containing Token transactions for use in seed block filtering.\n"
             "\nArguments:\n"
             "1. startblock           (number, required) the first block to look for Token transactions (inclusive)\n"
@@ -567,63 +250,6 @@ static UniValue gettokenpayload(const JSONRPCRequest& request)
     payloadObj.pushKV("payload", mp_obj.getPayload());
     payloadObj.pushKV("payloadsize", mp_obj.getPayloadSize());
     return payloadObj;
-}
-
-// determine whether to automatically commit transactions
-static UniValue token_setautocommit(const JSONRPCRequest& request)
-{
-    if (request.fHelp || request.params.size() != 1)
-        throw runtime_error(
-            "token_setautocommit flag\n"
-            "\nSets the global flag that determines whether transactions are automatically committed and broadcast.\n"
-            "\nArguments:\n"
-            "1. flag                 (boolean, required) the flag\n"
-            "\nResult:\n"
-            "true|false              (boolean) the updated flag status\n"
-            "\nExamples:\n"
-            + HelpExampleCli("token_setautocommit", "false")
-            + HelpExampleRpc("token_setautocommit", "false")
-        );
-
-    LOCK(cs_tally);
-
-    autoCommit = request.params[0].get_bool();
-    return autoCommit;
-}
-
-// display an MP balance via RPC
-static UniValue gettokenbalance(const JSONRPCRequest& request)
-{
-    if (request.fHelp || request.params.size() != 2)
-        throw runtime_error(
-            "gettokenbalance \"address\" ticker\n"
-            "\nReturns the token balance for a given address and token.\n"
-            "\nArguments:\n"
-            "1. address              (string, required) the address\n"
-            "2. ticker               (string, required) the token ticker\n"
-            "\nResult:\n"
-            "{\n"
-            "  \"balance\" : \"n.nnnnnnnn\",   (string) the available balance of the address\n"
-            "  \"reserved\" : \"n.nnnnnnnn\"   (string) the amount reserved by sell offers and accepts\n"
-            "  \"frozen\" : \"n.nnnnnnnn\"     (string) the amount frozen by the issuer (applies to managed properties only)\n"
-            "}\n"
-            "\nExamples:\n"
-            + HelpExampleCli("gettokenbalance", "\"RiGQ12CCidStpSKmjdJMfzc2uE9JFD7epe\" TOKEN")
-            + HelpExampleRpc("gettokenbalance", "\"RiGQ12CCidStpSKmjdJMfzc2uE9JFD7epe\", TOKEN")
-        );
-
-    std::string address = ParseAddress(request.params[0]);
-
-    uint32_t propertyId = pDbSpInfo->findSPByTicker(request.params[1].get_str());
-    if (!propertyId)
-        throw JSONRPCError(RPC_INTERNAL_ERROR, "Token not found");
-
-    RequireExistingProperty(propertyId);
-
-    UniValue balanceObj(UniValue::VOBJ);
-    BalanceToJSON(address, propertyId, balanceObj, isPropertyDivisible(propertyId));
-
-    return balanceObj;
 }
 
 static UniValue getalltokenbalances(const JSONRPCRequest& request)
@@ -1308,9 +934,17 @@ static UniValue gettokencrowdsale(const JSONRPCRequest& request)
     response.pushKV("propertyiddesired", (uint64_t) sp.property_desired);
 
     CMPSPInfo::Entry desiredproperty;
-    pDbSpInfo->getSP(sp.property_desired, desiredproperty);
-    response.pushKV("tokendesiredname", desiredproperty.name);
-    response.pushKV("tokendesired", desiredproperty.ticker);
+
+    if (sp.property_desired == 0) {
+        // If propertyiddesired is 0, set desired name and ticker to "RPD"
+        desiredproperty.name = "RPD";
+        desiredproperty.ticker = "RPD";
+    } else {
+        pDbSpInfo->getSP(sp.property_desired, desiredproperty);
+    }
+
+    response.pushKV("desiredname", desiredproperty.name);
+    response.pushKV("desiredticker", desiredproperty.ticker);
 
     response.pushKV("tokensperunit", FormatMP(propertyId, sp.num_tokens));
     response.pushKV("earlybonus", sp.early_bird);
@@ -1399,9 +1033,17 @@ static UniValue gettokenactivecrowdsales(const JSONRPCRequest& request)
         responseObj.pushKV("propertyiddesired", (uint64_t) sp.property_desired);
 
         CMPSPInfo::Entry desiredproperty;
-        pDbSpInfo->getSP(sp.property_desired, desiredproperty);
-        responseObj.pushKV("tokendesiredname", desiredproperty.name);
-        responseObj.pushKV("tokendesired", desiredproperty.ticker);
+
+        if (sp.property_desired == 0) {
+            // If propertyiddesired is 0, set desired name and ticker to "RPD"
+            desiredproperty.name = "RPD";
+            desiredproperty.ticker = "RPD";
+        } else {
+            pDbSpInfo->getSP(sp.property_desired, desiredproperty);
+        }
+
+        responseObj.pushKV("desiredname", desiredproperty.name);
+        responseObj.pushKV("desiredticker", desiredproperty.ticker);
 
         responseObj.pushKV("tokensperunit", FormatMP(propertyId, sp.num_tokens));
         responseObj.pushKV("earlybonus", sp.early_bird);
@@ -1739,7 +1381,6 @@ static UniValue gettokenactivedexsells(const JSONRPCRequest& request)
             "    \"seller\" : \"address\",               (string) the address of the seller\n"
             "    \"amountavailable\" : \"n.nnnnnnnn\",   (string) the number of tokens still listed for sale and currently available\n"
             "    \"RPDdesired\" : \"n.nnnnnnnn\",    (string) the number of RPD desired in exchange\n"
-            "    \"unitprice\" : \"n.nnnnnnnn\" ,        (string) the unit price (RPD/token)\n"
             "    \"timelimit\" : nn,                   (number) the time limit in blocks a buyer has to pay following a successful accept\n"
             "    \"minimumfee\" : \"n.nnnnnnnn\",        (string) the minimum mining fee a buyer has to pay to accept this offer\n"
             "    \"amountaccepted\" : \"n.nnnnnnnn\",    (string) the number of tokens currently reserved for pending \"accept\" orders\n"
@@ -1805,8 +1446,7 @@ static UniValue gettokenactivedexsells(const JSONRPCRequest& request)
                 unitPriceFloat /= 100000000.0;
             }
         }
-        int64_t unitPrice = rounduint64(unitPriceFloat * COIN);
-        int64_t bitcoinDesired = calculateDesiredRPD(sellOfferAmount, sellRPDDesired, amountAvailable);
+        int64_t rpdDesired = rounduint64(unitPriceFloat * COIN);
 
         UniValue responseObj(UniValue::VOBJ);
         responseObj.pushKV("txid", txid);
@@ -1815,8 +1455,7 @@ static UniValue gettokenactivedexsells(const JSONRPCRequest& request)
         responseObj.pushKV("ticker", property.ticker);
         responseObj.pushKV("seller", seller);
         responseObj.pushKV("amountavailable", FormatMP(propertyId, amountAvailable));
-        responseObj.pushKV("rpddesired", FormatDivisibleMP(bitcoinDesired));
-        responseObj.pushKV("unitprice", FormatDivisibleMP(unitPrice));
+        responseObj.pushKV("rpddesired", FormatDivisibleMP(rpdDesired));
         responseObj.pushKV("timelimit", timeLimit);
         responseObj.pushKV("minimumfee", FormatDivisibleMP(minFee));
 
@@ -1910,7 +1549,7 @@ static UniValue listblockstokentransactions(const JSONRPCRequest& request)
 {
     if (request.fHelp || request.params.size() != 2)
         throw runtime_error(
-            "token_listblocktransactions firstblock lastblock\n"
+            "listblockstokentransactions firstblock lastblock\n"
             "\nLists all Token transactions in a given range of blocks.\n"
             "\nNote: the list of transactions is unordered and can contain invalid transactions!\n"
             "\nArguments:\n"
@@ -2186,55 +1825,6 @@ static UniValue gettokensinfo(const JSONRPCRequest& request)
     return infoResponse;
 }
 
-static UniValue token_getsto(const JSONRPCRequest& request)
-{
-    if (request.fHelp || request.params.size() < 1 || request.params.size() > 2)
-        throw runtime_error(
-            "token_getsto \"txid\" \"recipientfilter\"\n"
-            "\nGet information and recipients of a send-to-owners transaction.\n"
-            "\nArguments:\n"
-            "1. txid                 (string, required) the hash of the transaction to lookup\n"
-            "2. recipientfilter      (string, optional) a filter for recipients (wallet by default, \"*\" for all)\n"
-            "\nResult:\n"
-            "{\n"
-            "  \"txid\" : \"hash\",                (string) the hex-encoded hash of the transaction\n"
-            "  \"sendingaddress\" : \"address\",   (string) the address of the sender\n"
-            "  \"ismine\" : true|false,          (boolean) whether the transaction involes an address in the wallet\n"
-            "  \"confirmations\" : nnnnnnnnnn,   (number) the number of transaction confirmations\n"
-            "  \"fee\" : \"n.nnnnnnnn\",           (string) the transaction fee in RPD\n"
-            "  \"blocktime\" : nnnnnnnnnn,       (number) the timestamp of the block that contains the transaction\n"
-            "  \"valid\" : true|false,           (boolean) whether the transaction is valid\n"
-            "  \"version\" : n,                  (number) the transaction version\n"
-            "  \"type_int\" : n,                 (number) the transaction type as number\n"
-            "  \"type\" : \"type\",                (string) the transaction type as string\n"
-            "  \"propertyid\" : n,               (number) the identifier of sent tokens\n"
-            "  \"divisible\" : true|false,       (boolean) whether the sent tokens are divisible\n"
-            "  \"amount\" : \"n.nnnnnnnn\",        (string) the number of tokens sent to owners\n"
-            "  \"totalstofee\" : \"n.nnnnnnnn\",   (string) the fee paid by the sender, nominated in RPD\n"
-            "  \"recipients\": [                 (array of JSON objects) a list of recipients\n"
-            "    {\n"
-            "      \"address\" : \"address\",          (string) the address of the recipient\n"
-            "      \"amount\" : \"n.nnnnnnnn\"         (string) the number of tokens sent to this recipient\n"
-            "    },\n"
-            "    ...\n"
-            "  ]\n"
-            "}\n"
-            "\nExamples:\n"
-            + HelpExampleCli("token_getsto", "\"1075db55d416d3ca199f55b6084e2115b9345e16c5cf302fc80e9d5fbf5d48d\" \"*\"")
-            + HelpExampleRpc("token_getsto", "\"1075db55d416d3ca199f55b6084e2115b9345e16c5cf302fc80e9d5fbf5d48d\", \"*\"")
-        );
-
-    uint256 hash = ParseHashV(request.params[0], "txid");
-    std::string filterAddress;
-    if (request.params.size() > 1) filterAddress = ParseAddressOrWildcard(request.params[1]);
-
-    UniValue txobj(UniValue::VOBJ);
-    int populateResult = populateRPCTransactionObject(hash, txobj, "", true);
-    if (populateResult != 0) PopulateFailure(populateResult);
-
-    return txobj;
-}
-
 static UniValue gettokentrade(const JSONRPCRequest& request)
 {
     if (request.fHelp || request.params.size() != 1)
@@ -2424,7 +2014,7 @@ static const CRPCCommand commands[] =
   //  ------------------------- ------------------------------- -------------------------------------- ----------
     { "tokens (data retrieval)", "gettokensinfo",                   &gettokensinfo,                    true  },
     { "tokens (data retrieval)", "getalltokenbalances",             &getalltokenbalances,              false },
-    { "tokens (data retrieval)", "gettokenbalance",                 &gettokenbalance,                  false },
+    { "tokens (data retrieval)", "gettokenbalances",                &gettokenbalances,                 false },
     { "tokens (data retrieval)", "gettokentransaction",             &gettokentransaction,              false },
     { "tokens (data retrieval)", "gettoken",                        &gettoken,                         false },
     { "tokens (data retrieval)", "listtokens",                      &listtokens,                       false },
@@ -2434,7 +2024,6 @@ static const CRPCCommand commands[] =
     { "tokens (data retrieval)", "gettokenactivecrowdsales",        &gettokenactivecrowdsales,         false },
     { "tokens (data retrieval)", "gettokenorderbook",               &gettokenorderbook,                false },
     { "tokens (data retrieval)", "gettokentrade",                   &gettokentrade,                    false },
-    // { "tokens (data retrieval)", "token_getsto",                    &token_getsto,                     false },
     { "tokens (data retrieval)", "listblocktokentransactions",      &listblocktokentransactions,       false },
     { "tokens (data retrieval)", "listblockstokentransactions",     &listblockstokentransactions,      false },
     { "tokens (data retrieval)", "listpendingtokentransactions",    &listpendingtokentransactions,     false },
@@ -2445,15 +2034,9 @@ static const CRPCCommand commands[] =
     { "tokens (data retrieval)", "gettokenpayload",                 &gettokenpayload,                  false },
     { "tokens (data retrieval)", "gettokenseedblocks",              &gettokenseedblocks,               false },
     { "tokens (data retrieval)", "gettokenmetadexhash",             &gettokenmetadexhash,              false },
-    // { "tokens (data retrieval)", "token_getfeecache",               &token_getfeecache,                false },
-    // { "tokens (data retrieval)", "token_getfeetrigger",             &token_getfeetrigger,              false },
-    // { "tokens (data retrieval)", "token_getfeedistribution",        &token_getfeedistribution,         false },
-    // { "tokens (data retrieval)", "token_getfeedistributions",       &token_getfeedistributions,        false },
     { "tokens (data retrieval)", "gettokenbalanceshash",            &gettokenbalanceshash,             false },
 #ifdef ENABLE_WALLET
     { "tokens (data retrieval)", "listtokentransactions",           &listtokentransactions,            false },
-    // { "tokens (data retrieval)", "token_getfeeshare",               &token_getfeeshare,                false },
-    // { "tokens (configuration)",  "token_setautocommit",             &token_setautocommit,              true  },
     { "tokens (data retrieval)", "getwallettokenbalances",          &getwallettokenbalances,           false },
     { "tokens (data retrieval)", "getwalletaddresstokenbalances",   &getwalletaddresstokenbalances,    false },
     { "tokens (data retrieval)", "gettokenbalances",                &gettokenbalances,                 false },

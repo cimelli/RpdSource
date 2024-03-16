@@ -47,10 +47,10 @@ using namespace mastercore;
 
 static const std::regex IPFS_CHARACTERS("Qm[1-9A-HJ-NP-Za-km-z]{44,}|b[A-Za-z2-7]{58,}|B[A-Z2-7]{58,}|z[1-9A-HJ-NP-Za-km-z]{48,}|F[0-9A-F]{50,}");
 static const std::regex TOKEN_SUB_CHARACTERS("^[r]?[A-Z0-9._]{3,20}#[A-Z0-9._]{3,20}$");
-static const std::regex PROTECTED_TICKERS("^RPD$|^RPDCHAIN$");
+static const std::regex PROTECTED_TICKERS("^RPD$|^RPDCHAIN$|^RPDX$");
 static const std::regex TOKEN_TICKER_CHARACTERS("^[r]?[A-Z0-9._]{3,20}$");
 static const std::regex USERNAME_CHARACTERS("^[a-z0-9._]{3,20}.rpd$");
-static const std::regex PROTECTED_USERNAMES("^rpdchain.rpd$|^rpd.rpd$");
+static const std::regex PROTECTED_USERNAMES("^rpdchain.rpd$|^rpd.rpd$|^rpdx.rpd$");
 
 std::vector<std::string> SplitSubTicker(const std::string &s) {
     std::vector<std::string> elements;

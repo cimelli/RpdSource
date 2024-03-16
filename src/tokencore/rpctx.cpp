@@ -240,10 +240,6 @@ static UniValue sendtoken(const JSONRPCRequest& request)
     }
 }
 
-
-
-
-
 static UniValue sendtokenmany(const JSONRPCRequest& request)
 {
     if (request.fHelp || request.params.size() != 3)
@@ -362,11 +358,6 @@ static UniValue sendtokenmany(const JSONRPCRequest& request)
 
 }
 
-
-
-
-
-// sendtokenrpdpayment - send a RPD payment
 static UniValue sendtokenrpdpayment(const JSONRPCRequest& request)
 {
     if (request.fHelp || request.params.size() != 4)
@@ -673,7 +664,7 @@ static UniValue sendtokendexpay(const JSONRPCRequest& request)
         throw runtime_error(
             "sendtokendexpay \"fromaddress\" \"toaddress\" ticker \"amount\"\n"
 
-            "\nCreate and broadcast an accept offer for the specified token and amount.\n"
+            "\nCreate and broadcast an payment for the specified token (after you have created an accept offer).\n"
 
             "\nArguments:\n"
             "1. fromaddress          (string, required) the address to send from\n"

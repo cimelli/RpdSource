@@ -210,7 +210,7 @@
              </size>
             </property>
             <property name="text">
-             <string>Instead of sharing only a RPDCHAIN address, you can create a payment request, bundling up more information</string>
+             <string>Instead of sharing just your address... You can now create a payment request, bundling up more information for the sender.</string>
             </property>
             <property name="alignment">
              <set>Qt::AlignCenter</set>
@@ -259,7 +259,7 @@
              </item>
              <item alignment="Qt::AlignTop">
               <widget class="QWidget" name="layoutAmount" native="true">
-               <layout class="QHBoxLayout" name="horizontalLayout" stretch="2,0">
+               <layout class="QHBoxLayout" name="horizontalLayout" stretch="2,1">
                 <property name="spacing">
                  <number>0</number>
                 </property>
@@ -292,55 +292,6 @@
                   <property name="placeholderText">
                    <string notr="true">0.00</string>
                   </property>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QWidget" name="comboContainer" native="true">
-                  <property name="minimumSize">
-                   <size>
-                    <width>100</width>
-                    <height>50</height>
-                   </size>
-                  </property>
-                  <property name="maximumSize">
-                   <size>
-                    <width>16777215</width>
-                    <height>50</height>
-                   </size>
-                  </property>
-                  <layout class="QHBoxLayout" name="horizontalLayout_31">
-                   <property name="spacing">
-                    <number>0</number>
-                   </property>
-                   <property name="leftMargin">
-                    <number>0</number>
-                   </property>
-                   <property name="topMargin">
-                    <number>0</number>
-                   </property>
-                   <property name="rightMargin">
-                    <number>10</number>
-                   </property>
-                   <property name="bottomMargin">
-                    <number>0</number>
-                   </property>
-                    <item>
-                        <widget class="QLabel" name="comboBoxCoin">
-                            <property name="text">
-                                <string>RPD</string>
-                            </property>
-                            <property name="alignment">
-                                <set>Qt::AlignCenter</set>
-                            </property>
-                            <property name="font">
-                                <font>
-                                    <pointsize>24</pointsize>
-                                    <family>monospace</family>
-                                </font>
-                            </property>
-                        </widget>
-                    </item>
-                  </layout>
                  </widget>
                 </item>
                </layout>
@@ -446,7 +397,7 @@
                </size>
               </property>
               <property name="text">
-               <string>Description (optional)</string>
+               <string>Note:</string>
               </property>
              </widget>
             </item>
@@ -465,7 +416,7 @@
                </size>
               </property>
               <property name="placeholderText">
-               <string>Enter description</string>
+               <string>Enter note for sender</string>
               </property>
              </widget>
             </item>
@@ -614,7 +565,7 @@
                </size>
               </property>
               <property name="text">
-               <string>COPY URL</string>
+               <string>COPY URI</string>
               </property>
              </widget>
             </item>
@@ -702,3 +653,4 @@
  <resources/>
  <connections/>
 </ui>
+

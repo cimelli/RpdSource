@@ -2165,7 +2165,7 @@ HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH*/
 }
 
 QPushButton[cssClass="btn-number-check"] {
-    border:  1px solid #d1d5db;
+    border:  1px solid rgba(209, 213, 219, 0.5);
     background-color:transparent;
     font-size:14px;
     border-radius:11px;
@@ -2173,8 +2173,8 @@ QPushButton[cssClass="btn-number-check"] {
 }
 
 QPushButton[cssClass="btn-number-check"]:checked {
-    border:  1px solid #d1d5db;
-    background-color:#3c3c3b;
+    border:  1px solid #ff5533;
+    background-color:transparent;
     font-size:14px;
     border-radius:11px;
     color: #d1d5db;
@@ -2188,7 +2188,7 @@ QPushButton[cssClass="btn-name-check"] {
 }
 
 QPushButton[cssClass="btn-name-check"]:checked {
-    background-color:#3c3c3b;
+    background-color:transparent;
     border:none;
     font-size:20px;
     color: #d1d5db;
@@ -2678,12 +2678,12 @@ QPushButton[cssClass="btn-welcome-number-check"] {
     background-color:transparent;
     font-size:14px;
     border-radius:11px;
-    color: #d1d5db;
+    color: rgba(209, 213, 219, 0.5);
 }
 
 QPushButton[cssClass="btn-welcome-number-check"]:checked {
-    border:  1px solid #d1d5db;
-    background-color: #d1d5db;
+    border:  1px solid #ff5533;
+    background-color:transparent;
     font-size:14px;
     border-radius:11px;
     color: #d1d5db;

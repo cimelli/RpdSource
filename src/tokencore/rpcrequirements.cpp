@@ -28,13 +28,6 @@ void RequireBalance(const std::string& address, uint32_t propertyId, int64_t amo
     }
 }
 
-void RequirePrimaryToken(uint32_t propertyId)
-{
-    if (propertyId < 1 || 2 < propertyId) {
-        throw JSONRPCError(RPC_INVALID_PARAMETER, "Property identifier must be 1 (OMN) or 2 (TOMN)");
-    }
-}
-
 void RequirePropertyName(const std::string& name)
 {
     if (name.empty()) {
