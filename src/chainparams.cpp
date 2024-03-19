@@ -207,7 +207,7 @@ Genesis Merkle 0x5ac6154bb64fbe61995558afc487bb0e02746b33ffabbd7e1ca949f331dcc42
         //consensus.hashGenesisBlock = genesis.GetHash();
         //assert(consensus.hashGenesisBlock == uint256S("0x000007e2d4e851dbf9bfcf4b88556f6ecd9bcfb2f425acc18c4f6497393df938"));
         //assert(genesis.hashMerkleRoot == uint256S("0x5ac6154bb64fbe61995558afc487bb0e02746b33ffabbd7e1ca949f331dcc42a"));
-        GenesisGenerator(genesis)
+        GenesisGenerator(genesis);
         //GenesisGeneratorV2(genesis);
 
         consensus.fPowAllowMinDifficultyBlocks = true;
