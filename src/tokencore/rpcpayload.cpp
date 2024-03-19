@@ -234,6 +234,11 @@ static UniValue createtokenpayloadissuancefixed(const JSONRPCRequest& request)
     RequirePropertyName(name);
     RequirePropertyName(ticker);
 
+    if ((name == "RNS" || name == "rns" || name == "RnS" || name == "RNs" ||
+         name == "rNS" || name == "rnS" || name == "rNs" || name == "Rns") &&
+        !IsUsernameValid(ticker))
+        throw JSONRPCError(RPC_INTERNAL_ERROR, "Name 'RNS' can only be used to deploy a username");
+    
     uint32_t propertyId = pDbSpInfo->findSPByTicker(ticker);
     if (propertyId > 0)
         throw JSONRPCError(RPC_INTERNAL_ERROR, "Token with this ticker already exists");
@@ -302,6 +307,10 @@ static UniValue createtokenpayloadissuancecrowdsale(const JSONRPCRequest& reques
 
     RequirePropertyName(name);
     RequirePropertyName(ticker);
+    
+    if (name == "RNS" || name == "rns" || name == "RnS" || name == "RNs" ||
+        name == "rNS" || name == "rnS" || name == "rNs" || name == "Rns")
+        throw JSONRPCError(RPC_INTERNAL_ERROR, "Name 'RNS' can only be used to deploy a username");
 
     uint32_t propertyId = pDbSpInfo->findSPByTicker(ticker);
     if (propertyId > 0)
@@ -361,6 +370,10 @@ static UniValue createtokenpayloadissuancemanaged(const JSONRPCRequest& request)
 
     RequirePropertyName(name);
     RequirePropertyName(ticker);
+    
+    if (name == "RNS" || name == "rns" || name == "RnS" || name == "RNs" ||
+        name == "rNS" || name == "rnS" || name == "rNs" || name == "Rns")
+        throw JSONRPCError(RPC_INTERNAL_ERROR, "Name 'RNS' can only be used to deploy a username");
 
     uint32_t propertyId = pDbSpInfo->findSPByTicker(ticker);
     if (propertyId > 0)
