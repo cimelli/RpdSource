@@ -16,35 +16,6 @@
 
 #include <assert.h>
 
-void GenesisGenerator(CBlock genesis)
-{
-    printf("Searching for genesis block...\n");
-    uint256 hash;
-    bool fNegative;
-    bool fOverflow;
-    arith_uint256 bnTarget;
-    bnTarget.SetCompact(genesis.nBits, &fNegative, &fOverflow);
-    while (true) {
-        hash = genesis.GetHash();
-        if (UintToArith256(hash) <= bnTarget)
-            break;
-        if ((genesis.nNonce & 0xFFF) == 0) {
-            printf("nonce %08X: hash = %s (target = %s)\n", genesis.nNonce, hash.ToString().c_str(), bnTarget.ToString().c_str());
-        }
-        ++genesis.nNonce;
-        if (genesis.nNonce == 0) {
-            printf("NONCE WRAPPED, incrementing time\n");
-            ++genesis.nTime;
-        }
-    }
-
-    printf("genesis.nTime = %u \n", genesis.nTime);
-    printf("genesis.nNonce = %u \n", genesis.nNonce);
-    printf("genesis.GetHash = %s\n", genesis.GetHash().ToString().c_str());
-    printf("genesis.MerkleRoot = %s\n", genesis.hashMerkleRoot.ToString().c_str());
-    printf("=============================================================================================================================\n");
-}
-
 static CBlock CreateGenesisBlock(const char* pszTimestamp, const CScript& genesisOutputScript, uint32_t nTime, uint32_t nNonce, uint32_t nBits, int32_t nVersion, const CAmount& genesisReward)
 {
     CMutableTransaction txNew;
@@ -158,7 +129,7 @@ void GenesisGeneratorV2(CBlock genesis)
  */
 static Checkpoints::MapCheckpoints mapCheckpoints =
     boost::assign::map_list_of
-    (0, uint256S("0x001"));
+    (0, uint256S("0x00000477c5ac349ecd278a1a3860bd9ac72d47ea93d081457085947df392d587"));
 
 static const Checkpoints::CCheckpointData data = {
     &mapCheckpoints,
@@ -197,18 +168,17 @@ public:
         strNetworkID = "main";
 
         /*
-time: 1705080326
-hashGenesisBlock to 0x000007e2d4e851dbf9bfcf4b88556f6ecd9bcfb2f425acc18c4f6497393df938
-Genesis Nonce to 2594257
-Genesis Merkle 0x5ac6154bb64fbe61995558afc487bb0e02746b33ffabbd7e1ca949f331dcc42a
+time: 1710945345
+hashGenesisBlock to 0x00000477c5ac349ecd278a1a3860bd9ac72d47ea93d081457085947df392d587
+Genesis Nonce to 547682
+Genesis Merkle 0xda6e63a634e657e54e81cfb9a68d94f47b69fcb77fc066b55ddfad3743dae7f1
         */
 
-        //genesis = CreateGenesisBlock(1705080326, 2594257, 0x1e0ffff0, 1, 0 * COIN);
-        //consensus.hashGenesisBlock = genesis.GetHash();
-        //assert(consensus.hashGenesisBlock == uint256S("0x000007e2d4e851dbf9bfcf4b88556f6ecd9bcfb2f425acc18c4f6497393df938"));
-        //assert(genesis.hashMerkleRoot == uint256S("0x5ac6154bb64fbe61995558afc487bb0e02746b33ffabbd7e1ca949f331dcc42a"));
-        //GenesisGenerator(genesis);
-        GenesisGeneratorV2(genesis);
+        genesis = CreateGenesisBlock(1710945345, 547682, 0x1e0ffff0, 1, 0 * COIN);
+        consensus.hashGenesisBlock = genesis.GetHash();
+        assert(consensus.hashGenesisBlock == uint256S("0x00000477c5ac349ecd278a1a3860bd9ac72d47ea93d081457085947df392d587"));
+        assert(genesis.hashMerkleRoot == uint256S("0xda6e63a634e657e54e81cfb9a68d94f47b69fcb77fc066b55ddfad3743dae7f1"));
+        //GenesisGeneratorV2(genesis);
 
         consensus.fPowAllowMinDifficultyBlocks = true;
         consensus.powLimit   = ~UINT256_ZERO >> 2;
