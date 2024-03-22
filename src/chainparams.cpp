@@ -141,21 +141,21 @@ static const Checkpoints::CCheckpointData data = {
 
 static Checkpoints::MapCheckpoints mapCheckpointsTestnet =
     boost::assign::map_list_of
-    (0, uint256S("0x00000a105b6fbe4df4bbe4728f0a26ee85e92dbe8a4f7522235c116494ab6096"));
+    (0, uint256S("0x00000477c5ac349ecd278a1a3860bd9ac72d47ea93d081457085947df392d587"));
 
 static const Checkpoints::CCheckpointData dataTestnet = {
     &mapCheckpointsTestnet,
-    1694531982,
+    1710945345,
     0,
     1440};
 
 static Checkpoints::MapCheckpoints mapCheckpointsRegtest =
     boost::assign::map_list_of
-    (0, uint256S("0x00000a105b6fbe4df4bbe4728f0a26ee85e92dbe8a4f7522235c116494ab6096"));
+    (0, uint256S("0x00000477c5ac349ecd278a1a3860bd9ac72d47ea93d081457085947df392d587"));
 
 static const Checkpoints::CCheckpointData dataRegtest = {
     &mapCheckpointsRegtest,
-    1694531982,
+    1710945345,
     0,
     1440};
 
@@ -363,10 +363,10 @@ public:
         Genesis Merkle 0x5ac6154bb64fbe61995558afc487bb0e02746b33ffabbd7e1ca949f331dcc42a
         */
 
-        genesis = CreateGenesisBlock(1694531982, 174605, 0x1e0ffff0, 1, 0 * COIN);
+        genesis = CreateGenesisBlock(1710945345, 547682, 0x1e0ffff0, 1, 0 * COIN);
         consensus.hashGenesisBlock = genesis.GetHash();
-        assert(consensus.hashGenesisBlock == uint256S("0x00000a105b6fbe4df4bbe4728f0a26ee85e92dbe8a4f7522235c116494ab6096"));
-        assert(genesis.hashMerkleRoot == uint256S("0x5ac6154bb64fbe61995558afc487bb0e02746b33ffabbd7e1ca949f331dcc42a"));
+        assert(consensus.hashGenesisBlock == uint256S("0x00000477c5ac349ecd278a1a3860bd9ac72d47ea93d081457085947df392d587"));
+        assert(genesis.hashMerkleRoot == uint256S("0xda6e63a634e657e54e81cfb9a68d94f47b69fcb77fc066b55ddfad3743dae7f1"));
 
         consensus.fPowAllowMinDifficultyBlocks = true;
         consensus.powLimit   = ~UINT256_ZERO >> 20;   // RPDCHAIN starting difficulty is 1 / 2^12
@@ -520,10 +520,10 @@ public:
         Genesis Merkle 0x5ac6154bb64fbe61995558afc487bb0e02746b33ffabbd7e1ca949f331dcc42a
         */
 
-        genesis = CreateGenesisBlock(1694531982, 174605, 0x1e0ffff0, 1, 0 * COIN);
+        genesis = CreateGenesisBlock(1710945345, 547682, 0x1e0ffff0, 1, 0 * COIN);
         consensus.hashGenesisBlock = genesis.GetHash();
-        assert(consensus.hashGenesisBlock == uint256S("0x00000a105b6fbe4df4bbe4728f0a26ee85e92dbe8a4f7522235c116494ab6096"));
-        assert(genesis.hashMerkleRoot == uint256S("0x5ac6154bb64fbe61995558afc487bb0e02746b33ffabbd7e1ca949f331dcc42a"));
+        assert(consensus.hashGenesisBlock == uint256S("0x00000477c5ac349ecd278a1a3860bd9ac72d47ea93d081457085947df392d587"));
+        assert(genesis.hashMerkleRoot == uint256S("0xda6e63a634e657e54e81cfb9a68d94f47b69fcb77fc066b55ddfad3743dae7f1"));
 
         consensus.fPowAllowMinDifficultyBlocks = true;
         consensus.powLimit   = ~UINT256_ZERO >> 20;   // RPDCHAIN starting difficulty is 1 / 2^12
