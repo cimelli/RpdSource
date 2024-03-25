@@ -266,7 +266,8 @@ bool CBlockTreeDB::LoadBlockIndexGuts(boost::function<CBlockIndex*(const uint256
 
     pcursor->Seek(std::make_pair(DB_BLOCK_INDEX, UINT256_ZERO));
 
-    const int last_pow_block = Params().GetConsensus().height_last_PoW;
+    const Consensus::Params& consensus = Params().GetConsensus();
+    const bool last_pow_block = consensus.NetworkUpgradeActive(nHeight, Consensus::UPGRADE_POS);
 
     // Load mapBlockIndex
     while (pcursor->Valid()) {
