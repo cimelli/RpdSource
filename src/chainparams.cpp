@@ -71,7 +71,7 @@ void GenesisGeneratorV2(CBlock genesis)
     //
     // /////////////////////////////////////////////////////////////////
 
-    uint32_t nGenesisTime = 1710945345;
+    uint32_t nGenesisTime = 1711762993;
 
     arith_uint256 test;
     uint256 hashGenesisBlock;
@@ -129,7 +129,7 @@ void GenesisGeneratorV2(CBlock genesis)
  */
 static Checkpoints::MapCheckpoints mapCheckpoints =
     boost::assign::map_list_of
-    (0, uint256S("0x001"));
+    (0, uint256S("0x00000477c5ac349ecd278a1a3860bd9ac72d47ea93d081457085947df392d587"));
 
 static const Checkpoints::CCheckpointData data = {
     &mapCheckpoints,
@@ -166,6 +166,13 @@ public:
     {
         networkID = CBaseChainParams::MAIN;
         strNetworkID = "main";
+
+        /*
+        time: 1710945345
+hashGenesisBlock to 0x00000477c5ac349ecd278a1a3860bd9ac72d47ea93d081457085947df392d587
+Genesis Nonce to 547682
+Genesis Merkle 0xda6e63a634e657e54e81cfb9a68d94f47b69fcb77fc066b55ddfad3743dae7f1
+        */
 
         //genesis = CreateGenesisBlock(1710945345, 547682, 0x1e0ffff0, 1, 0 * COIN);
         //consensus.hashGenesisBlock = genesis.GetHash();
