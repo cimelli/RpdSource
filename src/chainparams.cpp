@@ -71,7 +71,7 @@ void GenesisGeneratorV2(CBlock genesis)
     //
     // /////////////////////////////////////////////////////////////////
 
-    uint32_t nGenesisTime = 1711762993;
+    uint32_t nGenesisTime = 1712170088;
 
     arith_uint256 test;
     uint256 hashGenesisBlock;
@@ -133,7 +133,7 @@ static Checkpoints::MapCheckpoints mapCheckpoints =
 
 static const Checkpoints::CCheckpointData data = {
     &mapCheckpoints,
-    1710945345, // * UNIX timestamp of last checkpoint block
+    1712170088, // * UNIX timestamp of last checkpoint block
     0,    // * total number of transactions between genesis and last checkpoint
                 //   (the tx=... number in the UpdateTip debug.log lines)
     1440        // * estimated number of transactions per day after checkpoint
@@ -174,11 +174,11 @@ Genesis Nonce to 1517620
 Genesis Merkle 0xda6e63a634e657e54e81cfb9a68d94f47b69fcb77fc066b55ddfad3743dae7f1
         */
 
-        genesis = CreateGenesisBlock(1711762993, 547682, 0x1e0ffff0, 1, 0 * COIN);
-        consensus.hashGenesisBlock = genesis.GetHash();
-        assert(consensus.hashGenesisBlock == uint256S("0x00000ede7df8f2d108cfccf3bd47d4a51a459eaa8c60cdc11583c21589f43e06"));
-        assert(genesis.hashMerkleRoot == uint256S("0xda6e63a634e657e54e81cfb9a68d94f47b69fcb77fc066b55ddfad3743dae7f1"));
-        //GenesisGeneratorV2(genesis);
+        //genesis = CreateGenesisBlock(1712170088, 547682, 0x1e0ffff0, 1, 0 * COIN);
+        //consensus.hashGenesisBlock = genesis.GetHash();
+        //assert(consensus.hashGenesisBlock == uint256S("0x00000ede7df8f2d108cfccf3bd47d4a51a459eaa8c60cdc11583c21589f43e06"));
+        //assert(genesis.hashMerkleRoot == uint256S("0xda6e63a634e657e54e81cfb9a68d94f47b69fcb77fc066b55ddfad3743dae7f1"));
+        GenesisGeneratorV2(genesis);
 
         consensus.fPowAllowMinDifficultyBlocks = false;
         consensus.powLimit   = ~UINT256_ZERO >> 2;
