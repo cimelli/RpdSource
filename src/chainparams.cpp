@@ -129,7 +129,7 @@ void GenesisGeneratorV2(CBlock genesis)
  */
 static Checkpoints::MapCheckpoints mapCheckpoints =
     boost::assign::map_list_of
-    (0, uint256S("0x00000477c5ac349ecd278a1a3860bd9ac72d47ea93d081457085947df392d587"));
+    (0, uint256S("0x000000bb12b748154222fd99fdc5703b5c54c0cfc524bb249dbe66bef1d683a3"));
 
 static const Checkpoints::CCheckpointData data = {
     &mapCheckpoints,
@@ -141,21 +141,21 @@ static const Checkpoints::CCheckpointData data = {
 
 static Checkpoints::MapCheckpoints mapCheckpointsTestnet =
     boost::assign::map_list_of
-    (0, uint256S("0x00000ede7df8f2d108cfccf3bd47d4a51a459eaa8c60cdc11583c21589f43e06"));
+    (0, uint256S("0x000000bb12b748154222fd99fdc5703b5c54c0cfc524bb249dbe66bef1d683a3"));
 
 static const Checkpoints::CCheckpointData dataTestnet = {
     &mapCheckpointsTestnet,
-    1711762993,
+    1712170088,
     0,
     1440};
 
 static Checkpoints::MapCheckpoints mapCheckpointsRegtest =
     boost::assign::map_list_of
-    (0, uint256S("0x00000477c5ac349ecd278a1a3860bd9ac72d47ea93d081457085947df392d587"));
+    (0, uint256S("0x000000bb12b748154222fd99fdc5703b5c54c0cfc524bb249dbe66bef1d683a3"));
 
 static const Checkpoints::CCheckpointData dataRegtest = {
     &mapCheckpointsRegtest,
-    1710945345,
+    1712170088,
     0,
     1440};
 
@@ -168,17 +168,17 @@ public:
         strNetworkID = "main";
 
         /*
-time: 1711762993
-hashGenesisBlock to 0x00000ede7df8f2d108cfccf3bd47d4a51a459eaa8c60cdc11583c21589f43e06
-Genesis Nonce to 1517620
+time: 1712170088
+hashGenesisBlock to 0x000000bb12b748154222fd99fdc5703b5c54c0cfc524bb249dbe66bef1d683a3
+Genesis Nonce to 1254268
 Genesis Merkle 0xda6e63a634e657e54e81cfb9a68d94f47b69fcb77fc066b55ddfad3743dae7f1
         */
 
-        //genesis = CreateGenesisBlock(1712170088, 547682, 0x1e0ffff0, 1, 0 * COIN);
-        //consensus.hashGenesisBlock = genesis.GetHash();
-        //assert(consensus.hashGenesisBlock == uint256S("0x00000ede7df8f2d108cfccf3bd47d4a51a459eaa8c60cdc11583c21589f43e06"));
-        //assert(genesis.hashMerkleRoot == uint256S("0xda6e63a634e657e54e81cfb9a68d94f47b69fcb77fc066b55ddfad3743dae7f1"));
-        GenesisGeneratorV2(genesis);
+        genesis = CreateGenesisBlock(1712170088, 1254268, 0x1e0ffff0, 1, 0 * COIN);
+        consensus.hashGenesisBlock = genesis.GetHash();
+        assert(consensus.hashGenesisBlock == uint256S("0x000000bb12b748154222fd99fdc5703b5c54c0cfc524bb249dbe66bef1d683a3"));
+        assert(genesis.hashMerkleRoot == uint256S("0xda6e63a634e657e54e81cfb9a68d94f47b69fcb77fc066b55ddfad3743dae7f1"));
+        //GenesisGeneratorV2(genesis);
 
         consensus.fPowAllowMinDifficultyBlocks = false;
         consensus.powLimit   = ~UINT256_ZERO >> 2;
@@ -363,9 +363,9 @@ public:
         Genesis Merkle 0x5ac6154bb64fbe61995558afc487bb0e02746b33ffabbd7e1ca949f331dcc42a
         */
 
-        genesis = CreateGenesisBlock(1710945345, 547682, 0x1e0ffff0, 1, 0 * COIN);
+        genesis = CreateGenesisBlock(1712170088, 1254268, 0x1e0ffff0, 1, 0 * COIN);
         consensus.hashGenesisBlock = genesis.GetHash();
-        assert(consensus.hashGenesisBlock == uint256S("0x00000477c5ac349ecd278a1a3860bd9ac72d47ea93d081457085947df392d587"));
+        assert(consensus.hashGenesisBlock == uint256S("0x000000bb12b748154222fd99fdc5703b5c54c0cfc524bb249dbe66bef1d683a3"));
         assert(genesis.hashMerkleRoot == uint256S("0xda6e63a634e657e54e81cfb9a68d94f47b69fcb77fc066b55ddfad3743dae7f1"));
 
         consensus.fPowAllowMinDifficultyBlocks = true;
@@ -520,9 +520,9 @@ public:
         Genesis Merkle 0x5ac6154bb64fbe61995558afc487bb0e02746b33ffabbd7e1ca949f331dcc42a
         */
 
-        genesis = CreateGenesisBlock(1710945345, 547682, 0x1e0ffff0, 1, 0 * COIN);
+        genesis = CreateGenesisBlock(1712170088, 1254268, 0x1e0ffff0, 1, 0 * COIN);
         consensus.hashGenesisBlock = genesis.GetHash();
-        assert(consensus.hashGenesisBlock == uint256S("0x00000477c5ac349ecd278a1a3860bd9ac72d47ea93d081457085947df392d587"));
+        assert(consensus.hashGenesisBlock == uint256S("0x000000bb12b748154222fd99fdc5703b5c54c0cfc524bb249dbe66bef1d683a3"));
         assert(genesis.hashMerkleRoot == uint256S("0xda6e63a634e657e54e81cfb9a68d94f47b69fcb77fc066b55ddfad3743dae7f1"));
 
         consensus.fPowAllowMinDifficultyBlocks = true;
