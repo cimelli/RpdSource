@@ -1637,8 +1637,7 @@ bool IsInitialBlockDownload()
     if (latchToFalse.load(std::memory_order_relaxed))
          return false;
     const int chainHeight = chainActive.Height();
-    //if (fImporting || fReindex || fVerifyingBlocks || chainHeight < Checkpoints::GetTotalBlocksEstimate())
-    if (fImporting || fReindex || fVerifyingBlocks)  
+    if (fImporting || fReindex || fVerifyingBlocks || chainHeight < Checkpoints::GetTotalBlocksEstimate())
         return true;
     bool state = (chainHeight < pindexBestHeader->nHeight - 24 * 6 ||
             pindexBestHeader->GetBlockTime() < GetTime() - nMaxTipAge);
@@ -3837,6 +3836,15 @@ bool CheckBlockHeader(const CBlockHeader& block, CValidationState& state, bool f
         return state.DoS(50, false, REJECT_INVALID, "high-hash", false, "proof of work failed");
 
     if (Params().IsRegTestNet()) return true;
+
+    // Version 4 header must be used after consensus.ZC_TimeStart. And never before.
+    if (block.GetBlockTime() > Params().GetConsensus().ZC_TimeStart) {
+        if(block.nVersion < 4)
+            return state.DoS(50,false, REJECT_INVALID, "block-version", "must be above 4 after ZC_TimeStart");
+    } else {
+        if (block.nVersion >= 4)
+            return state.DoS(50,false, REJECT_INVALID, "block-version", "must be below 4 before ZC_TimeStart");
+    }
 
     return true;
 }
