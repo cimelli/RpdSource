@@ -289,13 +289,13 @@ bool CBlockTreeDB::LoadBlockIndexGuts(boost::function<CBlockIndex*(const uint256
                 pindexNew->nTx = diskindex.nTx;
 
                 //zerocoin
-                pindexNew->nAccumulatorCheckpoint = diskindex.nAccumulatorCheckpoint;
+                //pindexNew->nAccumulatorCheckpoint = diskindex.nAccumulatorCheckpoint;
 
                 //Proof Of Stake
                 pindexNew->nFlags = diskindex.nFlags;
                 pindexNew->vStakeModifier = diskindex.vStakeModifier;
 
-                if (!Params().GetConsensus().NetworkUpgradeActive(pindexNew->nHeight, Consensus::UPGRADE_POS)) {
+                    if (!Params().GetConsensus().NetworkUpgradeActive(pindexNew->nHeight, Consensus::UPGRADE_POS)) {
                     if (!CheckProofOfWork(pindexNew->GetBlockHash(), pindexNew->nBits))
                         return error("LoadBlockIndex() : CheckProofOfWork failed: %s", pindexNew->ToString());
                 }
