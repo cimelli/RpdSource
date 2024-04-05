@@ -235,8 +235,8 @@ void populateRPCTypeInfo(CMPTransaction& mp_obj, UniValue& txobj, uint32_t txTyp
             populateRPCTypeUnfreezeTokens(mp_obj, txobj);
             break;
 
-        case TOKEN_TYPE_RAPIDS_PAYMENT:
-            populateRPCTypeRapidsPayment(mp_obj, txobj);
+        case TOKEN_TYPE_RPD_PAYMENT:
+            populateRPCTypeRPDPayment(mp_obj, txobj);
             break;
 
         case TOKENCORE_MESSAGE_TYPE_ACTIVATION:
@@ -267,7 +267,7 @@ bool showRefForTx(uint32_t txType)
         case TOKEN_TYPE_REVOKE_PROPERTY_TOKENS: return false;
         case TOKEN_TYPE_CHANGE_ISSUER_ADDRESS: return true;
         case TOKEN_TYPE_SEND_ALL: return true;
-        case TOKEN_TYPE_RAPIDS_PAYMENT: return true;
+        case TOKEN_TYPE_RPD_PAYMENT: return true;
         case TOKEN_TYPE_ENABLE_FREEZING: return false;
         case TOKEN_TYPE_DISABLE_FREEZING: return false;
         case TOKEN_TYPE_FREEZE_PROPERTY_TOKENS: return true;
@@ -402,7 +402,7 @@ void populateRPCTypeTradeOffer(CMPTransaction& tokenObj, UniValue& txobj)
     txobj.push_back(Pair("propertyticker", getPropertyTicker(propertyId)));
     txobj.push_back(Pair("divisible", isPropertyDivisible(propertyId)));
     txobj.push_back(Pair("amount", FormatMP(propertyId, amountOffered)));
-    txobj.push_back(Pair("rapidsdesired", FormatDivisibleMP(amountDesired)));
+    txobj.push_back(Pair("rpddesired", FormatDivisibleMP(amountDesired)));
     txobj.push_back(Pair("timelimit",  temp_offer.getBlockTimeLimit()));
     txobj.push_back(Pair("feerequired", FormatDivisibleMP(temp_offer.getMinFee())));
     if (sellSubAction == 1) txobj.push_back(Pair("action", "new"));
@@ -655,7 +655,7 @@ void populateRPCTypeUnfreezeTokens(CMPTransaction& tokenObj, UniValue& txobj)
 }
 
 
-void populateRPCTypeRapidsPayment(CMPTransaction& omniObj, UniValue& txobj)
+void populateRPCTypeRPDPayment(CMPTransaction& omniObj, UniValue& txobj)
 {
     uint256 linked_txid = omniObj.getLinkedTXID();
     txobj.push_back(Pair("linkedtxid", linked_txid.GetHex()));
@@ -685,10 +685,10 @@ void populateRPCTypeRapidsPayment(CMPTransaction& omniObj, UniValue& txobj)
                         PrintToLog("SP Error: Crowdsale purchase for non-existent property %d in transaction %s", crowdPropertyId, omniObj.getHash().GetHex());
                         return;
                     }
-                    txobj.push_back(Pair("propertyname", "Rapids"));
+                    txobj.push_back(Pair("propertyname", "RPD"));
                     txobj.push_back(Pair("propertyticker", "RPD"));
                     txobj.push_back(Pair("divisible", true));
-                    txobj.push_back(Pair("amount", FormatDivisibleMP(GetRapidsPaymentAmount(omniObj.getHash(), mp_obj.getSender()))));
+                    txobj.push_back(Pair("amount", FormatDivisibleMP(GetRPDPaymentAmount(omniObj.getHash(), mp_obj.getSender()))));
                     txobj.push_back(Pair("purchasedpropertyid", crowdPropertyId));
                     txobj.push_back(Pair("purchasedpropertyname", sp.name));
                     txobj.push_back(Pair("purchasedpropertyticker", sp.ticker));

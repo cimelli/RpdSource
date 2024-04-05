@@ -451,7 +451,9 @@ std::string mastercore::getTokenLabel(uint32_t propertyId)
             tokenStr = " TTOKEN";
         }
     } else {
-        tokenStr = strprintf(" #%d", propertyId);
+        CMPSPInfo::Entry property;
+        pDbSpInfo->getSP(propertyId, property);
+        tokenStr = strprintf(" %s", property.name);
     }
     return tokenStr;
 }
@@ -685,7 +687,7 @@ void CheckWalletUpdate(bool forceUpdate)
 #endif
 }
 
-//! Cache for potential Token Layer transactions
+//! Cache for potential RPDx transactions
 static std::set<uint256> setMarkerCache;
 
 //! Guards marker cache
@@ -694,7 +696,7 @@ static RecursiveMutex cs_marker_cache;
 /**
  * Checks, if transaction has any Token marker.
  *
- * Note: this may include invalid or malformed Token Layer transactions!
+ * Note: this may include invalid or malformed RPDx transactions!
  *
  * MUST NOT BE USED FOR CONSENSUS CRITICAL STUFF!
  */
@@ -1378,7 +1380,7 @@ int ParseTransaction(const CTransaction& tx, int nBlock, unsigned int idx, CMPTr
 /**
  * Helper to provide the amount of КЗВ sent to a particular address in a transaction
  */
-int64_t GetRapidsPaymentAmount(const uint256& txid, const std::string& recipient)
+int64_t GetRPDPaymentAmount(const uint256& txid, const std::string& recipient)
 {
     CTransaction tx;
     uint256 blockHash;
@@ -1953,11 +1955,9 @@ bool mastercore_handler_tx(const CTransaction& tx, int nBlock, unsigned int idx,
         // PKT_ERROR - 2 = interpret_Transaction failed, structurally invalid payload
         if (interp_ret != PKT_ERROR - 2) {
             bool bValid = (0 <= interp_ret);
-
+                        
             // ToDo: Add amount check here
-
             std::cout << mp_obj.getType() << "\n\n";
-
             // ToDo: Add unique name check here
 
             pDbTransactionList->recordTX(tx.GetHash(), bValid, nBlock, mp_obj.getType(), mp_obj.getNewAmount());
@@ -2084,7 +2084,6 @@ int mastercore_handler_disc_end(int nBlockNow, CBlockIndex const * pBlockIndex)
 /**
  * Returns the Exodus address.
  */
-
 const CTxDestination ExodusAddress()
 {
     if (isNonMainNet()) {

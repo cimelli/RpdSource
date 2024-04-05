@@ -73,7 +73,7 @@ UsernamesDialog::UsernamesDialog(QWidget *parent) :
     // do an initial population
     PopulateUsernames();
 
-    // initial resizing
+    // Initial resizing
     ui->balancesTable->resizeColumnToContents(0);
     ui->balancesTable->resizeColumnToContents(1);
     ui->balancesTable->verticalHeader()->setVisible(false);
@@ -81,7 +81,6 @@ UsernamesDialog::UsernamesDialog(QWidget *parent) :
     ui->balancesTable->setSelectionBehavior(QAbstractItemView::SelectRows);
     ui->balancesTable->setSelectionMode(QAbstractItemView::SingleSelection);
     ui->balancesTable->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
-    ui->balancesTable->verticalHeader()->setFixedWidth(10);
     ui->balancesTable->setTabKeyNavigation(false);
     ui->balancesTable->setContextMenuPolicy(Qt::CustomContextMenu);
     ui->balancesTable->setEditTriggers(QAbstractItemView::NoEditTriggers);
@@ -157,7 +156,7 @@ void UsernamesDialog::PopulateUsernames()
     // loop over the wallet property list and add the wallet totals
     for (std::set<uint32_t>::iterator it = global_wallet_property_list.begin() ; it != global_wallet_property_list.end(); ++it) {
         uint32_t propertyId = *it;
-        std::string username = getPropertyName(propertyId).c_str();
+        std::string username = getPropertyTicker(propertyId).c_str();
 
         if (global_balance_money[propertyId] > 0 || global_balance_reserved[propertyId] > 0) {
             if (IsUsernameValid(username)) {
