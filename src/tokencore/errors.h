@@ -159,6 +159,9 @@ inline std::string error_str(int ec) {
       case PKT_ERROR_TRADEOFFER -23:
           ec_str = "Value out of range or zero";
           break;
+      case PKT_ERROR_TRADEOFFER -47:
+          ec_str = "Property for sale must be OMN or TOMN";
+          break;
       case PKT_ERROR_TRADEOFFER -49:
           ec_str = "Sender has no active sell offer for the property";
           break;

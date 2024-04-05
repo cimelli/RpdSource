@@ -210,11 +210,6 @@ int DEx_offerCreate(const std::string& addressSeller, uint32_t propertyId, int64
         return (DEX_ERROR_SELLOFFER -10); // offer already exists
     }
 
-    // Ensure further there can only be one active offer
-    if (DEx_hasOffer(addressSeller)) {
-        return (DEX_ERROR_SELLOFFER -10); // offer already exists
-    }
-
     const std::string key = STR_SELLOFFER_ADDR_PROP_COMBO(addressSeller, propertyId);
     if (msc_debug_dex) PrintToLog("%s(%s|%s), nValue=%d)\n", __func__, addressSeller, key, amountOffered);
 
@@ -508,8 +503,8 @@ int DEx_payment(const uint256& txid, unsigned int vout, const std::string& addre
     uint32_t propertyId = TOKEN_PROPERTY_MSC;
     CMPAccept* p_accept = nullptr;
 
-    // Retrieve and get the token for sale for that seller
-    if (DEx_getTokenForSale(addressSeller, propertyId)) {
+    if (!p_accept) {
+        propertyId = TOKEN_PROPERTY_TMSC; // test for TMSC accept second
         p_accept = DEx_getAccept(addressSeller, propertyId, addressBuyer);
     }
 

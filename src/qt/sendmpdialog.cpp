@@ -125,30 +125,24 @@ void SendMPDialog::updatePropSelector()
     QString spId = ui->propertyComboBox->itemData(ui->propertyComboBox->currentIndex()).toString();
     ui->propertyComboBox->clear();
     for (unsigned int propertyId = 1; propertyId < nextPropIdMainEco; propertyId++) {
-        if (global_balance_money[propertyId] > 0) {
-                std::string spName = getPropertyName(propertyId);
-                std::string spId = strprintf("%d", propertyId);
-                std::string spTicker = getPropertyTicker(propertyId);
-
-                if (spName.size() > 20) spName = spName.substr(0, 20) + "...";
-                if (spTicker.size() > 20) spTicker = spTicker.substr(0, 20) + "...";
-
-                std::string itemText = spName + " (" + spTicker + " - ID#" + spId + ")";
-                ui->propertyComboBox->addItem(itemText.c_str(), spId.c_str());
-            }
+        if ((global_balance_money[propertyId] > 0) || (global_balance_reserved[propertyId] > 0)) {
+            std::string spName = getPropertyName(propertyId);
+            std::string spId = strprintf("%d", propertyId);
+            if(spName.size()>23) spName=spName.substr(0,23) + "...";
+            spName += " (ID#" + spId + ")";
+            if (isPropertyDivisible(propertyId)) { spName += ""; } else { spName += ""; }
+            ui->propertyComboBox->addItem(spName.c_str(),spId.c_str());
+        }
     }
     for (unsigned int propertyId = 2147483647; propertyId < nextPropIdTestEco; propertyId++) {
-        if (global_balance_money[propertyId] > 0) {
+        if ((global_balance_money[propertyId] > 0) || (global_balance_reserved[propertyId] > 0)) {
             std::string spName = getPropertyName(propertyId);
-                std::string spId = strprintf("%d", propertyId);
-                std::string spTicker = getPropertyTicker(propertyId);
-
-                if (spName.size() > 20) spName = spName.substr(0, 20) + "...";
-                if (spTicker.size() > 20) spTicker = spTicker.substr(0, 20) + "...";
-
-                std::string itemText = spName + " (" + spTicker + " - ID#" + spId + ")";
-                ui->propertyComboBox->addItem(itemText.c_str(), spId.c_str());
-            }
+            std::string spId = strprintf("%d", propertyId);
+            if(spName.size()>23) spName=spName.substr(0,23) + "...";
+            spName += " (ID#" + spId + ")";
+            if (isPropertyDivisible(propertyId)) { spName += ""; } else { spName += ""; }
+            ui->propertyComboBox->addItem(spName.c_str(),spId.c_str());
+        }
     }
     int propIdx = ui->propertyComboBox->findData(spId);
     if (propIdx != -1) { ui->propertyComboBox->setCurrentIndex(propIdx); }

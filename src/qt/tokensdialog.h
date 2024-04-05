@@ -34,7 +34,7 @@ public:
 
     void setClientModel(ClientModel *model);
     void setWalletModel(WalletModel *model);
-    void AddRow(const std::string& label, const std::string& address, const std::string& spTicker, const std::string& reserved, const std::string& available);
+    void AddRow(const std::string& label, const std::string& address, const std::string& reserved, const std::string& available);
     void PopulateBalances(unsigned int propertyId);
     void UpdatePropSelector();
 
@@ -59,7 +59,6 @@ private Q_SLOTS:
     void balancesCopyCol1();
     void balancesCopyCol2();
     void balancesCopyCol3();
-    void balancesCopyCol4();
 
 Q_SIGNALS:
     /**  Fired when a message should be reported to the user */

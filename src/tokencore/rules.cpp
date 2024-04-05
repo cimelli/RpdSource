@@ -54,7 +54,7 @@ std::vector<TransactionRestriction> CConsensusParams::GetRestrictions() const
         { TOKEN_TYPE_CREATE_PROPERTY_VARIABLE,  MP_TX_PKT_V2,  false,   TOKEN_SP_BLOCK       },
         { TOKEN_TYPE_CLOSE_CROWDSALE,           MP_TX_PKT_V0,  false,   TOKEN_SP_BLOCK       },
 
-        { TOKEN_TYPE_RPD_PAYMENT,            MP_TX_PKT_V0,  true,    TOKEN_SP_BLOCK       },
+        { TOKEN_TYPE_RAPIDS_PAYMENT,            MP_TX_PKT_V0,  true,    TOKEN_SP_BLOCK       },
         { TOKEN_TYPE_SEND_TO_MANY,              MP_TX_PKT_V0,  true,    TOKEN_SP_BLOCK       },
 
         { TOKEN_TYPE_CREATE_PROPERTY_MANUAL,    MP_TX_PKT_V0,  false,   TOKEN_MANUALSP_BLOCK },
@@ -115,7 +115,7 @@ std::vector<TransactionCheckpoint> CMainConsensusParams::GetTransactions() const
 CMainConsensusParams::CMainConsensusParams()
 {
     // Exodus related:
-    GENESIS_BLOCK = 10000;
+    GENESIS_BLOCK = 100;
     // Notice range for feature activations:
     MIN_ACTIVATION_BLOCKS = 10080;  // ~2 weeks
     MAX_ACTIVATION_BLOCKS = 60480; // ~12 weeks
@@ -328,9 +328,9 @@ bool IsAllowedOutputType(int whichType, int nBlock)
 }
 
 /**
- * Whether RPD payments are supported for a transaction type/version.
+ * Whether Rapids payments are supported for a transaction type/version.
  */
-bool IsRPDPaymentAllowed(uint16_t type, uint16_t version)
+bool IsRapidsPaymentAllowed(uint16_t type, uint16_t version)
 {
     bool allowed = false;
 

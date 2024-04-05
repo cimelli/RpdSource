@@ -70,7 +70,7 @@ WelcomeContentWidget::WelcomeContentWidget(QWidget *parent) :
                                   "    border-radius: 2px;"
                                   "}"
                                   "QPushButton:hover {"
-                                  "    background-color: #ff5533;"
+                                  "    background-color: #50ff5533;"
                                   "}");
     nextButton->move(nextX, nextY);
     nextButton->setStyleSheet("QPushButton {"
@@ -83,7 +83,7 @@ WelcomeContentWidget::WelcomeContentWidget(QWidget *parent) :
                               "    border-radius: 2px;"
                               "}"
                               "QPushButton:hover {"
-                              "    background-color: #ff5533;"
+                              "    background-color: #50ff5533;"
                               "}");
 
     if (pos == 0) {

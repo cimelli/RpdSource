@@ -47,10 +47,10 @@ using namespace mastercore;
 
 static const std::regex IPFS_CHARACTERS("Qm[1-9A-HJ-NP-Za-km-z]{44,}|b[A-Za-z2-7]{58,}|B[A-Z2-7]{58,}|z[1-9A-HJ-NP-Za-km-z]{48,}|F[0-9A-F]{50,}");
 static const std::regex TOKEN_SUB_CHARACTERS("^[r]?[A-Z0-9._]{3,20}#[A-Z0-9._]{3,20}$");
-static const std::regex PROTECTED_TICKERS("^RPD$|^RPDCHAIN$|^RPDX$");
+static const std::regex PROTECTED_TICKERS("^RPD$|^RPDCHAIN$");
 static const std::regex TOKEN_TICKER_CHARACTERS("^[r]?[A-Z0-9._]{3,20}$");
 static const std::regex USERNAME_CHARACTERS("^[a-z0-9._]{3,20}.rpd$");
-static const std::regex PROTECTED_USERNAMES("^rpdchain.rpd$|^rpd.rpd$|^rpdx.rpd$");
+static const std::regex PROTECTED_USERNAMES("^rpdchain.rpd$|^rpd.rpd$");
 
 std::vector<std::string> SplitSubTicker(const std::string &s) {
     std::vector<std::string> elements;
@@ -118,7 +118,7 @@ std::string mastercore::strTransactionType(uint16_t txType)
         case TOKEN_TYPE_FREEZE_PROPERTY_TOKENS: return "Freeze Property Tokens";
         case TOKEN_TYPE_UNFREEZE_PROPERTY_TOKENS: return "Unfreeze Property Tokens";
         case TOKEN_TYPE_NOTIFICATION: return "Notification";
-        case TOKEN_TYPE_RPD_PAYMENT: return "RPD Payment";
+        case TOKEN_TYPE_RAPIDS_PAYMENT: return "Rapids Payment";
         case TOKENCORE_MESSAGE_TYPE_ALERT: return "ALERT";
         case TOKENCORE_MESSAGE_TYPE_DEACTIVATION: return "Feature Deactivation";
         case TOKENCORE_MESSAGE_TYPE_ACTIVATION: return "Feature Activation";
@@ -226,8 +226,8 @@ bool CMPTransaction::interpret_Transaction()
         case TOKENCORE_MESSAGE_TYPE_DEACTIVATION:
             return interpret_Deactivation();
 
-        case TOKEN_TYPE_RPD_PAYMENT:
-            return interpret_RPDPayment();
+        case TOKEN_TYPE_RAPIDS_PAYMENT:
+            return interpret_RapidsPayment();
 
         case TOKENCORE_MESSAGE_TYPE_ACTIVATION:
             return interpret_Activation();
@@ -909,7 +909,7 @@ bool CMPTransaction::interpret_Deactivation()
 }
 
 /** Tx 80 */
-bool CMPTransaction::interpret_RPDPayment()
+bool CMPTransaction::interpret_RapidsPayment()
 {
     if (pkt_size < 36) {
         return false;
@@ -1060,8 +1060,8 @@ int CMPTransaction::interpretPacket()
         case TOKEN_TYPE_CHANGE_ISSUER_ADDRESS:
             return logicMath_ChangeIssuer();
 
-        case TOKEN_TYPE_RPD_PAYMENT:
-            return logicMath_RPDPayment();
+        case TOKEN_TYPE_RAPIDS_PAYMENT:
+            return logicMath_RapidsPayment();
 
         case TOKEN_TYPE_ENABLE_FREEZING:
             return logicMath_EnableFreezing();
@@ -2744,7 +2744,7 @@ int CMPTransaction::logicMath_Deactivation()
 }
 
 /** Tx 80 */
-int CMPTransaction::logicMath_RPDPayment()
+int CMPTransaction::logicMath_RapidsPayment()
 {
     uint256 blockHash;
     {
@@ -2823,15 +2823,15 @@ int CMPTransaction::logicMath_RPDPayment()
 
     uint16_t linked_type = mp_obj.getType();
     uint16_t linked_version = mp_obj.getVersion();
-    if (!IsRPDPaymentAllowed(linked_type, linked_version)) {
-        PrintToLog("%s(): rejected: linked transaction %s doesn't support RPD payments\n",
+    if (!IsRapidsPaymentAllowed(linked_type, linked_version)) {
+        PrintToLog("%s(): rejected: linked transaction %s doesn't support rapids payments\n",
                 __func__,
                 linked_txid.GetHex());
         return (PKT_ERROR_TOKENS -61);
     }
 
     std::string linked_sender = mp_obj.getSender();
-    nValue = GetRPDPaymentAmount(txid, linked_sender);
+    nValue = GetRapidsPaymentAmount(txid, linked_sender);
     PrintToLog("\tlinked tx sender: %s\n", linked_sender);
     PrintToLog("\t  psyment amount: %s\n", FormatDivisibleMP(nValue));
 

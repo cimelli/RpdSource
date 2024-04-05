@@ -114,7 +114,7 @@ private:
     uint32_t activation_block;
     uint32_t min_client_version;
 
-    // RPD Payment
+    // Rapids Payment
     uint256 linked_txid;
 
     // Indicates whether the transaction can be used to execute logic
@@ -144,7 +144,7 @@ private:
     bool interpret_GrantTokens();
     bool interpret_RevokeTokens();
     bool interpret_ChangeIssuer();
-    bool interpret_RPDPayment();
+    bool interpret_RapidsPayment();
     bool interpret_EnableFreezing();
     bool interpret_DisableFreezing();
     bool interpret_FreezeTokens();
@@ -173,7 +173,7 @@ private:
     int logicMath_GrantTokens();
     int logicMath_RevokeTokens();
     int logicMath_ChangeIssuer();
-    int logicMath_RPDPayment();
+    int logicMath_RapidsPayment();
     int logicMath_EnableFreezing();
     int logicMath_DisableFreezing();
     int logicMath_FreezeTokens();

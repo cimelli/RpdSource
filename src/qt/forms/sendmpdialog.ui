@@ -203,13 +203,13 @@
           <widget class="QComboBox" name="propertyComboBox">
            <property name="sizePolicy">
             <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-             <horstretch>1</horstretch>
+             <horstretch>0</horstretch>
              <verstretch>0</verstretch>
             </sizepolicy>
            </property>
            <property name="minimumSize">
             <size>
-             <width>300</width>
+             <width>200</width>
              <height>0</height>
             </size>
            </property>

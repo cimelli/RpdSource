@@ -37,7 +37,7 @@ SendMultiRow::SendMultiRow(PWidget *parent) :
     ui->btnMenu->setVisible(false);
 
     // Button Contact
-    btnContact = ui->lineEditAddress->addAction(QIcon("://ic-arrow-drop-down"), QLineEdit::TrailingPosition);
+    btnContact = ui->lineEditAddress->addAction(QIcon("://ic-arrow-down"), QLineEdit::TrailingPosition);
     // Icon Number
     ui->stackedAddress->addWidget(iconNumber);
     iconNumber->show();

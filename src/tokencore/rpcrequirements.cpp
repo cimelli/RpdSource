@@ -28,6 +28,13 @@ void RequireBalance(const std::string& address, uint32_t propertyId, int64_t amo
     }
 }
 
+void RequirePrimaryToken(uint32_t propertyId)
+{
+    if (propertyId < 1 || 2 < propertyId) {
+        throw JSONRPCError(RPC_INVALID_PARAMETER, "Property identifier must be 1 (OMN) or 2 (TOMN)");
+    }
+}
+
 void RequirePropertyName(const std::string& name)
 {
     if (name.empty()) {
@@ -109,10 +116,10 @@ void RequireMatchingDExOffer(const std::string& address, uint32_t propertyId)
     }
 }
 
-void RequireNoOtherDExOffer(const std::string& address)
+void RequireNoOtherDExOffer(const std::string& address, uint32_t propertyId)
 {
     LOCK(cs_tally);
-    if (mastercore::DEx_hasOffer(address)) {
+    if (mastercore::DEx_offerExists(address, propertyId)) {
         throw JSONRPCError(RPC_TYPE_ERROR, "Another active sell offer from the given address already exists on the distributed exchange");
     }
 }
