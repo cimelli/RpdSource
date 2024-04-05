@@ -100,7 +100,7 @@ std::vector<unsigned char> CreatePayload_SendToMany(uint32_t propertyId, std::ve
     return payload;
 }
 
-std::vector<unsigned char> CreatePayload_RapidsPayment(const uint256& linkedtxid)
+std::vector<unsigned char> CreatePayload_RPDPayment(const uint256& linkedtxid)
 {
     std::vector<unsigned char> payload;
     uint16_t messageVer = 0;
