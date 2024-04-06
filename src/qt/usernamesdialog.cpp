@@ -95,8 +95,8 @@ UsernamesDialog::UsernamesDialog(QWidget *parent) :
 
     // Connect actions
     connect(ui->balancesTable, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(contextualMenu(QPoint)));
-    connect(balancesCopyAddressAction, SIGNAL(triggered()), this, SLOT(balancesCopyCol0()));
-    connect(balancesCopyUsernameAction, SIGNAL(triggered()), this, SLOT(balancesCopyCol1()));
+    connect(balancesCopyUsernameAction, SIGNAL(triggered()), this, SLOT(balancesCopyCol0()));
+    connect(balancesCopyAddressAction, SIGNAL(triggered()), this, SLOT(balancesCopyCol1()));
 }
 
 UsernamesDialog::~UsernamesDialog()

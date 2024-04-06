@@ -910,10 +910,17 @@ static UniValue sendtokenissuancefixed(const JSONRPCRequest& request)
     RequirePropertyName(name);
     RequirePropertyName(ticker);
     
-    if ((name == "RNS" || name == "rns" || name == "RnS" || name == "RNs" ||
-         name == "rNS" || name == "rnS" || name == "rNs" || name == "Rns") &&
-        !IsUsernameValid(ticker))
-        throw JSONRPCError(RPC_INTERNAL_ERROR, "Name 'RNS' can only be used to deploy a username");
+    if (name == "RNS")
+    {
+        if (!IsUsernameValid(ticker))
+        {
+            throw JSONRPCError(RPC_INTERNAL_ERROR, "Name 'RNS' can only be used to deploy a valid username");
+        }
+    }
+    else if (IsUsernameValid(ticker))
+    {
+        throw JSONRPCError(RPC_INTERNAL_ERROR, "Username deployment must have name 'RNS'");
+    }
 
     uint32_t propertyId = pDbSpInfo->findSPByTicker(ticker);
     if (propertyId > 0)
