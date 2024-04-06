@@ -50,7 +50,7 @@ static const std::regex TOKEN_SUB_CHARACTERS("^[r]?[A-Z0-9._]{3,20}#[A-Z0-9._]{3
 static const std::regex PROTECTED_TICKERS("^RPD$|^RPDCHAIN$|^RPDX$");
 static const std::regex TOKEN_TICKER_CHARACTERS("^[r]?[A-Z0-9._]{3,20}$");
 static const std::regex USERNAME_CHARACTERS("^[a-z0-9._]{3,20}.rpd$");
-static const std::regex PROTECTED_USERNAMES("^rpdchain.rpd$|^rpd.rpd$|^rpdx.rpd$");
+static const std::regex PROTECTED_USERNAMES("^rpdchain.rpd$|^rpd.rpd$|^rns.rpd$|^rpdx.rpd$");
 
 std::vector<std::string> SplitSubTicker(const std::string &s) {
     std::vector<std::string> elements;
