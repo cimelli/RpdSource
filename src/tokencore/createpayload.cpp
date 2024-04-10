@@ -236,9 +236,9 @@ std::vector<unsigned char> CreatePayload_IssuanceFixed(uint8_t ecosystem, uint16
     payload.push_back('\0');
     payload.insert(payload.end(), data.begin(), data.end());
     payload.push_back('\0');
+    PUSH_BACK_BYTES(payload, amount);
     payload.insert(payload.end(), royaltiesReceiver.begin(), royaltiesReceiver.end());
     payload.push_back('\0');
-    PUSH_BACK_BYTES(payload, amount);
     PUSH_BACK_BYTES(payload, royaltiesPercentage);
 
     return payload;

@@ -810,6 +810,9 @@ static UniValue sendtokenissuancecrowdsale(const JSONRPCRequest& request)
     uint32_t propertyIdDesired = pDbSpInfo->findSPByTicker(desiredToken);
     if (desiredToken != "RPD" && propertyIdDesired == 0)
         throw JSONRPCError(RPC_INTERNAL_ERROR, "Desired token not found");
+    
+    if (!IsTokenTickerValid(ticker))
+        throw JSONRPCError(RPC_INTERNAL_ERROR, "Token ticker is invalid");
 
     if (!IsTokenIPFSValid(data))
         throw JSONRPCError(RPC_INTERNAL_ERROR, "Token IPFS is invalid");
@@ -910,7 +913,15 @@ static UniValue sendtokenissuancefixed(const JSONRPCRequest& request)
     RequirePropertyName(name);
     RequirePropertyName(ticker);
     
-    if (name != "RNS")
+    if (name == "RNS")
+    {
+        if (!IsUsernameValid(ticker))
+        {
+            throw JSONRPCError(RPC_INTERNAL_ERROR, "Name 'RNS' can only be used to deploy a username");
+        }
+        // Deploy username with RNS
+    }
+    else
     {
         if (IsUsernameValid(ticker))
         {
@@ -921,18 +932,7 @@ static UniValue sendtokenissuancefixed(const JSONRPCRequest& request)
         {
             throw JSONRPCError(RPC_INTERNAL_ERROR, "Name 'RNS' can only be used to deploy a username");
         }
-        else
-        {
-            // Deploy token with the given name
-        }
-    }
-    else if (name == "RNS" && !IsUsernameValid(ticker))
-    {
-        throw JSONRPCError(RPC_INTERNAL_ERROR, "Username deployment must have name 'RNS'");
-    }
-    else
-    {
-        // Deploy username with RNS
+        // Deploy token with the given name
     }
 
     uint32_t propertyId = pDbSpInfo->findSPByTicker(ticker);
