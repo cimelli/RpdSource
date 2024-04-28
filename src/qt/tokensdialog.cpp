@@ -181,9 +181,10 @@ void TokensDialog::UpdatePropSelector()
     for (std::set<uint32_t>::iterator it = global_wallet_property_list.begin(); it != global_wallet_property_list.end(); ++it) {
         uint32_t propertyId = *it;
         
-        // Check if available balance is greater than 1, or if reserved balance is greater than 1 or if 0
-        if ((global_balance_money[propertyId] > 1 && global_balance_reserved[propertyId] == 0) ||
-            (global_balance_money[propertyId] == 0 && global_balance_reserved[propertyId] > 1))
+        // Check if either available balance or reserved balance is greater than 1, or if both are not equal to 1 but not equal to 0
+        if ((global_balance_money[propertyId] > 1 || global_balance_reserved[propertyId] > 1) ||
+            (global_balance_money[propertyId] == 0 && global_balance_reserved[propertyId] > 1) ||
+            (global_balance_money[propertyId] > 1 && global_balance_reserved[propertyId] == 0))
         {
             std::string spId = strprintf("%d", propertyId);
             std::string spTicker = getPropertyTicker(propertyId);
@@ -260,9 +261,10 @@ void TokensDialog::PopulateBalances(unsigned int propertyId) {
             std::string available = FormatMP(propertyId, global_balance_money[propertyId]);
             std::string reserved = FormatMP(propertyId, global_balance_reserved[propertyId]);
 
-            // Check if available balance is greater than 1, or if reserved balance is greater than 1 or if 0
-            if ((global_balance_money[propertyId] > 1 && global_balance_reserved[propertyId] == 0) ||
-                (global_balance_money[propertyId] == 0 && global_balance_reserved[propertyId] > 1))
+            // Check if either available balance or reserved balance is greater than 1, or if both are not equal to 1 but not equal to 0
+            if ((global_balance_money[propertyId] > 1 || global_balance_reserved[propertyId] > 1) ||
+                (global_balance_money[propertyId] == 0 && global_balance_reserved[propertyId] > 1) ||
+                (global_balance_money[propertyId] > 1 && global_balance_reserved[propertyId] == 0))
                 AddRow(spId, spName, spTicker, reserved, available);
         }
     } else {

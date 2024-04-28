@@ -501,6 +501,40 @@ static UniValue getwallettokenbalances(const JSONRPCRequest& request)
     return response;
 }
 
+static UniValue gettokenbalance(const JSONRPCRequest& request)
+{
+    if (request.fHelp || request.params.size() != 2)
+        throw runtime_error(
+            "gettokenbalance \"address\" ticker\n"
+            "\nReturns the token balance for a given address and token.\n"
+            "\nArguments:\n"
+            "1. address              (string, required) the address\n"
+            "2. ticker               (string, required) the token ticker\n"
+            "\nResult:\n"
+            "{\n"
+            "  \"balance\" : \"n.nnnnnnnn\",   (string) the available balance of the address\n"
+            "  \"reserved\" : \"n.nnnnnnnn\"   (string) the amount reserved by sell offers and accepts\n"
+            "  \"frozen\" : \"n.nnnnnnnn\"     (string) the amount frozen by the issuer (applies to managed properties only)\n"
+            "}\n"
+            "\nExamples:\n"
+            + HelpExampleCli("gettokenbalance", "\"RiGQ12CCidStpSKmjdJMfzc2uE9JFD7epe\" TOKEN")
+            + HelpExampleRpc("gettokenbalance", "\"RiGQ12CCidStpSKmjdJMfzc2uE9JFD7epe\", TOKEN")
+        );
+
+    std::string address = ParseAddress(request.params[0]);
+
+    uint32_t propertyId = pDbSpInfo->findSPByTicker(request.params[1].get_str());
+    if (!propertyId)
+        throw JSONRPCError(RPC_INTERNAL_ERROR, "Token not found");
+
+    RequireExistingProperty(propertyId);
+
+    UniValue balanceObj(UniValue::VOBJ);
+    BalanceToJSON(address, propertyId, balanceObj, isPropertyDivisible(propertyId));
+
+    return balanceObj;
+}
+
 static UniValue gettokenbalances(const JSONRPCRequest& request)
 {
     if (request.fHelp || request.params.size() > 1)
@@ -1417,7 +1451,8 @@ static UniValue gettokenactivedexsells(const JSONRPCRequest& request)
     for (OfferMap::iterator it = my_offers.begin(); it != my_offers.end(); ++it) {
         const CMPOffer& selloffer = it->second;
         const std::string& sellCombo = it->first;
-        std::string seller = sellCombo.substr(0, sellCombo.size() - 2);
+        size_t hyphenPos = sellCombo.find_last_of('-');
+        std::string seller = (hyphenPos != std::string::npos) ? sellCombo.substr(0, hyphenPos) : sellCombo;
 
         // filtering
         if (!addressFilter.empty() && seller != addressFilter) continue;
@@ -2014,7 +2049,7 @@ static const CRPCCommand commands[] =
   //  ------------------------- ------------------------------- -------------------------------------- ----------
     { "tokens (data retrieval)", "gettokensinfo",                   &gettokensinfo,                    true  },
     { "tokens (data retrieval)", "getalltokenbalances",             &getalltokenbalances,              false },
-    { "tokens (data retrieval)", "gettokenbalances",                &gettokenbalances,                 false },
+    { "tokens (data retrieval)", "gettokenbalance",                 &gettokenbalance,                  false },
     { "tokens (data retrieval)", "gettokentransaction",             &gettokentransaction,              false },
     { "tokens (data retrieval)", "gettoken",                        &gettoken,                         false },
     { "tokens (data retrieval)", "listtokens",                      &listtokens,                       false },

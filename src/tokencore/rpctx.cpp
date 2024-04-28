@@ -718,11 +718,11 @@ static UniValue sendtokendexpay(const JSONRPCRequest& request)
         const CAmount amountToPayInRPD = calculateDesiredRPD(acceptOffer->getOfferAmountOriginal(), acceptOffer->getRPDDesiredOriginal(), amountAccepted);
 
         if (nAmount > amountToPayInRPD) {
-            throw JSONRPCError(RPC_MISC_ERROR, strprintf("Paying more than required: %lld RPD to pay for %lld tokens", FormatMoney(amountToPayInRPD), FormatMP(propertyId, amountAccepted)));
+            throw JSONRPCError(RPC_MISC_ERROR, ("Paying more than required: %lld RPD to pay for %lld tokens", FormatMoney(amountToPayInRPD), FormatMP(propertyId, amountAccepted)));
         }
 
         if (!isPropertyDivisible(propertyId) && nAmount < amountToPayInRPD) {
-            throw JSONRPCError(RPC_MISC_ERROR, strprintf("Paying less than required: %lld RPD to pay for %lld tokens", FormatMoney(amountToPayInRPD), FormatMP(propertyId, amountAccepted)));
+            throw JSONRPCError(RPC_MISC_ERROR, ("Paying less than required: %lld RPD to pay for %lld tokens", FormatMoney(amountToPayInRPD), FormatMP(propertyId, amountAccepted)));
         }
     }
 
@@ -886,15 +886,20 @@ static UniValue sendtokenissuancefixed(const JSONRPCRequest& request)
     std::string data = ParseText(request.params[9]);
     int64_t amount = ParseAmount(request.params[10], type);
 
+    // Check if the amount is 1, otherwise disallow royalties
+    if (amount != 1 && request.params.size() > 12) {
+        throw JSONRPCError(RPC_INTERNAL_ERROR, "Royalties can only be attached to tokens with an amount of 1");
+    }
+
     std::string royaltiesReceiver = (request.params.size() > 11 && !ParseText(request.params[11]).empty()) ? ParseText(request.params[11]): "";
     uint8_t royaltiesPercentage = (request.params.size() > 12) ? ParseRoyaltiesPercentage(request.params[12]) : 0;
 
     if (royaltiesReceiver != "") {
         if (!IsUsernameValid(royaltiesReceiver)) {
-            throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, strprintf("Royalties receiver must be a valid username", royaltiesReceiver));
+            throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Royalties receiver must be a valid username");
         }
         if (GetUsernameAddress(royaltiesReceiver) == "") {
-            throw JSONRPCError(RPC_INTERNAL_ERROR, strprintf("Username %s not valid", royaltiesReceiver));
+            throw JSONRPCError(RPC_INTERNAL_ERROR, "Username %s not valid");
         }
     } else if (royaltiesPercentage > 0) {
         throw JSONRPCError(RPC_INTERNAL_ERROR, "Royalties receiver can't be empty if royalties percentage greater than zero");

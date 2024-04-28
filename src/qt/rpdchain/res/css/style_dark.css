@@ -431,8 +431,7 @@ HH       TOP BAR
 HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH*/
 
 *[cssClass="container-top"] {
-    background-color:transparent;
-    border-image: url("://bg-dashboard-banner") 0 0 0 0 stretch stretch;
+    background-color:#3c3c3b;
 }
 
 *[cssClass="container-topbar-no-image"] {
