@@ -132,7 +132,6 @@
         <file alias="img-logo-rpdchain">rpdchain/res/img/img-logo-rpdchain.svg</file>
         <file alias="bg-welcome-svg">rpdchain/res/img/bg-welcome.svg</file>
         <file alias="bg-welcome">rpdchain/res/img/bg-welcome.png</file>
-        <file alias="bg-dashboard-banner">rpdchain/res/img/bg-dashboard-banner.png</file>
         <file alias="ic-check-box-dark-active">rpdchain/res/img/ic-check-box-dark-active.svg</file>
         <file alias="ic-check-box-indeterminate">rpdchain/res/img/ic-check-box-indeterminate.svg</file>
         <file alias="ic-check-liliac-indeterminate">rpdchain/res/img/ic-check-liliac-indeterminate.svg</file>
