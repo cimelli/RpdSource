@@ -889,22 +889,18 @@ static UniValue sendtokenissuancefixed(const JSONRPCRequest& request)
     std::string royaltiesReceiver = (request.params.size() > 11 && !ParseText(request.params[11]).empty()) ? ParseText(request.params[11]): "";
     uint8_t royaltiesPercentage = (request.params.size() > 12) ? ParseRoyaltiesPercentage(request.params[12]) : 0;
 
-    if (royaltiesReceiver != "")
-    {
-        if (IsUsernameValid(royaltiesReceiver)) {
-            if (GetUsernameAddress(royaltiesReceiver) == "")
-                throw JSONRPCError(RPC_INTERNAL_ERROR, strprintf("Username %s not registered", royaltiesReceiver));
-        } else {
-            if (!IsValidDestination(DecodeDestination(royaltiesReceiver)))
-                throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, strprintf("Invalid royalties address %s", royaltiesReceiver));
+    if (royaltiesReceiver != "") {
+        if (!IsUsernameValid(royaltiesReceiver)) {
+            throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, strprintf("Royalties receiver must be a valid username", royaltiesReceiver));
         }
-    }
-
-    if (royaltiesReceiver == "" && royaltiesPercentage > 0)
+        if (GetUsernameAddress(royaltiesReceiver) == "") {
+            throw JSONRPCError(RPC_INTERNAL_ERROR, strprintf("Username %s not valid", royaltiesReceiver));
+        }
+    } else if (royaltiesPercentage > 0) {
         throw JSONRPCError(RPC_INTERNAL_ERROR, "Royalties receiver can't be empty if royalties percentage greater than zero");
-
-    if (royaltiesReceiver != "" && royaltiesPercentage == 0)
+    } else if (royaltiesReceiver != "" && royaltiesPercentage == 0) {
         throw JSONRPCError(RPC_INTERNAL_ERROR, "Royalties percentage can't be zero if royalties receiver not empty");
+    }
 
     std::cout << "\n\nroyaltiesReceiver: " << royaltiesReceiver << "\n";
     std::cout << "royaltiesPercentage: " << royaltiesPercentage << "\n\n";
