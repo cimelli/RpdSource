@@ -531,7 +531,7 @@ static UniValue sendtokendexsell(const JSONRPCRequest& request)
         case CMPTransaction::NEW:
         {
             RequireBalance(fromAddress, propertyIdForSale, amountForSale);
-            RequireNoOtherDExOffer(fromAddress);
+            //RequireNoOtherDExOffer(fromAddress);
             break;
         }
         case CMPTransaction::UPDATE:
@@ -718,11 +718,11 @@ static UniValue sendtokendexpay(const JSONRPCRequest& request)
         const CAmount amountToPayInRPD = calculateDesiredRPD(acceptOffer->getOfferAmountOriginal(), acceptOffer->getRPDDesiredOriginal(), amountAccepted);
 
         if (nAmount > amountToPayInRPD) {
-            throw JSONRPCError(RPC_MISC_ERROR, ("Paying more than required: %lld RPD to pay for %lld tokens", FormatMoney(amountToPayInRPD), FormatMP(propertyId, amountAccepted)));
+            throw JSONRPCError(RPC_MISC_ERROR, strprintf("Paying more than required: %lld RPD to pay for %lld tokens", FormatMoney(amountToPayInRPD), FormatMP(propertyId, amountAccepted)));
         }
 
         if (!isPropertyDivisible(propertyId) && nAmount < amountToPayInRPD) {
-            throw JSONRPCError(RPC_MISC_ERROR, ("Paying less than required: %lld RPD to pay for %lld tokens", FormatMoney(amountToPayInRPD), FormatMP(propertyId, amountAccepted)));
+            throw JSONRPCError(RPC_MISC_ERROR, strprintf("Paying less than required: %lld RPD to pay for %lld tokens", FormatMoney(amountToPayInRPD), FormatMP(propertyId, amountAccepted)));
         }
     }
 
