@@ -531,7 +531,6 @@ static UniValue sendtokendexsell(const JSONRPCRequest& request)
         case CMPTransaction::NEW:
         {
             RequireBalance(fromAddress, propertyIdForSale, amountForSale);
-            //RequireNoOtherDExOffer(fromAddress);
             break;
         }
         case CMPTransaction::UPDATE:

@@ -109,14 +109,6 @@ void RequireMatchingDExOffer(const std::string& address, uint32_t propertyId)
     }
 }
 
-//void RequireNoOtherDExOffer(const std::string& address)
-//{
-    //LOCK(cs_tally);
-    //if (mastercore::DEx_hasOffer(address)) {
-        //throw JSONRPCError(RPC_TYPE_ERROR, "Another active sell offer from the given address already exists on the distributed exchange");
-    //}
-//}
-
 void RequireMatchingDExAccept(const std::string& sellerAddress, uint32_t propertyId, const std::string& buyerAddress)
 {
     LOCK(cs_tally);

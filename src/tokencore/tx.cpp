@@ -1488,20 +1488,11 @@ int CMPTransaction::logicMath_TradeOffer()
 
         case MP_TX_PKT_V1:
         {
-            if (DEx_offerExists(sender, property)) {
-                if (CANCEL != subaction && UPDATE != subaction) {
-                    PrintToLog("%s(): rejected: sender %s has an active sell offer for property: %d\n", __func__, sender, property);
-                    rc = (PKT_ERROR_TRADEOFFER -48);
-                    break;
+            if (NEW != subaction) {
+                PrintToLog("%s(): rejected: sender %s has no active sell offer for property: %d\n", __func__, sender, property);
+                rc = (PKT_ERROR_TRADEOFFER -49);
+                break;
                 }
-            } else {
-                // Offer does not exist
-                if (NEW != subaction) {
-                    PrintToLog("%s(): rejected: sender %s has no active sell offer for property: %d\n", __func__, sender, property);
-                    rc = (PKT_ERROR_TRADEOFFER -49);
-                    break;
-                }
-            }
 
             switch (subaction) {
                 case NEW:
