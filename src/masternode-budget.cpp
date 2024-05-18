@@ -1357,6 +1357,15 @@ CBudgetProposal::CBudgetProposal(const CBudgetProposal& other)
     strInvalid = "";
 }
 
+bool CBudgetProposal::IsExpired(int nCurrentHeight)
+{
+    if (nBlockEnd < nCurrentHeight) {
+        strInvalid = "Proposal expired";
+        return true;
+    }
+    return false;
+}
+
 void CBudgetProposal::SyncVotes(CNode* pfrom, bool fPartial, int& nInvCount) const
 {
     LOCK(cs);

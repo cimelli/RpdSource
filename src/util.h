@@ -205,4 +205,6 @@ void TraceThread(const char* name, Callable func)
 
 fs::path AbsPathForConfigVal(const fs::path& path, bool net_specific = true);
 
+bool IsValidUTF8(const std::string& str);
+
 #endif // BITCOIN_UTIL_H

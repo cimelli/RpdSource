@@ -57,7 +57,7 @@ void openDialogFullScreen(QWidget* parent, QWidget* dialog)
     dialog->resize(parent->width(), parent->height());
 }
 
-bool openDialogWithOpaqueBackgroundY(QDialog* widget, RPDCHAINGUI* gui, double posX, int posY)
+bool openDialogWithOpaqueBackgroundY(QDialog* widget, RPDCHAINGUI* gui, double posX, int posY, bool hideOpaqueBackground)
 {
     widget->setWindowFlags(Qt::CustomizeWindowHint);
     widget->setAttribute(Qt::WA_TranslucentBackground, true);
@@ -70,7 +70,7 @@ bool openDialogWithOpaqueBackgroundY(QDialog* widget, RPDCHAINGUI* gui, double p
     animation->start(QAbstractAnimation::DeleteWhenStopped);
     widget->activateWindow();
     bool res = widget->exec();
-    gui->showHide(false);
+    if (hideOpaqueBackground) gui->showHide(false);
     return res;
 }
 

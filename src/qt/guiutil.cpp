@@ -56,26 +56,10 @@
 #include <QUrlQuery>
 #include <QMouseEvent>
 
-
-static fs::detail::utf8_codecvt_facet utf8;
-
-#if defined(Q_OS_MAC)
-extern double NSAppKitVersionNumber;
-#if !defined(NSAppKitVersionNumber10_8)
-#define NSAppKitVersionNumber10_8 1187
-#endif
-#if !defined(NSAppKitVersionNumber10_9)
-#define NSAppKitVersionNumber10_9 1265
-#endif
-#endif
-
 #define URI_SCHEME "rpdchain"
 
 #if defined(Q_OS_MAC)
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
 
-#include <CoreServices/CoreServices.h>
 #include <QProcess>
 
 void ForceActivation();
@@ -110,7 +94,7 @@ QFont bitcoinAddressFont()
  * return validity.
  * @note Must return 0 if !valid.
  */
-CAmount parseValue(const QString& text, int displayUnit, bool* valid_out)
+static CAmount parseValue(const QString& text, int displayUnit, bool* valid_out)
 {
     CAmount val = 0;
     bool valid = BitcoinUnits::parse(displayUnit, text, &val);
@@ -123,9 +107,24 @@ CAmount parseValue(const QString& text, int displayUnit, bool* valid_out)
     return valid ? val : 0;
 }
 
+/**
+ * Returns 0 if the value is invalid
+ */
+CAmount parseValue(const QString& amount, int displayUnit)
+{
+    bool isValid = false;
+    CAmount value = GUIUtil::parseValue(amount, displayUnit, &isValid);
+    return isValid ? value : 0;
+}
+
 QString formatBalance(CAmount amount, int nDisplayUnit, bool isZrpd)
 {
     return (amount == 0) ? ("0.00 " + BitcoinUnits::name(nDisplayUnit, isZrpd)) : BitcoinUnits::floorHtmlWithUnit(nDisplayUnit, amount, false, BitcoinUnits::separatorAlways, true, isZrpd);
+}
+
+QString formatBalanceWithoutHtml(CAmount amount, int nDisplayUnit, bool isZrpd)
+{
+    return (amount == 0) ? ("0.00 " + BitcoinUnits::name(nDisplayUnit, isZrpd)) : BitcoinUnits::floorWithUnit(nDisplayUnit, amount, false, BitcoinUnits::separatorAlways, true, isZrpd);
 }
 
 void setupAddressWidget(QValidatedLineEdit* widget, QWidget* parent)
@@ -206,7 +205,7 @@ bool parseBitcoinURI(const QUrl& uri, SendCoinsRecipient* out)
 
 bool parseBitcoinURI(QString uri, SendCoinsRecipient* out)
 {
-    // Convert rpdchain:// to rpdchain:
+    // Convert rpd:// to rpd:
     //
     //    Cannot handle this later, because rpdchain:// will cause Qt to see the part after // as host,
     //    which will lower-case it (and thus invalidate the address).
@@ -370,7 +369,7 @@ bool checkPoint(const QPoint& p, const QWidget* w)
 {
     QWidget* atW = QApplication::widgetAt(w->mapToGlobal(p));
     if (!atW) return false;
-    return atW->topLevelWidget() == w;
+    return atW->window() == w;
 }
 
 bool isObscured(QWidget* w)
@@ -469,25 +468,6 @@ void SubstituteFonts(const QString& language)
 ToolTipToRichTextFilter::ToolTipToRichTextFilter(int size_threshold, QObject* parent) : QObject(parent),
                                                                                         size_threshold(size_threshold)
 {
-}
-
-bool ToolTipToRichTextFilter::eventFilter(QObject* obj, QEvent* evt)
-{
-    if (evt->type() == QEvent::ToolTipChange) {
-        QWidget* widget = static_cast<QWidget*>(obj);
-        QString tooltip = widget->toolTip();
-        if (tooltip.size() > size_threshold && !tooltip.startsWith("<qt")) {
-            // Escape the current message as HTML and replace \n by <br> if it's not rich text
-            if (!Qt::mightBeRichText(tooltip))
-                tooltip = HtmlEscape(tooltip, true);
-            // Envelop with <qt></qt> to make sure Qt detects every tooltip as rich text
-            // and style='white-space:pre' to preserve line composition
-            tooltip = "<qt style='white-space:pre'>" + tooltip + "</qt>";
-            widget->setToolTip(tooltip);
-            return true;
-        }
-    }
-    return QObject::eventFilter(obj, evt);
 }
 
 void TableViewLastColumnResizingFixer::connectViewHeadersSignals()
@@ -599,31 +579,23 @@ TableViewLastColumnResizingFixer::TableViewLastColumnResizingFixer(QTableView* t
     }
 }
 
-/**
- * Class constructor.
- * @param[in] seconds   Number of seconds to convert to a DHMS string
- */
-DHMSTableWidgetItem::DHMSTableWidgetItem(const int64_t seconds) : QTableWidgetItem(),
-                                                                  value(seconds)
+bool ToolTipToRichTextFilter::eventFilter(QObject* obj, QEvent* evt)
 {
-    this->setText(QString::fromStdString(DurationToDHMS(seconds)));
-}
-
-/**
- * Comparator overload to ensure that the "DHMS"-type durations as used in
- * the "active-since" list in the masternode tab are sorted by the elapsed
- * duration (versus the string value being sorted).
- * @param[in] item      Right hand side of the less than operator
- */
-bool DHMSTableWidgetItem::operator<(QTableWidgetItem const& item) const
-{
-    DHMSTableWidgetItem const* rhs =
-        dynamic_cast<DHMSTableWidgetItem const*>(&item);
-
-    if (!rhs)
-        return QTableWidgetItem::operator<(item);
-
-    return value < rhs->value;
+    if (evt->type() == QEvent::ToolTipChange) {
+        QWidget* widget = static_cast<QWidget*>(obj);
+        QString tooltip = widget->toolTip();
+        if (tooltip.size() > size_threshold && !tooltip.startsWith("<qt")) {
+            // Escape the current message as HTML and replace \n by <br> if it's not rich text
+            if (!Qt::mightBeRichText(tooltip))
+                tooltip = HtmlEscape(tooltip, true);
+            // Envelop with <qt></qt> to make sure Qt detects every tooltip as rich text
+            // and style='white-space:pre' to preserve line composition
+            tooltip = "<qt style='white-space:pre'>" + tooltip + "</qt>";
+            widget->setToolTip(tooltip);
+            return true;
+        }
+    }
+    return QObject::eventFilter(obj, evt);
 }
 
 #ifdef WIN32
@@ -657,6 +629,7 @@ bool SetStartOnSystemStartup(bool fAutoStart)
             TCHAR pszExePath[MAX_PATH];
             GetModuleFileName(NULL, pszExePath, sizeof(pszExePath));
 
+            // Start client minimized
             TCHAR pszArgs[5] = TEXT("-min");
 
             // Set the path to the shortcut target
@@ -693,7 +666,7 @@ bool SetStartOnSystemStartup(bool fAutoStart)
 #elif defined(Q_OS_LINUX)
 
 // Follow the Desktop Application Autostart Spec:
-//  http://standards.freedesktop.org/autostart-spec/autostart-spec-latest.html
+// http://standards.freedesktop.org/autostart-spec/autostart-spec-latest.html
 
 fs::path static GetAutostartDir()
 {
@@ -729,13 +702,14 @@ bool GetStartOnSystemStartup()
 
 bool SetStartOnSystemStartup(bool fAutoStart)
 {
-    if (!fAutoStart)
+    if (!fAutoStart) {
         fs::remove(GetAutostartFilePath());
-    else {
-        char pszExePath[MAX_PATH + 1];
-        memset(pszExePath, 0, sizeof(pszExePath));
-        if (readlink("/proc/self/exe", pszExePath, sizeof(pszExePath) - 1) == -1)
+    } else {
+        char pszExePath[MAX_PATH+1];
+        ssize_t r = readlink("/proc/self/exe", pszExePath, sizeof(pszExePath) - 1);
+        if (r == -1)
             return false;
+        pszExePath[r] = '\0';
 
         fs::create_directories(GetAutostartDir());
 
@@ -754,67 +728,6 @@ bool SetStartOnSystemStartup(bool fAutoStart)
     return true;
 }
 
-
-#elif defined(Q_OS_MAC)
-// based on: https://github.com/Mozketo/LaunchAtLoginController/blob/master/LaunchAtLoginController.m
-
-LSSharedFileListItemRef findStartupItemInList(LSSharedFileListRef list, CFURLRef findUrl);
-LSSharedFileListItemRef findStartupItemInList(LSSharedFileListRef list, CFURLRef findUrl)
-{
-    // loop through the list of startup items and try to find the rpdchain app
-    CFArrayRef listSnapshot = LSSharedFileListCopySnapshot(list, NULL);
-    for (int i = 0; i < CFArrayGetCount(listSnapshot); i++) {
-        LSSharedFileListItemRef item = (LSSharedFileListItemRef)CFArrayGetValueAtIndex(listSnapshot, i);
-        UInt32 resolutionFlags = kLSSharedFileListNoUserInteraction | kLSSharedFileListDoNotMountVolumes;
-        CFURLRef currentItemURL = NULL;
-
-#if defined(MAC_OS_X_VERSION_MAX_ALLOWED) && MAC_OS_X_VERSION_MAX_ALLOWED >= 10100
-    if (&LSSharedFileListItemCopyResolvedURL)
-        currentItemURL = LSSharedFileListItemCopyResolvedURL(item, resolutionFlags, NULL);
-#if defined(MAC_OS_X_VERSION_MIN_REQUIRED) && MAC_OS_X_VERSION_MIN_REQUIRED < 10100
-    else
-        LSSharedFileListItemResolve(item, resolutionFlags, &currentItemURL, NULL);
-#endif
-#else
-    LSSharedFileListItemResolve(item, resolutionFlags, &currentItemURL, NULL);
-#endif
-
-        if (currentItemURL && CFEqual(currentItemURL, findUrl)) {
-            // found
-            CFRelease(currentItemURL);
-            return item;
-        }
-        if (currentItemURL) {
-            CFRelease(currentItemURL);
-        }
-    }
-    return NULL;
-}
-
-bool GetStartOnSystemStartup()
-{
-    CFURLRef bitcoinAppUrl = CFBundleCopyBundleURL(CFBundleGetMainBundle());
-    LSSharedFileListRef loginItems = LSSharedFileListCreate(NULL, kLSSharedFileListSessionLoginItems, NULL);
-    LSSharedFileListItemRef foundItem = findStartupItemInList(loginItems, bitcoinAppUrl);
-    return !!foundItem; // return boolified object
-}
-
-bool SetStartOnSystemStartup(bool fAutoStart)
-{
-    CFURLRef bitcoinAppUrl = CFBundleCopyBundleURL(CFBundleGetMainBundle());
-    LSSharedFileListRef loginItems = LSSharedFileListCreate(NULL, kLSSharedFileListSessionLoginItems, NULL);
-    LSSharedFileListItemRef foundItem = findStartupItemInList(loginItems, bitcoinAppUrl);
-
-    if (fAutoStart && !foundItem) {
-        // add rpdchain app to startup item list
-        LSSharedFileListInsertItemURL(loginItems, kLSSharedFileListItemBeforeFirst, NULL, NULL, bitcoinAppUrl, NULL, NULL);
-    } else if (!fAutoStart && foundItem) {
-        // remove item
-        LSSharedFileListItemRemove(loginItems, foundItem);
-    }
-    return true;
-}
-#pragma GCC diagnostic pop
 #else
 
 bool GetStartOnSystemStartup()
@@ -897,12 +810,12 @@ void setClipboard(const QString& str)
 
 fs::path qstringToBoostPath(const QString& path)
 {
-    return fs::path(path.toStdString(), utf8);
+    return fs::path(path.toStdString());
 }
 
 QString boostPathToQString(const fs::path& path)
 {
-    return QString::fromStdString(path.string(utf8));
+    return QString::fromStdString(path.string());
 }
 
 QString formatDurationStr(int secs)

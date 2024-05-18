@@ -128,6 +128,7 @@ RPDCHAINGUI::RPDCHAINGUI(const NetworkStyle* networkStyle, QWidget* parent) :
         masterNodesWidget = new MasterNodesWidget(this);
         coldStakingWidget = new ColdStakingWidget(this);
         settingsWidget = new SettingsWidget(this);
+        governanceWidget = new GovernanceWidget(this);
 
         // Token
         sendTokenPage = new SendMPDialog(this);
@@ -157,6 +158,7 @@ RPDCHAINGUI::RPDCHAINGUI(const NetworkStyle* networkStyle, QWidget* parent) :
         stackedContainer->addWidget(masterNodesWidget);
         stackedContainer->addWidget(coldStakingWidget);
         stackedContainer->addWidget(settingsWidget);
+        stackedContainer->addWidget(governanceWidget);
         stackedContainer->setCurrentWidget(dashboard);
         stackedContainer->addWidget(tabHolder);
         stackedContainer->setCurrentWidget(dashboard);
@@ -225,6 +227,8 @@ void RPDCHAINGUI::connectActions()
     connect(masterNodesWidget, &MasterNodesWidget::execDialog, this, &RPDCHAINGUI::execDialog);
     connect(coldStakingWidget, &ColdStakingWidget::showHide, this, &RPDCHAINGUI::showHide);
     connect(coldStakingWidget, &ColdStakingWidget::execDialog, this, &RPDCHAINGUI::execDialog);
+    connect(governanceWidget, &GovernanceWidget::showHide, this, &RPDCHAINGUI::showHide);
+    connect(governanceWidget, &GovernanceWidget::execDialog, this, &RPDCHAINGUI::execDialog);
     connect(settingsWidget, &SettingsWidget::execDialog, this, &RPDCHAINGUI::execDialog);
 }
 
@@ -274,7 +278,9 @@ void RPDCHAINGUI::setClientModel(ClientModel* clientModel)
         topBar->setClientModel(clientModel);
         dashboard->setClientModel(clientModel);
         sendWidget->setClientModel(clientModel);
+        masterNodesWidget->setClientModel(clientModel);
         settingsWidget->setClientModel(clientModel);
+        governanceWidget->setClientModel(clientModel);
         sendTokenPage->setClientModel(clientModel);
         tokensPage->setClientModel(clientModel);
         nftsPage->setClientModel(clientModel);
@@ -528,6 +534,11 @@ void RPDCHAINGUI::goToMasterNodes()
     showTop(masterNodesWidget);
 }
 
+void RPDCHAINGUI::goToGovernance()
+{
+    showTop(governanceWidget);
+}
+
 void RPDCHAINGUI::goToColdStaking()
 {
     showTop(coldStakingWidget);
@@ -634,6 +645,20 @@ void RPDCHAINGUI::openFAQ(int section)
 
 
 #ifdef ENABLE_WALLET
+void RPDCHAINGUI::setGovModel(GovernanceModel* govModel)
+{
+    if (!stackedContainer || !clientModel) return;
+    governanceWidget->setGovModel(govModel);
+}
+
+void RPDCHAINGUI::setMNModel(MNModel* _mnModel)
+{
+    if (!stackedContainer || !clientModel) return;
+    mnModel = _mnModel;
+    governanceWidget->setMNModel(mnModel);
+    masterNodesWidget->setMNModel(mnModel);
+}
+
 bool RPDCHAINGUI::addWallet(const QString& name, WalletModel* walletModel)
 {
     // Single wallet supported for now..
@@ -649,6 +674,7 @@ bool RPDCHAINGUI::addWallet(const QString& name, WalletModel* walletModel)
     addressesWidget->setWalletModel(walletModel);
     masterNodesWidget->setWalletModel(walletModel);
     coldStakingWidget->setWalletModel(walletModel);
+    governanceWidget->setWalletModel(walletModel);
     settingsWidget->setWalletModel(walletModel);
     tokensPage->setWalletModel(walletModel);
     nftsPage->setWalletModel(walletModel);
@@ -658,6 +684,7 @@ bool RPDCHAINGUI::addWallet(const QString& name, WalletModel* walletModel)
     connect(walletModel, &WalletModel::message, this, &RPDCHAINGUI::message);
     connect(masterNodesWidget, &MasterNodesWidget::message, this, &RPDCHAINGUI::message);
     connect(coldStakingWidget, &ColdStakingWidget::message, this, &RPDCHAINGUI::message);
+    connect(governanceWidget, &GovernanceWidget::message, this, &RPDCHAINGUI::message);
     connect(topBar, &TopBar::message, this, &RPDCHAINGUI::message);
     connect(sendWidget, &SendWidget::message,this, &RPDCHAINGUI::message);
     connect(receiveWidget, &ReceiveWidget::message,this, &RPDCHAINGUI::message);

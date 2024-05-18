@@ -36,8 +36,9 @@ private Q_SLOTS:
     void onAddressClicked();
     void onMasterNodesClicked();
     void onColdStakingClicked();
-    void onTokensClicked();
     void onSettingsClicked();
+    void onTokensClicked();
+    void onGovClicked();
     void updateButtonStyles();
 private:
     Ui::NavMenuWidget *ui;

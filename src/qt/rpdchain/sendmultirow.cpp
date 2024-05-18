@@ -79,8 +79,8 @@ void SendMultiRow::amountChanged(const QString& amount)
 CAmount SendMultiRow::getAmountValue(QString amount)
 {
     bool isValid = false;
-    CAmount value = GUIUtil::parseValue(amount, displayUnit, &isValid);
-    return isValid ? value : -1;
+    CAmount value = GUIUtil::parseValue(amount, displayUnit /*, &isValid*/);
+    return value;
 }
 
 bool SendMultiRow::addressChanged(const QString& str, bool fOnlyValidate)

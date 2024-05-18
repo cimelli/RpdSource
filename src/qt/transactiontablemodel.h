@@ -26,6 +26,7 @@ class TransactionTableModel : public QAbstractTableModel
 public:
     explicit TransactionTableModel(CWallet* wallet, WalletModel* parent = 0);
     ~TransactionTableModel();
+    void init();
 
     enum ColumnIndex {
         Status = 0,
@@ -78,6 +79,7 @@ public:
     bool processingQueuedTransactions() { return fProcessingQueuedTransactions; }
 
 Q_SIGNALS:
+    void txLoaded(const QString& hash, const int txType, const int txStatus);
     void txArrived(const QString& hash, const bool& isCoinStake, const bool& isCSAnyType);
 
 private:

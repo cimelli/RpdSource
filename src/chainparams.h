@@ -82,6 +82,8 @@ public:
 
     CBaseChainParams::Network NetworkID() const { return networkID; }
     bool IsRegTestNet() const { return NetworkID() == CBaseChainParams::REGTEST; }
+    
+    int GetBudgetCycleBlocks() const { return consensus.nBudgetCycleBlocks; }
 
     // Governance
     const std::string& GovernanceMasterAddress() const { return strMasterAddress; }

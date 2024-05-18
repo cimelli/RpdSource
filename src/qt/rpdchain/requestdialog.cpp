@@ -85,9 +85,8 @@ void RequestDialog::accept()
         bool isValueValid = true;
         CAmount value = (ui->lineEditAmount->text().isEmpty() ?
                             0 :
-                            GUIUtil::parseValue(ui->lineEditAmount->text(), displayUnit, &isValueValid)
+                            GUIUtil::parseValue(ui->lineEditAmount->text(), displayUnit/*, &isValueValid*/)
                         );
-
         if (!this->isPaymentRequest) {
             // Add specific checks for cold staking address creation
             if (labelStr.isEmpty()) {

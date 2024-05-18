@@ -89,14 +89,7 @@ margin:0px;</string>
          </size>
         </property>
         <property name="styleSheet">
-         <string notr="true">QScrollBar {
-height:0px;
- width:0px;
-}
-
-#scrollAreaNav{
-background-color:transparent;
-}</string>
+         <string notr="true">QScrollBar {height:0px;width:0px;}#scrollAreaNav{background-color:transparent;}</string>
         </property>
         <property name="horizontalScrollBarPolicy">
          <enum>Qt::ScrollBarAlwaysOff</enum>
@@ -135,9 +128,7 @@ background-color:transparent;
           <bool>false</bool>
          </property>
          <property name="styleSheet">
-          <string notr="true">#scrollAreaNavVert{
-background-color:transparent;
-}</string>
+          <string notr="true">#scrollAreaNavVert{background-color:transparent;}</string>
          </property>
          <layout class="QVBoxLayout" name="verticalLayout_3">
           <property name="spacing">
@@ -167,8 +158,7 @@ background-color:transparent;
              </size>
             </property>
             <property name="text">
-             <string>HOME
-</string>
+             <string>HOME</string>
             </property>
             <property name="iconSize">
              <size>
@@ -193,8 +183,7 @@ background-color:transparent;
              </size>
             </property>
             <property name="text">
-             <string>SEND
-</string>
+             <string>SEND</string>
             </property>
             <property name="iconSize">
              <size>
@@ -219,8 +208,7 @@ background-color:transparent;
              </size>
             </property>
             <property name="text">
-             <string>RECEIVE
-</string>
+             <string>RECEIVE</string>
             </property>
             <property name="checkable">
              <bool>true</bool>
@@ -239,8 +227,7 @@ background-color:transparent;
              </size>
             </property>
             <property name="text">
-             <string>CONTACTS
-</string>
+             <string>CONTACTS</string>
             </property>
             <property name="iconSize">
              <size>
@@ -317,8 +304,7 @@ STAKING</string>
              </size>
             </property>
             <property name="text">
-             <string>SETTINGS
-</string>
+             <string>SETTINGS</string>
             </property>
             <property name="iconSize">
              <size>
@@ -343,8 +329,32 @@ STAKING</string>
              </size>
             </property>
             <property name="text">
-             <string>RPDx
-</string>
+             <string>RPDx</string>
+            </property>
+            <property name="iconSize">
+             <size>
+              <width>32</width>
+              <height>32</height>
+             </size>
+            </property>
+            <property name="checkable">
+             <bool>true</bool>
+            </property>
+            <property name="autoExclusive">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QToolButton" name="btnGovernance">
+            <property name="minimumSize">
+             <size>
+              <width>100</width>
+              <height>80</height>
+             </size>
+            </property>
+            <property name="text">
+             <string>DAO</string>
             </property>
             <property name="iconSize">
              <size>

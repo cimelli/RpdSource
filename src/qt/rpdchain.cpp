@@ -236,8 +236,10 @@ private:
 #ifdef ENABLE_WALLET
     PaymentServer* paymentServer;
     WalletModel* walletModel;
+    GovernanceModel* govModel{nullptr};
+    MNModel* mnModel{nullptr};
 #endif
-    int returnValue;
+    int returnValue{0};
     QTranslator qtTranslatorBase, qtTranslator, translatorBase, translator;
 
     void startThread();
@@ -442,6 +444,8 @@ void BitcoinApplication::requestShutdown()
     qDebug() << __func__ << ": Requesting shutdown";
     startThread();
     window->hide();
+    if (govModel) govModel->stop();
+    if (walletModel) walletModel->stop();
     window->setClientModel(0);
     pollShutdownTimer->stop();
 
@@ -475,14 +479,23 @@ void BitcoinApplication::initializeResult(int retval)
         window->setClientModel(clientModel);
 
 #ifdef ENABLE_WALLET
+        mnModel = new MNModel(this);
+        govModel = new GovernanceModel(clientModel, mnModel);
+        // TODO: Expose secondary wallets
         if (pwalletMain) {
             walletModel = new WalletModel(pwalletMain, optionsModel);
+            walletModel->setClientModel(clientModel);
+            mnModel->setWalletModel(walletModel);
+            govModel->setWalletModel(walletModel);
+            walletModel->init();
+            mnModel->init();
+
+            window->setGovModel(govModel);
 
             window->addWallet(RPDCHAINGUI::DEFAULT_WALLET, walletModel);
             window->setCurrentWallet(RPDCHAINGUI::DEFAULT_WALLET);
 
-            connect(walletModel, &WalletModel::coinsSent,
-                    paymentServer, &PaymentServer::fetchPaymentACK);
+            window->setMNModel(mnModel);
         }
 #endif
 

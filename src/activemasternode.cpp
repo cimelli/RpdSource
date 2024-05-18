@@ -187,3 +187,20 @@ bool CActiveMasternode::EnableHotColdMasterNode(CTxIn& newVin, CService& newServ
 
     return true;
 }
+
+bool CActiveMasternode::GetKeys(CKey& _privKeyMasternode, CPubKey& _pubKeyMasternode) const
+{
+    CPubKey pubKeyMasternode;
+    CKey keyMasternode;
+
+    if (!CMessageSigner::GetKeysFromSecret(strMasterNodePrivKey, keyMasternode, pubKeyMasternode)) {
+        return false;
+    }
+
+    if (!keyMasternode.IsValid() || !pubKeyMasternode.IsValid()) {
+        return false;
+    }
+
+    _privKeyMasternode = keyMasternode;
+    _pubKeyMasternode = pubKeyMasternode;
+}

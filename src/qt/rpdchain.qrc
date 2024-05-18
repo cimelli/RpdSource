@@ -147,6 +147,11 @@
         <file alias="ic-check-cold-staking">rpdchain/res/img/ic-check-cold-staking.svg</file>
         <file alias="ic-check-cold-staking-off">rpdchain/res/img/ic-check-cold-staking-off.svg</file>
         <file alias="ic-check-cold-staking-enabled">rpdchain/res/img/ic-check-cold-staking-enabled.svg</file>
+        <file alias="ic-nav-governance">rpdchain/res/img/ic-nav-governance.svg</file>
+        <file alias="ic-nav-governance-active">rpdchain/res/img/ic-nav-governance-active.svg</file>
+        <file alias="ic-nav-governance-hover">rpdchain/res/img/ic-nav-governance-hover.svg</file>
+        <file alias="img-empty-governance">rpdchain/res/img/img-empty-governance.svg</file>
+        <file alias="img-empty-dark-governance">rpdchain/res/img/img-empty-dark-governance.svg</file>
         <file alias="ic-nav-tokens-active">rpdchain/res/img/ic-nav-tokens-active.svg</file>
         <file alias="ic-nav-tokens-hover">rpdchain/res/img/ic-nav-tokens-hover.svg</file>
         <file alias="ic-nav-tokens">rpdchain/res/img/ic-nav-tokens.svg</file>

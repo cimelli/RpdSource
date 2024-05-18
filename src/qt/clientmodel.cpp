@@ -127,6 +127,16 @@ QString ClientModel::getLastBlockHash() const
     return QString::fromStdString(nHash.GetHex());
 }
 
+uint256 ClientModel::getLastBlockProcessed() const
+{
+    return cacheTip == nullptr ? Params().GenesisBlock().GetHash() : cacheTip->GetBlockHash();
+}
+
+int ClientModel::getLastBlockProcessedHeight() const
+{
+    return cacheTip == nullptr ? 0 : cacheTip->nHeight;
+}
+
 double ClientModel::getVerificationProgress() const
 {
     return Checkpoints::GuessVerificationProgress(cacheTip);

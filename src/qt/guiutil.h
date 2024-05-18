@@ -54,11 +54,13 @@ QString dateTimeStr(qint64 nTime);
 // Render RPDCHAIN addresses in monospace font
 QFont bitcoinAddressFont();
 
-// Parse string into a CAmount value
-CAmount parseValue(const QString& text, int displayUnit, bool* valid_out = 0);
+// Parse string into a CAmount value.
+// Return 0 if the value is invalid
+CAmount parseValue(const QString& amount, int displayUnit = 0);
 
 // Format an amount
 QString formatBalance(CAmount amount, int nDisplayUnit = 0, bool isZrpd = false);
+QString formatBalanceWithoutHtml(CAmount amount, int nDisplayUnit = 0, bool isZrpd = false);
 
 // Set up widgets for address and amounts
 void setupAddressWidget(QValidatedLineEdit* widget, QWidget* parent);
@@ -205,21 +207,6 @@ private Q_SLOTS:
     void on_geometriesChanged();
 };
 
-/**
-     * Extension to QTableWidgetItem that facilitates proper ordering for "DHMS"
-     * strings (primarily used in the masternode's "active" listing).
-     */
-class DHMSTableWidgetItem : public QTableWidgetItem
-{
-public:
-    DHMSTableWidgetItem(const int64_t seconds);
-    virtual bool operator<(QTableWidgetItem const& item) const;
-
-private:
-    // Private backing value for DHMS string, used for sorting.
-    int64_t value;
-};
-
 bool GetStartOnSystemStartup();
 bool SetStartOnSystemStartup(bool fAutoStart);
 
@@ -252,19 +239,27 @@ QString formatPingTime(double dPingTime);
 /* Format a CNodeCombinedStats.nTimeOffset into a user-readable string. */
 QString formatTimeOffset(int64_t nTimeOffset);
 
-#if defined(Q_OS_MAC)
-    // workaround for Qt OSX Bug:
-    // https://bugreports.qt-project.org/browse/QTBUG-15631
-    // QProgressBar uses around 10% CPU even when app is in background
-    class ProgressBar : public QProgressBar
-    {
-        bool event(QEvent *e) {
-            return (e->type() != QEvent::StyleAnimationUpdate) ? QProgressBar::event(e) : false;
-        }
-    };
+typedef QProgressBar ProgressBar;
+
+/**
+* Splits the string into substrings wherever separator occurs, and returns
+* the list of those strings. Empty strings do not appear in the result.
+*
+* QString::split() signature differs in different Qt versions:
+*  - QString::SplitBehavior is deprecated since Qt 5.15
+*  - Qt::SplitBehavior was introduced in Qt 5.14
+* If {QString|Qt}::SkipEmptyParts behavior is required, use this
+* function instead of QString::split().
+*/
+template <typename SeparatorType>
+QStringList SplitSkipEmptyParts(const QString& string, const SeparatorType& separator)
+{
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 14, 0))
+    return string.split(separator, QString::SkipEmptyParts);
 #else
     typedef QProgressBar ProgressBar;
 #endif
+}
 
 } // namespace GUIUtil
 

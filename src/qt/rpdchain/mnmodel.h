@@ -8,6 +8,9 @@
 #include <QAbstractTableModel>
 #include "masternode.h"
 #include "masternodeconfig.h"
+#include "qt/walletmodel.h"
+
+class CMasternode;
 
 class MNModel : public QAbstractTableModel
 {
@@ -19,6 +22,8 @@ public:
         nodes.clear();
         collateralTxAccepted.clear();
     }
+    void init();
+    void setWalletModel(WalletModel* _model) { walletModel = _model; };
 
     enum ColumnIndex {
         ALIAS = 0,  /**< User specified MN alias */
@@ -56,6 +61,7 @@ public:
 
 
 private:
+    WalletModel* walletModel;
     // alias mn node ---> pair <ip, master node>
     QMap<QString, std::pair<QString, CMasternode*>> nodes;
     QMap<std::string, bool> collateralTxAccepted;

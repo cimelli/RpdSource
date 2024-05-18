@@ -14,8 +14,10 @@
 #include "interface/wallet.h"
 
 #include "allocators.h" /* for SecureString */
+#include "masternode-budget.h"
 #include "swifttx.h"
 #include "wallet/wallet.h"
+#include "operationresult.h"
 #include "pairresult.h"
 
 #include <map>
@@ -24,6 +26,8 @@
 #include <QObject>
 
 class AddressTableModel;
+class CBudgetProposal;
+class ClientModel;
 class OptionsModel;
 class RecentRequestsTableModel;
 class TransactionTableModel;
@@ -116,6 +120,7 @@ class WalletModel : public QObject
 public:
     explicit WalletModel(CWallet* wallet, OptionsModel* optionsModel, QObject* parent = 0);
     ~WalletModel();
+    void init();
 
     enum StatusCode // Returned by sendCoins
     {
@@ -191,7 +196,9 @@ public:
     bool hasWalletCustomFee();
     bool getWalletCustomFee(CAmount& nFeeRet);
     void setWalletCustomFee(bool fUseCustomFee, const CAmount& nFee = DEFAULT_TRANSACTION_FEE);
+    CAmount getNetMinFee();
 
+    OperationResult createAndSendProposalFeeTx(CBudgetProposal& proposal);
     const CWalletTx* getTx(uint256 id);
 
     // prepare transaction for getting txfee before sending coins
@@ -274,6 +281,9 @@ public:
     std::string GetUniqueWalletBackupName();
     void loadReceiveRequests(std::vector<std::string>& vReceiveRequests);
     bool saveReceiveRequest(const std::string& sAddress, const int64_t nId, const std::string& sRequest);
+    ClientModel& clientModel() const { return *m_client_model; }
+     void setClientModel(ClientModel* client_model);
+     void stop();
 
 private:
     CWallet* wallet;
@@ -281,7 +291,8 @@ private:
     // todo: Goal would be to move every CWallet* call to the wallet wrapper and
     //  in the model only perform the data organization (and QT wrappers) to be presented on the UI.
     interfaces::Wallet walletWrapper;
-
+    ClientModel* m_client_model;
+    
     bool fHaveWatchOnly;
     bool fForceCheckBalanceChanged;
 

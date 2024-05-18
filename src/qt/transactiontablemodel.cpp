@@ -166,6 +166,12 @@ public:
         }
     }
 
+    void emitTxLoaded(const TransactionRecord& rec)
+     {
+         Q_EMIT parent->txLoaded(QString::fromStdString(rec.hash.GetHex()),
+                                 rec.type, rec.status.status);
+     }
+    
     static ConvertTxToVectorResult convertTxToRecords(TransactionTablePriv* tablePriv, const CWallet* wallet, const std::vector<CWalletTx>& walletTxes) {
         ConvertTxToVectorResult res;
 
@@ -333,10 +339,14 @@ TransactionTableModel::TransactionTableModel(CWallet* wallet, WalletModel* paren
                                                                                      fProcessingQueuedTransactions(false)
 {
     columns << QString() << QString() << tr("Date") << tr("Type") << tr("Address") << BitcoinUnits::getAmountColumnTitle(walletModel->getOptionsModel()->getDisplayUnit());
-    priv->refreshWallet();
-
+    
     connect(walletModel->getOptionsModel(), &OptionsModel::displayUnitChanged, this, &TransactionTableModel::updateDisplayUnit);
+    
+}
 
+void TransactionTableModel::init()
+{
+    priv->refreshWallet();
     subscribeToCoreSignals();
 }
 

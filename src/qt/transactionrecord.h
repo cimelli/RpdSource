@@ -94,7 +94,8 @@ public:
         P2CSDelegationSent, // Non-spendable P2CS delegated utxo. (coin-owner transferred ownership to external wallet)
         P2CSDelegationSentOwner, // Spendable P2CS delegated utxo. (coin-owner)
         P2CSUnlockOwner, // Coin-owner spent the delegated utxo
-        P2CSUnlockStaker // Staker watching the owner spent the delegated utxo
+        P2CSUnlockStaker, // Staker watching the owner spent the delegated utxo
+        SendToNobody // Burned RPDs, op_return output.
     };
 
     /** Number of confirmation recommended for accepting a transaction */

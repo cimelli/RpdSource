@@ -21,6 +21,7 @@
 #include "qt/rpdchain/receivewidget.h"
 #include "qt/rpdchain/addresseswidget.h"
 #include "qt/rpdchain/coldstakingwidget.h"
+#include "qt/rpdchain/governancewidget.h"
 #include "qt/rpdchain/masternodeswidget.h"
 #include "qt/rpdchain/snackbar.h"
 #include "qt/rpdchain/settings/settingswidget.h"
@@ -34,6 +35,8 @@ class ClientModel;
 class NetworkStyle;
 class Notificator;
 class WalletModel;
+
+class GovernanceWidget;
 
 /**
   RPDCHAIN GUI main class. This class represents the main window of the RPDCHAIN UI. It communicates with both the client and
@@ -69,6 +72,7 @@ public Q_SLOTS:
     void goToAddresses();
     void goToMasterNodes();
     void goToColdStaking();
+    void goToGovernance();
     void goToSettings();
     void gotoTokensPage();
     void goToSettingsInfo();
@@ -95,6 +99,8 @@ public Q_SLOTS:
     /** Show incoming transaction notification for new transactions. */
     void incomingTransaction(const QString& date, int unit, const CAmount& amount, const QString& type, const QString& address);
 #ifdef ENABLE_WALLET
+    void setGovModel(GovernanceModel* govModel);
+    void setMNModel(MNModel* mnModel);
     /** Set the wallet model.
         The wallet model represents a bitcoin wallet, and offers access to the list of transactions, address book and sending
         functionality.
@@ -118,6 +124,7 @@ protected:
 private:
     bool enableWallet;
     ClientModel* clientModel = nullptr;
+    MNModel* mnModel = nullptr;
 
     // Actions
     QAction* quitAction = nullptr;
@@ -135,6 +142,7 @@ private:
     AddressesWidget *addressesWidget = nullptr;
     MasterNodesWidget *masterNodesWidget = nullptr;
     ColdStakingWidget *coldStakingWidget = nullptr;
+    GovernanceWidget* governanceWidget = nullptr;
     SettingsWidget* settingsWidget = nullptr;
     SendMPDialog *sendTokenPage = nullptr;
     TokensDialog *tokensPage = nullptr;

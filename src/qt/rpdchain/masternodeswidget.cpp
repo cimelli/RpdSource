@@ -77,7 +77,6 @@ MasterNodesWidget::MasterNodesWidget(RPDCHAINGUI *parent) :
             new MNHolder(isLightTheme()),
             this
     );
-    mnModel = new MNModel(this);
 
     this->setStyleSheet(parent->styleSheet());
 
@@ -145,13 +144,12 @@ void MasterNodesWidget::hideEvent(QHideEvent *event)
     if (timer) timer->stop();
 }
 
-void MasterNodesWidget::loadWalletModel()
+void MasterNodesWidget::setMNModel(MNModel* _mnModel)
 {
-    if (walletModel) {
-        ui->listMn->setModel(mnModel);
-        ui->listMn->setModelColumn(AddressTableModel::Label);
-        updateListState();
-    }
+    mnModel = _mnModel;
+    ui->listMn->setModel(mnModel);
+    ui->listMn->setModelColumn(AddressTableModel::Label);
+    updateListState();
 }
 
 void MasterNodesWidget::updateListState()
@@ -162,10 +160,10 @@ void MasterNodesWidget::updateListState()
     ui->pushButtonStartAll->setVisible(show);
 }
 
-void MasterNodesWidget::onMNClicked(const QModelIndex &index)
+void MasterNodesWidget::onMNClicked(const QModelIndex & _index)
 {
-    ui->listMn->setCurrentIndex(index);
-    QRect rect = ui->listMn->visualRect(index);
+    ui->listMn->setCurrentIndex(_index);
+    QRect rect = ui->listMn->visualRect(_index);
     QPoint pos = rect.topRight();
     pos.setX(pos.x() - (DECORATION_SIZE * 2));
     pos.setY(pos.y() + (DECORATION_SIZE * 1.5));
@@ -182,7 +180,7 @@ void MasterNodesWidget::onMNClicked(const QModelIndex &index)
     } else {
         this->menu->hide();
     }
-    this->index = index;
+    this->index = _index;
     menu->move(pos);
     menu->show();
 
