@@ -69,22 +69,16 @@
         <file alias="ic-menu-hover">rpdchain/res/img/ic-menu-hover.svg</file>
         <file alias="ic-mint">rpdchain/res/img/ic-mint.svg</file>
         <file alias="ic-nav-address-active">rpdchain/res/img/ic-nav-address-active.svg</file>
-        <file alias="ic-nav-address-hover">rpdchain/res/img/ic-nav-address-hover.svg</file>
         <file alias="ic-nav-address">rpdchain/res/img/ic-nav-address.svg</file>
         <file alias="ic-nav-dashboard-active">rpdchain/res/img/ic-nav-dashboard-active.svg</file>
-        <file alias="ic-nav-dashboard-hover">rpdchain/res/img/ic-nav-dashboard-hover.svg</file>
         <file alias="ic-nav-dashboard">rpdchain/res/img/ic-nav-dashboard.svg</file>
         <file alias="ic-nav-master-active">rpdchain/res/img/ic-nav-master-active.svg</file>
-        <file alias="ic-nav-master-hover">rpdchain/res/img/ic-nav-master-hover.svg</file>
         <file alias="ic-nav-master">rpdchain/res/img/ic-nav-master.svg</file>
         <file alias="ic-nav-receive-active">rpdchain/res/img/ic-nav-receive-active.svg</file>
-        <file alias="ic-nav-receive-hover">rpdchain/res/img/ic-nav-receive-hover.svg</file>
         <file alias="ic-nav-receive">rpdchain/res/img/ic-nav-receive.svg</file>
         <file alias="ic-nav-send-active">rpdchain/res/img/ic-nav-send-active.svg</file>
-        <file alias="ic-nav-send-hover">rpdchain/res/img/ic-nav-send-hover.svg</file>
         <file alias="ic-nav-send">rpdchain/res/img/ic-nav-send.svg</file>
         <file alias="ic-nav-settings-active">rpdchain/res/img/ic-nav-settings-active.svg</file>
-        <file alias="ic-nav-settings-hover">rpdchain/res/img/ic-nav-settings-hover.svg</file>
         <file alias="ic-nav-settings">rpdchain/res/img/ic-nav-settings.svg</file>
         <file alias="ic-radio-liliac-on">rpdchain/res/img/ic-radio-liliac-on.svg</file>
         <file alias="ic-receive-off">rpdchain/res/img/ic-receive-off.svg</file>
@@ -149,11 +143,9 @@
         <file alias="ic-check-cold-staking-enabled">rpdchain/res/img/ic-check-cold-staking-enabled.svg</file>
         <file alias="ic-nav-governance">rpdchain/res/img/ic-nav-governance.svg</file>
         <file alias="ic-nav-governance-active">rpdchain/res/img/ic-nav-governance-active.svg</file>
-        <file alias="ic-nav-governance-hover">rpdchain/res/img/ic-nav-governance-hover.svg</file>
         <file alias="img-empty-governance">rpdchain/res/img/img-empty-governance.svg</file>
         <file alias="img-empty-dark-governance">rpdchain/res/img/img-empty-dark-governance.svg</file>
         <file alias="ic-nav-tokens-active">rpdchain/res/img/ic-nav-tokens-active.svg</file>
-        <file alias="ic-nav-tokens-hover">rpdchain/res/img/ic-nav-tokens-hover.svg</file>
         <file alias="ic-nav-tokens">rpdchain/res/img/ic-nav-tokens.svg</file>
     </qresource>
 </RCC>

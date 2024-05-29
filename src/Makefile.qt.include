@@ -327,7 +327,6 @@ RES_ICONS = \
   qt/rpdchain/res/img/ic-nav-cold-staking-active.svg \
   qt/rpdchain/res/img/ic-nav-governance.svg \
   qt/rpdchain/res/img/ic-nav-governance-active.svg \
-  qt/rpdchain/res/img/ic-nav-governance-hover.svg \
   qt/rpdchain/res/img/img-empty-governance.svg \
   qt/rpdchain/res/img/img-empty-dark-governance.svg \
   qt/rpdchain/res/img/ic-nav-dashboard-active.svg \
@@ -335,7 +334,6 @@ RES_ICONS = \
   qt/rpdchain/res/img/bg-splash.svg \
   qt/rpdchain/res/img/bg-splash.png \
   qt/rpdchain/res/img/ic-check-mint.svg \
-  qt/rpdchain/res/img/ic-nav-dashboard-hover.svg \
   qt/rpdchain/res/img/ic-wallet-status-staking.svg \
   qt/rpdchain/res/img/ic-check-peers-off.svg \
   qt/rpdchain/res/img/ic-nav-dashboard.svg \
@@ -344,7 +342,6 @@ RES_ICONS = \
   qt/rpdchain/res/img/ic-nav-master-active.svg \
   qt/rpdchain/res/img/ic-watch-password-white.svg \
   qt/rpdchain/res/img/ic-check-staking-off.svg \
-  qt/rpdchain/res/img/ic-nav-master-hover.svg \
   qt/rpdchain/res/img/ic-watch-password.svg \
   qt/rpdchain/res/img/bg-welcome.svg \
   qt/rpdchain/res/img/bg-welcome.png \
@@ -363,7 +360,6 @@ RES_ICONS = \
   qt/rpdchain/res/img/ic-pending.svg \
   qt/rpdchain/res/img/ic-nav-receive-active.svg \
   qt/rpdchain/res/img/img-empty-dark-masternode.svg \
-  qt/rpdchain/res/img/ic-nav-receive-hover.svg \
   qt/rpdchain/res/img/img-empty-dark-multisend.svg \
   qt/rpdchain/res/img/ic-nav-receive.svg \
   qt/rpdchain/res/img/img-empty-dark-peers.svg \
@@ -371,13 +367,11 @@ RES_ICONS = \
   qt/rpdchain/res/img/ic-nav-send-active.svg \
   qt/rpdchain/res/img/img-empty-dark-staking-off.svg \
   qt/rpdchain/res/img/img-empty-dark-staking-on.svg \
-  qt/rpdchain/res/img/ic-nav-send-hover.svg \
   qt/rpdchain/res/img/img-empty-dark-transactions.svg \
   qt/rpdchain/res/img/ic-nav-send.svg \
   qt/rpdchain/res/img/img-empty-error.svg \
   qt/rpdchain/res/img/ic-nav-settings-active.svg \
   qt/rpdchain/res/img/img-empty-masternode.svg \
-  qt/rpdchain/res/img/ic-nav-settings-hover.svg \
   qt/rpdchain/res/img/img-empty-multisend.svg \
   qt/rpdchain/res/img/ic-address-send.svg \
   qt/rpdchain/res/img/ic-close-white.svg \
@@ -444,7 +438,6 @@ RES_ICONS = \
   qt/rpdchain/res/img/ic-nav-address-active.svg \
   qt/rpdchain/res/img/ic-unlock-staking.svg \
   qt/rpdchain/res/img/ic-check-locked-off.svg \
-  qt/rpdchain/res/img/ic-nav-address-hover.svg \
   qt/rpdchain/res/img/ic-check-liliac-indeterminate.svg \
   qt/rpdchain/res/img/ic-check-box-liliac-indeterminate.svg \
   qt/rpdchain/res/img/ic-transaction-stake-delegated.svg \
@@ -454,7 +447,6 @@ RES_ICONS = \
   qt/rpdchain/res/img/ic-transaction-cs-contract.svg \
   qt/rpdchain/res/img/ic-transaction-cs-contract-inactive.svg \
   qt/rpdchain/res/img/ic-check-box-indeterminate.svg \
-  qt/rpdchain/res/img/ic-nav-tokens-hover.svg \
   qt/rpdchain/res/img/ic-nav-tokens-active.svg \
   qt/rpdchain/res/img/ic-nav-tokens.svg
 

@@ -358,8 +358,8 @@ STAKING</string>
             </property>
             <property name="iconSize">
              <size>
-              <width>32</width>
-              <height>32</height>
+              <width>36</width>
+              <height>36</height>
              </size>
             </property>
             <property name="checkable">
