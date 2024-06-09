@@ -1970,7 +1970,7 @@ HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH*/
 
 *[cssClass="card-governance"] {
     background-color:#3c3c3b;
-    border:  1px solid #d1d5db;
+    border: 1px solid #d1d5db;
     border-radius: 6px;
 }
 
@@ -2046,7 +2046,7 @@ HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH*/
 }
 
 *[cssClass="card-progress-yes"]::chunk:horizontal {
-    background: transparent;
+    background-color: transparent;
     margin-right: 2px;
 }
 
@@ -2107,14 +2107,14 @@ HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH*/
 }
 
 *[cssClass="btn-vote-select"] {
-    background: transparent;
+    background-color: transparent;
     border: 0px;
     color:#d1d5db;
     font-size:16px;
 }
 
 *[cssClass="btn-vote-select"]:hover {
-    text-decoration: underline;
+    color:rgba(255, 85, 51, 0.5);
 }
 
 
@@ -2138,7 +2138,7 @@ HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH*/
 
 
 *[cssClass="vote-progress"]::chunk:horizontal {
-    background: rgba(209, 213, 219, 0.5);
+    background-color: rgba(209, 213, 219, 0.2);
     border-right:1px solid  #d1d5db;
 }
 
@@ -2146,7 +2146,7 @@ HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH*/
 
 *[cssClass="vote-progress-no"] {
     height: 36px;
-    color: rgba(209, 213, 219, 0.5);
+    color: #ff5533;
     font-size:14px;
     background-color: transparent;
     border-radius: 2px;
@@ -2154,14 +2154,13 @@ HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH*/
 
 
 *[cssClass="vote-progress-no"]::chunk:horizontal {
-    background: rgba(209, 213, 219, 0.5);
-    height: 36px;
+    background-color: rgba(209, 213, 219, 0.2);
 }
 
 
 *[cssClass="vote-progress-yes"] {
     min-height: 36px;
-    color: #d1d5db;
+    color: #ff5533;
     font-size:14px;
     background-color: transparent;
     border-radius: 2px;
@@ -2169,20 +2168,20 @@ HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH*/
 
 
 *[cssClass="vote-progress-yes"]::chunk:horizontal {
-    background: #d1d5db;
+    background-color: rgba(209, 213, 219, 0.2);
 }
 
 QCheckBox[cssClass="check-vote"] {
     spacing: 5px;
     padding:5px;
     font-size:18px;
-    color:rgba(209, 213, 219, 0.5);
+    color:rgba(255, 85, 51, 0.5);
 }
 
 QCheckBox:checked[cssClass="check-vote"]  {
     spacing: 5px;
     font-size:18px;
-    color:#d1d5db;
+    color:#ff5533;
 }
 
 QCheckBox::indicator[cssClass="check-vote"] {
@@ -2191,11 +2190,11 @@ QCheckBox::indicator[cssClass="check-vote"] {
 }
 
 QCheckBox::indicator:unchecked[cssClass="check-vote"] {
-    image: url(://ic-check-vote-dark);
+    image: url(://ic-check-box);
 }
 
 QCheckBox::indicator:checked[cssClass="check-vote"] {
-    image: url(://ic-check-vote-active-dark);
+    image: url(://ic-check-active);
 }
 
 /*HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH

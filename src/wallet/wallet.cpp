@@ -2339,7 +2339,7 @@ bool CWallet::CreateBudgetFeeTX(CWalletTx& tx, const uint256& hash, CReserveKey&
     CAmount nFeeRet = 0;
     std::string strFail = "";
     std::vector<CRecipient> vecSend;
-    vecSend.emplace_back(scriptChange, (fFinalization ? BUDGET_FEE_TX : BUDGET_FEE_TX_OLD), false);
+    vecSend.emplace_back(scriptChange, (fFinalization ? BUDGET_FEE_TX : BUDGET_FEE_TX), false);
 
     CCoinControl* coinControl = NULL;
     int nChangePosInOut = -1;

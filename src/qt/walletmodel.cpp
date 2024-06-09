@@ -533,7 +533,7 @@ OperationResult WalletModel::createAndSendProposalFeeTx(CBudgetProposal& proposa
     CWalletTx wtx;
     const uint256& nHash = proposal.GetHash();
     CReserveKey keyChange(wallet);
-    if (!wallet->CreateBudgetFeeTX(wtx, nHash, keyChange, BUDGET_FEE_TX_OLD)) { // 50 PIV collateral for proposal
+    if (!wallet->CreateBudgetFeeTX(wtx, nHash, keyChange, BUDGET_FEE_TX)) { // 50 RPD collateral for proposal
         return {false , "Error making fee transaction for proposal. Please check your wallet balance."};
     }
 

@@ -23,6 +23,7 @@ VoteDialog::VoteDialog(QWidget *parent, GovernanceModel* _govModel, MNModel* _mn
 
     // Vote Info
     setCssProperty(ui->labelTitleVote, "vote-title");
+    ui->labelTitle->setAlignment(Qt::AlignCenter);
     setCssProperty(ui->labelAmount, "vote-amount");
     ui->labelAmount->setAlignment(Qt::AlignCenter);
     setCssProperty(ui->labelTime, "vote-time");
@@ -33,7 +34,6 @@ VoteDialog::VoteDialog(QWidget *parent, GovernanceModel* _govModel, MNModel* _mn
     setCssProperty(ui->btnEsc, "ic-close");
     setCssProperty(ui->btnCancel, "btn-dialog-cancel");
     setCssProperty(ui->btnSave, "btn-primary");
-    setCssProperty(ui->btnLink, "btn-link");
     setCssProperty(ui->btnSelectMasternodes, "btn-vote-select");
     setCssProperty(ui->containerNo, "card-progress-box");
     setCssProperty(ui->containerYes, "card-progress-box");
@@ -166,7 +166,7 @@ void VoteDialog::updateMnSelectionNum()
 {
     QString text;
     if (vecSelectedMn.empty()) {
-        text = !votes.empty() ? tr("You have voted with %1 Masternodes for this proposal\nChange votes").arg(votes.size()) :
+        text = !votes.empty() ? tr("You have voted with %1 Masternodes for this proposal...\nSelect to change or add more votes").arg(votes.size()) :
                 tr("Select Voting Masternodes");
     } else {
         text = tr("%1 Masternodes selected to vote").arg(vecSelectedMn.size());

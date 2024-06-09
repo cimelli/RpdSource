@@ -739,7 +739,7 @@
                 </sizepolicy>
                </property>
                <property name="text">
-                <string>Make sure you have 50 RPD for the proposal fee</string>
+                <string>Make sure you have 5 RPD for the proposal fee</string>
                </property>
                <property name="alignment">
                 <set>Qt::AlignCenter</set>

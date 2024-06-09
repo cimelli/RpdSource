@@ -32,7 +32,7 @@ void initComboView(PWidget* parent, QComboBox* comboBox, const QString& filterHi
 
 GovernanceWidget::GovernanceWidget(RPDCHAINGUI* parent) :
         PWidget(parent),
-        ui(new Ui::governanceWidget)
+        ui(new Ui::GovernanceWidget)
 {
     ui->setupUi(this);
     this->setStyleSheet(parent->styleSheet());
@@ -46,7 +46,7 @@ GovernanceWidget::GovernanceWidget(RPDCHAINGUI* parent) :
     /* Title */
     ui->labelTitle->setText(tr("Governance"));
     setCssProperty(ui->labelTitle, "text-title-screen");
-    ui->labelSubtitle1->setText(tr("View, follow, vote and submit network budget proposals."));
+    ui->labelSubtitle1->setText(tr("View, follow, vote and submit network budget proposals... Be part of the DAO!"));
     setCssProperty(ui->labelSubtitle1, "text-subtitle");
     setCssProperty(ui->pushImgEmpty, "img-empty-governance");
     setCssProperty(ui->labelEmpty, "text-empty");

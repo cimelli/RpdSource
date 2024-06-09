@@ -15,7 +15,7 @@
 #include <QApplication>
 
 namespace Ui {
-class governanceWidget;
+class GovernanceWidget;
 }
 
 QT_BEGIN_NAMESPACE
@@ -81,7 +81,7 @@ public Q_SLOTS:
     void onMoreInfoClicked();
 
 private:
-    Ui::governanceWidget *ui;
+    Ui::GovernanceWidget *ui;
     GovernanceModel* governanceModel{nullptr};
     MNModel* mnModel{nullptr};
     bool isSync{false};
