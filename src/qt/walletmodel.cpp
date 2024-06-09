@@ -57,8 +57,7 @@ void WalletModel::init()
     // This timer will be fired repeatedly to update the balance
     pollTimer = new QTimer(this);
     connect(pollTimer, &QTimer::timeout, this, &WalletModel::pollBalanceChanged);
-    pollTimer->start(MODEL_UPDATE_DELAY);
-
+    pollTimer->start(MODEL_UPDATE_DELAY * 5);
     subscribeToCoreSignals();
 }
 

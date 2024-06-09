@@ -75,6 +75,7 @@ public Q_SLOTS:
     void onVoteForPropClicked(const ProposalInfo& proposalInfo);
     void onCreatePropClicked();
     void onMenuClicked(ProposalCard* card);
+    void walletSynced(bool sync);
     //
     void onCopyUrl();
     void onOpenClicked();

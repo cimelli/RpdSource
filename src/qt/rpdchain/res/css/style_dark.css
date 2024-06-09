@@ -2146,7 +2146,7 @@ HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH*/
 
 *[cssClass="vote-progress-no"] {
     height: 36px;
-    color: #ff5533;
+    color: #d1d5db;
     font-size:14px;
     background-color: transparent;
     border-radius: 2px;
@@ -2154,13 +2154,13 @@ HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH*/
 
 
 *[cssClass="vote-progress-no"]::chunk:horizontal {
-    background-color: rgba(209, 213, 219, 0.2);
+    background-color: transparent;
 }
 
 
 *[cssClass="vote-progress-yes"] {
     min-height: 36px;
-    color: #ff5533;
+    color: #d1d5db;
     font-size:14px;
     background-color: transparent;
     border-radius: 2px;
@@ -2168,20 +2168,20 @@ HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH*/
 
 
 *[cssClass="vote-progress-yes"]::chunk:horizontal {
-    background-color: rgba(209, 213, 219, 0.2);
+    background-color: transparent;
 }
 
 QCheckBox[cssClass="check-vote"] {
     spacing: 5px;
     padding:5px;
     font-size:18px;
-    color:rgba(255, 85, 51, 0.5);
+    color: rgba(209, 213, 219, 0.5);
 }
 
 QCheckBox:checked[cssClass="check-vote"]  {
     spacing: 5px;
     font-size:18px;
-    color:#ff5533;
+    color:#d1d5db;
 }
 
 QCheckBox::indicator[cssClass="check-vote"] {

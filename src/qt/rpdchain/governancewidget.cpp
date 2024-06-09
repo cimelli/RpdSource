@@ -138,6 +138,14 @@ void GovernanceWidget::onVoteForPropClicked(const ProposalInfo& proposalInfo)
     dialog->deleteLater();
 }
 
+void GovernanceWidget::walletSynced(bool sync)
+{
+    if (this->isSync != sync) {
+        this->isSync = sync;
+        ui->layoutWarning->setVisible(!this->isSync);
+    }
+}
+
 void GovernanceWidget::onCreatePropClicked()
 {
     if (!walletModel || !governanceModel || !clientModel) return;

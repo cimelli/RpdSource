@@ -290,6 +290,7 @@ void RPDCHAINGUI::setClientModel(ClientModel* clientModel)
         connect(clientModel, &ClientModel::message, this, &RPDCHAINGUI::message);
         connect(topBar, &TopBar::walletSynced, dashboard, &DashboardWidget::walletSynced);
         connect(topBar, &TopBar::walletSynced, coldStakingWidget, &ColdStakingWidget::walletSynced);
+        connect(topBar, &TopBar::walletSynced, governanceWidget, &GovernanceWidget::walletSynced);
 
         // Get restart command-line parameters and handle restart
         connect(settingsWidget, &SettingsWidget::handleRestart, [this](QStringList arg){handleRestart(arg);});
