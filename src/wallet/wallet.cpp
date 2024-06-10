@@ -2331,7 +2331,7 @@ bool CWallet::SelectCoinsToSpend(const std::vector<COutput>& vAvailableCoins, co
     return res;
 }
 
-bool CWallet::CreateBudgetFeeTX(CWalletTx& tx, const uint256& hash, CReserveKey& keyChange, bool fFinalization)
+bool CWallet::CreateBudgetFeeTX(CWalletTx& tx, const uint256& hash, CReserveKey& keyChange, CAmount fee)
 {
     CScript scriptChange;
     scriptChange << OP_RETURN << ToByteVector(hash);
@@ -2339,11 +2339,11 @@ bool CWallet::CreateBudgetFeeTX(CWalletTx& tx, const uint256& hash, CReserveKey&
     CAmount nFeeRet = 0;
     std::string strFail = "";
     std::vector<CRecipient> vecSend;
-    vecSend.emplace_back(scriptChange, (fFinalization ? BUDGET_FEE_TX : BUDGET_FEE_TX_OLD), false);
+    vecSend.emplace_back(scriptChange, fee, false); // Use the fee parameter directly
 
-    CCoinControl* coinControl = NULL;
+    CCoinControl* coinControl = nullptr;
     int nChangePosInOut = -1;
-    bool success = CreateTransaction(vecSend, tx, keyChange, nFeeRet, nChangePosInOut, strFail, coinControl, ALL_COINS, true, false /*useIX*/, (CAmount)0);
+    bool success = CreateTransaction(vecSend, tx, keyChange, nFeeRet, nChangePosInOut, strFail, coinControl, ALL_COINS, true, false /*useIX*/, 0);
     if (!success) {
         LogPrintf("%s: Error - %s\n", __func__, strFail);
         return false;

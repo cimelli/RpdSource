@@ -49,10 +49,9 @@ bool IsBudgetCollateralValid(const uint256& nTxCollateralHash, const uint256& nE
             LogPrint(BCLog::MNBUDGET,"%s: %s\n", __func__, strError);
             return false;
         }
+        
+        // Check for budget finalization collateral
         if (fBudgetFinalization) {
-            // Collateral for budget finalization
-            // Note: there are still old valid budgets out there, but the check for the new 5 RPD finalization collateral
-            //       will also cover the old 50 RPD finalization collateral.
             LogPrint(BCLog::MNBUDGET, "Final Budget: o.scriptPubKey(%s) == findScript(%s) ?\n", HexStr(o.scriptPubKey), HexStr(findScript));
             if (o.scriptPubKey == findScript) {
                 LogPrint(BCLog::MNBUDGET, "Final Budget: o.nValue(%ld) >= BUDGET_FEE_TX(%ld) ?\n", o.nValue, BUDGET_FEE_TX);
@@ -61,8 +60,8 @@ bool IsBudgetCollateralValid(const uint256& nTxCollateralHash, const uint256& nE
                 }
             }
         }
+        // Check for normal budget proposal collateral
         else {
-            // Collateral for normal budget proposal
             LogPrint(BCLog::MNBUDGET, "Normal Budget: o.scriptPubKey(%s) == findScript(%s) ?\n", HexStr(o.scriptPubKey), HexStr(findScript));
             if (o.scriptPubKey == findScript) {
                 LogPrint(BCLog::MNBUDGET, "Normal Budget: o.nValue(%ld) >= PROPOSAL_FEE_TX(%ld) ?\n", o.nValue, PROPOSAL_FEE_TX);
@@ -72,6 +71,7 @@ bool IsBudgetCollateralValid(const uint256& nTxCollateralHash, const uint256& nE
             }
         }
     }
+
     if (!foundOpReturn) {
         strError = strprintf("Couldn't find opReturn %s in %s", nExpectedHash.ToString(), txCollateral.ToString());
         LogPrint(BCLog::MNBUDGET,"%s: %s\n", __func__, strError);
@@ -147,7 +147,6 @@ void CBudgetManager::SubmitFinalBudget()
         return;
     }
 
-     // Submit final budget during the last 2 days (2880 blocks) before payment for Mainnet, about 9 minutes (9 blocks) for Testnet
     int finalizationWindow = ((nBlocksPerCycle / 30) * 2);
 
     if (Params().NetworkID() == CBaseChainParams::TESTNET) {
@@ -193,7 +192,7 @@ void CBudgetManager::SubmitFinalBudget()
         return; //already exists
     }
 
-    //create fee tx
+    // Create fee transaction
     CTransaction tx;
     uint256 txidCollateral;
 
@@ -201,7 +200,7 @@ void CBudgetManager::SubmitFinalBudget()
         CWalletTx wtx;
         // Get our change address
         CReserveKey keyChange(pwalletMain);
-        if (!pwalletMain->CreateBudgetFeeTX(wtx, budgetHash, keyChange, true)) {
+        if (!pwalletMain->CreateBudgetFeeTX(wtx, budgetHash, keyChange, BUDGET_FEE_TX)) { // 50 RPD collateral for proposal
             LogPrint(BCLog::MNBUDGET,"%s: Can't make collateral transaction\n", __func__);
             return;
         }
@@ -217,7 +216,7 @@ void CBudgetManager::SubmitFinalBudget()
         txidCollateral = mapCollateralTxids[budgetHash];
     }
 
-    //create the proposal incase we're the first to make it
+    // Create the proposal in case we're the first to make it
     CFinalizedBudgetBroadcast finalizedBudgetBroadcast(strBudgetName, nBlockStart, vecTxBudgetPayments, txidCollateral);
 
     // check

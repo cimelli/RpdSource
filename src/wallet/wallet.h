@@ -608,7 +608,7 @@ public:
     std::set<CTxDestination> GetLabelAddresses(const std::string& label) const;
     void DeleteLabel(const std::string& label);
 
-    bool CreateBudgetFeeTX(CWalletTx& tx, const uint256& hash, CReserveKey& keyChange, bool fFinalization);
+    bool CreateBudgetFeeTX(CWalletTx& tx, const uint256& hash, CReserveKey& keyChange, CAmount fee);
 
     bool IsUsed(const CTxDestination address) const;
 

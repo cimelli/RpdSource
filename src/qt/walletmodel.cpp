@@ -532,16 +532,16 @@ OperationResult WalletModel::createAndSendProposalFeeTx(CBudgetProposal& proposa
     CWalletTx wtx;
     const uint256& nHash = proposal.GetHash();
     CReserveKey keyChange(wallet);
-    if (!wallet->CreateBudgetFeeTX(wtx, nHash, keyChange, BUDGET_FEE_TX_OLD)) { // 50 RPD collateral for proposal
-        return {false , "Error making fee transaction for proposal. Please check your wallet balance."};
+    if (!wallet->CreateBudgetFeeTX(wtx, nHash, keyChange, BUDGET_FEE_TX)) { // 50 RPD collateral for proposal
+        return {false, "Error making fee transaction for proposal. Please check your wallet balance."};
     }
 
-    // send the tx to the network
+    // Send the transaction to the network
     const CWallet::CommitResult& res = wallet->CommitTransaction(wtx, keyChange, g_connman.get());
     if (res.status != CWallet::CommitStatus::OK) {
         return {false, strprintf("Cannot commit proposal fee transaction: %s", res.ToString())};
     }
-    // Everything went fine, set the fee tx hash
+    // Everything went fine, set the fee transaction hash
     proposal.SetFeeTxHash(wtx.GetHash());
     return {true};
 }

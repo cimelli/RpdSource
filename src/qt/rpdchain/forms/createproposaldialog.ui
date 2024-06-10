@@ -352,7 +352,7 @@
             </size>
            </property>
            <property name="currentIndex">
-            <number>1</number>
+            <number>0</number>
            </property>
            <widget class="QWidget" name="pageIcon3">
             <property name="minimumSize">
@@ -670,9 +670,6 @@
           <height>350</height>
          </size>
         </property>
-        <property name="currentIndex">
-         <number>1</number>
-        </property>
         <widget class="QWidget" name="page_1">
          <layout class="QVBoxLayout" name="verticalLayout_7" stretch="1,3,0">
           <property name="spacing">
@@ -742,7 +739,7 @@
                 </sizepolicy>
                </property>
                <property name="text">
-                <string>Make sure you have 5 RPD for the proposal fee</string>
+                <string>Make sure you have 50 RPD for the proposal fee</string>
                </property>
                <property name="alignment">
                 <set>Qt::AlignCenter</set>
@@ -891,7 +888,8 @@
                    </sizepolicy>
                   </property>
                   <property name="text">
-                   <string>Add the requested number of payments, the amount per payment, and the payee address.</string>
+                   <string>Add the requested number of payments,
+the amount per payment, and the payee address.</string>
                   </property>
                   <property name="alignment">
                    <set>Qt::AlignCenter</set>
@@ -1279,12 +1277,9 @@
           <property name="orientation">
            <enum>Qt::Horizontal</enum>
           </property>
-          <property name="sizeType">
-           <enum>QSizePolicy::Fixed</enum>
-          </property>
           <property name="sizeHint" stdset="0">
            <size>
-            <width>180</width>
+            <width>40</width>
             <height>20</height>
            </size>
           </property>
