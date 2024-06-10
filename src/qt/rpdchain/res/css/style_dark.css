@@ -429,7 +429,7 @@ QPushButton[cssClass="btn-check-cold-staking"]:checked {
 *[cssClass="btn-nav-governance"] {
     qproperty-icon: url("://ic-nav-governance") off,
     url("://ic-nav-governance-active") on;
-    qproperty-iconSize: 24px 30px;
+    qproperty-iconSize: 36px 36px;
     background-color:transparent;
     font-size:14px;
     color: #d1d5db;
@@ -454,7 +454,7 @@ QPushButton[cssClass="btn-check-cold-staking"]:checked {
 
 *[cssClass="btn-nav-governance-active"] {
     qproperty-icon:url("://ic-nav-governance-active");
-    qproperty-iconSize: 24px 30px;
+    qproperty-iconSize: 36px 36px;
     background-color: #3c3c3b;
     font-size:14px;
     color: #ff5533;
