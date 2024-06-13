@@ -1313,7 +1313,7 @@ bool AppInit2()
         }
 
         if (GetBoolArg("-resync", false)) {
-            uiInterface.InitMessage(_("Preparing for resync..."));
+            uiInterface.InitMessage(_("preparing for resync..."));
             // Delete the local blockchain folders to force a resync from scratch to get a consitent blockchain-state
             fs::path blocksDir = GetDataDir() / "blocks";
             fs::path chainstateDir = GetDataDir() / "chainstate";
@@ -1558,7 +1558,7 @@ bool AppInit2()
                 if (fReindex) {
                     pblocktree->WriteReindexing(true);
                 } else {
-                    uiInterface.InitMessage(_("Upgrading coins database..."));
+                    uiInterface.InitMessage(_("upgrading coins database..."));
                     // If necessary, upgrade from older database format.
                     if (!pcoinsdbview->Upgrade()) {
                         strLoadError = _("Error upgrading chainstate database");
@@ -1570,10 +1570,10 @@ bool AppInit2()
                 if (ShutdownRequested()) break;
 
                 // RPDCHAIN: load previous sessions sporks if we have them.
-                uiInterface.InitMessage(_("Loading sporks..."));
+                uiInterface.InitMessage(_("loading sporks..."));
                 sporkManager.LoadSporksFromDB();
 
-                uiInterface.InitMessage(_("Loading block index..."));
+                uiInterface.InitMessage(_("loading block index..."));
                 std::string strBlockIndexError = "";
                 if (!LoadBlockIndex(strBlockIndexError)) {
                     if (ShutdownRequested()) break;
@@ -1669,7 +1669,7 @@ bool AppInit2()
                 // Drop all information from the zerocoinDB and repopulate
                 if (fReindexZerocoin && consensus.NetworkUpgradeActive(chainHeight, Consensus::UPGRADE_ZC)) {
                     LOCK(cs_main);
-                    uiInterface.InitMessage(_("Reindexing zerocoin database..."));
+                    uiInterface.InitMessage(_("reindexing zerocoin database..."));
                     std::string strError = ReindexZerocoinDB();
                     if (strError != "") {
                         strLoadError = strError;
@@ -1685,7 +1685,7 @@ bool AppInit2()
                 }
 
                 if (!fReindex) {
-                    uiInterface.InitMessage(_("Verifying blocks..."));
+                    uiInterface.InitMessage(_("verifying blocks..."));
 
                     // Flag sent to validation code to let it know it can skip certain checks
                     fVerifyingBlocks = true;
@@ -1792,7 +1792,7 @@ bool AppInit2()
     //     }
     // }
 
-    uiInterface.InitMessage(_("Parsing Token Layer transactions..."));
+    uiInterface.InitMessage(_("parsing RPDx transactions..."));
 
     mastercore_init();
 
@@ -1858,7 +1858,7 @@ bool AppInit2()
 
     // ********************************************************* Step 10: setup layer 2 data
 
-    uiInterface.InitMessage(_("Loading masternode cache..."));
+    uiInterface.InitMessage(_("loading masternode cache..."));
 
     CMasternodeDB mndb;
     CMasternodeDB::ReadResult readResult = mndb.Read(mnodeman);
@@ -1872,7 +1872,7 @@ bool AppInit2()
             LogPrintf("file format is unknown or invalid, please fix it manually\n");
     }
 
-    uiInterface.InitMessage(_("Loading budget cache..."));
+    uiInterface.InitMessage(_("loading budget cache..."));
 
     CBudgetDB budgetdb;
     int nChainHeight = WITH_LOCK(cs_main, return chainActive.Height(); );
@@ -1896,7 +1896,7 @@ bool AppInit2()
     budget.ClearSeen();
 
 
-    uiInterface.InitMessage(_("Loading masternode payment cache..."));
+    uiInterface.InitMessage(_("loading masternode payment cache..."));
 
     CMasternodePaymentDB mnpayments;
     CMasternodePaymentDB::ReadResult readResult3 = mnpayments.Read(masternodePayments);
@@ -2048,7 +2048,7 @@ bool AppInit2()
     // ********************************************************* Step 12: finished
 
     SetRPCWarmupFinished();
-    uiInterface.InitMessage(_("Done loading"));
+    uiInterface.InitMessage(_("done loading!"));
 
 #ifdef ENABLE_WALLET
     if (pwalletMain) {

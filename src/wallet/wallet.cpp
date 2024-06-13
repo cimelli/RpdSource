@@ -1638,7 +1638,7 @@ bool CWallet::Verify()
         return UIError(strprintf(_("Wallet %s resides outside data directory %s"), walletFile, strDataDir));
 
     LogPrintf("Using wallet %s\n", walletFile);
-    uiInterface.InitMessage(_("Verifying wallet..."));
+    uiInterface.InitMessage(_("verifying wallet..."));
 
     if (!bitdb.Open(GetDataDir())) {
         // try moving the database env out of the way
@@ -3759,7 +3759,7 @@ CWallet* CWallet::CreateWalletFromFile(const std::string walletFile)
     std::vector<CWalletTx> vWtx;
 
     if (GetBoolArg("-zapwallettxes", false)) {
-        uiInterface.InitMessage(_("Zapping all transactions from wallet..."));
+        uiInterface.InitMessage(_("zapping all transactions from wallet..."));
 
         CWallet *tempWallet = new CWallet(walletFile);
         DBErrors nZapWalletRet = tempWallet->ZapWalletTx(vWtx);
@@ -3772,7 +3772,7 @@ CWallet* CWallet::CreateWalletFromFile(const std::string walletFile)
         tempWallet = nullptr;
     }
 
-    uiInterface.InitMessage(_("Loading wallet..."));
+    uiInterface.InitMessage(_("loading wallet..."));
     fVerifyingBlocks = true;
 
     int64_t nStart = GetTimeMillis();
@@ -3893,7 +3893,7 @@ CWallet* CWallet::CreateWalletFromFile(const std::string walletFile)
             pindexRescan = chainActive.Genesis();
     }
     if (chainActive.Tip() && chainActive.Tip() != pindexRescan) {
-        uiInterface.InitMessage(_("Rescanning..."));
+        uiInterface.InitMessage(_("rescanning..."));
         LogPrintf("Rescanning last %i blocks (from block %i)...\n", chainActive.Height() - pindexRescan->nHeight, pindexRescan->nHeight);
         const int64_t nWalletRescanTime = GetTimeMillis();
         if (walletInstance->ScanForWalletTransactions(pindexRescan, true, true) == -1) {
@@ -3929,7 +3929,7 @@ CWallet* CWallet::CreateWalletFromFile(const std::string walletFile)
 
     if (!zwalletInstance->GetMasterSeed().IsNull()) {
         //Inititalize zRPDWallet
-        uiInterface.InitMessage(_("Syncing zRPD wallet..."));
+        uiInterface.InitMessage(_("syncing zRPD wallet..."));
 
         //Load zerocoin mint hashes to memory
         walletInstance->zrpdTracker->Init();

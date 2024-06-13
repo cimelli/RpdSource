@@ -2088,7 +2088,7 @@ bool CConnman::Start(CScheduler& scheduler, std::string& strNodeError, Options c
 
     clientInterface = connOptions.uiInterface;
     if (clientInterface)
-        clientInterface->InitMessage(_("Loading addresses..."));
+        clientInterface->InitMessage(_("loading addresses..."));
     // Load addresses from peers.dat
     int64_t nStart = GetTimeMillis();
     {
@@ -2102,7 +2102,7 @@ bool CConnman::Start(CScheduler& scheduler, std::string& strNodeError, Options c
         }
     }
     if (clientInterface)
-        clientInterface->InitMessage(_("Loading banlist..."));
+        clientInterface->InitMessage(_("loading banlist..."));
     // Load addresses from banlist.dat
     nStart = GetTimeMillis();
     CBanDB bandb;
