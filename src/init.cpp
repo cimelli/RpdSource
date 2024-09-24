@@ -1238,7 +1238,7 @@ bool AppInit2()
     if (GetBoolArg("-server", false)) {
         uiInterface.InitMessage.connect(SetRPCWarmupStatus);
         if (!AppInitServers())
-            return UIError(_("Unable to start HTTP server. See debug log for details."));
+            return UIError(_("unable to start HTTP server. See debug log for details."));
     }
 
 // ********************************************************* Step 5: Backup wallet and verify wallet database integrity

@@ -144,7 +144,7 @@ void CBudgetManager::SubmitFinalBudget()
     if (nSubmittedHeight >= nBlockStart){
         LogPrint(BCLog::MNBUDGET,"%s: nSubmittedHeight(=%ld) < nBlockStart(=%ld) condition not fulfilled.\n",
                 __func__, nSubmittedHeight, nBlockStart);
-        return;
+        return UINT256_ZERO;
     }
 
     int finalizationWindow = ((nBlocksPerCycle / 30) * 2);
