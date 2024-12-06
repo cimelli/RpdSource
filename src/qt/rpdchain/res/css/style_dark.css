@@ -3054,7 +3054,7 @@ QComboBox[cssClass="btn-combo-welcome"]::down-arrow {
 }
 
 QComboBox[cssClass="btn-combo-welcome"]::down-arrow:on {
-    image: url("://ic-arrow-drop-down");
+    image: url("://ic-arrow-drop-down-white");
     width: 24px;
     height: 24px;
 }
@@ -3063,7 +3063,7 @@ QPushButton[cssClass="btn-welcome-back"] {
     background: url("://ic-arrow-left-white");
     background-repeat:no-repeat;
     background-position:center;
-    border: none;
+    border: 2px solid #d1d5db;
     background-color:#3c3c3b;
     color: #d1d5db;
 }
@@ -3072,7 +3072,7 @@ QPushButton[cssClass="btn-welcome-next"] {
     background: url("://ic-arrow-right-white");
     background-repeat:no-repeat;
     background-position:center;
-    border: none;
+    border: 2px solid #d1d5db;
     background-color: #3c3c3b;
     color: #d1d5db;
 }
