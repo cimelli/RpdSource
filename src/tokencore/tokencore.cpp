@@ -1725,14 +1725,14 @@ int mastercore_init()
     if (GetBoolArg("-startclean", false)) {
         PrintToLog("Process was started with --startclean option, attempting to clear persistence files..\n");
         try {
-            boost::filesystem::path tokensPath = GetDataDir() / "tokens";
-            boost::filesystem::path persistPath = GetDataDir() / "tokens" / "persist";
-            boost::filesystem::path txlistPath = GetDataDir() / "tokens" / "txlist";
-            boost::filesystem::path tradePath = GetDataDir() / "tokens" / "tradelist";
-            boost::filesystem::path spPath = GetDataDir() / "tokens" / "spinfo";
-            boost::filesystem::path stoPath = GetDataDir() / "tokens" / "stolist";
-            boost::filesystem::path tokenTXDBPath = GetDataDir() / "tokens" / "txdb";
-            boost::filesystem::path feesPath = GetDataDir() / "tokens" / "feecache";
+            boost::filesystem::path tokensPath     = GetDataDir() / "tokens";
+            boost::filesystem::path persistPath    = GetDataDir() / "tokens" / "persist";
+            boost::filesystem::path txlistPath     = GetDataDir() / "tokens" / "txlist";
+            boost::filesystem::path tradePath      = GetDataDir() / "tokens" / "tradelist";
+            boost::filesystem::path spPath         = GetDataDir() / "tokens" / "spinfo";
+            boost::filesystem::path stoPath        = GetDataDir() / "tokens" / "stolist";
+            boost::filesystem::path tokenTXDBPath  = GetDataDir() / "tokens" / "txdb";
+            boost::filesystem::path feesPath       = GetDataDir() / "tokens" / "feecache";
             boost::filesystem::path feeHistoryPath = GetDataDir() / "tokens" / "feehistory";
             if (boost::filesystem::exists(tokensPath)) boost::filesystem::remove_all(tokensPath);
             if (boost::filesystem::exists(persistPath)) boost::filesystem::remove_all(persistPath);

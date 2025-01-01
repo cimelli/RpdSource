@@ -2048,7 +2048,7 @@ bool AppInit2()
     // ********************************************************* Step 12: finished
 
     SetRPCWarmupFinished();
-    uiInterface.InitMessage(_("done loading!"));
+    uiInterface.InitMessage(_("done loading"));
 
 #ifdef ENABLE_WALLET
     if (pwalletMain) {

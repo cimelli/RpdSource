@@ -137,7 +137,7 @@ void CTokenFeeCache::AddFee(const uint32_t &propertyId, int block, const int64_t
             if (tempItem.first == block) continue; // this is an older entry for the same block, discard it
             if (!newValue.empty()) newValue += ",";
             newValue += strprintf("%d:%d", tempItem.first, tempItem.second);
-            if (msc_debug_fees) PrintToLog("      Readding entry: block %d amount %d\n", tempItem.first, tempItem.second);
+            if (msc_debug_fees) PrintToLog("      Reading entry: block %d amount %d\n", tempItem.first, tempItem.second);
         }
         if (!newValue.empty()) newValue += ",";
     }
