@@ -166,7 +166,7 @@
             <string notr="true">color:#d1d5db; padding-left:50px;</string>
            </property>
            <property name="text">
-            <string>Loading…</string>
+            <string>loading…</string>
            </property>
            <property name="alignment">
             <set>Qt::AlignHCenter|Qt::AlignTop</set>

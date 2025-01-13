@@ -1795,6 +1795,9 @@ bool AppInit2()
     uiInterface.InitMessage(_("parsing RPDx transactions..."));
 
     mastercore_init();
+    
+    // If this is written true before the next client init, then we know the shutdown process failed
+    pblocktree->WriteFlag("shutdown", false);
 
 // ********************************************************* Step 8: load wallet
 #ifdef ENABLE_WALLET

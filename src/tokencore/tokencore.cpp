@@ -1753,12 +1753,12 @@ int mastercore_init()
 
     TryCreateDirectory(GetDataDir() / "tokens");
 
-    pDbTradeList = new CMPTradeList(GetDataDir() / "tokens" / "tradelist", fReindex);
-    pDbStoList = new CMPSTOList(GetDataDir() / "tokens" / "stolist", fReindex);
-    pDbTransactionList = new CMPTxList(GetDataDir() / "tokens" / "txlist", fReindex);
-    pDbSpInfo = new CMPSPInfo(GetDataDir() / "tokens" / "spinfo", fReindex);
-    pDbTransaction = new CTokenTransactionDB(GetDataDir() / "tokens" / "txdb", fReindex);
-    pDbFeeCache = new CTokenFeeCache(GetDataDir() / "tokens" / "feecache", fReindex);
+    pDbTradeList = new CMPTradeList(GetDataDir()       / "tokens" / "tradelist", fReindex);
+    pDbStoList = new CMPSTOList(GetDataDir()             / "tokens" / "stolist", fReindex);
+    pDbTransactionList = new CMPTxList(GetDataDir()       / "tokens" / "txlist", fReindex);
+    pDbSpInfo = new CMPSPInfo(GetDataDir()                / "tokens" / "spinfo", fReindex);
+    pDbTransaction = new CTokenTransactionDB(GetDataDir()   / "tokens" / "txdb", fReindex);
+    pDbFeeCache = new CTokenFeeCache(GetDataDir()       / "tokens" / "feecache", fReindex);
     pDbFeeHistory = new CTokenFeeHistory(GetDataDir() / "tokens" / "feehistory", fReindex);
 
     pathStateFiles = GetDataDir() / "tokens" / "persist";

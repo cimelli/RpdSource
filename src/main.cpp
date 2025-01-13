@@ -4882,9 +4882,6 @@ bool static LoadBlockIndexDB(std::string& strError)
     pblocktree->ReadFlag("txindex", fTxIndex);
     LogPrintf("LoadBlockIndexDB(): transaction index %s\n", fTxIndex ? "enabled" : "disabled");
 
-    // If this is written true before the next client init, then we know the shutdown process failed
-    pblocktree->WriteFlag("shutdown", false);
-
     // Load pointer to end of best chain
     BlockMap::iterator it = mapBlockIndex.find(pcoinsTip->GetBestBlock());
     if (it == mapBlockIndex.end())

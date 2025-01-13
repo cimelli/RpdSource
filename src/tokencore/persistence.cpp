@@ -5,7 +5,6 @@
  */
 
 #include "tokencore/persistence.h"
-
 #include "tokencore/dex.h"
 #include "tokencore/log.h"
 #include "tokencore/mdex.h"
